@@ -14,6 +14,17 @@ class Azf_Rpc_Server {
     protected $rpcServer;
 
     /**
+     * @var string
+     */
+    protected $module = null;
+
+    /**
+     *
+     * @var string
+     */
+    protected $provider = null;
+
+    /**
      *
      * @return Zend_Json_Server
      */
@@ -29,6 +40,38 @@ class Azf_Rpc_Server {
         $this->rpcServer = $rpcServer;
     }
 
+    /**
+     *
+     * @return string
+     */
+    public function getModuleName() {
+        return $this->module;
+    }
+
+    /**
+     *
+     * @param string $module 
+     */
+    public function setModuleName($module) {
+        $this->module = $module;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getProviderName() {
+        return $this->provider;
+    }
+
+    /**
+     *
+     * @param string $provider 
+     */
+    public function setProviderName($provider) {
+        $this->provider = $provider;
+    }
+
     function __construct() {
         $this->_init();
     }
@@ -39,11 +82,21 @@ class Azf_Rpc_Server {
     protected function _init() {
         $rpcServer = new Zend_Json_Server();
         $this->setRpcServer($rpcServer);
+        
+        $this->_initModelProviderName();
+    }
+
+    protected function _initModelProviderName() {
+        $module = $_GET['module'];
+        $provider = $_GET['provider'];
+        
+        $this->setModuleName($module && ctype_alpha($module)&&ctype_alpha($module[0])?$module:null);
+        $this->setProviderName($provider && ctype_alnum($provider)&&ctype_alpha($provider[0])?$provider:null);
     }
 
     public function handle() {
         $server = $this->getRpcServer();
-        
+
         // If it is a GET request, return SMD
         if ('GET' == $_SERVER['REQUEST_METHOD']) {
             $server->setTarget('/json-rpc.php')

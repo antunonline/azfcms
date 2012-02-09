@@ -1,0 +1,38 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="/js/dojo/dojo/dojo.js"></script>
+        <script type="text/javascript">
+            dojo.require("dojo.rpc.JsonService");
+            
+            rpc = {
+                rpc: null,
+                init: function(){
+                    dojo.byId("sendBtn").disabled = "";
+                    
+                    this.rpc = new dojo.rpc.JsonService("/json-rpc.php?q=");   
+                },
+                send: function(){
+                    
+                }
+            }
+            
+            dojo.addOnLoad(function(){
+                rpc.init();
+            })
+        </script>
+    </head>
+    <body>
+        <div>
+            <button disabled="disabled" id="sendBtn" onclick="rpc.send()">
+                Send RPC Request
+            </button>
+        </div>
+    </body>
+</html>

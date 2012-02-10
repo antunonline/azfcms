@@ -10,6 +10,12 @@ class Azf_Rpc_Server {
 
     /**
      *
+     * @var array
+     */
+    protected $requestArgs = array();
+
+    /**
+     *
      * @var Zend_Json_Server
      */
     protected $rpcServer;
@@ -24,6 +30,36 @@ class Azf_Rpc_Server {
      * @var Azf_Rpc_Provider_Abstract
      */
     protected $providerInstance;
+
+    /**
+     *
+     * @return array
+     */
+    public function getRequestArgs() {
+        return $this->requestArgs;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed 
+     */
+    public function getRequestArg($name, $default = null) {
+        if (!isset($this->requestArgs[$name])) {
+            return $default;
+        } else {
+            return $this->requestArgs[$name];
+        }
+    }
+
+    /**
+     *
+     * @param array $requestArgs 
+     */
+    public function setRequestArgs(array $requestArgs) {
+        $this->requestArgs = $requestArgs;
+    }
 
     /**
      *
@@ -72,18 +108,53 @@ class Azf_Rpc_Server {
     public function setProviderInstance(Azf_Rpc_Provider_Abstract $providerInstance) {
         $this->providerInstance = $providerInstance;
     }
+    
+    /**
+     *  @return string|boolean
+     */
+    public function getModuleName(){
+        $moduleName = $this->getRequestArg("module","");
+        if($moduleName && ctype_alpha($moduleName[0]) && ctype_alnum($moduleName)){
+            return $moduleName;
+        }
+        else {
+            return false;
+        }
+        
+    }
+    
+    /**
+     *  @return string|string
+     */
+    public function getProviderName(){
+        $providerName = $this->getRequestArg("provider","");
+        if($providerName && ctype_alpha($providerName[0]) && ctype_alnum($providerName)){
+            return $providerName;
+        }
+        else {
+            return false;
+        }
+    }
 
     function __construct() {
-        $this->_init();
+        
     }
 
     /**
      * This method will initialize all dependencies required by the server 
      */
     protected function _init() {
+        $this->_initRequestArgs();
+        // If module name or provider name is not valid or not provided
+        if(!$this->getModuleName() || !$this->getProviderName()){
+            return false;
+        }
         $this->_initJsonServer();
+        $this->_initModule();
         $this->_initClassName();
         $this->_initClassInstance();
+        
+        return true;
     }
 
     /**
@@ -94,31 +165,58 @@ class Azf_Rpc_Server {
         $this->setRpcServer($rpcServer);
     }
 
+    protected function _initRequestArgs() {
+        if ($this->getRequestArgs() == false) {
+            $this->setRequestArgs($_GET);
+        }
+    }
+    
+    protected function _initModule(){
+        $moduleName = $this->getModuleName();
+        $providerName = $this->getProviderName();
+        $modulePath = APPLICATION_PATH."/modules/".strtolower($moduleName);
+        $moduleBootstrapPath = $modulePath."/".ucfirst($modulePath)."Bootstrap";
+        $bootstrapClassName = ucfirst($moduleName)."_".ucfirst($providerName);
+        
+        if(strtolower($moduleName)=="default"){
+            return true;
+        }
+        
+        if(!is_dir($modulePath)){
+            return false;
+        }
+        $autoloader = new Zend_Application_Module_Autoloader(array(
+            'namespace'=>strtolower($moduleName),
+            'basePath'=>$modulePath
+        ));
+        
+        if(is_file($moduleBootstrapPath) && is_readable($moduleBootstrapPath)){
+           if(!include_once($moduleBootstrapPath)){
+               return false;
+           }
+           
+           $bootstrapInstance = new $bootstrapClassName();
+           /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
+           $bootstrapInstance->bootstrap("rpc");
+        }
+        
+        return true;
+    }
+
     /**
      * Construct class name from given parameters 
      */
     protected function _initClassName() {
-        $module = $_GET['module'];
-        $provider = $_GET['provider'];
+        $module = $this->getModuleName();
+        $provider = $this->getProviderName();
 
-        if ($module && ctype_alpha($module[0]) && ctype_alnum($module)) {
-            $cleanModule = $module;
-        } else {
-            $module = "";
-        }
-
-        if ($provider && ctype_alpha($provider[0]) && ctype_alnum($provider)) {
-            $cleanProvider = $provider;
-        } else {
-            $module = "";
-        }
-
-        if ($cleanModule && $cleanProvider) {
-            if (strtolower($cleanModule) == "default") {
-                $cleanModule = "application";
+        // If module and provider values are valid (does not equals to false)
+        if ($module && $provider) {
+            if (strtolower($module) == "default") {
+                $module = "application";
             }
 
-            $providerClassName = ucfirst($cleanModule) . "_Rpc_" . ucfirst($provider);
+            $providerClassName = ucfirst($module) . "_Rpc_" . ucfirst($provider);
         } else {
             $providerClassName = "";
         }
@@ -169,6 +267,10 @@ class Azf_Rpc_Server {
      * @return boolean 
      */
     public function handle() {
+        if(!$this->_init()){
+            echo "null";
+        }
+
         $server = $this->getRpcServer();
         $providerInstance = $this->getProviderInstance();
 
@@ -177,8 +279,8 @@ class Azf_Rpc_Server {
             return false;
         } else {
             $server->setClass($providerInstance);
-            $module = $_GET['module'];
-            $provider = $_GET['provider'];
+            $module = $this->getModuleName();
+            $provider = $this->getProviderName();
         }
 
         // If it is a GET request, return SMD

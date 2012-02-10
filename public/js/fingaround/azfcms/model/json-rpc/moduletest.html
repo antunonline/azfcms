@@ -16,11 +16,14 @@ and open the template in the editor.
                 init: function(){
                     dojo.byId("sendBtn").disabled = "";
                     
-                    this.rpc = new dojo.rpc.JsonService("/json-rpc.php?module=default&provider=providerA");   
+                    this.rpc = new dojo.rpc.JsonService("/json-rpc.php?module=user&provider=user");   
                 },
                 send: function(){
-                    this.rpc.add(1,2).addCallback(function(r){
-                        alert(r);
+                    this.rpc.getUser(1).addCallback(function(r){
+                        var form = document.forms.form;
+                        form.uid.value = r.id;
+                        form.fname.value = r.firstName;
+                        form.lname.value = r.lastName;
                     })
                 }
             }
@@ -34,12 +37,32 @@ and open the template in the editor.
         <div>
             <span>
                 <a href="test1.html">Default module RPC test</a>
+                 <a href="moduletest.html">User module RPC test</a>
             </span>
         </div>
         <div>
             <button disabled="disabled" id="sendBtn" onclick="rpc.send()">
                 Send RPC Request
             </button>
+        </div>
+        <div>
+            <form name="form">
+                <label for="uid">User ID:</label>
+                <input type="text" id="uid" />
+                <br />
+                
+                
+                <label for="fname">First name:</label>
+                <input type="text" id="fname" />
+                <br />
+                
+                
+                <label for="lname">Last name:</label>
+                <input type="text" id="lname" />
+                <br />
+                
+                
+            </form>
         </div>
     </body>
 </html>

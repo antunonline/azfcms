@@ -16,10 +16,12 @@ and open the template in the editor.
                 init: function(){
                     dojo.byId("sendBtn").disabled = "";
                     
-                    this.rpc = new dojo.rpc.JsonService("/json-rpc.php?q=");   
+                    this.rpc = new dojo.rpc.JsonService("/json-rpc.php?module=default&provider=providerA");   
                 },
                 send: function(){
-                    
+                    this.rpc.add(1,2).addCallback(function(r){
+                        alert(r);
+                    })
                 }
             }
             

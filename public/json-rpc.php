@@ -22,7 +22,7 @@ $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
-$application->bootstrap();
+$application->bootstrap('rpc');
 
 $rpcServer = new Azf_Rpc_Server();
 $rpcServer->handle();

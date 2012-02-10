@@ -2,6 +2,7 @@
 
 /**
  * Description of Server
+ *  // TODO 
  *
  * @author Antun Horvat <at> it-branch.com
  */
@@ -16,13 +17,13 @@ class Azf_Rpc_Server {
     /**
      * @var string
      */
-    protected $module = null;
+    protected $providerClassName;
 
     /**
      *
-     * @var string
+     * @var Azf_Rpc_Provider_Abstract
      */
-    protected $provider = null;
+    protected $providerInstance;
 
     /**
      *
@@ -44,32 +45,32 @@ class Azf_Rpc_Server {
      *
      * @return string
      */
-    public function getModuleName() {
-        return $this->module;
+    public function getProviderClassName() {
+        return $this->providerClassName;
     }
 
     /**
      *
-     * @param string $module 
+     * @param string $providerClassName 
      */
-    public function setModuleName($module) {
-        $this->module = $module;
+    public function setProviderClassName($providerClassName) {
+        $this->providerClassName = $providerClassName;
     }
 
     /**
      *
-     * @return string
+     * @return Azf_Rpc_Provider_Abstract
      */
-    public function getProviderName() {
-        return $this->provider;
+    public function getProviderInstance() {
+        return $this->providerInstance;
     }
 
     /**
      *
-     * @param string $provider 
+     * @param Azf_Rpc_Provider_Abstract $providerInstance 
      */
-    public function setProviderName($provider) {
-        $this->provider = $provider;
+    public function setProviderInstance(Azf_Rpc_Provider_Abstract $providerInstance) {
+        $this->providerInstance = $providerInstance;
     }
 
     function __construct() {
@@ -80,26 +81,109 @@ class Azf_Rpc_Server {
      * This method will initialize all dependencies required by the server 
      */
     protected function _init() {
+        $this->_initJsonServer();
+        $this->_initClassName();
+        $this->_initClassInstance();
+    }
+
+    /**
+     * Initialize JSON-RPC ZF server implementation 
+     */
+    protected function _initJsonServer() {
         $rpcServer = new Zend_Json_Server();
         $this->setRpcServer($rpcServer);
-        
-        $this->_initModelProviderName();
     }
 
-    protected function _initModelProviderName() {
+    /**
+     * Construct class name from given parameters 
+     */
+    protected function _initClassName() {
         $module = $_GET['module'];
         $provider = $_GET['provider'];
-        
-        $this->setModuleName($module && ctype_alpha($module)&&ctype_alpha($module[0])?$module:null);
-        $this->setProviderName($provider && ctype_alnum($provider)&&ctype_alpha($provider[0])?$provider:null);
+
+        if ($module && ctype_alpha($module[0]) && ctype_alnum($module)) {
+            $cleanModule = $module;
+        } else {
+            $module = "";
+        }
+
+        if ($provider && ctype_alpha($provider[0]) && ctype_alnum($provider)) {
+            $cleanProvider = $provider;
+        } else {
+            $module = "";
+        }
+
+        if ($cleanModule && $cleanProvider) {
+            if (strtolower($cleanModule) == "default") {
+                $cleanModule = "application";
+            }
+
+            $providerClassName = ucfirst($cleanModule) . "_Rpc_" . ucfirst($provider);
+        } else {
+            $providerClassName = "";
+        }
+
+        $this->setProviderClassName($providerClassName);
     }
 
+    /**
+     * Initialize provider instance, if the request is properly formatted 
+     */
+    protected function _initClassInstance() {
+
+        $className = $this->getProviderClassName();
+        if ($className && Zend_Loader_Autoloader::getInstance()->autoload($className)) {
+            $instance = new $className();
+        } else {
+            $instance = null;
+        }
+
+        $this->setProviderInstance($instance);
+    }
+
+    /**
+     * Is the user allowed to invoke the method.
+     * @return boolean 
+     */
+    protected function _isAllowed() {
+        $provider = $this->getProviderInstance();
+        $provider->initAcl();
+
+        if ($provider->isAllowed($this->getRpcServer()->getRequest()->getMethod())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Initialize RPC provider 
+     */
+    protected function _initProvider() {
+        $provider = $this->getProviderInstance();
+        $provider->init();
+    }
+
+    /**
+     * Handle the result.
+     * @return boolean 
+     */
     public function handle() {
         $server = $this->getRpcServer();
+        $providerInstance = $this->getProviderInstance();
+
+        if (!$providerInstance) {
+            echo "false";
+            return false;
+        } else {
+            $server->setClass($providerInstance);
+            $module = $_GET['module'];
+            $provider = $_GET['provider'];
+        }
 
         // If it is a GET request, return SMD
         if ('GET' == $_SERVER['REQUEST_METHOD']) {
-            $server->setTarget('/json-rpc.php')
+            $server->setTarget("/json-rpc.php?module=$module&provider=$provider")
                     ->setEnvelope(Zend_Json_Server_Smd::ENV_JSONRPC_2);
             $smd = $server->getServiceMap();
 
@@ -111,7 +195,12 @@ class Azf_Rpc_Server {
         }
         // If it is a POST request, try to invoke the service
         else {
-            $server->getRequest()->getMethod();
+            if ($this->_isAllowed()) {
+                $this->_initProvider();
+                echo $server->handle();
+            } else {
+                return false;
+            }
         }
     }
 

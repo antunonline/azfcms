@@ -197,7 +197,7 @@ class Azf_Rpc_Server {
            
            $bootstrapInstance = new $bootstrapClassName();
            /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
-           $bootstrapInstance->bootstrap("rpc");
+           $bootstrapInstance->bootstrap();
         }
         
         return true;

@@ -13,7 +13,11 @@
 class User_Bootstrap extends Zend_Application_Module_Bootstrap{
     
     public function _initRpc(){
-        $this->_initRpcLoader();
+        $envName = $this->getEnvironment();
+        
+        if(0 === strpos($envName,"json-rpc")){
+            $this->_initRpcLoader();
+        }
     }
     
     public function _initRpcLoader(){

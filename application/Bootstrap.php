@@ -2,18 +2,22 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
-    public function initAzfClassPath() {
+    public function _initAzfClassPath() {
         Zend_Loader_Autoloader::getInstance()->registerNamespace("Azf");
     }
 
     public function _initRpc() {
-        $this->initAzfClassPath();
-        $this->_initRpcModule();
-        $this->_initRpcLoader();
+        $envName = $this->getEnvironment();
+        // If we are in json-rpc env
+        if(0 === strpos($envName, "json-rpc")){
+            $this->bootstrap("azfClassPath");
+            $this->initRpcModule();
+            $this->initRpcLoader();
+        }
         
     }
     
-    protected function _initRpcModule(){
+    protected function initRpcModule(){
         $module = (string) $_GET['module'];
         $moduleDir = APPLICATION_PATH.'/modules/'.$module;
         if($module && ctype_alpha($module[0]) && ctype_alnum($module) && is_dir($moduleDir)){
@@ -25,7 +29,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         }
     }
 
-    protected function _initRpcLoader() {
+    protected function initRpcLoader() {
         $this->getResourceLoader()
                 ->addResourceType("rpcs", "rpcs", "Rpc");
     }

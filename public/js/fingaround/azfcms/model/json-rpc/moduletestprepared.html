@@ -8,6 +8,7 @@ and open the template in the editor.
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="/js/dojo/dojo/dojo.js"></script>
+        <script type="text/javascript" src="/js/azfcms/azfcms.js"></script>
         <script type="text/javascript">
             dojo.require("dojo.rpc.JsonService");
             
@@ -16,10 +17,10 @@ and open the template in the editor.
                 init: function(){
                     dojo.byId("sendBtn").disabled = "";
                     
-                    this.rpc = new dojo.rpc.JsonService("/json-rpc.php?module=user&provider=user");   
+                    this.rpc = azfcms.model.prepareRpc("user","user");
                 },
                 send: function(){
-                    this.rpc.getUser(1).addCallback(function(r){
+                    this.rpc.callArray("getUser",[1]).addCallback(function(r){
                         var form = document.forms.form;
                         form.uid.value = r.id;
                         form.fname.value = r.firstName;

@@ -16,12 +16,10 @@ and open the template in the editor.
                 rpc: null,
                 init: function(){
                     dojo.byId("sendBtn").disabled = "";
-                    
-                    this.rpc = azfcms.model.prepareRpc("providerA","default");
                 },
                 send: function(){
-                    this.rpc.call("add",1,2).addCallback(function(r){
-                        alert(r)
+                    azfcms.model.callRpc("add",[1,2],'providerA','default').addCallback(function(r){
+                        alert(r);
                     })
                 }
             }

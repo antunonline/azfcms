@@ -24,5 +24,8 @@ $application = new Zend_Application(
 );
 $application->bootstrap();
 
-$rpcServer = new Azf_Rpc_Server();
-$rpcServer->handle();
+Zend_Registry::set("logLevel",E_ALL);
+$writer = new Zend_Log(new Zend_Log_Writer_Firebug());
+Zend_Registry::set("log",$writer);
+$server = new Azf_Rest_Server();
+$server->handle();

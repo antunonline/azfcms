@@ -33,6 +33,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $this->getResourceLoader()
                 ->addResourceType("rpcs", "rpcs", "Rpc");
     }
+    
+    
+    
+    
+    protected function initRestLoader(){
+        $this->getResourceLoader()
+                ->addResourceType("rest", "rest","rest");
+    }
 
 }
 

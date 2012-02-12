@@ -6,7 +6,7 @@ defined('APPLICATION_PATH')
 
 // Define application environment
 defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', 'json-rpc-production');
+    || define('APPLICATION_ENV', 'json-rest-production');
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(

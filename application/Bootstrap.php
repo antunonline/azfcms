@@ -9,21 +9,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     public function _initRpc() {
         $envName = $this->getEnvironment();
         // If we are in json-rpc env
-        if(0 === strpos($envName, "json-rpc")){
+        if (0 === strpos($envName, "json-rpc")) {
             $this->bootstrap("azfClassPath");
             $this->initRpcModule();
             $this->initRpcLoader();
         }
-        
     }
-    
-    protected function initRpcModule(){
+
+    protected function initRpcModule() {
         $module = (string) $_GET['module'];
-        $moduleDir = APPLICATION_PATH.'/modules/'.$module;
-        if($module && ctype_alpha($module[0]) && ctype_alnum($module) && is_dir($moduleDir)){
+        $moduleDir = APPLICATION_PATH . '/modules/' . $module;
+        if ($module && ctype_alpha($module[0]) && ctype_alnum($module) && is_dir($moduleDir)) {
             $resource = new Zend_Application_Resource_Modules(array(
-                $module
-            ));
+                        $module
+                    ));
             $resource->setBootstrap($this);
             $resource->init();
         }
@@ -33,13 +32,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $this->getResourceLoader()
                 ->addResourceType("rpcs", "rpcs", "Rpc");
     }
-    
-    
-    
-    
-    protected function initRestLoader(){
+
+    public function _initRest() {
+        if (0 !== strpos($this->getEnvironment(), "json-rest")) {
+            return;
+        }
+        $this->_initRestLoader();
+    }
+
+    private function _initRestLoader() {
         $this->getResourceLoader()
-                ->addResourceType("rest", "rest","rest");
+                ->addResourceType("rests", "rests", "Rest");
     }
 
 }

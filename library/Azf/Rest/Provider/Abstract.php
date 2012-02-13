@@ -27,13 +27,26 @@ abstract class Azf_Rest_Provider_Abstract {
         $this->request = $request;
     }
 
-    abstract public function index();
+    public function init() {
+        
+    }
     
-    abstract public function get();
     
-    abstract public function post();
+    /**
+     * @param Azf_Rest_Request $request
+     * @param string $method
+     * @param string $id
+     * @return boolean 
+     */
+    abstract public function isAllowed($request, $method, $id);
 
-    abstract public function put();
-    
-    abstract public function delete();
+    abstract public function index(Azf_Rest_Request $request, Azf_Rest_Response $response);
+
+    abstract public function get(Azf_Rest_Request $request, Azf_Rest_Response $response);
+
+    abstract public function post(Azf_Rest_Request $request, Azf_Rest_Response $response);
+
+    abstract public function put(Azf_Rest_Request $request, Azf_Rest_Response $response);
+
+    abstract public function delete(Azf_Rest_Request $request, Azf_Rest_Response $response);
 }

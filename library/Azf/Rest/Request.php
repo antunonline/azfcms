@@ -147,7 +147,7 @@ class Azf_Rest_Request {
                 }
                 switch ($key) {
                     case 0:
-                        $parsedArgs['module'] = $value;
+                        $parsedArgs['module'] = $value=="default"?"application":$value;
                         break;
                     case 1:
                         $parsedArgs['provider'] = $value;
@@ -160,9 +160,9 @@ class Azf_Rest_Request {
         } else {
             throw new RuntimeException("Provided URL ($url) is not properly formatted.");
         }
+        
 
-
-        $this->_parsedArgs = $parsedArgs;
+        $this->_parsedArgs = $parsedArgs+array('id'=>'');
     }
 
     protected function _parseBody() {

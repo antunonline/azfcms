@@ -24,7 +24,7 @@ class Azf_Rest_Response {
      *
      * @var type 
      */
-    protected $responseCode = "200";
+    protected $responseCode = "";
 
     /**
      *

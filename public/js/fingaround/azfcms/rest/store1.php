@@ -10,7 +10,7 @@
                 margin:  0px;
                 padding:  0px;
             }
-            
+
             #gridElement {
                 height: 100%;
             }
@@ -30,7 +30,8 @@
                     { name: 'Id', field: 'id'}];
                 var grid = new dojox.grid.DataGrid({
                     store: rest,
-                    structure: gridLayout
+                    structure: gridLayout,
+                    sortFields: "sort"
                 }, dojo.byId("gridElement"));
                 grid.startup();
             })
@@ -38,7 +39,7 @@
     </head>
     <body class="claro">
         <div  id="gridElement">
-            
+
         </div>
     </body>
 </html>

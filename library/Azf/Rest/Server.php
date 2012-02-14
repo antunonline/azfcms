@@ -144,8 +144,8 @@ class Azf_Rest_Server {
             throw new RuntimeException("Initialized provider instance is not a subclass of Azf_Rest_Provider_Abstract");
         }
 
-        $provider->init();
         $provider->setRequest($this->getRequest());
+        $provider->init();
         $this->setProvider($provider);
     }
 

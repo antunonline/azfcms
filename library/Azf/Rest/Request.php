@@ -93,6 +93,20 @@ class Azf_Rest_Request {
     }
 
     /**
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return string
+     */
+    public function getRequestArg($name, $default = null) {
+        if (isset($this->_request[$name])) {
+            return $this->_request[$name];
+        } else {
+            return $default;
+        }
+    }
+
+    /**
      * 
      * @param array $request  Request object
      */
@@ -129,25 +143,27 @@ class Azf_Rest_Request {
 
     protected function _parseArgs() {
         $url = $this->_request['REQUEST_URI'];
-        // Remove URL prefix
-        $url = str_replace("/json-rest.php/", "", $url); $url = rtrim($url,"/");
         // Remove query part
         if (false !== ($pos = strpos($url, "?"))) {
             $url = substr($url, 0, $pos);
             unset($pos);
         }
+        // Remove URL prefix
+        $url = str_replace("/json-rest.php/", "", $url);
+        $url = rtrim($url, "/");
+
         $parsedArgs = array();
 
         $parts = array_slice(explode("/", $url), 0, 3);
 
         if (count($parts) >= 2) {
             foreach ($parts as $key => $value) {
-                if (!$value || (!ctype_alpha($value[0])&&$key!=2) || !ctype_alnum($value)) {
+                if (!$value || (!ctype_alpha($value[0]) && $key != 2) || !ctype_alnum($value)) {
                     throw new RuntimeException("Provided URL ($url) is not properly formatted.");
                 }
                 switch ($key) {
                     case 0:
-                        $parsedArgs['module'] = $value=="default"?"application":$value;
+                        $parsedArgs['module'] = $value == "default" ? "application" : $value;
                         break;
                     case 1:
                         $parsedArgs['provider'] = $value;
@@ -160,9 +176,9 @@ class Azf_Rest_Request {
         } else {
             throw new RuntimeException("Provided URL ($url) is not properly formatted.");
         }
-        
 
-        $this->_parsedArgs = $parsedArgs+array('id'=>'');
+
+        $this->_parsedArgs = $parsedArgs + array('id' => '');
     }
 
     protected function _parseBody() {

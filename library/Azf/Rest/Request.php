@@ -130,7 +130,7 @@ class Azf_Rest_Request {
     protected function _parseArgs() {
         $url = $this->_request['REQUEST_URI'];
         // Remove URL prefix
-        $url = str_replace("/json-rest.php/", "", $url);
+        $url = str_replace("/json-rest.php/", "", $url); $url = rtrim($url,"/");
         // Remove query part
         if (false !== ($pos = strpos($url, "?"))) {
             $url = substr($url, 0, $pos);

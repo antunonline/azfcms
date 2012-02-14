@@ -65,7 +65,6 @@ class Azf_Rest_Server {
         return $this->provider;
     }
 
-    
     /**
      *
      * @param Azf_Rest_Provider_Abstract $provider 
@@ -107,6 +106,29 @@ class Azf_Rest_Server {
         if ($this->getRequest()->getModuleName() == "application") {
             return;
         }
+        $module = $this->getRequest()->getModuleName();
+        $modulePath = APPLICATION_PATH . "/modules/" . $module;
+        $bootstrapPath = $modulePath . "/Bootstrap.php";
+        $bootstrapClassName = ucfirst($module) . "_Bootstrap";
+
+        if (!is_dir($modulePath)) {
+            throw new RuntimeException("Module directory for module \"$module\" does not exist");
+        }
+
+        $resourceLoader = new Zend_Application_Module_Autoloader(array(
+                    'namespace' => ucfirst($module),
+                    'basePath' => $modulePath
+                ));
+
+        if (is_readable($bootstrapPath)) {
+            include_once($bootstrapPath);
+            if (class_exists($bootstrapClassName)) {
+                $bootstrapInstance = new $bootstrapClassName(Zend_Registry::get("application"));
+                /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
+                $bootstrapInstance->setResourceLoader($resourceLoader);
+                $bootstrapInstance->bootstrap();
+            }
+        }
     }
 
     protected function _initProvider() {
@@ -116,66 +138,65 @@ class Azf_Rest_Server {
         if (!Zend_Loader_Autoloader::getInstance()->autoload($providerClassName)) {
             throw new Zend_Loader_Exception("Could not load \"$providerClassName\" class");
         }
-        
+
         $provider = new $providerClassName();
-        if($provider instanceof Azf_Rest_Provider_Abstract == false){
+        if ($provider instanceof Azf_Rest_Provider_Abstract == false) {
             throw new RuntimeException("Initialized provider instance is not a subclass of Azf_Rest_Provider_Abstract");
         }
-        
+
         $provider->init();
         $provider->setRequest($this->getRequest());
         $this->setProvider($provider);
     }
-    
-    
-    protected function _handle(){
+
+    protected function _handle() {
         $provider = $this->getProvider();
         $request = $this->getRequest();
         $response = $this->getResponse();
-        
-        if(!$this->_isAllowed($provider)){
+
+        if (!$this->_isAllowed($provider)) {
             $response->setBody("Not allowed");
             $response->setResponseCode(Azf_Rest_Response::HTTP_UNAUTHORIZED);
             return;
         }
-        
-        switch($this->getRequest()->getMethod()){
+
+        switch ($this->getRequest()->getMethod()) {
             case Azf_Rest_Request::METHOD_GET:
-                if($request->getId()){
-                    $responseBody = $provider->get($request,$response);
+                if ($request->getId()) {
+                    $responseBody = $provider->get($request, $response);
                 } else {
-                    $responseBody = $provider->index($request,$response);
+                    $responseBody = $provider->index($request, $response);
                 }
-                if($response->getResponseCode()==false){
+                if ($response->getResponseCode() == false) {
                     $response->setResponseCode(Azf_Rest_Response::HTTP_OK);
                 }
                 break;
             case Azf_Rest_Request::METHOD_POST:
-                $responseBody = $provider->post($request,$response);
-                
-                if($response->getResponseCode()==false){
+                $responseBody = $provider->post($request, $response);
+
+                if ($response->getResponseCode() == false) {
                     $response->setResponseCode(Azf_Rest_Response::HTTP_CREATED);
                 }
                 break;
             case Azf_Rest_Request::METHOD_PUT:
-                $responseBody = $provider->put($request,$response);
-                if($response->getResponseCode()==false){
+                $responseBody = $provider->put($request, $response);
+                if ($response->getResponseCode() == false) {
                     $response->setResponseCode(Azf_Rest_Response::HTTP_OK);
                 }
                 break;
             case Azf_Rest_Request::METHOD_DELETE:
-                $responseBody = $provider->delete($request,$response);
-                if($response->getResponseCode()==false){
+                $responseBody = $provider->delete($request, $response);
+                if ($response->getResponseCode() == false) {
                     $response->setResponseCode(Azf_Rest_Response::HTTP_OK);
                 }
                 break;
         }
-        
+
         $response->addBody(json_encode($responseBody));
         $response->doResponse();
     }
-    
-    protected function _isAllowed(Azf_Rest_Provider_Abstract $provider){
+
+    protected function _isAllowed(Azf_Rest_Provider_Abstract $provider) {
         return $provider->isAllowed($this->getRequest(), $this->getRequest()->getMethod(), $this->getRequest()->getId());
     }
 

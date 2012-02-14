@@ -23,9 +23,10 @@ $application = new Zend_Application(
     APPLICATION_PATH . '/configs/application.ini'
 );
 $application->bootstrap();
+Zend_Registry::set("application",$application);
 
 Zend_Registry::set("logLevel",E_ALL);
-$writer = new Zend_Log(new Zend_Log_Writer_Firebug());
+$writer = new Zend_Log(new Zend_Log_Writer_Null());
 Zend_Registry::set("log",$writer);
 $server = new Azf_Rest_Server();
 $server->handle();

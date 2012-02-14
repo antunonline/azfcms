@@ -30,8 +30,7 @@
                     { name: 'Id', field: 'id'}];
                 var grid = new dojox.grid.DataGrid({
                     store: rest,
-                    structure: gridLayout,
-                    sortFields: "sort"
+                    structure: gridLayout
                 }, dojo.byId("gridElement"));
                 grid.startup();
             })

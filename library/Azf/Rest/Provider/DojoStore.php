@@ -2,6 +2,15 @@
 
 class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
 
+    const F_CONTAINS = "contains";
+    const F_STARTS_WITH = "startsWith";
+    const F_ENDS_WITH = "endsWith";
+    const F_DOES_NOT_CONTAIN = "doesNotContain";
+    const F_IS_NOT = "isNot";
+    const F_DOES_NOT_START_WITH = "doesNotStartWith";
+    const F_DOES_NOT_END_WITH = "doesNotEndWith";
+    const F_IS_EMPTY = "isEmpty";
+
     /**
      *
      * @var int
@@ -52,6 +61,37 @@ class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
     }
 
     /**
+     *
+     * @return int 
+     */
+    public function getMaxPageSize() {
+        return 40;
+    }
+
+    protected function _initRangeHeader() {
+        // Set page size
+        $this->requestCount = $this->getMaxPageSize();
+        
+        if (isset($_SERVER['HTTP_RANGE'])) {
+            $header = str_replace("items=", "", $_SERVER['HTTP_RANGE']);
+            $chunks = explode("-", $header);
+            if (count($chunks) == 2) {
+                $from = $chunks[0];
+                $to = $chunks[1];
+                $count = $to - $from;
+                if (ctype_digit($from) && ctype_digit($count)) {
+                    return;
+                } else if ($from < 0 || $count > $this->getMaxPageSize() || $count < 1) {
+                    return;
+                } else {
+                    $this->requestFrom = $from;
+                    $this->requestCount = $count;
+                }
+            }
+        }
+    }
+
+    /**
      * Parse sort instruction send by REST client
      */
     public function _parseSortFields() {
@@ -64,8 +104,8 @@ class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
         $start +=5; // Add "sort("  strlen
         $sort = substr($query, $start, $end - $start);
 
-        $parts = explode(",",$sort);
-        
+        $parts = explode(",", $sort);
+
         foreach ($parts as $part) {
             $direction = $part[0] == "+" || $part[0] == "-" ? $part[0] : null;
             $field = substr($part, 1);

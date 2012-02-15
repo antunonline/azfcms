@@ -3,12 +3,12 @@
 class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
 
     const F_CONTAINS = "contains";
+    const F_EQUALS = "equals";
     const F_STARTS_WITH = "startsWith";
     const F_ENDS_WITH = "endsWith";
-    const F_DOES_NOT_CONTAIN = "doesNotContain";
-    const F_IS_NOT = "isNot";
-    const F_DOES_NOT_START_WITH = "doesNotStartWith";
-    const F_DOES_NOT_END_WITH = "doesNotEndWith";
+    const F_NOT_CONTAIN = "notContain";
+    const F_NOT_START_WITH = "notStartWith";
+    const F_NOT_END_WITH = "notEndWith";
     const F_IS_EMPTY = "isEmpty";
 
     /**
@@ -26,6 +26,12 @@ class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
      * @var array
      */
     protected $sortFields = array();
+    
+    /**
+     *
+     * @var array 
+     */
+    protected $filterFields = array();
 
     /**
      *

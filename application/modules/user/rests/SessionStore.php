@@ -17,7 +17,7 @@ class User_Rest_SessionStore extends Azf_Rest_Provider_DojoStore {
     protected function _initRecords(Zend_Session_Namespace $session) {
         $records = array();
         for ($i = 1; $i <= 1000; $i++) {
-            $records[] = array(
+            $records[$i] = array(
                 'id' => $i,
                 'firstName' => "First " . $i,
                 'lastName' => "Last " . $i

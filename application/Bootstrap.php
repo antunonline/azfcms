@@ -47,7 +47,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     
     public function _initLog() {
         $logWriter = new Zend_Log_Writer_Null();
-        $log = new Zend_log($logWriter);
+        $log = new Zend_Log($logWriter);
         Zend_Registry::set("log",$log);
         Zend_Registry::set("logLevel",  Zend_Registry::isRegistered("logLevel")?Zend_Registry::get("logLevel"):E_ERROR);
     }

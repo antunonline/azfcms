@@ -40,5 +40,8 @@
         <div  id="gridElement">
 
         </div>
+        <div>
+            <input type="button" value="Save changes"  onclick="dijit.byId('gridElement').store.save({})"/>
+        </div>
     </body>
 </html>

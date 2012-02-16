@@ -21,13 +21,22 @@ class User_Rest_User extends Azf_Rest_Provider_DojoStore {
     }
 
     public function index(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        $this->setContentRange($this->requestFrom, $this->requestCount, 10000);
+        $this->setContentRange(10000, $this->requestFrom, $this->requestCount);
 
         $filter = "";
         foreach ($this->filterFields as $def) {
             $filter.= " ". implode("-", $def);
         }
-        return array_fill(0, $this->getRequestCount(), array('firstName' => "Test " . implode("-", array_keys($this->sortFields)), 'lastName' => '' . $filter, 'id' => 11));
+        
+        $response = array();
+        for($i = $this->requestFrom; $i < $this->requestFrom+$this->requestCount; $i++){
+            $response[] = array(
+              'id'=>$i,
+                'firstName'=>$filter,
+                'lastName'=>implode(',',$this->sortFields)
+            );
+        }
+        return $response;
     }
 
     public function isAllowed($request, $method, $id) {

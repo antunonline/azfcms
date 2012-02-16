@@ -191,7 +191,8 @@ class Azf_Rest_Server {
                 }
                 break;
         }
-
+        
+        $provider->_uninit();
         $response->addBody(json_encode($responseBody));
         $response->doResponse();
     }

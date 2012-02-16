@@ -31,6 +31,10 @@ abstract class Azf_Rest_Provider_Abstract {
         
     }
     
+    public function _uninit(){
+        
+    }
+    
     
     /**
      * @param Azf_Rest_Request $request

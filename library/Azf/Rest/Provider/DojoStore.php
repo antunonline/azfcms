@@ -49,7 +49,11 @@ abstract class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
         return $this->requestCount;
     }
 
-    public function setContentRange($from, $count, $available) {
+    public function setContentRange($available , $from = null, $count = null) {
+        if($from === null){
+            $from = $this->requestFrom;
+            $count = $this->requestCount;
+        }
         $to = $from + $count;
         header("Content-Range: $from-$to/$available");
     }

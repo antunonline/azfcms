@@ -44,6 +44,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $this->getResourceLoader()
                 ->addResourceType("rests", "rests", "Rest");
     }
+    
+    public function _initLog() {
+        $logWriter = new Zend_Log_Writer_Null();
+        $log = new Zend_log($logWriter);
+        Zend_Registry::set("log",$log);
+        Zend_Registry::set("logLevel",  Zend_Registry::isRegistered("logLevel")?Zend_Registry::get("logLevel"):E_ERROR);
+    }
 
 }
 

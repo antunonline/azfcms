@@ -187,16 +187,6 @@ abstract class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
         return 40;
     }
     
-    
-    /**
-     *  Return value of this method defines weather the provided field is filterable
-     * @param type $field
-     * @param type $filter 
-     * @return boolean
-     */
-    public function isFilterable($field, $filter){
-        return false;
-    }
 
     
 

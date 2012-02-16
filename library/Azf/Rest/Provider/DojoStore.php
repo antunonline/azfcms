@@ -1,14 +1,14 @@
 <?php
 
-class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
+abstract class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
 
-    const F_CONTAINS = "contains";
+    const F_CONTAIN = "contains";
     const F_EQUALS = "equals";
     const F_STARTS_WITH = "startsWith";
     const F_ENDS_WITH = "endsWith";
-    const F_NOT_CONTAIN = "notContain";
-    const F_NOT_START_WITH = "notStartWith";
-    const F_NOT_END_WITH = "notEndWith";
+    const F_NOT_CONTAIN = "notContains";
+    const F_NOT_START_WITH = "notStartsWith";
+    const F_NOT_END_WITH = "notEndsWith";
     const F_IS_EMPTY = "isEmpty";
 
     /**
@@ -26,7 +26,7 @@ class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
      * @var array
      */
     protected $sortFields = array();
-    
+
     /**
      *
      * @var array 
@@ -54,30 +54,10 @@ class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
         header("Content-Range: $from-$to/$available");
     }
 
-    /**
-     * This method will return an array of field names which
-     * will validate client submitted sort field names
-     * Valid sort fields will be available to the REST handling method
-     * through $this->sortFields array property. 
-     * 
-     * @return array 
-     */
-    public function getSortableFields() {
-        return array();
-    }
-
-    /**
-     *
-     * @return int 
-     */
-    public function getMaxPageSize() {
-        return 40;
-    }
-
     protected function _initRangeHeader() {
         // Set page size
         $this->requestCount = $this->getMaxPageSize();
-        
+
         if (isset($_SERVER['HTTP_RANGE'])) {
             $header = str_replace("items=", "", $_SERVER['HTTP_RANGE']);
             $chunks = explode("-", $header);
@@ -127,65 +107,97 @@ class Azf_Rest_Provider_DojoStore extends Azf_Rest_Provider_Abstract {
         }
     }
 
+    protected function _parseFilterFields() {
+        $queryString = $this->getRequest()->getRequestArg("QUERY_STRING");
+        // Remove prefix
+        $queryString = urldecode(substr($queryString, strpos($queryString, "?")));
+        // Extract parts
+        $parts = explode("&", $queryString);
+        // Allowed field names
+        $allowedFieldNames = $this->getFilterableFields();
+
+        // Parse parts
+        foreach ($parts as $part) {
+            // If filter contains filter type
+            if(false !== ($pos = strpos($part,":"))){
+                $type = substr($part,0,$pos);
+                // Default definition is F_EQUALS
+                if(!in_array($type, array(self::F_CONTAIN,self::F_ENDS_WITH, self::F_EQUALS, self::F_IS_EMPTY,
+                    self::F_NOT_CONTAIN, self::F_NOT_END_WITH, self::F_NOT_START_WITH, self::F_STARTS_WITH))){
+                    $type=self::F_EQUALS;
+                } else { 
+                    // Otherwise $type equals to value provided by the request
+                }
+            }else { // No filter type is specified, equals will be used
+                $pos = 0;
+                $type = self::F_EQUALS;
+            }
+            
+            $fieldName = substr($part, $pos+1, strpos($part,"=")-$pos-1);
+            if(!in_array($fieldName,$allowedFieldNames)){
+                // If field name is invalid
+                continue;
+            }
+            
+            $values = explode("=",$part);
+            $value = array_pop($values);
+            
+            $this->filterFields[] = array(
+                $fieldName, $type, $value
+            );
+            
+        }
+    }
+
     public function init() {
         parent::init();
         $this->_initRangeHeader();
         $this->_parseSortFields();
+        $this->_parseFilterFields();
     }
 
     /**
-     *
-     * @param Azf_Rest_Request $request
-     * @param Azf_Rest_Response $response 
+     * This method will return an array of field names which
+     * will validate client submitted sort field names
+     * Valid sort fields will be available to the REST handling method
+     * through $this->sortFields array property. 
+     * 
+     * @return array 
      */
-    public function delete(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        
+    public function getSortableFields() {
+        return array();
+    }
+    
+    
+    /**
+     * The array value returned by this method will filter input field names which are set
+     * to filter result set by provided value.
+     * @return array
+     */
+    public function getFilterableFields(){
+        return array();
     }
 
     /**
+     * By overriding this method you can alter maximum page size. Default is 40 records per request.
      *
-     * @param Azf_Rest_Request $request
-     * @param Azf_Rest_Response $response 
+     * @return int 
      */
-    public function get(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        
+    public function getMaxPageSize() {
+        return 40;
+    }
+    
+    
+    /**
+     *  Return value of this method defines weather the provided field is filterable
+     * @param type $field
+     * @param type $filter 
+     * @return boolean
+     */
+    public function isFilterable($field, $filter){
+        return false;
     }
 
-    /**
-     *
-     * @param Azf_Rest_Request $request
-     * @param Azf_Rest_Response $response 
-     */
-    public function index(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        
-    }
-
-    /**
-     *
-     * @param type $request
-     * @param type $method
-     * @param type $id 
-     */
-    public function isAllowed($request, $method, $id) {
-        
-    }
-
-    /**
-     *
-     * @param Azf_Rest_Request $request
-     * @param Azf_Rest_Response $response 
-     */
-    public function post(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        
-    }
-
-    /**
-     *
-     * @param Azf_Rest_Request $request
-     * @param Azf_Rest_Response $response 
-     */
-    public function put(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        
-    }
+    
 
 }

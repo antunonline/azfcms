@@ -46,31 +46,26 @@
                             isServerSide: true,
                             setupFilterQuery: function(commands, request){
                                 if(commands.filter && commands.enable){
-                                    var key, value;
-                                    request.query = {
-                                            
-                                    };
-                                    if(commands.filter.data.op == 'string'){
-                                        key = commands.filter.data[0].data +":" + commands.filter.op;
-                                        value = commands.filter.data[1].data;
-                                        request.query[key] = value;
-                                    }else {
-                                        
-                                        for(var index in commands.filter.data){
-                                            var op = commands.filter.data[index].op;
-                                            if(op == "not"){
-                                                var data = commands.filter.data[index].data[0].data;
-                                                op = data.op+op;
-                                            } else {
-                                                var data = commands.filter.data[index].data;
+                                    request.query = {};
+                                    
+                                    var parse = function(request,data,key){
+                                         
+                                       // If we are working with or, are operator
+                                        if(data.op == "any" || data.op=="all"){
+                                            for(var k in data.data){
+                                                parse(request, data.data[k],"");
                                             }
-                                            
-                                            key = data[0].data + ":" + op;
-                                            value = data[1].data;
-                                            request.query[key] = value;
+                                        } else if(data.op == "not") {
+                                            parse(request,data.data[0],"not");
+                                        } else {
+                                            if(key){
+                                                data.op = data.op[0].toUpperCase() + data.op.substring(1);
+                                            }
+                                            key  += data.op + ":" + data.data[0].data;
+                                            request[key] = data.data[1].data;
                                         }
                                     }
-                                    
+                                    parse(request.query,commands.filter,"");
                                     
                                 }
                             }

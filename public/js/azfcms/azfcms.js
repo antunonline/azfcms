@@ -9,6 +9,8 @@ var azfcms = {
     },
     model : {
         preparedRpcs: {},
+        preparedRests: {},
+        preparedRestStores:{},
         _getPreparedRpc: function(provider, module){
             var name = module+provider;
             if(typeof this.preparedRpcs[name] != 'undefined'){
@@ -41,6 +43,49 @@ var azfcms = {
             
             return rpc;
         },
+        _prepareRest: function(provider, module){
+            var name = provider+module;
+            dojo.require("dojox.rpc.Rest");
+            var rest = new dojox.rpc.Rest("/json-rest.php/"+module+"/"+provider+"/",true);
+            return rest;
+        },
+        _setPreparedRest: function(provider, module, rest){
+            this.preparedRests[name] = rest;
+        },
+        _getPreparedRest: function(provider, module){
+            var name = provider+module;
+            if(typeof this.preparedRests[name] != 'undefined'){
+                return this.preparedRests[name];
+            } else {
+                return false;
+            }
+        },
+        _initRestStore: function(provider, module){
+            dojo.require("dojox.data.JsonRestStore");
+            var targetUrl = "/json-rest.php/"+module+"/"+provider+"/";
+            
+            var restStore = new dojox.data.JsonRestStore({target: targetUrl});
+            return restStore;
+            
+        },
+        _getPreparedRestStore: function(provider, module){
+            var name = module+provider;
+            if(typeof this.preparedRestStores[name] == 'undefined'){
+                return false;
+            } else {
+                return this.preparedRestStores[name]; 
+            }
+        },
+        _setPreparedRestStore: function(provider, module,restStore){
+            var name = module+provider;
+            this.preparedRestStores[name] = restStore;
+        },
+        _ucfirst: function(value){
+            return value[0].toUpperCase()+value.substring(1);
+        },
+        
+        
+        
         callRpc: function(method, args, provider, module){
             var rpc = null;
             if(rpc = this.prepareRpc(provider, module)){
@@ -68,6 +113,52 @@ var azfcms = {
                     return false;
                 }
             }
+        },
+        
+        
+        /**
+         * @param {string} method
+         * @param {string} id
+         * @param {Array} data
+         * @param {string} provider
+         * @param {string} module
+         * @return response
+         */
+        callRest: function(method,id, data, provider, module){
+            var rest = this.prepareRest(provider,module);
+            if(rest){
+                return rest[method.toLowerCase()](id,data);
+            } else {
+                return false;
+            }
+        },
+        
+        prepareRest: function(provider, module){
+            var rest;
+            if(rest = this._getPreparedRest(provider, module)){
+                return rest;
+            } else {
+                rest = this._prepareRest(provider, module);
+                if(rest){
+                    this._setPreparedRest(provider, module,rest);
+                    return rest;
+                } else {
+                    return false;
+                }
+            }
+        },
+        
+        prepareRestStore: function(provider, module){
+            provider = this._ucfirst(provider);
+            module = this._ucfirst(module);
+            
+            var restStore = this._getPreparedRestStore(provider, module);
+            if(!restStore){
+                restStore = this._initRestStore(provider, module);
+                this._setPreparedRestStore(provider,module,restStore);
+            }
+            
+            return restStore;
         }
     }
 };

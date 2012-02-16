@@ -107,6 +107,7 @@ class Azf_Rest_Server {
             return;
         }
         $module = $this->getRequest()->getModuleName();
+        $module = strtolower($module[0]).substr($module,1);
         $modulePath = APPLICATION_PATH . "/modules/" . $module;
         $bootstrapPath = $modulePath . "/Bootstrap.php";
         $bootstrapClassName = ucfirst($module) . "_Bootstrap";

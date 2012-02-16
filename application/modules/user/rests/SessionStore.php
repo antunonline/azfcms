@@ -66,7 +66,7 @@ class User_Rest_SessionStore extends Azf_Rest_Provider_DojoStore {
         $id = $request->getId();
         $lastName = $requestBody->lastName;
 
-        return $this->records[(int)$id] = array(
+        $this->records[(int)$id] = array(
             'firstName' => $firstName,
             'lastName' => $lastName,
             'id' => $id
@@ -78,7 +78,7 @@ class User_Rest_SessionStore extends Azf_Rest_Provider_DojoStore {
         $firstName = $requestBody->firstName;
         $lastName = $requestBody->lastName;
 
-        return $this->records[(int)$request->getId()] = array(
+        $this->records[(int)$request->getId()] = array(
             'firstName' => $firstName,
             'lastName' => $lastName,
             'id' => $request->getId()

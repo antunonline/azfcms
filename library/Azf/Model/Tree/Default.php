@@ -6,14 +6,13 @@
  */
 
 /**
- * Description of NavigationTree
+ * Description of TreeModel
  *
  * @author Antun Horvat <at> it-branch.com
  */
-class Application_Model_DbTable_NavigationTree extends Application_Model_DbTable_AbstractTreeModel{
-    protected $_name = "NavigationTree";
-    protected $_primary = "";
-
+class Azf_Model_Tree_Default extends Azf_Model_Tree_Abstract{
+    
+    
     public function _find($id) {
         return $this->getAdapter()->fetchRow("SELECT * FROM $this->_name WHERE id = ?", array($id));
     }
@@ -24,24 +23,23 @@ class Application_Model_DbTable_NavigationTree extends Application_Model_DbTable
                     'r' => $r,
                     'parentId' => $parentId,
                     'tid' => $this->tid,
-                    'name' => $value['name'],
-                    'name,body' => $value['body']
+                    'value' => $value
                 ));
     }
     
     protected function createTemporaryTable(){
-        $temporaryTreeTableDDLSQL = "CREATE TEMPORARY TABLE TemporaryTreeTable( id INT UNSIGNED NOT NULL, parentId INT UNSIGNED, l INT UNSIGNED, r INT UNSIGNED, tid INT UNSIGNED, name VARCHAR(255), body MEDIUMTEXT );";
+        $temporaryTreeTableDDLSQL = "CREATE TEMPORARY TABLE TemporaryTreeTable( id INT UNSIGNED NOT NULL, parentId INT UNSIGNED, l INT UNSIGNED, r INT UNSIGNED, tid INT UNSIGNED, value VARCHAR(255));";
         $this->getAdapter()->query($temporaryTreeTableDDLSQL);
     }
     
     protected function moveNodeIntoTemporaryTable($node) {
 
-        $moveNodeIntoTemporaryTableSQL = "INSERT INTO TemporaryTreeTable (id, parentId, l, r, tid, name, body) SELECT id, parentId, l, r, tid, name, body FROM $this->_name WHERE l >= ? AND r <= ? AND tid = ?;";
+        $moveNodeIntoTemporaryTableSQL = "INSERT INTO TemporaryTreeTable (id, parentId, l, r, tid, value) SELECT id, parentId, l, r, tid, value FROM $this->_name WHERE l >= ? AND r <= ? AND tid = ?;";
         $this->getAdapter()->query($moveNodeIntoTemporaryTableSQL, array($node['l'], $node['r'], $this->tid));
     }
     
     protected function mergeTemporaryTable() {
-        $mergeTemporaryTableSQL = "INSERT INTO $this->_name (id, parentId, l, r, tid, name, body) SELECT id, parentId, l, r, tid, name, body FROM TemporaryTreeTable;";
+        $mergeTemporaryTableSQL = "INSERT INTO $this->_name (id, parentId, l, r, tid, value) SELECT id, parentId, l, r, tid, value FROM TemporaryTreeTable;";
         $this->getAdapter()->query($mergeTemporaryTableSQL);
     }
     
@@ -56,5 +54,8 @@ class Application_Model_DbTable_NavigationTree extends Application_Model_DbTable
         
         return $r;
     }
-}
 
+    protected function getTableName() {
+        return "Tree";
+    }
+}

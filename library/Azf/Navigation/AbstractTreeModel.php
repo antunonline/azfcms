@@ -10,7 +10,7 @@
  *
  * @author Antun Horvat <at> it-branch.com
  */
-abstract class Application_Model_DbTable_AbstractTreeModel extends Zend_Db_Table_Abstract {
+abstract class Azf_Navigation_AbstractTreeModel extends Zend_Db_Table_Abstract {
 
     protected $_name = "Tree";
     //put your code here

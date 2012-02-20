@@ -10,7 +10,7 @@
  *
  * @author Antun Horvat <at> it-branch.com
  */
-class Application_Model_DbTable_TreeModel extends Application_Model_DbTable_AbstractTreeModel{
+class Azf_Navigation_TreeModel extends Azf_Navigation_AbstractTreeModel{
     
     protected $_name = "TestTree";
     

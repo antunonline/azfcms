@@ -20,13 +20,13 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
     
     /**
      *
-     * @var Application_Model_DbTable_NavigationTree
+     * @var Azf_Navigation_NavigationTree
      */
     protected $model;
 
     /**
      *
-     * @return Application_Model_DbTable_NavigationTree
+     * @return Azf_Navigation_NavigationTree
      */
     public function getModel() {
         return $this->model;
@@ -34,17 +34,17 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
 
     /**
      *
-     * @param Application_Model_DbTable_NavigationTree $model 
+     * @param Azf_Navigation_NavigationTree $model 
      */
-    public function setModel(Application_Model_DbTable_NavigationTree $model) {
+    public function setModel(Azf_Navigation_NavigationTree $model) {
         $this->model = $model;
     }
 
     /**
      *
-     * @param Application_Model_DbTable_NavigationTree $model 
+     * @param Azf_Navigation_NavigationTree $model 
      */
-    public function __construct(Application_Model_DbTable_NavigationTree $model) {
+    public function __construct(Azf_Navigation_NavigationTree $model) {
         $this->setModel($model);
     }
 

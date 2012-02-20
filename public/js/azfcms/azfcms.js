@@ -64,7 +64,9 @@ var azfcms = {
             dojo.require("dojox.data.JsonRestStore");
             var targetUrl = "/json-rest.php/"+module+"/"+provider+"/";
             
-            var restStore = new dojox.data.JsonRestStore({target: targetUrl});
+            var restStore = new dojox.data.JsonRestStore({
+                target: targetUrl
+            });
             return restStore;
             
         },
@@ -127,12 +129,23 @@ var azfcms = {
         callRest: function(method,id, data, provider, module){
             var rest = this.prepareRest(provider,module);
             if(rest){
-                return rest[method.toLowerCase()](id,data);
+                method = method.toLowerCase();
+                if(method=="get"){
+                    return rest(id);
+                } else {
+                    return rest[method](id, data);
+                }
             } else {
                 return false;
             }
         },
         
+        
+        /**
+         * @param {string} provider
+         * @param {string} module
+         * @return {dojox.rpc.Rest}
+         */
         prepareRest: function(provider, module){
             var rest;
             if(rest = this._getPreparedRest(provider, module)){
@@ -148,6 +161,11 @@ var azfcms = {
             }
         },
         
+        /**
+         * @param {string} provider
+         * @param {string} module
+         * @return {dojox.data.JsonRestStore}
+         */
         prepareRestStore: function(provider, module){
             provider = this._ucfirst(provider);
             module = this._ucfirst(module);

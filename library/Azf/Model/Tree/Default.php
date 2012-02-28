@@ -58,4 +58,31 @@ class Azf_Model_Tree_Default extends Azf_Model_Tree_Abstract{
     protected function getTableName() {
         return "Tree";
     }
+    
+    
+    
+    
+    /**
+     * This method will disable current and all sibling nodes
+     * @param int $nodeId 
+     * @return void
+     */
+    public function disable($nodeId){
+        $this->getAdapter()->query("call navigation_disable (?);",array($nodeId));
+    }
+    
+    
+    /**
+     * This method will enable current and all sibling nodes
+     *
+     * @param int $nodeId 
+     */
+    public function enable($nodeId){
+        $this->getAdapter()->query("call navigation_enable (?);",array($nodeId));
+    }
+    
+    
+    public function getMenu($userId){
+        
+    }
 }

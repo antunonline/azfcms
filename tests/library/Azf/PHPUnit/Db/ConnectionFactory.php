@@ -10,7 +10,7 @@
  *
  * @author Antun Horvat <at> it-branch.com
  */
-class PHPUnit_TreeModel_ConnectionFactory {
+class Azf_PHPUnit_Db_ConnectionFactory {
 
     protected static $adapter;
 

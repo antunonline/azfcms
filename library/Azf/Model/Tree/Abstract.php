@@ -12,9 +12,6 @@
  */
 abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
-    protected $_name = "Tree";
-    //put your code here
-
     protected $tid = 1;
 
     public function getTid() {

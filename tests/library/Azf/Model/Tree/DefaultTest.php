@@ -32,13 +32,42 @@ class Azf_Model_Tree_DefaultTest extends PHPUnit_Framework_TestCase {
     }
 
     public function getDbTreeSum() {
-        return PHPUnit_TreeModel_DBModel::getTreeSum();
+        return Azf_PHPUnit_Db_DbModel::getTreeSum();
+    }
+
+    public static function setUpDBTable() {
+        $conn = Azf_PHPUnit_Db_ConnectionFactory::getConnection();
+        $config = $conn->getConfig();
+        $dbName = $config['dbname'];
+        $colName = "Tables_in_" . $dbName;
+
+        $sql = "show tables where $colName = 'Tree'";
+        $rows = $conn->fetchAll($sql);
+        if (!$rows) {
+            $SQL = <<<SQL
+   create table Tree (
+id int unsigned primary key auto_increment,
+parentId int unsigned null,
+tid int unsigned  not null default 1,
+l int unsigned not null,
+r int unsigned not null,
+value varchar(40) not null)
+         
+SQL;
+            $conn->exec($SQL);
+        }
+    }
+
+    public static function setUpBeforeClass() {
+        Azf_PHPUnit_Db_ConnectionFactory::initDefaultDbTableAdapter();
+        
+        self::setUpDBTable();
     }
 
     public function setUp() {
-        PHPUnit_TreeModel_ConnectionFactory::initDefaultDbTableAdapter();
-        PHPUnit_TreeModel_DBModel::reset();
-        PHPUnit_TreeModel_DBModel::populate(__DIR__ . "/TestTreeModel//SampleDataSet.xml");
+        
+        Azf_PHPUnit_Db_DbModel::reset();
+        Azf_PHPUnit_Db_DbModel::populate(__DIR__ . "/TestTreeModel//SampleDataSet.xml");
         $this->model = new Azf_Model_Tree_Default();
     }
 
@@ -52,6 +81,7 @@ class Azf_Model_Tree_DefaultTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testInitTree3() {
+
         $this->model->setTid(3);
         $this->model->initTree("TREE Three");
         $this->assertEquals(array('id' => 41, 'l' => 1, 'r' => 2, 'parentId' => null, 'value' => 'TREE Three', 'childNodes' => array()), $this->model->getTree(null, true));
@@ -382,7 +412,7 @@ class Azf_Model_Tree_DefaultTest extends PHPUnit_Framework_TestCase {
                                     'id' => "7"
                                 )
                             ),
-                            'id'=>5,
+                            'id' => 5,
                         )
                     ),
                     'id' => "4",

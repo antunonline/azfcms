@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<dataset>
+    <Navigation  id='1' tid='1' l='1' r='14' disabled='0' url='' final='{}' plugins='{"description":{"meta":"description"}}' abstract='{"title":"AZFCMS"}' home="0" />
+    <Navigation parentId='1' id='2' tid='1' l='2' r='3' disabled='0' url='/products' final='{}' plugins='{}' abstract='{"param1":"sometext"}' home='1' />
+    <Navigation parentId='1'  id='3' tid='1' l='4' r='5' disabled='0' url='/support' final='{title:"Cool Title!"}' plugins='{"description":{"what":"YEA"}}' abstract='{"accept":"YES"}' home='0' />
+    <Navigation parentId='1' id='4' tid='1' l='6' r='13' disabled='0' url='/forums' final='{}' plugins='{"description":{"meta":"overriden"},"info":{"info":"key"}}' abstract='{}' home='0' />
+    <Navigation parentId='4' id='6' tid='1' l='7' r='8' disabled='0' url='/forums/support' final='{}' plugins='{}' abstract='{}' home='0' />
+    <Navigation parentId='4' id='7' tid='1' l='9' r='10' disabled='0' url='/forums/producta' final='{"otherTitle":"Other text, Cool:)"}' plugins='{}' abstract='{}' home='0' />
+    <Navigation parentId='4' id='8' tid='1' l='11' r='12' disabled='0' url='/forums/other' final='{"action":"index","controller":"index","module":"default"}' plugins='{}' abstract='{}' home='0' />
+</dataset>

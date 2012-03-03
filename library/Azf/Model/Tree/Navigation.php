@@ -15,6 +15,9 @@ class Azf_Model_Tree_Navigation extends Azf_Model_Tree_Abstract {
     const FIELD_STATIC = "final";
     const FIELD_DYNAMIC = 'abstract';
 
+    protected $_name = "Navigation";
+    protected $_primary = "id";
+    
     protected $_staticParams = array();
     protected $_dynamicParams = array();
     protected $_pluginsParams = array();
@@ -43,16 +46,23 @@ SQL;
 
     protected function insertNode($l, $r, $parentId, $value) {
         $value = (object) $value;
+        $initialConfig = $this->_encodeConfig(array());
+        $disabled = isset($value->disabled)?$value->disabled:1;
+        $url  = isset($value->url)?$value->url:"/";
+        $final = isset($value->final)?$value->final:"/";
+        $plugins = isset($value->plugins)?$this->_encodeConfig($value->plugins):$initialConfig;
+        $abstract = isset($value->abstract)?$this->_encodeConfig($value->abstract):$initialConfig;
+        
         $record = array(
             'l' => $l,
             'r' => $r,
             'parentId' => $parentId,
             'tid' => $this->tid,
-            'disabled' => $value->disabled,
-            'url' => $value->url,
-            'final' => $value->final,
-            'plugins' => $value->plugins,
-            'abstract' => $value->abstract
+            'disabled' => $disabled,
+            'url' => $url,
+            'final' => $final,
+            'plugins' => $plugins,
+            'abstract' => $abstract
         );
 
         return Zend_Db_Table_Abstract::insert($record);
@@ -212,6 +222,8 @@ SQL;
             self::FIELD_STATIC => $this->_encodeConfig($this->_staticParams[$cacheKey]),
             self::FIELD_DYNAMIC => $this->_encodeConfig($this->_dynamicParams[$cacheKey])
         );
+        
+        $this->update($record, $id);
     }
 
     /**
@@ -274,7 +286,7 @@ SQL;
      */
     protected function _getFieldParams($id, $field) {
         $id = (int) $id;
-        $name = (string) $name;
+        $field = (string)$field;
         $cacheKey = "i" . $id;
         $this->_fetchConfiguration($id);
 
@@ -444,7 +456,7 @@ SQL;
      */
     public function hasStaticParam($id, $name) {
         $name = (string) $name;
-        $params = $this->_getFieldParams($id);
+        $params = $this->_getFieldParams($id, self::FIELD_STATIC);
 
         return isset($params[$name]) ? true : false;
     }
@@ -453,13 +465,13 @@ SQL;
      * This method will return all static parameters encapsulated in stdClass
      * 
      * @param int $id
-     * @return stdClass
+     * @return array
      * @throws InvalidArgumentException 
      */
     public function getStaticParams($id) {
-        $params = $this->_getFieldParams($id);
+        $params = $this->_getFieldParams($id, self::FIELD_STATIC);
 
-        return (object) $params;
+        return $params;
     }
 
     /**
@@ -479,7 +491,7 @@ SQL;
      * @param mixed $default
      * @return mixed 
      */
-    public function getDynamicParam($id, $name, $default) {
+    public function getDynamicParam($id, $name, $default=null) {
         return $this->_getFieldParam($id, self::FIELD_DYNAMIC, $name, $default);
     }
 
@@ -541,11 +553,11 @@ SQL;
      * @param mixed $default 
      * @return mixed
      */
-    public function getPluginParam($id, $plugin, $name, $default) {
+    public function getPluginParam($id, $plugin, $name, $default = null) {
         $name = (string) $name;
         $params = $this->_getPluginParams($id, $plugin);
 
-        isset($params[$name]) ? $params[$name] : $default;
+        return isset($params[$name]) ? $params[$name] : $default;
     }
 
     /**
@@ -559,7 +571,7 @@ SQL;
         $name = (string) $name;
         $params = $this->_getPluginParams($id, $plugin);
 
-        isset($params[$name]) ? true : false;
+        return isset($params[$name]) ? true : false;
     }
 
     /**
@@ -576,6 +588,7 @@ SQL;
     public function deletePluginParam($id, $plugin, $name) {
         $this->_deletePluginParam($id, $plugin, $name);
     }
+    
 
 }
 

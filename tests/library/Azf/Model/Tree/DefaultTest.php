@@ -36,31 +36,13 @@ class Azf_Model_Tree_DefaultTest extends PHPUnit_Framework_TestCase {
     }
 
     public static function setUpDBTable() {
-        $conn = Azf_PHPUnit_Db_ConnectionFactory::getConnection();
-        $config = $conn->getConfig();
-        $dbName = $config['dbname'];
-        $colName = "Tables_in_" . $dbName;
-
-        $sql = "show tables where $colName = 'Tree'";
-        $rows = $conn->fetchAll($sql);
-        if (!$rows) {
-            $SQL = <<<SQL
-   create table Tree (
-id int unsigned primary key auto_increment,
-parentId int unsigned null,
-tid int unsigned  not null default 1,
-l int unsigned not null,
-r int unsigned not null,
-value varchar(40) not null)
-         
-SQL;
-            $conn->exec($SQL);
+        if(!Azf_PHPUnit_Db_Utils::tableExist("Tree")){
+            Azf_PHPUnit_Db_Utils::createTable("Tree");
         }
     }
 
     public static function setUpBeforeClass() {
         Azf_PHPUnit_Db_ConnectionFactory::initDefaultDbTableAdapter();
-        
         self::setUpDBTable();
     }
 

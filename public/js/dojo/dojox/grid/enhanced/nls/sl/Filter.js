@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -65,6 +64,8 @@ define(
 	"anycolumn": "katerikoli stolpec",
 	"statusTipTitleNoFilter": "Vrstica za filtriranje",
 	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelAny": "Ujemanje s katerimkoli pravilom.",
+	"statusTipRelAll": "Ujemanje z vsemi pravili.",
 	
 	"defaultItemsName": "postavke",
 	"filterBarMsgHasFilterTemplate": "Prikazanih je ${0} od ${1} ${2}.",
@@ -85,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

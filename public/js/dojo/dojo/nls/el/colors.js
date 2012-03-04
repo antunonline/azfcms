@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "ώχρα",
 teal: "πετρόλ",
 thistle: "μωβ βιολετί",
 tomato: "κόκκινο της ντομάτας",
+transparent: "διαφανές",
 turquoise: "τυρκουάζ",
 violet: "βιολετί",
 wheat: "σταρένιο",

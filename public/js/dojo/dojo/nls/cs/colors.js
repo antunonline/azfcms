@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "šedobéžová",
 teal: "šedozelená",
 thistle: "bodláková",
 tomato: "tomatová",
+transparent: "průhledná",
 turquoise: "tyrkysová",
 violet: "fialová",
 wheat: "zlatohnědá",

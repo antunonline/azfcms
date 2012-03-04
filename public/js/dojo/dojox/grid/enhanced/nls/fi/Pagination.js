@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -8,6 +7,7 @@ define(
 	"nextTip": "Seuraava sivu",
 	"prevTip": "Edellinen sivu",
 	"itemTitle": "nimikkeet",
+	"singularItemTitle": "kohde",
 	"pageStepLabelTemplate": "Sivu ${0}",
 	"pageSizeLabelTemplate": "${0} nimikettä sivua kohti",
 	"allItemsLabelTemplate": "Kaikki nimikkeet",
@@ -21,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

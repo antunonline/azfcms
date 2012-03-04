@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -20,7 +19,8 @@ define(
 	emoticonYes: "Ναι",
 	emoticonNo: "Όχι",
 	emoticonAngel: "Αγγελούδι",
-	emoticonCrying: "Κλάμα"
+	emoticonCrying: "Κλάμα",
+	emoticonHappy: "Ευτυχία"
 })
 
 //end v1.x content

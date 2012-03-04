@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "탠(tan)",
 teal: "틸(teal)",
 thistle: "시슬(thistle)",
 tomato: "토마토(tomato)",
+transparent: "투명(transparent)",
 turquoise: "터콰즈(turquoise)",
 violet: "바이올렛(violet)",
 wheat: "휘트(wheat)",

@@ -1,4 +1,3 @@
-//>>built
 define({ root:
 //begin v1.x content
 ({
@@ -177,6 +176,7 @@ yellowgreen: "yellow green"
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -186,5 +186,6 @@ yellowgreen: "yellow green"
 "da": true,
 "cs": true,
 "ca": true,
+"az": true,
 "ar": true
 });

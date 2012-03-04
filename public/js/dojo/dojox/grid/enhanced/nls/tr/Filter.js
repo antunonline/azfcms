@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -65,6 +64,8 @@ define(
 	"anycolumn": "herhangi bir sütun",
 	"statusTipTitleNoFilter": "Süzgeç Çubuğu",
 	"statusTipTitleHasFilter": "Süzgeç",
+	"statusTipRelAny": "Herhangi bir kuralı eşleştir.",
+	"statusTipRelAll": "Bütün kuralları eşleştir.",
 	
 	"defaultItemsName": "öğe",
 	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor.",
@@ -85,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

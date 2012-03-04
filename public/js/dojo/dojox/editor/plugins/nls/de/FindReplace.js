@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -11,7 +10,6 @@ define(
 	"matchCaseTooltip": "Groß- und Kleinschreibung abgleichen",
 	"backwards": "Zurück",
 	"backwardsTooltip": "Rückwärts nach Text suchen",
-	"replaceAll": "Alle Vorkommen",
 	"replaceAllButton": "Global ersetzen",
 	"replaceAllButtonTooltip": "Gesamten Text ersetzen",
 	"findButton": "Suchen",

@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -65,6 +64,8 @@ define(
 	"anycolumn": "bármely oszlop",
 	"statusTipTitleNoFilter": "Szűrősáv",
 	"statusTipTitleHasFilter": "Szűrő",
+	"statusTipRelAny": "Bármely szabálynak megfelel.",
+	"statusTipRelAll": "Minden szabálynak megfelel.",
 	
 	"defaultItemsName": "elemek",
 	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} megjelenítve.",
@@ -85,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

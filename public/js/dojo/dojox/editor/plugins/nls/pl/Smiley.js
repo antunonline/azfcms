@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -20,7 +19,8 @@ define(
 	emoticonYes: "Tak",
 	emoticonNo: "Nie",
 	emoticonAngel: "anioł",
-	emoticonCrying: "płacz"
+	emoticonCrying: "płacz",
+	emoticonHappy: "radość"
 })
 
 //end v1.x content

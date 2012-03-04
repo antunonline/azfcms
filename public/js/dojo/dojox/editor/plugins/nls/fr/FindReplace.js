@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -11,7 +10,6 @@ define(
 	"matchCaseTooltip": "Respecter la casse",
 	"backwards": "Vers l'arrière",
 	"backwardsTooltip": "Recherchez le texte vers l'arrière",
-	"replaceAll": "Toutes les occurrences",
 	"replaceAllButton": "Remplacer tout",
 	"replaceAllButtonTooltip": "Remplacez tout le texte",
 	"findButton": "Rechercher",

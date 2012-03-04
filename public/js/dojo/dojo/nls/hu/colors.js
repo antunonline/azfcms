@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "rozsdabarna",
 teal: "pávakék",
 thistle: "bogáncs",
 tomato: "paradicsom",
+transparent: "átlátszó",
 turquoise: "türkizkék",
 violet: "ibolyaszín",
 wheat: "búza",

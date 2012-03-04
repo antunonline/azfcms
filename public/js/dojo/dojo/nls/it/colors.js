@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "grigio bruno",
 teal: "verde turchese",
 thistle: "rosa cenere",
 tomato: "pomodoro",
+transparent: "trasparente",
 turquoise: "turchese",
 violet: "viola",
 wheat: "sabbia",

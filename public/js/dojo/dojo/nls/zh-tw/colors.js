@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "皮革色",
 teal: "深藍綠色",
 thistle: "薊色",
 tomato: "蕃茄紅",
+transparent: "透明",
 turquoise: "松石綠",
 violet: "紫羅蘭色",
 wheat: "小麥色",

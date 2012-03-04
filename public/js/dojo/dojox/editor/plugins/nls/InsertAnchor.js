@@ -1,5 +1,5 @@
-//>>built
 define({ root:
+//begin v1.x content
 ({
 	insertAnchor: "Insert Anchor",
 	title: "Anchor Properties",
@@ -29,6 +29,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -40,4 +41,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

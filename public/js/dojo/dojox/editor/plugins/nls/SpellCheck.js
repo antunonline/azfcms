@@ -1,5 +1,5 @@
-//>>built
 define({ root:
+//begin v1.x content
 ({
 	widgetLabel: "Batch Spell Check",
 	unfound: "Not found",
@@ -37,6 +37,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -48,4 +49,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

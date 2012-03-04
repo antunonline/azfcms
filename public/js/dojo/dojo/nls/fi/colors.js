@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "kellanruskea",
 teal: "sinivihreä",
 thistle: "ohdake",
 tomato: "tomaatinpunainen",
+transparent: "läpinäkyvä",
 turquoise: "turkoosi",
 violet: "violetti",
 wheat: "vehnänkeltainen",

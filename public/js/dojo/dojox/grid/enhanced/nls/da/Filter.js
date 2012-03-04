@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -65,6 +64,8 @@ define(
 	"anycolumn": "vilkårlig kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
 	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelAny": "Matcher en hvilken som helst regel.",
+	"statusTipRelAll": "Matcher alle regler.",
 	
 	"defaultItemsName": "elementer",
 	"filterBarMsgHasFilterTemplate": "${0} af ${1} ${2} vist.",
@@ -85,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

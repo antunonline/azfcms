@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -8,6 +7,7 @@ define(
 	"nextTip": "Sonraki Sayfa",
 	"prevTip": "Önceki Sayfa",
 	"itemTitle": "öğe",
+	"singularItemTitle": "öğe",
 	"pageStepLabelTemplate": "Sayfa ${0}",
 	"pageSizeLabelTemplate": "Sayfa başına ${0} öğe",
 	"allItemsLabelTemplate": "Tüm öğeler",
@@ -21,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

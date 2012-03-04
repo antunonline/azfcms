@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -65,6 +64,8 @@ define(
 	"anycolumn": "alla kolumner",
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelAny": "Matcha någon regel.",
+	"statusTipRelAll": "Matcha alla regler.",
 	
 	"defaultItemsName": "objekt",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} visas.",
@@ -85,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

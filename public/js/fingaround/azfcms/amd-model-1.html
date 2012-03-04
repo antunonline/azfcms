@@ -1,0 +1,32 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var dojoConfig = {
+                async:true
+            }
+        </script>
+        <script  src="/js/dojo/dojo/dojo.js" ></script>
+        <script type="text/javascript">
+            require(['dojo/_base/kernel','dojo/_base/loader'], function(dojo){
+                dojo.registerModulePath("azfcms", "../../azfcms");
+            })
+            
+            require(['azfcms/model'],function(model){
+                var func = function(){
+                    console.debug(JsonService)
+                }
+                func.apply(model.callRpc,[]);
+            })
+        </script>
+    </head>
+    <body>
+        <div>TODO write content</div>
+    </body>
+</html>

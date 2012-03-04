@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "śniady",
 teal: "zielonomodry",
 thistle: "bladofioletowy",
 tomato: "pomidorowy",
+transparent: "przezroczysty",
 turquoise: "turkusowy",
 violet: "fiołkowy",
 wheat: "pszeniczny",

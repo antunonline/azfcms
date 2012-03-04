@@ -1,5 +1,3 @@
-//>>built
-define(
 ({
 	"clearFilterDialogTitle": "Limpar Filtro",
 	"filterDefDialogTitle": "Filtrar",
@@ -85,5 +83,3 @@ define(
 
 
 
-
-);

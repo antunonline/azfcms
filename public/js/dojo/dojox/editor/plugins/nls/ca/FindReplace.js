@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -11,7 +10,6 @@ define(
 	"matchCaseTooltip": "Coincidència de majúscules i minúscules",
 	"backwards": "Cap enrere",
 	"backwardsTooltip": "Cerca text cap enrere",
-	"replaceAll": "Totes les aparicions",
 	"replaceAllButton": "Substitueix tot",
 	"replaceAllButtonTooltip": "Substitueix tot el text",
 	"findButton": "Cerca",

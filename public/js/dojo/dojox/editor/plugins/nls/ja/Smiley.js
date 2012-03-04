@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -20,7 +19,8 @@ define(
 	emoticonYes: "はい",
 	emoticonNo: "いいえ",
 	emoticonAngel: "エンジェル",
-	emoticonCrying: "泣く"
+	emoticonCrying: "泣く",
+	emoticonHappy: "幸せ"
 })
 
 //end v1.x content

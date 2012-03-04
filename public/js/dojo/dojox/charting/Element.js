@@ -1,211 +1,364 @@
-//>>built
-define("dojox/charting/Element",["dojo/_base/lang","dojo/_base/array","dojo/dom-construct","dojo/_base/declare","dojox/gfx"],function(_1,_2,_3,_4,_5){
-return _4("dojox.charting.Element",null,{chart:null,group:null,htmlElements:null,dirty:true,constructor:function(_6){
-this.chart=_6;
-this.group=null;
-this.htmlElements=[];
-this.dirty=true;
-this.trailingSymbol="...";
-this._events=[];
-},createGroup:function(_7){
-if(!_7){
-_7=this.chart.surface;
-}
-if(!this.group){
-this.group=_7.createGroup();
-}
-return this;
-},purgeGroup:function(){
-this.destroyHtmlElements();
-if(this.group){
-this.group.clear();
-this.group.removeShape();
-this.group=null;
-}
-this.dirty=true;
-if(this._events.length){
-_2.forEach(this._events,function(_8){
-_8.shape.disconnect(_8.handle);
-});
-this._events=[];
-}
-return this;
-},cleanGroup:function(_9){
-this.destroyHtmlElements();
-if(!_9){
-_9=this.chart.surface;
-}
-if(this.group){
-this.group.clear();
-}else{
-this.group=_9.createGroup();
-}
-this.dirty=true;
-return this;
-},destroyHtmlElements:function(){
-if(this.htmlElements.length){
-_2.forEach(this.htmlElements,_3.destroy);
-this.htmlElements=[];
-}
-},destroy:function(){
-this.purgeGroup();
-},getTextWidth:function(s,_a){
-return _5._base._getTextBox(s,{font:_a}).w||0;
-},getTextWithLimitLength:function(s,_b,_c,_d){
-if(!s||s.length<=0){
-return {text:"",truncated:_d||false};
-}
-if(!_c||_c<=0){
-return {text:s,truncated:_d||false};
-}
-var _e=2,_f=0.618,_10=s.substring(0,1)+this.trailingSymbol,_11=this.getTextWidth(_10,_b);
-if(_c<=_11){
-return {text:_10,truncated:true};
-}
-var _12=this.getTextWidth(s,_b);
-if(_12<=_c){
-return {text:s,truncated:_d||false};
-}else{
-var _13=0,end=s.length;
-while(_13<end){
-if(end-_13<=_e){
-while(this.getTextWidth(s.substring(0,_13)+this.trailingSymbol,_b)>_c){
-_13-=1;
-}
-return {text:(s.substring(0,_13)+this.trailingSymbol),truncated:true};
-}
-var _14=_13+Math.round((end-_13)*_f),_15=this.getTextWidth(s.substring(0,_14),_b);
-if(_15<_c){
-_13=_14;
-end=end;
-}else{
-_13=_13;
-end=_14;
-}
-}
-}
-},getTextWithLimitCharCount:function(s,_16,_17,_18){
-if(!s||s.length<=0){
-return {text:"",truncated:_18||false};
-}
-if(!_17||_17<=0||s.length<=_17){
-return {text:s,truncated:_18||false};
-}
-return {text:s.substring(0,_17)+this.trailingSymbol,truncated:true};
-},_plotFill:function(_19,dim,_1a){
-if(!_19||!_19.type||!_19.space){
-return _19;
-}
-var _1b=_19.space;
-switch(_19.type){
-case "linear":
-if(_1b==="plot"||_1b==="shapeX"||_1b==="shapeY"){
-_19=_5.makeParameters(_5.defaultLinearGradient,_19);
-_19.space=_1b;
-if(_1b==="plot"||_1b==="shapeX"){
-var _1c=dim.height-_1a.t-_1a.b;
-_19.y1=_1a.t+_1c*_19.y1/100;
-_19.y2=_1a.t+_1c*_19.y2/100;
-}
-if(_1b==="plot"||_1b==="shapeY"){
-var _1c=dim.width-_1a.l-_1a.r;
-_19.x1=_1a.l+_1c*_19.x1/100;
-_19.x2=_1a.l+_1c*_19.x2/100;
-}
-}
-break;
-case "radial":
-if(_1b==="plot"){
-_19=_5.makeParameters(_5.defaultRadialGradient,_19);
-_19.space=_1b;
-var _1d=dim.width-_1a.l-_1a.r,_1e=dim.height-_1a.t-_1a.b;
-_19.cx=_1a.l+_1d*_19.cx/100;
-_19.cy=_1a.t+_1e*_19.cy/100;
-_19.r=_19.r*Math.sqrt(_1d*_1d+_1e*_1e)/200;
-}
-break;
-case "pattern":
-if(_1b==="plot"||_1b==="shapeX"||_1b==="shapeY"){
-_19=_5.makeParameters(_5.defaultPattern,_19);
-_19.space=_1b;
-if(_1b==="plot"||_1b==="shapeX"){
-var _1c=dim.height-_1a.t-_1a.b;
-_19.y=_1a.t+_1c*_19.y/100;
-_19.height=_1c*_19.height/100;
-}
-if(_1b==="plot"||_1b==="shapeY"){
-var _1c=dim.width-_1a.l-_1a.r;
-_19.x=_1a.l+_1c*_19.x/100;
-_19.width=_1c*_19.width/100;
-}
-}
-break;
-}
-return _19;
-},_shapeFill:function(_1f,_20){
-if(!_1f||!_1f.space){
-return _1f;
-}
-var _21=_1f.space;
-switch(_1f.type){
-case "linear":
-if(_21==="shape"||_21==="shapeX"||_21==="shapeY"){
-_1f=_5.makeParameters(_5.defaultLinearGradient,_1f);
-_1f.space=_21;
-if(_21==="shape"||_21==="shapeX"){
-var _22=_20.width;
-_1f.x1=_20.x+_22*_1f.x1/100;
-_1f.x2=_20.x+_22*_1f.x2/100;
-}
-if(_21==="shape"||_21==="shapeY"){
-var _22=_20.height;
-_1f.y1=_20.y+_22*_1f.y1/100;
-_1f.y2=_20.y+_22*_1f.y2/100;
-}
-}
-break;
-case "radial":
-if(_21==="shape"){
-_1f=_5.makeParameters(_5.defaultRadialGradient,_1f);
-_1f.space=_21;
-_1f.cx=_20.x+_20.width/2;
-_1f.cy=_20.y+_20.height/2;
-_1f.r=_1f.r*_20.width/200;
-}
-break;
-case "pattern":
-if(_21==="shape"||_21==="shapeX"||_21==="shapeY"){
-_1f=_5.makeParameters(_5.defaultPattern,_1f);
-_1f.space=_21;
-if(_21==="shape"||_21==="shapeX"){
-var _22=_20.width;
-_1f.x=_20.x+_22*_1f.x/100;
-_1f.width=_22*_1f.width/100;
-}
-if(_21==="shape"||_21==="shapeY"){
-var _22=_20.height;
-_1f.y=_20.y+_22*_1f.y/100;
-_1f.height=_22*_1f.height/100;
-}
-}
-break;
-}
-return _1f;
-},_pseudoRadialFill:function(_23,_24,_25,_26,end){
-if(!_23||_23.type!=="radial"||_23.space!=="shape"){
-return _23;
-}
-var _27=_23.space;
-_23=_5.makeParameters(_5.defaultRadialGradient,_23);
-_23.space=_27;
-if(arguments.length<4){
-_23.cx=_24.x;
-_23.cy=_24.y;
-_23.r=_23.r*_25/100;
-return _23;
-}
-var _28=arguments.length<5?_26:(end+_26)/2;
-return {type:"linear",x1:_24.x,y1:_24.y,x2:_24.x+_23.r*_25*Math.cos(_28)/100,y2:_24.y+_23.r*_25*Math.sin(_28)/100,colors:_23.colors};
-return _23;
-}});
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/dom-construct","dojo/_base/declare", "dojox/gfx", "dojox/gfx/utils", "dojox/gfx/shape"],
+	function(lang, arr, domConstruct, declare, gfx, utils, shape){
+	
+	return declare("dojox.charting.Element", null, {
+		//	summary:
+		//		A base class that is used to build other elements of a chart, such as
+		//		a series.
+		//	chart: dojox.charting.Chart
+		//		The parent chart for this element.
+		//	group: dojox.gfx.Group
+		//		The visual GFX group representing this element.
+		//	htmlElement: Array
+		//		Any DOMNodes used as a part of this element (such as HTML-based labels).
+		//	dirty: Boolean
+		//		A flag indicating whether or not this element needs to be rendered.
+	
+		chart: null,
+		group: null,
+		htmlElements: null,
+		dirty: true,
+	
+		constructor: function(chart){
+			//	summary:
+			//		Creates a new charting element.
+			//	chart: dojox.charting.Chart
+			//		The chart that this element belongs to.
+			this.chart = chart;
+			this.group = null;
+			this.htmlElements = [];
+			this.dirty = true;
+			this.trailingSymbol = "...";
+			this._events = [];
+		},
+		createGroup: function(creator){
+			//	summary:
+			//		Convenience function to create a new dojox.gfx.Group.
+			//	creator: dojox.gfx.Surface?
+			//		An optional surface in which to create this group.
+			//	returns: dojox.charting.Element
+			//		A reference to this object for functional chaining.
+			if(!creator){ creator = this.chart.surface; }
+			if(!this.group){
+				this.group = creator.createGroup();
+			}
+			return this;	//	dojox.charting.Element
+		},
+		purgeGroup: function(){
+			//	summary:
+			//		Clear any elements out of our group, and destroy the group.
+			//	returns: dojox.charting.Element
+			//		A reference to this object for functional chaining.
+			this.destroyHtmlElements();
+			if(this.group){
+				// since 1.7.x we need dispose shape otherwise there is a memoryleak
+				utils.forEach(this.group, function(child){
+					shape.dispose(child);
+				});
+				this.group.clear();
+				this.group.removeShape();
+				this.group = null;
+			}
+			this.dirty = true;
+			if(this._events.length){
+				arr.forEach(this._events, function(item){
+					item.shape.disconnect(item.handle);
+				});
+				this._events = [];
+			}
+			return this;	//	dojox.charting.Element
+		},
+		cleanGroup: function(creator){
+			//	summary:
+			//		Clean any elements (HTML or GFX-based) out of our group, and create a new one.
+			//	creator: dojox.gfx.Surface?
+			//		An optional surface to work with.
+			//	returns: dojox.charting.Element
+			//		A reference to this object for functional chaining.
+			this.destroyHtmlElements();
+			if(!creator){ creator = this.chart.surface; }
+			if(this.group){
+				this.group.clear();
+			}else{
+				this.group = creator.createGroup();
+			}
+			this.dirty = true;
+			return this;	//	dojox.charting.Element
+		},
+		destroyHtmlElements: function(){
+			//	summary:
+			//		Destroy any DOMNodes that may have been created as a part of this element.
+			if(this.htmlElements.length){
+				arr.forEach(this.htmlElements, domConstruct.destroy);
+				this.htmlElements = [];
+			}
+		},
+		destroy: function(){
+			//	summary:
+			//		API addition to conform to the rest of the Dojo Toolkit's standard.
+			this.purgeGroup();
+		},
+		//text utilities
+		getTextWidth: function(s, font){
+			return gfx._base._getTextBox(s, {font: font}).w || 0;
+		},
+		getTextWithLimitLength: function(s, font, limitWidth, truncated){
+			//	summary:
+			//		Get the truncated string based on the limited width in px(dichotomy algorithm)
+			//	s: String?
+			//		candidate text.
+			//	font: String?
+			//		text's font style.
+			//	limitWidth: Number?
+			//		text limited width in px.
+			//	truncated: Boolean?
+			//		whether the input text(s) has already been truncated.
+			//	returns: Object
+			//		{
+			//			text: processed text, maybe truncated or not
+			//			truncated: whether text has been truncated
+			//		}
+			if (!s || s.length <= 0) {
+				return {
+					text: "",
+					truncated: truncated || false
+				};
+			}
+			if(!limitWidth || limitWidth <= 0){
+				return {
+					text: s,
+					truncated: truncated || false
+				};
+			}
+			var delta = 2,
+				//golden section for dichotomy algorithm
+				trucPercentage = 0.618,
+				minStr = s.substring(0,1) + this.trailingSymbol,
+				minWidth = this.getTextWidth(minStr, font);
+			if (limitWidth <= minWidth) {
+				return {
+					text: minStr,
+					truncated: true
+				};
+			}
+			var width = this.getTextWidth(s, font);
+			if(width <= limitWidth){
+				return {
+					text: s,
+					truncated: truncated || false
+				};
+			}else{
+				var begin = 0,
+					end = s.length;
+				while(begin < end){
+					if(end - begin <= delta ){
+						while (this.getTextWidth(s.substring(0, begin) + this.trailingSymbol, font) > limitWidth) {
+							begin -= 1;
+						}
+						return {
+							text: (s.substring(0,begin) + this.trailingSymbol),
+							truncated: true
+						};
+					}
+					var index = begin + Math.round((end - begin) * trucPercentage),
+						widthIntercepted = this.getTextWidth(s.substring(0, index), font);
+					if(widthIntercepted < limitWidth){
+						begin = index;
+						end = end;
+					}else{
+						begin = begin;
+						end = index;
+					}
+				}
+			}
+		},
+		getTextWithLimitCharCount: function(s, font, wcLimit, truncated){
+			//	summary:
+			//		Get the truncated string based on the limited character count(dichotomy algorithm)
+			//	s: String?
+			//		candidate text.
+			//	font: String?
+			//		text's font style.
+			//	wcLimit: Number?
+			//		text limited character count.
+			//	truncated: Boolean?
+			//		whether the input text(s) has already been truncated.
+			//	returns: Object
+			//		{
+			//			text: processed text, maybe truncated or not
+			//			truncated: whether text has been truncated
+			//		}
+			if (!s || s.length <= 0) {
+				return {
+					text: "",
+					truncated: truncated || false
+				};
+			}
+			if(!wcLimit || wcLimit <= 0 || s.length <= wcLimit){
+				return {
+					text: s,
+					truncated: truncated || false
+				};
+			}
+			return {
+				text: s.substring(0, wcLimit) + this.trailingSymbol,
+				truncated: true
+			};
+		},
+		// fill utilities
+		_plotFill: function(fill, dim, offsets){
+			// process a plot-wide fill
+			if(!fill || !fill.type || !fill.space){
+				return fill;
+			}
+			var space = fill.space;
+			switch(fill.type){
+				case "linear":
+					if(space === "plot" || space === "shapeX" || space === "shapeY"){
+						// clone a fill so we can modify properly directly
+						fill = gfx.makeParameters(gfx.defaultLinearGradient, fill);
+						fill.space = space;
+						// process dimensions
+						if(space === "plot" || space === "shapeX"){
+							// process Y
+							var span = dim.height - offsets.t - offsets.b;
+							fill.y1 = offsets.t + span * fill.y1 / 100;
+							fill.y2 = offsets.t + span * fill.y2 / 100;
+						}
+						if(space === "plot" || space === "shapeY"){
+							// process X
+							var span = dim.width - offsets.l - offsets.r;
+							fill.x1 = offsets.l + span * fill.x1 / 100;
+							fill.x2 = offsets.l + span * fill.x2 / 100;
+						}
+					}
+					break;
+				case "radial":
+					if(space === "plot"){
+						// this one is used exclusively for scatter charts
+						// clone a fill so we can modify properly directly
+						fill = gfx.makeParameters(gfx.defaultRadialGradient, fill);
+						fill.space = space;
+						// process both dimensions
+						var spanX = dim.width  - offsets.l - offsets.r,
+							spanY = dim.height - offsets.t - offsets.b;
+						fill.cx = offsets.l + spanX * fill.cx / 100;
+						fill.cy = offsets.t + spanY * fill.cy / 100;
+						fill.r  = fill.r * Math.sqrt(spanX * spanX + spanY * spanY) / 200;
+					}
+					break;
+				case "pattern":
+					if(space === "plot" || space === "shapeX" || space === "shapeY"){
+						// clone a fill so we can modify properly directly
+						fill = gfx.makeParameters(gfx.defaultPattern, fill);
+						fill.space = space;
+						// process dimensions
+						if(space === "plot" || space === "shapeX"){
+							// process Y
+							var span = dim.height - offsets.t - offsets.b;
+							fill.y = offsets.t + span * fill.y / 100;
+							fill.height = span * fill.height / 100;
+						}
+						if(space === "plot" || space === "shapeY"){
+							// process X
+							var span = dim.width - offsets.l - offsets.r;
+							fill.x = offsets.l + span * fill.x / 100;
+							fill.width = span * fill.width / 100;
+						}
+					}
+					break;
+			}
+			return fill;
+		},
+		_shapeFill: function(fill, bbox){
+			// process shape-specific fill
+			if(!fill || !fill.space){
+				return fill;
+			}
+			var space = fill.space;
+			switch(fill.type){
+				case "linear":
+					if(space === "shape" || space === "shapeX" || space === "shapeY"){
+						// clone a fill so we can modify properly directly
+						fill = gfx.makeParameters(gfx.defaultLinearGradient, fill);
+						fill.space = space;
+						// process dimensions
+						if(space === "shape" || space === "shapeX"){
+							// process X
+							var span = bbox.width;
+							fill.x1 = bbox.x + span * fill.x1 / 100;
+							fill.x2 = bbox.x + span * fill.x2 / 100;
+						}
+						if(space === "shape" || space === "shapeY"){
+							// process Y
+							var span = bbox.height;
+							fill.y1 = bbox.y + span * fill.y1 / 100;
+							fill.y2 = bbox.y + span * fill.y2 / 100;
+						}
+					}
+					break;
+				case "radial":
+					if(space === "shape"){
+						// this one is used exclusively for bubble charts and pie charts
+						// clone a fill so we can modify properly directly
+						fill = gfx.makeParameters(gfx.defaultRadialGradient, fill);
+						fill.space = space;
+						// process both dimensions
+						fill.cx = bbox.x + bbox.width  / 2;
+						fill.cy = bbox.y + bbox.height / 2;
+						fill.r  = fill.r * bbox.width  / 200;
+					}
+					break;
+				case "pattern":
+					if(space === "shape" || space === "shapeX" || space === "shapeY"){
+						// clone a fill so we can modify properly directly
+						fill = gfx.makeParameters(gfx.defaultPattern, fill);
+						fill.space = space;
+						// process dimensions
+						if(space === "shape" || space === "shapeX"){
+							// process X
+							var span = bbox.width;
+							fill.x = bbox.x + span * fill.x / 100;
+							fill.width = span * fill.width / 100;
+						}
+						if(space === "shape" || space === "shapeY"){
+							// process Y
+							var span = bbox.height;
+							fill.y = bbox.y + span * fill.y / 100;
+							fill.height = span * fill.height / 100;
+						}
+					}
+					break;
+			}
+			return fill;
+		},
+		_pseudoRadialFill: function(fill, center, radius, start, end){
+			// process pseudo-radial fills
+			if(!fill || fill.type !== "radial" || fill.space !== "shape"){
+				return fill;
+			}
+			// clone and normalize fill
+			var space = fill.space;
+			fill = gfx.makeParameters(gfx.defaultRadialGradient, fill);
+			fill.space = space;
+			if(arguments.length < 4){
+				// process both dimensions
+				fill.cx = center.x;
+				fill.cy = center.y;
+				fill.r  = fill.r * radius / 100;
+				return fill;
+			}
+			// convert to a linear gradient
+			var angle = arguments.length < 5 ? start : (end + start) / 2;
+			return {
+				type: "linear",
+				x1: center.x,
+				y1: center.y,
+				x2: center.x + fill.r * radius * Math.cos(angle) / 100,
+				y2: center.y + fill.r * radius * Math.sin(angle) / 100,
+				colors: fill.colors
+			};
+			return fill;
+		}
+	});
 });

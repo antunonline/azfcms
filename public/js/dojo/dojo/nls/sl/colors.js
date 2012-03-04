@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "rumeno-rjava",
 teal: "modrozelena",
 thistle: "osatna",
 tomato: "paradižnikova",
+transparent: "prosojno",
 turquoise: "turkizna",
 violet: "vijolična",
 wheat: "pšenična",

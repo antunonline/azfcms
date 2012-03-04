@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "tan",
 teal: "teal",
 thistle: "thistle",
 tomato: "tomato",
+transparent: "สีใส",
 turquoise: "turquoise",
 violet: "ม่วง",
 wheat: "wheat",

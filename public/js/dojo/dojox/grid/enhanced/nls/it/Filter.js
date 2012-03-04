@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -65,6 +64,8 @@ define(
 	"anycolumn": "qualsiasi colonna",
 	"statusTipTitleNoFilter": "Barra di filtro",
 	"statusTipTitleHasFilter": "Filtro",
+	"statusTipRelAny": "Corrispondenza con qualsiasi regola.",
+	"statusTipRelAll": "Corrispondenza con tutte le regole.",
 	
 	"defaultItemsName": "elementi",
 	"filterBarMsgHasFilterTemplate": "${0} di ${1} ${2} visualizzati.",
@@ -85,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

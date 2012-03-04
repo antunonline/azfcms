@@ -1,4 +1,3 @@
-//>>built
 define({ root:
 //begin v1.x content
 ({
@@ -99,6 +98,7 @@ define({ root:
 "he": true,
 "hr": true,
 "hu": true,
+"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

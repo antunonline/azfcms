@@ -1,4 +1,3 @@
-//>>built
 define(
 //begin v1.x content
 ({
@@ -147,6 +146,7 @@ tan: "güneş yanığı",
 teal: "Teal mavi",
 thistle: "devedikeni",
 tomato: "domates",
+transparent: "saydam",
 turquoise: "turkuaz",
 violet: "eflatun",
 wheat: "buğday",

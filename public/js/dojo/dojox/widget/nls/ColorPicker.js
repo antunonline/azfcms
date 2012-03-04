@@ -1,4 +1,3 @@
-//>>built
 define({ root:
 //begin v1.x content
 ({
@@ -34,6 +33,7 @@ saturationPickerTitle: "Saturation Selector"
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,

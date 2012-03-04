@@ -1,5 +1,3 @@
-//>>built
-define(
 ({
 	// ${0}: string
 	//		unit of item, identified by "itemTitle"
@@ -32,5 +30,3 @@ define(
 	"dialogCancel": "Cancelar",
 	"all": "todos"
 })
-
-);

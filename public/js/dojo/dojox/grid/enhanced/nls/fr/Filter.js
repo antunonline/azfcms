@@ -1,5 +1,4 @@
-//>>built
-﻿define(
+define(
 //begin v1.x content
 ({
 	"clearFilterDialogTitle": "Effacer le filtre",
@@ -65,6 +64,8 @@
 	"anycolumn": "n'importe quelle colonne",
 	"statusTipTitleNoFilter": "Barre de filtre",
 	"statusTipTitleHasFilter": "Filtrer",
+	"statusTipRelAny": "Répondre à l'une des règles.",
+	"statusTipRelAll": "Réponde à toutes les régles.",
 	
 	"defaultItemsName": "éléments",
 	"filterBarMsgHasFilterTemplate": "${0} sur ${1} ${2} affichés.",
@@ -85,6 +86,3 @@
 })
 //end v1.x content
 );
-
-
-

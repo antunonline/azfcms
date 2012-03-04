@@ -1,5 +1,3 @@
-//>>built
-define(
 ({
 	singleSort: "Classificação Única",
 	nestedSort: "Classificação Aninhada",
@@ -12,5 +10,3 @@ define(
 	selectAll: "Selecionar todos"
 })
 
-
-);

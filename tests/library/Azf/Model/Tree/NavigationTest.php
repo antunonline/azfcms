@@ -275,14 +275,14 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_setParam() {
         $navi = $this->navigation;
-        $navi->setPluginParam(1,"description","hello","world");
-        
-        $this->assertEquals("world",$navi->getPluginParam(1,"description","hello"));
-        $this->assertEquals("world",$navi->getPluginParam(2,"description","hello"));
-        
+        $navi->setPluginParam(1, "description", "hello", "world");
+
+        $this->assertEquals("world", $navi->getPluginParam(1, "description", "hello"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description", "hello"));
+
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals("world",$navi->getPluginParam(1,"description","hello"));
-        $this->assertEquals("world",$navi->getPluginParam(2,"description","hello"));
+        $this->assertEquals("world", $navi->getPluginParam(1, "description", "hello"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description", "hello"));
     }
 
     /**
@@ -290,90 +290,337 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_setParamOverrideParent() {
         $navi = $this->navigation;
-        $navi->setPluginParam(1,"description","meta","world");
-        
-        $this->assertEquals("world",$navi->getPluginParam(1,"description","meta"));
-        $this->assertEquals("world",$navi->getPluginParam(2,"description","meta"));
-        
+        $navi->setPluginParam(1, "description", "meta", "world");
+
+        $this->assertEquals("world", $navi->getPluginParam(1, "description", "meta"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description", "meta"));
+
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals("world",$navi->getPluginParam(1,"description","meta"));
-        $this->assertEquals("world",$navi->getPluginParam(2,"description","meta"));
+        $this->assertEquals("world", $navi->getPluginParam(1, "description", "meta"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description", "meta"));
     }
-    
-    
+
     /**
-     *@test 
+     * @test 
      */
-    public function pluginsConfiguration_setParamOfUndefinedPlugin(){
+    public function pluginsConfiguration_setParamOfUndefinedPlugin() {
         $navi = $this->navigation;
-        $navi->setPluginParam(2,"new","hello","new");
+        $navi->setPluginParam(2, "new", "hello", "new");
         $actual = "new";
-        
-        $this->assertEquals($actual,$navi->getPluginParam(2, "new", "hello"));
-        
+
+        $this->assertEquals($actual, $navi->getPluginParam(2, "new", "hello"));
+
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals($actual,$navi->getPluginParam(2, "new", "hello"));
+        $this->assertEquals($actual, $navi->getPluginParam(2, "new", "hello"));
     }
-    
-    
+
     /**
-     *@test 
+     * @test 
      */
-    public function pluginsConfiguration_deleteParentParam(){
+    public function pluginsConfiguration_deleteParentParam() {
         $navi = $this->navigation;
         $navi->deletePluginParam(1, "description", "meta");
-        
+
         $this->assertFalse($navi->hasPluginParam(1, "description", "meta"));
         $this->assertFalse($navi->hasPluginParam(2, "description", "meta"));
-        
+
         $navi = new Azf_Model_Tree_Navigation();
         $this->assertFalse($navi->hasPluginParam(1, "description", "meta"));
         $this->assertFalse($navi->hasPluginParam(2, "description", "meta"));
     }
-    
-    
+
     /**
      * @test
      */
-    public function pluginsConfiguration_deleteChildParam(){
+    public function pluginsConfiguration_deleteChildParam() {
         $navi = $this->navigation;
         $navi->deletePluginParam(4, "info", "info");
-        
+
         $this->assertFalse($navi->hasPluginParam(4, "info", "info"));
-        $this->assertTrue($navi->hasPluginParam(4,"description","meta"));
-        
+        $this->assertTrue($navi->hasPluginParam(4, "description", "meta"));
+
         $navi = new Azf_Model_Tree_Navigation();
         $this->assertFalse($navi->hasPluginParam(4, "info", "info"));
-        $this->assertTrue($navi->hasPluginParam(4,"description","meta"));
+        $this->assertTrue($navi->hasPluginParam(4, "description", "meta"));
     }
-    
-    
-    
+
     /**
      * @test
      */
-    public function pluginsConfiguration_getPluginsNames(){
+    public function pluginsConfiguration_getPluginsNames() {
         $navi = $this->navigation;
         $expected = array("description");
-        
+
         $actual = $navi->getPluginNames(1);
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * @test 
+     */
+    public function pluginsConfiguration_getPluginsNamesFromChild() {
+        $navi = $this->navigation;
+        $expected = array("description", "info");
+
+        $actual = $navi->getPluginNames(4);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test 
+     */
+    public function pluginsConfiguration_deletePlugin() {
+        $navi = $this->navigation;
+
+        $navi->deletePlugin(4, "description");
+        $this->assertEquals("description", $navi->getPluginParam(4, "description", "meta"));
+        $this->assertTrue($navi->hasPluginParam(4, "info", "info"));
+
+        $navi = new Azf_Model_Tree_Navigation();
+        $this->assertEquals("description", $navi->getPluginParam(4, "description", "meta"));
+        $this->assertTrue($navi->hasPluginParam(4, "info", "info"));
+    }
+
+    /**
+     * @test 
+     */
+    public function disable_page3WithoutChildNodes() {
+        $navi = $this->navigation;
+
+        $navi->disable(3);
+
+        $expected = "1";
+        $node = $navi->find(3);
+        $actual = $node['disabled'];
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test 
+     */
+    public function disable_page4WithChildNodes() {
+        $navi = $this->navigation;
+        $navi->disable(4);
+        $expected = "1";
+
+        $node = $navi->find(4);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(6);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(7);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(8);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(3);
+        $actual = $node['disabled'];
+        $this->assertEquals("0", $actual);
+    }
+
+    /**
+     * @test 
+     */
+    public function enable_page2() {
+        $navi = $this->navigation;
+        $navi->disable(2);
+        $navi->enable(2);
+
+        $node = $navi->find(2);
+        $actual = $node['disabled'];
+        $this->assertEquals("0", $actual);
+    }
+
+    /**
+     * @test 
+     */
+    public function enable_page4WithChildNodes() {
+        $navi = $this->navigation;
+        $navi->disable(4);
+        $navi->enable(4);
+        $expected = "0";
+
+        $node = $navi->find(4);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(6);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(7);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(8);
+        $actual = $node['disabled'];
+        $this->assertEquals($expected, $actual);
+
+        $node = $navi->find(3);
+        $actual = $node['disabled'];
+        $this->assertEquals("0", $actual);
+    }
+
+    /**
+     * @test
+     */
+    public function menu_getBreadCrumbsMenu() {
+        $navi = $this->navigation;
+        $expected = array(
+            array(
+                "id" => 2,
+                "url" => "/products"
+            )
+        );
+
+        $actual = $navi->getBreadCrumbsMenu(2, 1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test 
+     */
+    public function menu_getBreadCrumbsMenuForChild() {
+        $navi = $this->navigation;
+        $expected = array(
+            array(
+                "id" => 4,
+                "url" => "/forums"
+            ),
+            array(
+                "id" => 6,
+                "url" => "/forums/support"
+            )
+        );
+
+        $actual = $navi->getBreadCrumbsMenu(6, 1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test 
+     */
+    public function navigation_getBreadCrumbsMenuWithInsufficientACLRights() {
+        $navi = $this->navigation;
+        $expected = array(
+            array(
+                "id" => 4,
+                "url" => "/forums"
+            )
+        );
+
+
+        Azf_PHPUnit_Db_SchemaUtils::unbindNavigation_ACLGroup(6, 1);
+
+        $actual = $navi->getBreadCrumbsMenu(6, 1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     */
+    public function navigation_getRootMenu() {
+        $navi = $this->navigation;
+        $expected = array(
+            array('id' => '2', 'url' => '/products'),
+            array('id' => '3', 'url' => '/support'),
+            array('id' => '4', 'url' => '/forums')
+        );
+
+        $actual = $navi->getRootMenu(1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     */
+    public function navigation_getRootMenuWithACL() {
+        $navi = $this->navigation;
+        $expected = array(
+            array('id' => '2', 'url' => '/products'),
+            array('id' => '4', 'url' => '/forums')
+        );
+
+        Azf_PHPUnit_Db_SchemaUtils::unbindNavigation_ACLGroup(3, 1);
+        $actual = $navi->getRootMenu(1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
+     */
+    public function navigation_getRootMenuForUndefinedUser() {
+        $navi = $this->navigation;
+        $expected = array(
+        );
+
+
+        $actual = $navi->getRootMenu(33);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     *  @test
+     */
+    public function navigation_getContextualMenu() {
+        $navi = $this->navigation;
+        $expected = array(
+            array('id' => '2', 'url' => '/products'),
+            array('id' => '3', 'url' => '/support'),
+            array('id' => '4', 'url' => '/forums')
+        );
+        
+        $actual = $navi->getContextualMenu(1, 1);
+        $this->assertEquals($expected, $actual);
+    }
     
+    
+    /**
+     * @test 
+     */
+    public function navigation_getContextualMenuForSubNode(){
+        $navi = $this->navigation;
+        $expected = array(
+            array('id' => '6', 'url' => '/forums/support'),
+            array('id' => '7', 'url' => '/forums/producta'),
+            array('id' => '8', 'url' => '/forums/other')
+        );
+        
+        $actual = $navi->getContextualMenu(4, 1);
+        $this->assertEquals($expected, $actual);
+    }
     
     
     /**
      *@test 
      */
-    public function pluginsConfiguration_getPluginsNamesFromChild(){
+    public function navigation_getContextualMenuForEmptyNode(){
         $navi = $this->navigation;
-        $expected = array("description","info");
+        $expected = array(
+        );
         
-        $actual = $navi->getPluginNames(4);
+        $actual = $navi->getContextualMenu(3, 1);
         $this->assertEquals($expected, $actual);
     }
     
     
-    
+    /**
+     *@test 
+     */
+    public function navigation_getContextualMenuForUndefinedUser(){
+        $navi = $this->navigation;
+        $expected = array(
+        );
+        
+        $actual = $navi->getContextualMenu(1, 3);
+        $this->assertEquals($expected, $actual);
+    }
 
 }

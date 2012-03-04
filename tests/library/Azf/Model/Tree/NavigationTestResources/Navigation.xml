@@ -13,4 +13,23 @@ and open the template in the editor.
     <Navigation parentId='4' id='6' tid='1' l='7' r='8' disabled='0' url='/forums/support' final='{}' plugins='{}' abstract='{}' home='0' />
     <Navigation parentId='4' id='7' tid='1' l='9' r='10' disabled='0' url='/forums/producta' final='{"otherTitle":"Other text, Cool:)"}' plugins='{}' abstract='{}' home='0' />
     <Navigation parentId='4' id='8' tid='1' l='11' r='12' disabled='0' url='/forums/other' final='{"action":"index","controller":"index","module":"default"}' plugins='{}' abstract='{}' home='0' />
+    
+    <User id="1" firstName="Guest" lastName="Guest" />
+    <User id="2" firstName="Registered" lastName="Registered" />
+    
+    <ACLGroup id="1" name="Guest" />
+    <ACLGroup id="2" name="Registered" />
+    
+    <User_ACLGroup id="1" userId="1" aclGroupId="1" />
+    <User_ACLGroup id="2" userId="2" aclGroupId="1" />
+    <User_ACLGroup id="3" userId="2" aclGroupId="2" />
+
+    <Navigation_ACLGroup id="1" navigationId="1" aclGroupId="1" />
+    <Navigation_ACLGroup id="2" navigationId="2" aclGroupId="1" />
+    <Navigation_ACLGroup id="3" navigationId="3" aclGroupId="1" />
+    <Navigation_ACLGroup id="4" navigationId="4" aclGroupId="1" />
+    <Navigation_ACLGroup id="5" navigationId="6" aclGroupId="1" />
+    <Navigation_ACLGroup id="6" navigationId="7" aclGroupId="1" />
+    <Navigation_ACLGroup id="7" navigationId="8" aclGroupId="1" />
+    
 </dataset>

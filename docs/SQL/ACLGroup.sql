@@ -1,0 +1,6 @@
+CREATE  TABLE IF NOT EXISTS `azfcms`.`ACLGroup` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(60) NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `name` (`name` ASC) )
+ENGINE = InnoDB

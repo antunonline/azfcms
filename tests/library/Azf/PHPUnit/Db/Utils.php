@@ -85,7 +85,7 @@ SQL;
      */
     public static function populateTable($xmlSourcePath){
         $xmlDataSet = new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet($xmlSourcePath);
-        PHPUnit_Extensions_Database_Operation_Factory::INSERT()
+        PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT()
                 ->execute(self::getPHPUNitConnection(), $xmlDataSet);
     }
 

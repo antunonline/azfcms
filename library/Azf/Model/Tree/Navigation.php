@@ -170,12 +170,13 @@ SQL;
     /**
      *
      * @param void $id
+     * @param boolean $force
      * @return boolean
      * @throws RuntimeException
      */
-    protected function _fetchConfiguration($id) {
+    protected function _fetchConfiguration($id, $force = false) {
         $cacheKey = "i" . $id;
-        if (isset($this->_staticParams[$cacheKey])) {
+        if (isset($this->_staticParams[$cacheKey])&& $force == false) {
             return true;
         }
 
@@ -405,6 +406,13 @@ SQL;
         $this->_saveCache($id);
     }
 
+    
+    /**
+     *
+     * @param int $id
+     * @param string $plugin
+     * @param string $name 
+     */
     protected function _deletePluginParam($id, $plugin, $name) {
         $id = (int) $id;
         $plugin = (string) $plugin;
@@ -414,6 +422,24 @@ SQL;
 
         unset($this->_pluginsParams[$cacheKey][$plugin][$name]);
         $this->_saveCache($id);
+    }
+    
+    
+    /**
+     *
+     * @param int $id
+     * @param string $plugin 
+     */
+    protected function _deletePlugin($id, $plugin){
+        $id = (int) $id;
+        $plugin = (string) $plugin;
+        $cacheKey = "i" . $id;
+        
+        $this->_fetchConfiguration($id);
+        unset($this->_pluginsParams[$cacheKey][$plugin]);
+        
+        $this->_saveCache($id);
+        $this->_fetchConfiguration($id, true);
     }
 
     /**
@@ -585,8 +611,63 @@ SQL;
         $this->_setPluginParams($id, $plugin, $name, $value);
     }
 
+    
+    /**
+     *
+     * @param int $id
+     * @param string $plugin
+     * @param string $name 
+     */
     public function deletePluginParam($id, $plugin, $name) {
         $this->_deletePluginParam($id, $plugin, $name);
+    }
+    
+    
+    /**
+     *
+     * @param int $id
+     * @param string $plugin 
+     */
+    public function deletePlugin($id, $plugin){
+        $this->_deletePlugin($id,$plugin);
+    }
+    
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param int $userId
+     * @return array
+     */
+    public function getBreadCrumbsMenu($nodeId, $userId){
+        $return = $this->getAdapter()->fetchAll("call navigation_breadCrumbMenu (?,?);", array(
+            $nodeId, $userId
+        ));
+        
+        return $return;
+    }
+    
+    
+    /**
+     *
+     * @param int $userId
+     * @return array
+     */
+    public function getRootMenu($userId){
+        $return = $this->getAdapter()->fetchAll("call navigation_rootMenu (?);",array($userId));
+        return $return;
+    }
+    
+    
+    /**
+     * 
+     * @param int $nodeId 
+     * @param int $userId
+     * @return arary
+     */
+    public function getContextualMenu($nodeId, $userId){
+        $return = $this->getAdapter()->fetchAll("call navigation_contextMenu (?,?);",array($nodeId, $userId));
+        return $return;
     }
     
 

@@ -15,15 +15,21 @@ and open the template in the editor.
         <script  src="/js/dojo/dojo/dojo.js" ></script>
         <script type="text/javascript">
             require(['dojo/_base/kernel','dojo/_base/loader'], function(dojo){
-                dojo.registerModulePath("azfcms", "../../azfcms");
+                dojo.registerModulePath("azfcms", "/js/azfcms");
+                
+                require(['azfcms/model/Config'],function(config){
+                    
+                    
+                    
+                    if(a===b){
+                        document.body.innerHTML = "NOT OK";
+                    }else {
+                        document.body.innerHTML = "OK";
+                    }
+                })
             })
             
-            require(['azfcms/model'],function(model){
-                var func = function(){
-                    console.debug(JsonService)
-                }
-                func.apply(model.callRpc,[]);
-            })
+            
         </script>
     </head>
     <body>

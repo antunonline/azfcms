@@ -381,6 +381,40 @@ SQL;
             return false;
         }
     }
+    
+    
+    /**
+     *
+     * @param int $id
+     * @param string $plugin 
+     * @return string
+     */
+    protected function _generatePluginName($id, $plugin){
+        $parts = explode(":",$plugin);
+        if(count($parts)==2){
+            $name = $parts[0];
+            $index = $parts[1];
+        }else {
+            $name = $plugin;
+            $index = null;
+        }
+        
+        if($name && !ctype_alnum($name)){
+            throw new InvalidArgumentException("Plugin name can contain only alphanumeric characters");
+        }
+        
+        if(!ctype_digit($index)){
+            $pluginNames = $this->getPluginNames($id);
+            $search = "$name:";
+            $maxIndex = 0;
+            for($i = 0, $count = count($pluginNames); $i < $count; $i++){
+                $index = (int) ctype_digit(str_replace($search, "", $pluginNames[$i]));
+                $maxIndex = $maxIndex < $index ? $index : $maxIndex;
+            }
+            $index = $maxIndex;
+        }
+        return "$name:$index";
+    }
 
     /**
      *
@@ -390,12 +424,15 @@ SQL;
      * @param mixed $value
      * @return void 
      */
-    protected function _setPluginParams($id, $plugin, $name, $value) {
+    protected function _setPluginParam($id, $plugin, $name, $value) {
         $id = (int) $id;
         $plugin = (string) $plugin;
         $name = (string) $name;
         $cacheKey = "i" . $id;
         $this->_fetchConfiguration($id);
+        
+        $plugin = $this->_generatePluginName($id, $plugin);
+        
 
         if (!isset($this->_pluginsParams[$cacheKey][$plugin])) {
             $this->_pluginsParams[$cacheKey][$plugin] = array();
@@ -404,6 +441,31 @@ SQL;
         $this->_pluginsParams[$cacheKey][$plugin][$name] = $value;
 
         $this->_saveCache($id);
+        $this->_fetchConfiguration($id,true);
+        return $plugin;
+    }
+
+    /**
+     *
+     * @param int $id
+     * @param string $plugin
+     * @param array $params
+     * @return void 
+     */
+    protected function _setPluginParams($id, $plugin, array $params) {
+        $id = (int) $id;
+        $plugin = (string) $plugin;
+        $cacheKey = "i" . $id;
+        $this->_fetchConfiguration($id);
+        
+        $plugin = $this->_generatePluginName($id, $plugin);
+        
+
+        $this->_pluginsParams[$cacheKey][$plugin] = $params;
+
+        $this->_saveCache($id);
+        $this->_fetchConfiguration($id,true);
+        return $plugin;
     }
 
     
@@ -606,9 +668,22 @@ SQL;
      * @param string $plugin
      * @param string $name
      * @param mixed $value 
+     * @return string
      */
     public function setPluginParam($id, $plugin, $name, $value) {
-        $this->_setPluginParams($id, $plugin, $name, $value);
+        return $this->_setPluginParam($id, $plugin, $name, $value);
+    }
+    
+    
+    /**
+     *
+     * @param int $id
+     * @param string $plugin
+     * @param array $params 
+     * @return string
+     */
+    public function setPluginParams($id, $plugin, array $params){
+        return $this->_setPluginParams($id, $plugin, $params);
     }
 
     

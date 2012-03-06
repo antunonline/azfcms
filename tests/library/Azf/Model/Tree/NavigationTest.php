@@ -217,8 +217,8 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
     public function pluginsConfiguration_getDescriptionParam() {
         $expected = "description";
 
-        $this->assertEquals($expected, $this->navigation->getPluginParam(1, "description", "meta"));
-        $this->assertEquals($expected, $this->navigation->getPluginParam(3, "description", "meta"));
+        $this->assertEquals($expected, $this->navigation->getPluginParam(1, "description:0", "meta"));
+        $this->assertEquals($expected, $this->navigation->getPluginParam(3, "description:0", "meta"));
     }
 
     /**
@@ -226,7 +226,7 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_getDescriptionParamWithInheritance() {
         $expected = "overriden";
-        $actual = $this->navigation->getPluginParam(4, "description", "meta");
+        $actual = $this->navigation->getPluginParam(4, "description:0", "meta");
 
         $this->assertEquals($expected, $actual);
     }
@@ -238,10 +238,10 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
 
         $expected = array("meta" => "description");
 
-        $actual = $this->navigation->getPluginParams(1, "description");
+        $actual = $this->navigation->getPluginParams(1, "description:0");
         $this->assertEquals($expected, $actual);
 
-        $actual = $this->navigation->getPluginParams(2, "description");
+        $actual = $this->navigation->getPluginParams(2, "description:0");
         $this->assertEquals($expected, $actual);
     }
 
@@ -253,7 +253,7 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
             "what" => "YEA",
             "meta" => "description"
         );
-        $actual = $this->navigation->getPluginParams(3, "description");
+        $actual = $this->navigation->getPluginParams(3, "description:0");
 
         $this->assertEquals($expected, $actual);
     }
@@ -262,12 +262,12 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      * @test
      */
     public function pluginsConfiguration_hasParam() {
-        $this->assertFalse($this->navigation->hasPluginParam(1, "meta", "meta"));
-        $this->assertFalse($this->navigation->hasPluginParam(1, "description", "none"));
+        $this->assertFalse($this->navigation->hasPluginParam(1, "meta:0", "meta"));
+        $this->assertFalse($this->navigation->hasPluginParam(1, "description:0", "none"));
 
         $navi = $this->navigation;
-        $this->assertTrue($navi->hasPluginParam(1, "description", "meta"));
-        $this->assertTrue($navi->hasPluginParam(2, "description", "meta"));
+        $this->assertTrue($navi->hasPluginParam(1, "description:0", "meta"));
+        $this->assertTrue($navi->hasPluginParam(2, "description:0", "meta"));
     }
 
     /**
@@ -277,12 +277,28 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
         $navi = $this->navigation;
         $navi->setPluginParam(1, "description", "hello", "world");
 
-        $this->assertEquals("world", $navi->getPluginParam(1, "description", "hello"));
-        $this->assertEquals("world", $navi->getPluginParam(2, "description", "hello"));
+        $this->assertEquals("world", $navi->getPluginParam(1, "description:1", "hello"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description:1", "hello"));
 
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals("world", $navi->getPluginParam(1, "description", "hello"));
-        $this->assertEquals("world", $navi->getPluginParam(2, "description", "hello"));
+        $this->assertEquals("world", $navi->getPluginParam(1, "description:1", "hello"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description:1", "hello"));
+    }
+    
+    
+    /**
+     * @test
+     */
+    public function pluginsConfiguration_setNewPluginParam(){
+        $navi = $this->navigation;
+        $newFullPluginName = $navi->setPluginParam(2, "description","name","value");
+        $this->assertEquals("description:1",$newFullPluginName);
+        
+        $this->assertEquals("value", $navi->getPluginParam(2, "description:1", "name"));
+        
+        $navi = new Azf_Model_Tree_Navigation();
+        $this->assertEquals("value", $navi->getPluginParam(2, "description:1", "name"));
+        
     }
 
     /**
@@ -290,14 +306,14 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_setParamOverrideParent() {
         $navi = $this->navigation;
-        $navi->setPluginParam(1, "description", "meta", "world");
+        $navi->setPluginParam(1, "description:0", "meta", "world");
 
-        $this->assertEquals("world", $navi->getPluginParam(1, "description", "meta"));
-        $this->assertEquals("world", $navi->getPluginParam(2, "description", "meta"));
+        $this->assertEquals("world", $navi->getPluginParam(1, "description:0", "meta"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description:0", "meta"));
 
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals("world", $navi->getPluginParam(1, "description", "meta"));
-        $this->assertEquals("world", $navi->getPluginParam(2, "description", "meta"));
+        $this->assertEquals("world", $navi->getPluginParam(1, "description:0", "meta"));
+        $this->assertEquals("world", $navi->getPluginParam(2, "description:0", "meta"));
     }
 
     /**
@@ -305,13 +321,49 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_setParamOfUndefinedPlugin() {
         $navi = $this->navigation;
-        $navi->setPluginParam(2, "new", "hello", "new");
+        $plugName  = $navi->setPluginParam(2, "new", "hello", "new");
         $actual = "new";
 
-        $this->assertEquals($actual, $navi->getPluginParam(2, "new", "hello"));
+        $this->assertEquals($actual, $navi->getPluginParam(2, $plugName, "hello"));
 
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals($actual, $navi->getPluginParam(2, "new", "hello"));
+        $this->assertEquals($actual, $navi->getPluginParam(2, $plugName, "hello"));
+    }
+    
+    
+    /**
+     * @test
+     */
+    public function pluginsConfiguration_setPluginParams(){
+        $navi = $this->navigation;
+        $actual = array("a"=>"b");
+        $navi->setPluginParams(2, "description:0", $actual);
+        
+        $this->assertEquals($actual+array("meta"=>"description"), $navi->getPluginParams(2, "description:0"));
+        $navi = new Azf_Model_Tree_Navigation();
+        $this->assertEquals($actual+array("meta"=>"description"), $navi->getPluginParams(2, "description:0"));
+    }
+    
+    /**
+     * @test
+     */
+    public function pluginsConfiguration_setPluginParamsForNewPlugin(){
+        $navi = $this->navigation;
+        $actual = array("a"=>"b");
+        $navi->setPluginParams(2, "description", $actual);
+        
+        $this->assertEquals($actual, $navi->getPluginParams(2, "description:1"));
+        $navi = new Azf_Model_Tree_Navigation();
+        $this->assertEquals($actual, $navi->getPluginParams(2, "description:1"));
+    }
+    
+    /**
+     * @test
+     */
+    public function pluginsConfiguration_setPluginParamsNewPluginNameCheck(){
+        $navi = $this->navigation;
+        $name = $navi->setPluginParams(2, "description", array());
+        $this->assertEquals("description:1",$name);
     }
 
     /**
@@ -319,14 +371,14 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_deleteParentParam() {
         $navi = $this->navigation;
-        $navi->deletePluginParam(1, "description", "meta");
+        $navi->deletePluginParam(1, "description:0", "meta");
 
-        $this->assertFalse($navi->hasPluginParam(1, "description", "meta"));
-        $this->assertFalse($navi->hasPluginParam(2, "description", "meta"));
+        $this->assertFalse($navi->hasPluginParam(1, "description:0", "meta"));
+        $this->assertFalse($navi->hasPluginParam(2, "description:0", "meta"));
 
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertFalse($navi->hasPluginParam(1, "description", "meta"));
-        $this->assertFalse($navi->hasPluginParam(2, "description", "meta"));
+        $this->assertFalse($navi->hasPluginParam(1, "description:0", "meta"));
+        $this->assertFalse($navi->hasPluginParam(2, "description:0", "meta"));
     }
 
     /**
@@ -334,14 +386,14 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_deleteChildParam() {
         $navi = $this->navigation;
-        $navi->deletePluginParam(4, "info", "info");
+        $navi->deletePluginParam(4, "info:0", "info");
 
-        $this->assertFalse($navi->hasPluginParam(4, "info", "info"));
-        $this->assertTrue($navi->hasPluginParam(4, "description", "meta"));
+        $this->assertFalse($navi->hasPluginParam(4, "info:0", "info"));
+        $this->assertTrue($navi->hasPluginParam(4, "description:0", "meta"));
 
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertFalse($navi->hasPluginParam(4, "info", "info"));
-        $this->assertTrue($navi->hasPluginParam(4, "description", "meta"));
+        $this->assertFalse($navi->hasPluginParam(4, "info:0", "info"));
+        $this->assertTrue($navi->hasPluginParam(4, "description:0", "meta"));
     }
 
     /**
@@ -349,7 +401,7 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_getPluginsNames() {
         $navi = $this->navigation;
-        $expected = array("description");
+        $expected = array("description:0");
 
         $actual = $navi->getPluginNames(1);
         $this->assertEquals($expected, $actual);
@@ -360,7 +412,7 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     public function pluginsConfiguration_getPluginsNamesFromChild() {
         $navi = $this->navigation;
-        $expected = array("description", "info");
+        $expected = array("description:0", "info:0");
 
         $actual = $navi->getPluginNames(4);
         $this->assertEquals($expected, $actual);
@@ -372,13 +424,13 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
     public function pluginsConfiguration_deletePlugin() {
         $navi = $this->navigation;
 
-        $navi->deletePlugin(4, "description");
-        $this->assertEquals("description", $navi->getPluginParam(4, "description", "meta"));
-        $this->assertTrue($navi->hasPluginParam(4, "info", "info"));
+        $navi->deletePlugin(4, "description:0");
+        $this->assertEquals("description", $navi->getPluginParam(4, "description:0", "meta"));
+        $this->assertTrue($navi->hasPluginParam(4, "info:0", "info"));
 
         $navi = new Azf_Model_Tree_Navigation();
-        $this->assertEquals("description", $navi->getPluginParam(4, "description", "meta"));
-        $this->assertTrue($navi->hasPluginParam(4, "info", "info"));
+        $this->assertEquals("description", $navi->getPluginParam(4, "description:0", "meta"));
+        $this->assertTrue($navi->hasPluginParam(4, "info:0", "info"));
     }
 
     /**

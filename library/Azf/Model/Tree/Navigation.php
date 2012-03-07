@@ -21,6 +21,11 @@ class Azf_Model_Tree_Navigation extends Azf_Model_Tree_Abstract {
     protected $_staticParams = array();
     protected $_dynamicParams = array();
     protected $_pluginsParams = array();
+    /**
+     *
+     * @var array
+     */
+    protected $_urlMap = array();
 
     protected function createTemporaryTable() {
         $sql = <<<SQL
@@ -744,6 +749,8 @@ SQL;
         $return = $this->getAdapter()->fetchAll("call navigation_contextMenu (?,?);",array($nodeId, $userId));
         return $return;
     }
+    
+    
     
 
 }

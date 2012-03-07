@@ -14,134 +14,137 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
 
     /**
      *
-     * @var ITBranch_Controller_Router_Route_Default
+     * @var Azf_Model_Tree_Navigation
      */
-    protected static $instance;
-    
-    /**
-     *
-     * @var Azf_Navigation_NavigationTree
-     */
-    protected $model;
+    protected $model = null;
 
     /**
      *
-     * @return Azf_Navigation_NavigationTree
+     * @var int
      */
-    public function getModel() {
-        return $this->model;
+    protected $matchId = -1;
+
+    /**
+     * @var string
+     */
+    protected $url = "";
+
+    /**
+     *
+     * @var array
+     */
+    protected $matchQuery = array();
+
+    /**
+     *
+     * @return int
+     */
+    public function getMatchedId() {
+        return $this->matchId;
     }
 
     /**
      *
-     * @param Azf_Navigation_NavigationTree $model 
+     * @param int $matchId 
      */
-    public function setModel(Azf_Navigation_NavigationTree $model) {
+    public function setMatchedId($matchId) {
+        $this->matchId = $matchId;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getMatchedUrl() {
+        return $this->url;
+    }
+
+    /**
+     *
+     * @param string $url 
+     */
+    public function setMatchedUrl($url) {
+        $this->url = $url;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getMatchedQueryParams() {
+        return $this->matchQuery;
+    }
+
+    /**
+     * @param array $matchQuery
+     */
+    public function setMatchedQueryParams(array $matchQuery) {
+        $this->matchQuery = $matchQuery;
+    }
+
+    /**
+     *
+     * @param Azf_Model_Tree_Navigation $model 
+     */
+    public function __construct(Azf_Model_Tree_Navigation $model) {
         $this->model = $model;
     }
 
     /**
      *
-     * @param Azf_Navigation_NavigationTree $model 
+     * @param array $data
+     * @param boolean $reset
+     * @param boolean $encode
+     * @return string 
      */
-    public function __construct(Azf_Navigation_NavigationTree $model) {
-        $this->setModel($model);
-    }
-
     public function assemble($data = array(), $reset = false, $encode = false) {
-        $url = "";
-        if(!isset($data['id'])){
-            return false;
-        }
-        else if(isset($data['id'])&&isset($data['name'])){
-            $node['id']=$data['id'];
-            $node['name']=$data['name'];
-        }
-        else {
-            $id = $data['id'];
-            $node = $this->getModel()->find($id);
-            
-            if(!$node){
-                return false;
-            }
-        }
+        $id = isset($data['id']) ? $data['id'] : $this->getMatchedId();
+        $url = isset($data['url']) ? $data['url'] : $this->getMatchedUrl();
         
-        $params= array_diff_key($data,$node);        
-        
-        $url.=urlencode(preg_replace("/._d(\d)/",".-d $1",$node['name'])."._d").$node['id']."/";
-        
-        foreach($params as $key => $value){
-            if(is_string($value)==false) continue;
-            $url.=urlencode($key)."/".urlencode($value)."/";
+        if($reset==false){
+            $data += $this->getMatchedQueryParams();
         }
-        
-        return $url;
+
+        unset($data['id']);
+        unset($data['url']);
+        $url = urlencode($url);
+        $queryArgs = http_build_query($data);
+        $assembled = "/";
+
+
+        if ($url)
+            $assembled .=$url . "/";
+        $assembled .="$id.html";
+
+        if ($queryArgs)
+            $assembled.="?$queryArgs";
+
+        return $assembled;
     }
 
+    /**
+     *
+     * @param string $path
+     * @return array
+     */
     public function match($path) {
-        /* @var $regex Zend_Controller_Request_Http */
-        $regex = '/[^.]+\._d(\d+)/i';
-        $matches = array();
-        $match = array();
-        $requestUri = $path->getRequestUri();
-        
-        if(preg_match($regex,$requestUri, $matches)){
-            $node = $this->getModel()->find($matches[1]);
-            if($node){
-                $match =(array) json_decode($node['body']);
-                $match['id']=$node['id'];
-                
-                $matchString = "._d".$node['id']."/";
-                if(strpos($requestUri, $matchString)!== -1){
-                    $requestUri = substr($requestUri,strpos($requestUri,$matchString)+strlen($matchString));
-                    $lPos = 0;
-                    $pos = 0;
-                    $key = false;
-                    $value = false;
-                    
-                    while(false !== ($pos = strpos($requestUri,"/",$lPos))){
-                        
-                        if($key === false){
-                            $key = substr($requestUri, $lPos,$pos-$lPos);
-                        }
-                        else {
-                            $value = substr($requestUri, $lPos,$pos-$lPos);
-                            $match[urldecode($key)]=urldecode($value);
-                            
-                            $key = false;
-                            $value = false;
-                        }
-                        
-                        $lPos = $pos+1;
-                    }
-                    if(($key && !$value) || ($lPos<strlen($requestUri))){
-                        if($lPos<strlen($requestUri)){
-                            if($key){
-                                $value = substr($requestUri, $lPos);
-                            }
-                            else {
-                                $key = substr($requestUri, $lPos);
-                                $value = "";
-                            }
-                        }
-                        else {
-                            $value = "";
-                        }
-                        $match[urldecode($key)]=urldecode($value);
-                    }
-                }
-                
-            }
-        }
-        
-        if(!$match){
-            $node = $this->getModel()->getRootNode("*",true);
-            $match = json_decode($node['body']);
-        }
-        return $match;
+        $urlParts = parse_url($path);
+        $urlPath = isset($urlParts['path']) ? $urlParts['path'] : "";
+        $urlQuery = isset($urlParts['query']) ? $urlParts['query'] : "";
+        $id = substr($urlPath, ($lPos = 1 + strrpos($urlPath, "/")), strrpos($urlPath, ".html") - $lPos);
+        $id = ctype_digit($id) ? $id : -1;
+        $queryParams = array();
+        parse_str($urlQuery, $queryParams);
+
+        $staticParams = $this->model->getStaticParams($id);
+
+        $this->setMatchedId($id);
+        $this->setMatchedUrl($urlPath);
+        $this->setMatchedQueryParams($queryParams);
+
+        return $staticParams;
     }
 
-    
     /**
      *
      * @param Zend_Config $config

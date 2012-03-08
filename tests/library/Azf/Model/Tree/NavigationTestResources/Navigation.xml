@@ -14,10 +14,10 @@ and open the template in the editor.
     <Navigation parentId='4' id='7' tid='1' l='9' r='10' disabled='0' url='/forums/producta' final='{"otherTitle":"Other text, Cool:)"}' plugins='{}' abstract='{}' home='0' />
     <Navigation parentId='4' id='8' tid='1' l='11' r='12' disabled='0' url='/forums/other' final='{"action":"index","controller":"index","module":"default"}' plugins='{}' abstract='{}' home='0' />
     
-    <User id="1" firstName="Guest" lastName="Guest" />
-    <User id="2" firstName="Registered" lastName="Registered" />
+    <User id="1" firstName="Guest" lastName="Guest" loginName="Guest user" email="guest@example.com" verified="1" verificationKey="0" cTime="0" rTime="0" />
+    <User id="2" firstName="Registered" lastName="Registered" loginName="Registered user" email="regi@example.com" verified="1" verificationKey="1" cTime="0" rTime="0" />
     
-    <ACLGroup id="1" name="Guest" />
+    <ACLGroup id="1" name="Guest"  />
     <ACLGroup id="2" name="Registered" />
     
     <User_ACLGroup id="1" userId="1" aclGroupId="1" />

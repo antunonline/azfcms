@@ -146,16 +146,6 @@ SQL;
 
     /**
      *
-     * @param array $data
-     * @param int $id 
-     */
-    public function update(array $data, $id) {
-        $id = (int) $id;
-        parent::update($data, "$this->_primary = $id");
-    }
-
-    /**
-     *
      * @param mixed $config
      * @return string
      */
@@ -229,7 +219,7 @@ SQL;
             self::FIELD_DYNAMIC => $this->_encodeConfig($this->_dynamicParams[$cacheKey])
         );
         
-        $this->update($record, $id);
+        $this->update($record, array('id=?'=>$id));
     }
 
     /**

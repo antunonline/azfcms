@@ -128,6 +128,9 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
      * @return array
      */
     public function match($path) {
+        if(is_object($path) && $path instanceof Zend_Controller_Request_Http){
+            $path = $path->getRequestUri();
+        }
         $urlParts = parse_url($path);
         $urlPath = isset($urlParts['path']) ? $urlParts['path'] : "";
         $urlQuery = isset($urlParts['query']) ? $urlParts['query'] : "";
@@ -136,7 +139,10 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
         $queryParams = array();
         parse_str($urlQuery, $queryParams);
 
-        $staticParams = $this->model->getStaticParams($id);
+        $id = $this->model->match($id);
+        $staticParams = array("id"=>$id) + (array) $this->model->getStaticParams($id);
+        
+        
 
         $this->setMatchedId($id);
         $this->setMatchedUrl($urlPath);
@@ -153,5 +159,6 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
     public static function getInstance(Zend_Config $config) {
         return self::$instance;
     }
+    
 
 }

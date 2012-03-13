@@ -11,6 +11,16 @@
  * @author Antun Horvat <at> it-branch.com
  */
 class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
+    
+    
+    /**
+     *
+     * @param array $values
+     * @return Azf_PHPUnit_Framework_MockObject_Stub_ReturnSequential 
+     */
+    public function returnSequential(array $values){
+        return new Azf_PHPUnit_Framework_MockObject_Stub_ReturnSequential($values);
+    }
 
     /**
      *
@@ -673,6 +683,45 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
         
         $actual = $navi->getContextualMenu(1, 3);
         $this->assertEquals($expected, $actual);
+    }
+    
+    
+    /**
+     * @test
+     */
+    public function match_testHomeMatch(){
+        $mock = $this->getMock("Zend_Db_Statement_Pdo",array('fetch','execute'),array(),'',false);
+        $mock->expects($this->any())
+                ->method("fetch")
+                ->will($this->returnSequential(array(
+                    array('resultSet'=>'1','id'=>6,'url'=>'/6',
+                        'final'=>'{"module":"m1","controller":"c1","action":"a"}',
+                        'abstract'=>'{"param_a":"a"}',
+                        'plugins'=>'{"pa:0":{"pa":"a","pb":"b"} }'),
+                    array('resultSet'=>'1','id'=>6,'url'=>'/6',
+                        'final'=>'{"module":"m1","controller":"c1","action":"a"}',
+                        'abstract'=>'{"param_b":"b"}',
+                        'plugins'=>'{"pa:0":{"pa":"b","pb":"b"}, "pa:1":{"pa":"a1"} }'),
+                    array('resultSet'=>'1','id'=>6,'url'=>'/6',
+                        'final'=>'{"module":"m1","controller":"c1","action":"a"}',
+                        'abstract'=>'{"param_b":"b","param_a":"b"}',
+                        'plugins'=>'{"pa:0":{"pa":"b","pb":"b"}, "pa:1":{"pa":"a1"} }'),
+                    null
+                )));
+        
+        $naviMock = $this->getMock("Azf_Model_Tree_Navigation",array('_prepareStmt'),array(),'',false);        
+        $naviMock->expects($this->any())
+                ->method("_prepareStmt")
+                ->will($this->returnValue($mock));
+        
+        $this->assertEquals(6,$naviMock->match(-1));
+        $this->assertEquals("m1",$naviMock->getStaticParam(6,"module"));
+        $this->assertEquals("a",$naviMock->getDynamicParam(6,"param_a"));
+        $this->assertEquals("b",$naviMock->getDynamicParam(6,"param_b"));
+        $this->assertEquals(array("pa:0","pa:1"),$naviMock->getPluginNames(6));
+        
+        
+        
     }
 
 }

@@ -17,15 +17,21 @@ class Azf_Model_Tree_Navigation extends Azf_Model_Tree_Abstract {
 
     protected $_name = "Navigation";
     protected $_primary = "id";
-    
     protected $_staticParams = array();
     protected $_dynamicParams = array();
     protected $_pluginsParams = array();
+
     /**
      *
      * @var array
      */
     protected $_urlMap = array();
+
+    /**
+     *
+     * @var int|null
+     */
+    protected $lastFetchConfigurationId;
 
     protected function createTemporaryTable() {
         $sql = <<<SQL
@@ -52,12 +58,12 @@ SQL;
     protected function insertNode($l, $r, $parentId, $value) {
         $value = (object) $value;
         $initialConfig = $this->_encodeConfig(array());
-        $disabled = isset($value->disabled)?$value->disabled:1;
-        $url  = isset($value->url)?$value->url:"/";
-        $final = isset($value->final)?$value->final:"/";
-        $plugins = isset($value->plugins)?$this->_encodeConfig($value->plugins):$initialConfig;
-        $abstract = isset($value->abstract)?$this->_encodeConfig($value->abstract):$initialConfig;
-        
+        $disabled = isset($value->disabled) ? $value->disabled : 1;
+        $url = isset($value->url) ? $value->url : "/";
+        $final = isset($value->final) ? $value->final : "/";
+        $plugins = isset($value->plugins) ? $this->_encodeConfig($value->plugins) : $initialConfig;
+        $abstract = isset($value->abstract) ? $this->_encodeConfig($value->abstract) : $initialConfig;
+
         $record = array(
             'l' => $l,
             'r' => $r,
@@ -113,6 +119,41 @@ SQL;
     }
 
     /**
+     *
+     * @return int|null
+     */
+    public function getLastFetchConfigurationId() {
+        return $this->lastFetchConfigurationId;
+    }
+
+    /**
+     *
+     * @param int $lastFetchConfigurationId 
+     */
+    public function setLastFetchConfigurationId($lastFetchConfigurationId) {
+        $this->lastFetchConfigurationId = $lastFetchConfigurationId;
+    }
+    
+    /**
+     *
+     * @param string $sql 
+     * @return Zend_Db_Statement_Interface
+     */
+    public function _prepareStmt($sql){
+        return $this->getAdapter()->prepare($sql);
+    }
+    
+    
+    /**
+     *
+     * @param int $id 
+     * @return string
+     */
+    public function _getCacheKey($id){
+        return "i".$id;
+    }
+
+    /**
      * This method will disable current and all sibling nodes
      * @param int $nodeId 
      * @return void
@@ -138,7 +179,7 @@ SQL;
      * @return array
      */
     public function getCompleteMenu($userId) {
-        $stmt = $this->getAdapter()->prepare("call navigation_completeUserMenu (?);");
+        $stmt = $this->_prepareStmt("call navigation_completeUserMenu (?);");
         $stmt->execute(array($userId));
 
         return $this->_parseTree($stmt);
@@ -164,6 +205,39 @@ SQL;
 
     /**
      *
+     * @param array $row
+     * @param array $dynamicParams
+     * @param array $plugins 
+     */
+    protected function _mergeConfigurationRow(array $row, array &$dynamicParams, array &$plugins) {
+        $tmpDynamic = $this->_decodeConfig($row[self::FIELD_DYNAMIC]);
+        $dynamicParams+=$tmpDynamic;
+
+        $tmpPlugins = $this->_decodeConfig($row['plugins']);
+        foreach ($tmpPlugins as $pluginName => $pluginArray) {
+            $pluginArray = (array) $pluginArray;
+
+            if (isset($plugins[$pluginName])) {
+                $plugins[$pluginName] += $pluginArray;
+            } else {
+                $plugins[$pluginName] = $pluginArray;
+            }
+        }
+    }
+    
+    
+    
+    /**
+     *
+     * @param array $row 
+     * @return array
+     */
+    protected function _fetchStaticConfig(array $row){
+        return $this->_decodeConfig($row[self::FIELD_STATIC]);
+    }
+
+    /**
+     *
      * @param void $id
      * @param boolean $force
      * @return boolean
@@ -171,41 +245,32 @@ SQL;
      */
     protected function _fetchConfiguration($id, $force = false) {
         $cacheKey = "i" . $id;
-        if (isset($this->_staticParams[$cacheKey])&& $force == false) {
+        if (isset($this->_staticParams[$cacheKey]) && $force == false) {
             return true;
         }
 
-        $stmt = $this->getAdapter()->prepare("call fetchConfiguration(?)");
+        $stmt = $this->_prepareStmt("call fetchConfiguration(?)");
         $stmt->execute(array($id));
         $row = $stmt->fetch();
 
         if ($row) {
-            $this->_staticParams[$cacheKey] = array();
-            $this->_dynamicParams[$cacheKey] = array();
-            $this->_pluginsParams[$cacheKey] = array();
-            $plugins = array();
+            $staticParams = array();
+            $dynamicParams = array();
+            $pluginParams = array();
 
             // Store dynamic config
-            $this->_staticParams[$cacheKey] = $this->_decodeConfig($row[self::FIELD_STATIC]);
+            $staticParams = $this->_fetchStaticConfig($row);
             do {
-                $tmpDynamic = $this->_decodeConfig($row[self::FIELD_DYNAMIC]);
-                $this->_dynamicParams[$cacheKey]+=$tmpDynamic;
-
-                $tmpPlugins = $this->_decodeConfig($row['plugins']);
-                foreach ($tmpPlugins as $pluginName => $pluginArray) {
-                    $pluginArray = (array) $pluginArray;
-
-                    if (isset($plugins[$pluginName])) {
-                        $plugins[$pluginName] += $pluginArray;
-                    } else {
-                        $plugins[$pluginName] = $pluginArray;
-                    }
-                }
+                $this->_mergeConfigurationRow($row, $dynamicParams, $pluginParams);
             } while ($row = $stmt->fetch());
-            $this->_pluginsParams[$cacheKey] = $plugins;
         } else {
             throw new RuntimeException("Navigation record with ID $id does not exits");
         }
+        
+        $this->_staticParams[$cacheKey] = $staticParams;
+        $this->_dynamicParams[$cacheKey] = $dynamicParams;
+        $this->_pluginsParams[$cacheKey] = $pluginParams;
+        
         return true;
     }
 
@@ -218,8 +283,8 @@ SQL;
             self::FIELD_STATIC => $this->_encodeConfig($this->_staticParams[$cacheKey]),
             self::FIELD_DYNAMIC => $this->_encodeConfig($this->_dynamicParams[$cacheKey])
         );
-        
-        $this->update($record, array('id=?'=>$id));
+
+        $this->update($record, array('id=?' => $id));
     }
 
     /**
@@ -282,7 +347,7 @@ SQL;
      */
     protected function _getFieldParams($id, $field) {
         $id = (int) $id;
-        $field = (string)$field;
+        $field = (string) $field;
         $cacheKey = "i" . $id;
         $this->_fetchConfiguration($id);
 
@@ -376,33 +441,32 @@ SQL;
             return false;
         }
     }
-    
-    
+
     /**
      *
      * @param int $id
      * @param string $plugin 
      * @return string
      */
-    protected function _generatePluginName($id, $plugin){
-        $parts = explode(":",$plugin);
-        if(count($parts)==2){
+    protected function _generatePluginName($id, $plugin) {
+        $parts = explode(":", $plugin);
+        if (count($parts) == 2) {
             $name = $parts[0];
             $index = $parts[1];
-        }else {
+        } else {
             $name = $plugin;
             $index = null;
         }
-        
-        if($name && !ctype_alnum($name)){
+
+        if ($name && !ctype_alnum($name)) {
             throw new InvalidArgumentException("Plugin name can contain only alphanumeric characters");
         }
-        
-        if(!ctype_digit($index)){
+
+        if (!ctype_digit($index)) {
             $pluginNames = $this->getPluginNames($id);
             $search = "$name:";
             $maxIndex = 0;
-            for($i = 0, $count = count($pluginNames); $i < $count; $i++){
+            for ($i = 0, $count = count($pluginNames); $i < $count; $i++) {
                 $index = (int) ctype_digit(str_replace($search, "", $pluginNames[$i]));
                 $maxIndex = $maxIndex < $index ? $index : $maxIndex;
             }
@@ -425,9 +489,9 @@ SQL;
         $name = (string) $name;
         $cacheKey = "i" . $id;
         $this->_fetchConfiguration($id);
-        
+
         $plugin = $this->_generatePluginName($id, $plugin);
-        
+
 
         if (!isset($this->_pluginsParams[$cacheKey][$plugin])) {
             $this->_pluginsParams[$cacheKey][$plugin] = array();
@@ -436,7 +500,7 @@ SQL;
         $this->_pluginsParams[$cacheKey][$plugin][$name] = $value;
 
         $this->_saveCache($id);
-        $this->_fetchConfiguration($id,true);
+        $this->_fetchConfiguration($id, true);
         return $plugin;
     }
 
@@ -452,18 +516,17 @@ SQL;
         $plugin = (string) $plugin;
         $cacheKey = "i" . $id;
         $this->_fetchConfiguration($id);
-        
+
         $plugin = $this->_generatePluginName($id, $plugin);
-        
+
 
         $this->_pluginsParams[$cacheKey][$plugin] = $params;
 
         $this->_saveCache($id);
-        $this->_fetchConfiguration($id,true);
+        $this->_fetchConfiguration($id, true);
         return $plugin;
     }
 
-    
     /**
      *
      * @param int $id
@@ -480,21 +543,20 @@ SQL;
         unset($this->_pluginsParams[$cacheKey][$plugin][$name]);
         $this->_saveCache($id);
     }
-    
-    
+
     /**
      *
      * @param int $id
      * @param string $plugin 
      */
-    protected function _deletePlugin($id, $plugin){
+    protected function _deletePlugin($id, $plugin) {
         $id = (int) $id;
         $plugin = (string) $plugin;
         $cacheKey = "i" . $id;
-        
+
         $this->_fetchConfiguration($id);
         unset($this->_pluginsParams[$cacheKey][$plugin]);
-        
+
         $this->_saveCache($id);
         $this->_fetchConfiguration($id, true);
     }
@@ -574,7 +636,7 @@ SQL;
      * @param mixed $default
      * @return mixed 
      */
-    public function getDynamicParam($id, $name, $default=null) {
+    public function getDynamicParam($id, $name, $default = null) {
         return $this->_getFieldParam($id, self::FIELD_DYNAMIC, $name, $default);
     }
 
@@ -668,8 +730,7 @@ SQL;
     public function setPluginParam($id, $plugin, $name, $value) {
         return $this->_setPluginParam($id, $plugin, $name, $value);
     }
-    
-    
+
     /**
      *
      * @param int $id
@@ -677,11 +738,10 @@ SQL;
      * @param array $params 
      * @return string
      */
-    public function setPluginParams($id, $plugin, array $params){
+    public function setPluginParams($id, $plugin, array $params) {
         return $this->_setPluginParams($id, $plugin, $params);
     }
 
-    
     /**
      *
      * @param int $id
@@ -691,57 +751,81 @@ SQL;
     public function deletePluginParam($id, $plugin, $name) {
         $this->_deletePluginParam($id, $plugin, $name);
     }
-    
-    
+
     /**
      *
      * @param int $id
      * @param string $plugin 
      */
-    public function deletePlugin($id, $plugin){
-        $this->_deletePlugin($id,$plugin);
+    public function deletePlugin($id, $plugin) {
+        $this->_deletePlugin($id, $plugin);
     }
     
     
+    /**
+     *
+     * @param int $id 
+     * @return int
+     */
+    public function match($id){
+        $stmt = $this->_prepareStmt("call fetchConfiguration (?);");
+        $stmt->execute(array($id));
+        
+        $row = $stmt->fetch();
+        if($row){
+            $id = $row['id'];
+            $cacheKey = $this->_getCacheKey($id);
+            $staticParams = $this->_fetchStaticConfig($row);
+            $dynamicParams = array();
+            $pluginParams = array();
+            
+            do{
+                $this->_mergeConfigurationRow($row, $dynamicParams, $pluginParams);
+            }while($row = $stmt->fetch());
+        } else {
+            throw new RuntimeException("Can't load required navigation node set");
+        }
+        
+        $this->_staticParams[$cacheKey] = $staticParams;
+        $this->_dynamicParams[$cacheKey] = $dynamicParams;
+        $this->_pluginsParams[$cacheKey] = $pluginParams;
+        return $id;
+    }
+
     /**
      *
      * @param int $nodeId
      * @param int $userId
      * @return array
      */
-    public function getBreadCrumbsMenu($nodeId, $userId){
+    public function getBreadCrumbsMenu($nodeId, $userId) {
         $return = $this->getAdapter()->fetchAll("call navigation_breadCrumbMenu (?,?);", array(
             $nodeId, $userId
-        ));
-        
+                ));
+
         return $return;
     }
-    
-    
+
     /**
      *
      * @param int $userId
      * @return array
      */
-    public function getRootMenu($userId){
-        $return = $this->getAdapter()->fetchAll("call navigation_rootMenu (?);",array($userId));
+    public function getRootMenu($userId) {
+        $return = $this->getAdapter()->fetchAll("call navigation_rootMenu (?);", array($userId));
         return $return;
     }
-    
-    
+
     /**
      * 
      * @param int $nodeId 
      * @param int $userId
      * @return arary
      */
-    public function getContextualMenu($nodeId, $userId){
-        $return = $this->getAdapter()->fetchAll("call navigation_contextMenu (?,?);",array($nodeId, $userId));
+    public function getContextualMenu($nodeId, $userId) {
+        $return = $this->getAdapter()->fetchAll("call navigation_contextMenu (?,?);", array($nodeId, $userId));
         return $return;
     }
-    
-    
-    
 
 }
 

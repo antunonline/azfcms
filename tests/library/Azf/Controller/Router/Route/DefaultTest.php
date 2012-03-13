@@ -42,10 +42,15 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
      * @test 
      */
     public function testMatch_homePage() {
-        $mock = $this->getNavigationMock(array('getStaticParams'));
+        $mock = $this->getNavigationMock(array('getStaticParams','match'));
+        $mock->expects($this->once())
+                ->method("match")
+                ->with(-1)
+                ->will($this->returnValue("3"));
         $mock->expects($this->once())
                 ->method("getStaticParams")
-                ->with($this->equalTo(-1));
+                ->with($this->equalTo(3));
+        
 
         $route = $this->getRouteInstance($mock);
         $route->match("");
@@ -55,10 +60,14 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
      * @test 
      */
     public function testMatch_pageId1() {
-        $mock = $this->getNavigationMock(array('getStaticParams'));
+        $mock = $this->getNavigationMock(array('getStaticParams','match'));
         $mock->expects($this->once())
                 ->method("getStaticParams")
                 ->with($this->equalTo(1));
+        $mock->expects($this->once())
+                ->method("match")
+                ->with(1)
+                ->will($this->returnValue(1));
 
         $route = $this->getRouteInstance($mock);
         $route->match("/this-is-cool/1.html");
@@ -68,10 +77,13 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
      * @test 
      */
     public function testMatch_pageId11() {
-        $mock = $this->getNavigationMock(array('getStaticParams'));
+        $mock = $this->getNavigationMock(array('getStaticParams','match'));
         $mock->expects($this->once())
                 ->method("getStaticParams")
                 ->with($this->equalTo(11));
+        $mock->expects($this->once())
+                ->method("match")
+                ->will($this->returnValue(11));
 
         $route = $this->getRouteInstance($mock);
         $route->match("/this-is-cool/11.html");
@@ -81,10 +93,14 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
      * @test 
      */
     public function testMatch_pageId111() {
-        $mock = $this->getNavigationMock(array('getStaticParams'));
+        $mock = $this->getNavigationMock(array('getStaticParams','match'));
         $mock->expects($this->once())
                 ->method("getStaticParams")
                 ->with($this->equalTo(111));
+        $mock->expects($this->once())
+                ->method("match")
+                ->with(111)
+                ->will($this->returnValue(111));
 
         $route = $this->getRouteInstance($mock);
         $route->match("/this-is-cool/111.html?this=is&cool=yes");
@@ -94,11 +110,14 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
      * @test 
      */
     public function testMatch_HomePageMVCReturn() {
-        $mock = $this->getNavigationMock(array('getStaticParams'));
-        $mvc = array("module"=>"model","controller"=>"controller","action"=>"action");
+        $mock = $this->getNavigationMock(array('getStaticParams','match'));
+        $mvc = array("module"=>"model","controller"=>"controller","action"=>"action",'id'=>3);
         $mock->expects($this->once())
                 ->method("getStaticParams")
                 ->will($this->returnValue($mvc));
+        $mock->expects($this->once())
+                ->method("match")
+                ->will($this->returnValue(3));
 
         $route = $this->getRouteInstance($mock);
         $actual = $route->match("/");

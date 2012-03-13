@@ -1,18 +1,130 @@
 <?php
 
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 /**
  * Description of Context
  *
  * @author Antun Horvat <at> it-branch.com
  */
-class Azf_Controller_Action_Helper_Context implements Zend_Controller_Action_Interface {
-
-    public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
-        
+class Azf_Controller_Action_Helper_Context extends Zend_Controller_Action_Helper_Abstract {
+    
+    /**
+     *
+     * @var Azf_Model_Tree_Navigation
+     */
+    protected $navigationModel;
+    /**
+     *
+     * @var int
+     */
+    protected $contextId;
+    
+    /**
+     *
+     * @return Azf_Model_Tree_Navigation
+     */
+    public function getNavigationModel(){
+       return $this->navigationModel;
+    }
+    
+    /**
+     * 
+     */
+    public function getContextId(){
+        return $this->contextId;
     }
 
-    public function dispatch($action) {
-        
+    
+    /**
+     * 
+     */
+    public function init() {
+        $this->navigationModel = Zend_Registry::get("navigationModel");
+        $this->contextId = $this->getRequest()->getParam("id");
+    }
+    
+    
+    /**
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed 
+     */
+    public function getStaticParam($name, $default = null){
+        return $this->
+                getNavigationModel()
+                ->getStaticParam($this->getContextId(), $name, $default);
+    }
+    
+    /**
+     *
+     * @return array|false
+     */
+    public function getStaticParams(){
+        return $this->getNavigationModel()->getStaticParams($this->getContextId());
+    }
+    
+    
+    /**
+     *
+     * @param string $name
+     * @param mixed $default 
+     * @return mixed
+     */
+    public function getDynamicParam($name, $default = null){
+        return 
+        $this->getNavigationModel()->getDynamicParam(
+                $this->getContextId(), $name, $default);
+    }
+    
+    
+    /**
+     * @return array|false
+     */
+    public function getDynamicParams(){
+        return $this->getNavigationModel()
+                ->getDynamicParams($this->getContextId());
+    }
+    
+    
+    /**
+     *
+     * @param string $plugin
+     * @param string $name
+     * @param mixed $default 
+     * @return mixed
+     */
+    public function getPluginParam($plugin, $name, $default = null){
+        return 
+        $this->getNavigationModel()
+                ->getPluginParam($this->getContextId(), $plugin, $name, $default);
+    }
+    
+    
+    /**
+     *
+     * @param string $plugin 
+     * @return array|false
+     */
+    public function getPluginParams($plugin){
+        return 
+        $this->getNavigationModel()
+                ->getPluginParams($this->getContextId(), $plugin);
+    }
+    
+    
+    /**
+     *
+     * @return array
+     */
+    public function getPluginNames(){
+        return $this->getNavigationModel()
+                ->getPluginNames($this->getContextId());
     }
 
 }
+

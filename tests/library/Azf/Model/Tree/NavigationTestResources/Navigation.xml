@@ -17,8 +17,8 @@ and open the template in the editor.
     <User id="1" firstName="Guest" lastName="Guest" loginName="Guest user" email="guest@example.com" verified="1" verificationKey="0" cTime="0" rTime="0" />
     <User id="2" firstName="Registered" lastName="Registered" loginName="Registered user" email="regi@example.com" verified="1" verificationKey="1" cTime="0" rTime="0" />
     
-    <ACLGroup id="1" name="Guest"  />
-    <ACLGroup id="2" name="Registered" />
+    <ACLGroup id="1" resource="type1" privilege="read"  />
+    <ACLGroup id="2" resource="type1" privilege="comment" />
     
     <User_ACLGroup id="1" userId="1" aclGroupId="1" />
     <User_ACLGroup id="2" userId="2" aclGroupId="1" />

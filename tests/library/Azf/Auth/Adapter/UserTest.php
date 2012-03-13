@@ -16,7 +16,7 @@ class Azf_Auth_Adapter_UserTest extends PHPUnit_Framework_TestCase{
     }
     
     public function testValidAuthenticate(){
-        $expected = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, array('loginName'=>'registered'));
+        $expected = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, (object)array('loginName'=>'registered'));
         $dbMock = $this->getDbMock();
         $dbMock->expects($this->once())
                 ->method("getUserByLoginName")
@@ -53,7 +53,7 @@ class Azf_Auth_Adapter_UserTest extends PHPUnit_Framework_TestCase{
         $actual = $auth->authenticate();
         
         $this->assertEquals($result->getCode(), $actual->getCode());
-        $this->assertEquals($result->getIdentity(), $actual->getIdentity());
+        $this->assertEquals((object)$result->getIdentity(), $actual->getIdentity());
     }
     
     
@@ -72,7 +72,7 @@ class Azf_Auth_Adapter_UserTest extends PHPUnit_Framework_TestCase{
         $actual = $auth->authenticate();
         
         $this->assertEquals($result->getCode(), $actual->getCode());
-        $this->assertEquals($result->getIdentity(), $actual->getIdentity());
+        $this->assertEquals((object)$result->getIdentity(), $actual->getIdentity());
     }
 }
 

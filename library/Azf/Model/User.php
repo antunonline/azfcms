@@ -120,6 +120,16 @@ class Azf_Model_User extends Zend_Db_Table_Abstract{
     }
     
     
+    /**
+     *  Fetch user acl rules
+     * @param int $id
+     * @return array
+     */
+    public function getUserAclRules($id){
+        return $this->getAdapter()->fetchAll("call user_fetchAclRules (?);",array($id));
+    }
+    
+    
     
     
 }

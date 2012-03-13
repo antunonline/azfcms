@@ -88,7 +88,7 @@ class Azf_Auth_Adapter_User implements Zend_Auth_Adapter_Interface {
             }
         }
         
-        $result = new Zend_Auth_Result($code, $identity);
+        $result = new Zend_Auth_Result($code, (object) $identity);
         return $result;
         
     }

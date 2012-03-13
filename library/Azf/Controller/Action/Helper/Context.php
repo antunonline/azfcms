@@ -32,10 +32,27 @@ class Azf_Controller_Action_Helper_Context extends Zend_Controller_Action_Helper
     }
     
     /**
-     * 
+     *
+     * @param Azf_Model_Tree_Navigation $model 
+     */
+    public function setNavigationModel(Azf_Model_Tree_Navigation $model){
+        $this->navigationModel = $model;
+    }
+    
+    /**
+     * @return int
      */
     public function getContextId(){
         return $this->contextId;
+    }
+    
+    
+    /**
+     *
+     * @param type $id 
+     */
+    public function setContextId($id){
+        $this->contextId = $id;
     }
 
     
@@ -43,8 +60,13 @@ class Azf_Controller_Action_Helper_Context extends Zend_Controller_Action_Helper
      * 
      */
     public function init() {
-        $this->navigationModel = Zend_Registry::get("navigationModel");
-        $this->contextId = $this->getRequest()->getParam("id");
+        if(!$this->getNavigationModel()){
+            $this->navigationModel = Zend_Registry::get("navigationModel");
+        }
+        if(!$this->getContextId()){
+            $this->contextId = $this->getRequest()->getParam("id");
+        }
+        
     }
     
     

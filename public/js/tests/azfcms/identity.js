@@ -1,8 +1,9 @@
-require(['doh','azfcms/identity!class'],function(doh, identity){
+require(['doh','azfcms/identity'],function(doh, identity){
     
-    doh.registerTests('azfcms.identity!class',[
+    doh.registerTests('azfcms.identity',[
         function(){
-            var instance= new identity({
+            var instance= new identity.__class();
+            instance.setIdentity({
                 loginName:"identity",
                 id: 1
             });

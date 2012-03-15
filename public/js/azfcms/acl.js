@@ -1,10 +1,10 @@
 /* 
  * @author Antun Horvat
  */
-define("azfcms/acl",['dojo/_base/declare','azfcms/bootstrap!getAcl'],function(declare, aclRules){
+define("azfcms/acl",['dojo/_base/declare'],function(declare){
     var _class = declare(null,{
-        constructor: function(aclRules){
-            this._rules = aclRules;
+        constructor: function(){
+            this._rules = {};
         },
         
         /**
@@ -14,8 +14,8 @@ define("azfcms/acl",['dojo/_base/declare','azfcms/bootstrap!getAcl'],function(de
          */
         isAllowed: function(resource, privilege){
             if(
-            typeof this._rules[resource] == 'undefined' ||
-            typeof this._rules[resource][privilege] == 'undefined')
+            resource in this._rules == false ||
+            privilege in this._rules[resource] == false)
             {
                 return false;
             }
@@ -28,15 +28,15 @@ define("azfcms/acl",['dojo/_base/declare','azfcms/bootstrap!getAcl'],function(de
          * @param {Array} rules
          */
         setRules: function(rules){
-            var resource,privilege;
+            var resource,privilege = "";
             for(var i = 0; i < rules.length; i++){
                 resource = rules[i].resource;
                 privilege = rules[i].privilege;
                 
-                if(!resource in this._rules){
-                    this._rule[resource] = {};
+                if(resource in this._rules == false){
+                    this._rules[resource] = {};
                 }
-                this._rule[resource][privilege] = true;
+                this._rules[resource][privilege] = true;
             }
         },
         load: function(a,b,c){
@@ -44,7 +44,7 @@ define("azfcms/acl",['dojo/_base/declare','azfcms/bootstrap!getAcl'],function(de
         }
     });
     
-    var _classInstance = new _class(aclRules);
+    var _classInstance = new _class();
     _classInstance.__class = _class;
     return _classInstance;
     

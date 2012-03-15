@@ -2,10 +2,10 @@
 /**
  * @author Antun Horvat
  */
-define(['dojo/_base/declare', 'azfcms/bootstrap!getIdentity'],function(declare, identity){
+define(['dojo/_base/declare'],function(declare){
     var _class = declare(null,{
-        constructor: function(identity){
-            this._identity=identity;
+        constructor: function(){
+            this._identity={};
         },
         /**
          * @param {Object} identiyt
@@ -26,13 +26,10 @@ define(['dojo/_base/declare', 'azfcms/bootstrap!getIdentity'],function(declare, 
          */
         getId: function(){
             return this._identity.id;
-        },
-        load: function(id,requiest,callback){
-            callback(_class);
         }
     });
     
-    var _classInstance = new _class(identity);
+    var _classInstance = new _class();
     _classInstance.__class = _class;
     return _classInstance;
 })

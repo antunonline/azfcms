@@ -7,7 +7,8 @@ define(['dojo/_base/kernel'],function(dojo){
     require([
         'tests/azfcms/_Model',
         'tests/azfcms/model/config',
-        'tests/azfcms/identity'
+        'tests/azfcms/identity',
+        'tests/azfcms/acl'
 ])
 })
 

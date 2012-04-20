@@ -7,6 +7,8 @@ and open the template in the editor.
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/js/dojo/dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="/js/dojo/dijit/themes/claro/claro.css" />
         <script type="text/javascript">
             var dojoConfig = {
                 async:true
@@ -16,24 +18,29 @@ and open the template in the editor.
         <script type="text/javascript">
             require(['dojo/_base/kernel','dojo/_base/loader'], function(dojo){
                 dojo.registerModulePath("azfcms", "/js/azfcms");
-                
-                require(['azfcms/bootstrap'],function(bootstrap){
-                    bootstrap.bootstrap()
+                require({
+                    aliases: [
+                        ['azfcms','azfcms/main']
+                    ]
                 })
                 
+                require(['azfcms/view/adminView'],function(adminView){
+                    adminView.show();
                 })
                 
+            })
                 
                 
                 
-//                require(['azfcms/bootstrap'],function(bootstrap,lang){
-                    //                    bootstrap.bootstrap();
-//                })
+                
+            //                require(['azfcms/bootstrap'],function(bootstrap,lang){
+            //                    bootstrap.bootstrap();
+            //                })
             
             
         </script>
     </head>
-    <body>
+    <body class="claro">
         <div>TODO write content</div>
     </body>
 </html>

@@ -2,36 +2,26 @@
  * @author Antun Horvat
  * 
  */
-define(['azfcms/main','azfcms/model'],function(main, model){
+define([
+    'azfcms/model',   'azfcms/identity',   'azfcms/acl',
+    './_bootstrap/loader!acl',            './_bootstrap/loader!identity'
+    ],
+    function(model,             identity,           acl, 
+        aclRules,           identityObject){
     
-    var loader = {
-        getAcl: function(require, callback){
-            model.callRpc("getAcl",[],'bootstrap','default').
-            then(function(r){
-                callback(r);
-            });
-        },
-        getIdentity: function(require, callback){
-            model.callRpc("getIdentity",[],"bootstrap","default").
-            then(function(r){
-                callback(r);
-            })
-        }
-    }
+        // Set acl
+        acl.setRules(aclRules);
     
-    var module = {
-        load: function(id, require, callback){
-            loader[id](require, callback);
-        },
-        bootstrap: function(){
-            require(["azfcms/identity","azfcms/acl"], function(identity, acl){
-                var user = identity.getLoginName();
-                alert("Hello "+user);
-            })
-        }
-    };
+        // Set identity
+        identity.setIdentity(identityObject);
     
-    return module;
-})
+        var module = {
+            bootstrap: function(){
+            
+            }
+        };
+    
+        return module;
+    })
 
 

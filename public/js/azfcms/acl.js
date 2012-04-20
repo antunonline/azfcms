@@ -1,7 +1,7 @@
 /* 
  * @author Antun Horvat
  */
-define("azfcms/acl",['dojo/_base/declare'],function(declare){
+define(['dojo/_base/declare'],function(declare){
     var _class = declare(null,{
         constructor: function(){
             this._rules = {};

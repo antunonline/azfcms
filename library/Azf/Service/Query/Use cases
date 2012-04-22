@@ -1,0 +1,49 @@
+# This document will try to define potential real world use cases that this language should be able
+# to execute. 
+
+
+/**
+* Example 1.
+* In this example we will simply invoke method initialize() in no explicit namespace.
+*/
+
+initialize()
+
+
+
+/** 
+* Example 2.
+* In this example we will call method login() with two arguments: login name and password.
+* This method will return boolean response which will indicate status of login
+*/
+
+login("userName","password")
+
+
+/**
+* Example 3.
+* In this example we will call isLoggedIn() method of user namespace. This
+* method will return boolean value that will indicate login state of the user.
+*/
+user.isLoggedIn()
+
+/**
+* Example 4. 
+* In this example we will call update method with associative array that has name key set
+* to value "user" and id key set to value 33. The array will be used as first argument of the update method.
+*/
+
+update({name:"user",id:"33"})
+
+/**
+* Example 5. 
+* In this example we will call delete method on article model. First argument of method
+* will be integer that will uniquely identify the article. Returned value
+* will return number of affected rows.
+*/
+model.article.delete(33)
+
+
+Structure of the language.
+
+[identifier.]method([[,]number|quoted string|dictionary])

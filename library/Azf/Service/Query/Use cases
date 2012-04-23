@@ -46,4 +46,4 @@ model.article.delete(33)
 
 Structure of the language.
 
-[identifier.]method([[,]number|quoted string|dictionary])
+

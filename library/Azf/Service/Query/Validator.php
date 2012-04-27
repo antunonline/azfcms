@@ -26,20 +26,32 @@ class Azf_Service_Query_Validator {
         return $this->context[sizeof($this->context) - 1];
     }
 
-    public function getDataTokens() {
-        return array(
+    public function getDataTokens($addTokens = null) {
+        $tokens = array(
             Azf_Service_Query_Tokenizer::T_NUMBER,
             Azf_Service_Query_Tokenizer::T_QUOTED_STRING,
             Azf_Service_Query_Tokenizer::T_STRING,
             '[', '{'
         );
+        if(is_array($addTokens)){
+            $tokens = array_merge($tokens,$addTokens);
+        }
+        
+        return $tokens;
+        
     }
 
-    public function getDictKeyTokens() {
-        return array(
+    public function getDictKeyTokens($addTokens = null) {
+        $tokens = array(
             Azf_Service_Query_Tokenizer::T_NUMBER,
             Azf_Service_Query_Tokenizer::T_QUOTED_STRING
         );
+        
+        if(is_array($addTokens)){
+            $tokens = array_merge($tokens,$addTokens);
+        }
+        
+        return $tokens;
     }
 
     /**
@@ -60,11 +72,17 @@ class Azf_Service_Query_Validator {
                 continue;
 
             if (!$this->validateToken($bt, $t)) {
-                throw new RuntimeException("Invalid token specified");
+                throw new RuntimeException("Invalid token '$t' in front of '$bt'");
             }
 
 
             $bt = $t;
+        }
+        
+        $this->validateToken($bt,"");
+        
+        if($this->getCurrentContext()!=self::C_ROOT){
+            throw new RuntimeException("Expression is not complete");
         }
     }
 
@@ -122,23 +140,26 @@ class Azf_Service_Query_Validator {
     }
 
     protected function validateContext($t) {
+        $isValid = false;
         switch ($this->getCurrentContext()) {
             case self::C_ARRAY_VALUE:
-                $this->_validateArrayValueContext($t);
+                $isValid = $this->_validateArrayValueContext($t);
                 break;
             case self::C_DICT_KEY:
-                $this->_validateDictionaryKeyContext($t);
+                $isValid = $this->_validateDictionaryKeyContext($t);
                 break;
             case self::C_DICT_VALUE:
-                $this->_validateDictionaryValueContext($t);
+                $isValid = $this->_validateDictionaryValueContext($t);
                 break;
             case self::C_METHOD_PARAM:
-                $this->_validateMethodParamContext($t);
+                $isValid = $this->_validateMethodParamContext($t);
                 break;
             case self::C_ROOT:
-                $this->_validateRootContext($t);
+                $isValid = $this->_validateRootContext($t);
                 break;
         }
+        
+        return $isValid;
     }
 
     protected function _validateInitial($t) {
@@ -182,7 +203,7 @@ class Azf_Service_Query_Validator {
         
         switch($this->getCurrentContext()){
             case self::C_METHOD_PARAM: 
-                $isValid = $this->_validateMethodParamContext($t);
+                $isValid = $this->_validateMethodSeparator($t);
                 break;
             
             case self::C_ARRAY_VALUE:
@@ -204,7 +225,7 @@ class Azf_Service_Query_Validator {
      */
     protected function _validateOpenParenthese($t) {
         $this->pushContext(self::C_METHOD_PARAM);
-        return in_array($t, $this->getDataTokens() + array(')'));
+        return in_array($t, $this->getDataTokens(array(')')));
     }
 
     /**
@@ -225,9 +246,6 @@ class Azf_Service_Query_Validator {
      * @return boolean 
      */
     protected function _validateMethodParamContext($t) {
-        // Replace current context with separator context
-        $this->popContext();
-        $this->pushContext(self::C_METHOD_SEPARATOR);
         return in_array($t, array(
                     ',', ')'
                 ));
@@ -245,7 +263,7 @@ class Azf_Service_Query_Validator {
      */
     protected function _validateOpenSquareBracket($t) {
         $this->pushContext(self::C_ARRAY_VALUE);
-        return in_array($t, $this->getDataTokens());
+        return in_array($t, $this->getDataTokens(array(']')));
     }
 
     /**
@@ -285,7 +303,7 @@ class Azf_Service_Query_Validator {
     protected function _validateOpenCurlyBracket($t) {
         // push dictionary value context
         $this->pushContext(self::C_DICT_KEY);
-        return in_array($t, $this->getDictKeyTokens());
+        return in_array($t, $this->getDictKeyTokens(array('}')));
     }
 
     /**

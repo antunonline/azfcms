@@ -23,6 +23,10 @@ class Azf_Service_Query_ValidatorTest extends PHPUnit_Framework_TestCase {
         $this->validator->validate($this->tokenize($query));
         return true;
     }
+    
+    public function testEmptyExpr(){
+        $this->validator->validate($this->tokenize(""));
+    }
 
     public function testValidateTNumber() {
         $this->assertTrue($this->validate("33"));

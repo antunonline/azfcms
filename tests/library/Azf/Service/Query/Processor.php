@@ -5,6 +5,10 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
     
     
     
+    protected function getResolverMock($methods = array()){
+        return $this->getMock("Azf_Service_Query_Resolver", $methods);
+    }
+    
     protected function tokenize($expression){
         return Azf_Service_Query_Tokenizer::getInstance()
                 ->tokenize($expression);
@@ -16,15 +20,19 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
     }
     
     
-    protected function execute(array $tokens){
+    protected function execute(array $tokens, $resolvers){
         $processor = new Azf_Service_Query_Processor();
+        foreach($resolvers as $namespace=>$resolver){
+            $processor->addResolver($namespace, $resolver);
+        }
+        
         return $processor->process($tokens);
     }
     
-    protected function process($expr){
+    protected function process($expr, $resolvers=array()){
         $tokens = $this->tokenize($expr);
         $this->validate($tokens);
-        return $this->execute($tokens);
+        return $this->execute($tokens, $resolvers);
     }
     
     
@@ -195,6 +203,97 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
              "44"=>array(),
              '66'=>'66'
          );
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWithoutParameters(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->with(array(),array());
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf()",$resolvers);
+         $expected = null;
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWithoutParametersWithStringReturn(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->with(array(),array())
+                ->will($this->returnValue("WORKS"));
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf()",$resolvers);
+         $expected = "WORKS";
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWithoutParametersWithNumberArgument(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->will($this->returnArgument(1));
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf(44)",$resolvers);
+         $expected = array("44");
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWithoutParametersWithArrayArgument(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->will($this->returnArgument(1));
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf([])",$resolvers);
+         $expected = array(array());
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWithoutParametersWithDictArgument(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->will($this->returnArgument(1));
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf({})",$resolvers);
+         $expected = array(array());
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWithoutParametersWithPopulatedDictArgument(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->will($this->returnArgument(1));
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf({44:44})",$resolvers);
+         $expected = array(array('44'=>'44'));
         
         $this->assertEquals($expected,$actual);
     }

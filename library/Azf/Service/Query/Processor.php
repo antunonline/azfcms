@@ -21,6 +21,13 @@ class Azf_Service_Query_Processor {
      * @var array
      */
     protected $data = array();
+    
+    
+    /**
+     * Associative array that maps namespace with the resolver
+     * @var array
+     */
+    protected $resolvers = array();
 
     /**
      *
@@ -46,6 +53,49 @@ class Azf_Service_Query_Processor {
      */
     public function &getCurrentContext() {
         return $this->context[sizeof($this->context) - 1];
+    }
+    
+    /**
+     *
+     * @param string $namespace
+     * @param Azf_Service_Query_Resolver $resolver 
+     */
+    public function addResolver($namespace, Azf_Service_Query_Resolver $resolver){
+        $this->resolvers[$namespace] = $resolver;
+    }
+    
+    
+    /**
+     *
+     * @param string $namespace 
+     * @return Azf_Service_Query_Resolver|null
+     */
+    public function getResover($namespace){
+        if($this->hasResolver($namespace)){
+            return $this->resolvers[$namespace];
+        }
+        
+        return null;
+    }
+    
+    /**
+     *
+     * @param string $namespace 
+     */
+    public function removeResolver($namespace){
+        if($this->hasResolver($namespace)){
+            unset($this->resolvers[$namespace]);
+        }
+    }
+    
+    
+    /**
+     *
+     * @param string $namespace 
+     * @return boolean;
+     */
+    public function hasResolver($namespace){
+        return isset($this->resolvers[$namespace]);
     }
 
     protected function addValue(&$value) {
@@ -94,7 +144,7 @@ class Azf_Service_Query_Processor {
     }
 
     protected function _addMethodNamespace(&$value, &$context) {
-        $context[1]['namespace'][] = $value;
+        $context[1]['namespaces'][] = $value;
     }
 
     protected function _addMethodparameter(&$value, &$context) {
@@ -112,7 +162,29 @@ class Azf_Service_Query_Processor {
         $this->context = array(array(self::C_INITIALL, &$data));
     }
 
+    
+    /**
+     * Execute resolver specified in metadata
+     * @param array $metadata 
+     */
     protected function _executeMethod(array $metadata) {
+        $namespaces= $metadata['namespaces'];
+        $parameters = $metadata['parameters'];
+        
+        // shift namespace that we will use to find the resolver
+        $resolverNamespace = array_shift($namespaces);
+        
+        // If resolver is not found
+        if(!$this->hasResolver($resolverNamespace)){
+            return "Could not find resolver registered under the $resolverNamespace name";
+        } 
+        
+        try{
+            return $this->getResover($resolverNamespace)->execute($resolverNamespace, $namespaces, $parameters);
+        }catch(BadMethodCallException $e){
+            return "Could not execute " . implode(".", array_merge(array($resolverNamespace),$namespaces) ."() method");
+        }
+        
         
     }
 
@@ -189,7 +261,7 @@ class Azf_Service_Query_Processor {
             
         } else {
             $dataStructure = array(
-                'namespace' => array(),
+                'namespaces' => array(),
                 'parameters' => array()
             );
 

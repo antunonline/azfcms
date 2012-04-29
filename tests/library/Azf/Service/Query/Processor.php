@@ -83,6 +83,30 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected ,$actual);
     }
     
+    
+    public function testBooleanFalse(){
+        $actual = $this->process("false");
+         $expected = false;
+        
+        $this->assertEquals($expected ,$actual);
+    }
+    
+    
+    public function testBooleanTrue(){
+        $actual = $this->process("true");
+         $expected = true;
+        
+        $this->assertEquals($expected ,$actual);
+    }
+    
+    
+    public function testBooleanNull(){
+        $actual = $this->process("null");
+         $expected = null;
+        
+        $this->assertEquals($expected ,$actual);
+    }
+    
     public function testEmptyArray(){
         $actual = $this->process("[]");
          $expected = array();
@@ -117,6 +141,14 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
     public function testArrayWithDobuleQuotedString(){
         $actual = $this->process("[\"this is cool\"]");
          $expected = array("this is cool");
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testArrayWithBooleanValuesAndNulles(){
+        $actual = $this->process("[false,false,true,null,true]");
+         $expected = array(false,false,true,null,true);
         
         $this->assertEquals($expected,$actual);
     }
@@ -302,6 +334,22 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
         
         $actual = $this->process("wdf({44:44})",$resolvers);
          $expected = array(array('44'=>'44'));
+        
+        $this->assertEquals($expected,$actual);
+    }
+    
+    
+    public function testCallWIthBooleanAndNullParameters(){
+        $resolver = $this->getResolverMock(array("_execute"));
+        $resolver->expects($this->once())
+                ->method("_execute")
+                ->with(array(),array(false,true,null))
+                ->will($this->returnArgument(1));
+        
+        $resolvers = array('wdf'=>$resolver);
+        
+        $actual = $this->process("wdf(false,true,null)",$resolvers);
+         $expected = array(false,true,null);
         
         $this->assertEquals($expected,$actual);
     }

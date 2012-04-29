@@ -21,8 +21,7 @@ class Azf_Service_Query_Processor {
      * @var array
      */
     protected $data = array();
-    
-    
+
     /**
      * Associative array that maps namespace with the resolver
      * @var array
@@ -43,7 +42,7 @@ class Azf_Service_Query_Processor {
      * @return array
      */
     protected function &popContext() {
-        $context =  &array_pop($this->context);
+        $context = &array_pop($this->context);
         return $context;
     }
 
@@ -54,47 +53,45 @@ class Azf_Service_Query_Processor {
     public function &getCurrentContext() {
         return $this->context[sizeof($this->context) - 1];
     }
-    
+
     /**
      *
      * @param string $namespace
      * @param Azf_Service_Query_Resolver $resolver 
      */
-    public function addResolver($namespace, Azf_Service_Query_Resolver $resolver){
+    public function addResolver($namespace, Azf_Service_Query_Resolver $resolver) {
         $this->resolvers[$namespace] = $resolver;
     }
-    
-    
+
     /**
      *
      * @param string $namespace 
      * @return Azf_Service_Query_Resolver|null
      */
-    public function getResover($namespace){
-        if($this->hasResolver($namespace)){
+    public function getResover($namespace) {
+        if ($this->hasResolver($namespace)) {
             return $this->resolvers[$namespace];
         }
-        
+
         return null;
     }
-    
+
     /**
      *
      * @param string $namespace 
      */
-    public function removeResolver($namespace){
-        if($this->hasResolver($namespace)){
+    public function removeResolver($namespace) {
+        if ($this->hasResolver($namespace)) {
             unset($this->resolvers[$namespace]);
         }
     }
-    
-    
+
     /**
      *
      * @param string $namespace 
      * @return boolean;
      */
-    public function hasResolver($namespace){
+    public function hasResolver($namespace) {
         return isset($this->resolvers[$namespace]);
     }
 
@@ -150,9 +147,9 @@ class Azf_Service_Query_Processor {
     protected function _addMethodparameter(&$value, &$context) {
         $context[1]['parameters'][] = &$value;
     }
-    
-    protected function _addInitialValue(&$value,&$context){
-        $context[1][] =&$value;
+
+    protected function _addInitialValue(&$value, &$context) {
+        $context[1][] = &$value;
     }
 
     protected function _reset() {
@@ -162,30 +159,27 @@ class Azf_Service_Query_Processor {
         $this->context = array(array(self::C_INITIALL, &$data));
     }
 
-    
     /**
      * Execute resolver specified in metadata
      * @param array $metadata 
      */
     protected function _executeMethod(array $metadata) {
-        $namespaces= $metadata['namespaces'];
+        $namespaces = $metadata['namespaces'];
         $parameters = $metadata['parameters'];
-        
+
         // shift namespace that we will use to find the resolver
         $resolverNamespace = array_shift($namespaces);
-        
+
         // If resolver is not found
-        if(!$this->hasResolver($resolverNamespace)){
+        if (!$this->hasResolver($resolverNamespace)) {
             return "Could not find resolver registered under the $resolverNamespace name";
-        } 
-        
-        try{
-            return $this->getResover($resolverNamespace)->execute($resolverNamespace, $namespaces, $parameters);
-        }catch(BadMethodCallException $e){
-            return "Could not execute " . implode(".", array_merge(array($resolverNamespace),$namespaces) ."() method");
         }
-        
-        
+
+        try {
+            return $this->getResover($resolverNamespace)->execute($resolverNamespace, $namespaces, $parameters);
+        } catch (BadMethodCallException $e) {
+            return "Could not execute " . implode(".", array_merge(array($resolverNamespace), $namespaces) . "() method");
+        }
     }
 
     public function process(array $tokens) {
@@ -198,8 +192,8 @@ class Azf_Service_Query_Processor {
             $t = $tokens[$i];
             $this->_process($t);
         }
-        
-        return isset($this->data[0])?$this->data[0]:"";
+
+        return isset($this->data[0]) ? $this->data[0] : "";
     }
 
     protected function _process($t) {
@@ -246,45 +240,42 @@ class Azf_Service_Query_Processor {
                 $this->_processQuotedString($value, $context);
                 break;
             case Azf_Service_Query_Tokenizer::T_WHITESPACE:
-                
+
                 break;
             case Azf_Service_Query_Tokenizer::T_STRING:
                 $this->_processString($value, $context);
                 break;
-            
         }
     }
 
     protected function _processString($string, array &$context) {
 
-        $len = strlen($string);
-        if($len==4){
-            $strLower = strtolower($string);
-            switch($strLower){
-                case "null":
-                    $this->addValue(null);
-                    $matched = true;
-                    break;
-                case "false":
-                    $this->addValue(false);
-                    $matched = true;
-                    break;
-                case "true":
-                    $this->addValue(true);
-                    $matched = true;
-                    break;
-                default:
-                    $matched = false;
-                    break;
-            }
-            
-            // If value is one of defined above 
-            if($matched){
-                return;
-            }
+        $strLower = strtolower($string);
+        switch ($strLower) {
+            case "null":
+                $value = null;
+                $matched = true;
+                break;
+            case "false":
+                $value = false;
+                $matched = true;
+                break;
+            case "true":
+                $value = true;
+                $matched = true;
+                break;
+            default:
+                $matched = false;
+                break;
         }
-        
-        
+
+        // If value is one of defined above 
+        if ($matched) {
+            $this->addValue($value);
+            return;
+        }
+
+
         // If this is a method call
         if ($context[0] == self::C_METHOD_NAMESPACE) {
             

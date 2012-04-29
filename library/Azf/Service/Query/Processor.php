@@ -257,6 +257,35 @@ class Azf_Service_Query_Processor {
 
     protected function _processString($string, array &$context) {
 
+        $len = strlen($string);
+        if($len==4){
+            $strLower = strtolower($string);
+            switch($strLower){
+                case "null":
+                    $this->addValue(null);
+                    $matched = true;
+                    break;
+                case "false":
+                    $this->addValue(false);
+                    $matched = true;
+                    break;
+                case "true":
+                    $this->addValue(true);
+                    $matched = true;
+                    break;
+                default:
+                    $matched = false;
+                    break;
+            }
+            
+            // If value is one of defined above 
+            if($matched){
+                return;
+            }
+        }
+        
+        
+        // If this is a method call
         if ($context[0] == self::C_METHOD_NAMESPACE) {
             
         } else {

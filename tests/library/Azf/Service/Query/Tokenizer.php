@@ -25,6 +25,43 @@ class Azf_Service_Query_TokenizerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $this->tokenize("45"));
     }
 
+    public function testNetagiveNumber() {
+        $expected = array(
+            array(Azf_Service_Query_Tokenizer::T_NUMBER, "-45")
+        );
+
+        $this->assertEquals($expected, $this->tokenize("-45"));
+    }
+    
+    
+    public function testFloatingPointNumber(){
+        $expected = array(
+            array(Azf_Service_Query_Tokenizer::T_NUMBER, 0.185)
+        );
+        
+        $this->assertEquals($expected, $this->tokenize("0.185"));
+    }
+    
+    
+    public function testNetagiveFloatingPointNumber(){
+        $expected = array(
+            array(Azf_Service_Query_Tokenizer::T_NUMBER, -0.185)
+        );
+        
+        $this->assertEquals($expected, $this->tokenize("-0.185"));
+    }
+    
+    
+    public function testIllegalDoubleDottedFloatingPointNumber(){
+        $expected = array(
+            array(Azf_Service_Query_Tokenizer::T_NUMBER, 0.185),
+            '.',
+            array(Azf_Service_Query_Tokenizer::T_NUMBER, 33),
+        );
+        
+        $this->assertEquals($expected, $this->tokenize("0.185.33"));
+    }
+
     public function testNumberWithSpacesBefore() {
         $expected = array(
             array(Azf_Service_Query_Tokenizer::T_WHITESPACE, ''),

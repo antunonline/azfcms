@@ -44,9 +44,9 @@ class Azf_Service_Query_Tokenizer {
 
         $return = $this->getString();
         if ($return !== null) {
-            return array(self::T_STRING, $return);
-        }
-
+                return array(self::T_STRING, $return);
+            }
+            
         $return = $this->getQuotedString();
         if ($return !== null) {
             return array(self::T_QUOTED_STRING, $return);
@@ -211,6 +211,8 @@ class Azf_Service_Query_Tokenizer {
         $c = "";
         $ord = 0;
         $string = "";
+        $floating = false;
+        
         
         for(; $pos < $this->len; $pos++){
             $c = $this->query[$pos];
@@ -220,7 +222,13 @@ class Azf_Service_Query_Tokenizer {
             if($ord > 47 && $ord < 58){
                 $string.=$c;
                 // Otherwise break the loop
-            } else {
+            } else if($c=='-'&&($pos==$this->pos)){
+                $string.=$c;
+                // If c is first floating point separator, and this not a first char
+            }else if($c=="."&&$floating==false&&($pos>$this->pos)){
+                $string.=$c;
+                $floating=true;
+            }else {
                 break;
             }
         }
@@ -228,7 +236,11 @@ class Azf_Service_Query_Tokenizer {
         $this->pos = $pos;
         
         if($string!=="") {
-            return $string;
+            if($floating){
+                return (float)$string;
+            } else {
+                return (int)$string;
+            }
         } else {
             return null;
         }

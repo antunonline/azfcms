@@ -32,6 +32,38 @@ class Azf_Service_Query_ValidatorTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->validate("33"));
     }
 
+    public function testValidateBooleanFalse() {
+        $this->assertTrue($this->validate("false"));
+    }
+
+    public function testValidateBooleanTrue() {
+        $this->assertTrue($this->validate("true"));
+    }
+
+    public function testValidateNull() {
+        $this->assertTrue($this->validate("null"));
+    }
+
+    public function testValidateInvalidBooleanFalseCall() {
+        $this->setExpectedException("RuntimeException");
+        $this->validate("false()");
+    }
+
+    public function testValidateInvalidBooleanTrueCall() {
+        $this->setExpectedException("RuntimeException");
+        $this->validate("true()");
+    }
+
+    public function testValidateInvalidNullCall() {
+        $this->setExpectedException("RuntimeException");
+        $this->validate("null()");
+    }
+
+    public function testValidateInvalidString() {
+        $this->setExpectedException("RuntimeException");
+        $this->validate("someinvalidstring");
+    }
+
     public function testValidateTDoubleQuotas() {
         $this->assertTrue($this->validate('"test"'));
     }
@@ -110,6 +142,14 @@ class Azf_Service_Query_ValidatorTest extends PHPUnit_Framework_TestCase {
     public function testLegalComplexExpr1(){
         $this->assertTrue($this->validate("{'myName':user.getLoginName(),'email':user.getLoginPassword()}"));
     }
+    
+    public function testLegalComplexExpr2(){
+        $this->validate("{44:false}");
+    }
+    
+    public function testLegalComplexExpr3(){
+        $this->validate("[compare(true,true),compare(true,false),compare(false,null)]");
+    }
 
     public function testIllegalComplexExpr1() {
         $this->setExpectedException("RuntimeException");
@@ -117,6 +157,17 @@ class Azf_Service_Query_ValidatorTest extends PHPUnit_Framework_TestCase {
  0:myName(),
  1: hisName({'first','last'}),
 }");
+    }
+
+    
+    /**
+     * Here we have defined simple dictionary where key of the value is string '44' and
+     * the value is unfinished method declaration 'this'. Since 'this' is not a boolean
+     * or a null value, the expression is invalid
+     */
+    public function testIllegalComplexExpr2() {
+        $this->setExpectedException("RuntimeException");
+        $this->validate("{'44':this}");
     }
 
 }

@@ -60,6 +60,14 @@ class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
     }
     
     
+    public function testNetativeNumber(){
+        $actual = $this->process("-44");
+         $expected = -44;
+        
+        $this->assertEquals($expected ,$actual);
+    }
+    
+    
     public function testSingleQuotedString(){
         $actual = $this->process("'wdf'");
          $expected = "wdf";

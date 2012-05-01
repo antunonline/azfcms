@@ -427,7 +427,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $colsSQL = $this->_parseCols($cols);
 
-        $selectSQL = "SELECT $colsSQL From Tree WHERE tid = ? ORDER BY l ASC;";
+        $selectSQL = "SELECT $colsSQL From $this->_name WHERE tid = ? ORDER BY l ASC;";
         $selectStmt = $this->getAdapter()->prepare($selectSQL);
         $selectStmt->execute(array($this->tid));
 

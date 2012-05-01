@@ -198,7 +198,7 @@ class Azf_Service_Lang_Processor {
                 $instance = new $className();
 
                 if ($instance instanceof Azf_Service_Lang_Resolver) {
-                    $this->addResolver($namespace, $instance);
+                    $this->addResolver($resolverNamespace, $instance);
                     $resolver = $instance;
                 } else {
                     $resolver = null;

@@ -83,7 +83,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     /**
      *Initialize RPC module 
      */
-    protected function _initRpcModule() {
+    public function _initRpcModule() {
         if(!$this->isRpcEnv()){
             return;
         }
@@ -104,7 +104,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     /**
      * Initialize rpc namespace 
      */
-    protected function _initRpcLoader() {
+    public function _initRpcLoader() {
         if(!$this->isRpcEnv()){
             return;
         }
@@ -114,10 +114,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
 
     
-    private function _initRestLoader() {
+    public function _initRestLoader() {
         if(!$this->isRestEnv()){
             return false;
-        }
+        } 
         $this->getResourceLoader()
                 ->addResourceType("rests", "rests", "Rest");
     }

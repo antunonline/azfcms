@@ -163,7 +163,7 @@ class Azf_Rest_Request {
                 }
                 switch ($key) {
                     case 0:
-                        $parsedArgs['module'] = $value == "default" ? "application" : $value;
+                        $parsedArgs['module'] = strtolower($value) == "default" ? "application" : $value;
                         break;
                     case 1:
                         $parsedArgs['provider'] = $value;

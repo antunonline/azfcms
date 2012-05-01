@@ -31,5 +31,6 @@ if(!isset($_REQUEST['expr']) || !is_string($_REQUEST['expr'])){
 $expr = $_REQUEST['expr'];
 $server = new Azf_Service_Lang();
 $server->setResolver("user", "Application_Resolver_User");
+$server->setResolver("model", "Application_Resolver_Model");
 echo $server->executeAndJson($expr);
 

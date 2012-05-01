@@ -1,6 +1,6 @@
 <?php
 
-class Azf_Service_Query_Processor {
+class Azf_Service_Lang_Processor {
 
     const C_INITIALL = "cinitiall";
     const C_DICT = "cdict";
@@ -53,20 +53,33 @@ class Azf_Service_Query_Processor {
     public function &getCurrentContext() {
         return $this->context[sizeof($this->context) - 1];
     }
+    
+    
+    public function getResolvers() {
+        return $this->resolvers;
+    }
 
+    
+    public function setResolvers($resolvers) {
+        $this->resolvers = $resolvers;
+    }
+
+    
     /**
      *
      * @param string $namespace
-     * @param Azf_Service_Query_Resolver $resolver 
+     * @param Azf_Service_Lang_Resolver|string $resolver 
      */
-    public function addResolver($namespace, Azf_Service_Query_Resolver $resolver) {
+    public function addResolver($namespace,  $resolver) {
+        // Initialize the resolver 
+        $resolver->initialize();
         $this->resolvers[$namespace] = $resolver;
     }
 
     /**
      *
      * @param string $namespace 
-     * @return Azf_Service_Query_Resolver|null
+     * @return Azf_Service_Lang_Resolver|null
      */
     public function getResover($namespace) {
         if ($this->hasResolver($namespace)) {
@@ -176,7 +189,28 @@ class Azf_Service_Query_Processor {
         }
 
         try {
-            return $this->getResover($resolverNamespace)->execute($resolverNamespace, $namespaces, $parameters);
+            $resolver = $this->getResover($resolverNamespace);
+            if ($resolver instanceof Azf_Service_Lang_Resolver) {
+            } else {
+                // If returned resolver value is a string, we shall treat it as 
+                // class name
+                $className = $resolver;
+                $instance = new $className();
+
+                if ($instance instanceof Azf_Service_Lang_Resolver) {
+                    $this->addResolver($namespace, $instance);
+                    $resolver = $instance;
+                } else {
+                    $resolver = null;
+                }
+            }
+            
+            if($resolver){
+                // Call initialize method
+                return $resolver->execute($resolverNamespace, $namespaces, $parameters);
+            } else {
+                return null;
+            }
         } catch (BadMethodCallException $e) {
             return "Could not execute " . implode(".", array_merge(array($resolverNamespace), $namespaces) . "() method");
         }
@@ -233,16 +267,16 @@ class Azf_Service_Query_Processor {
         $value = $t[1];
 
         switch ($type) {
-            case Azf_Service_Query_Tokenizer::T_NUMBER:
+            case Azf_Service_Lang_Tokenizer::T_NUMBER:
                 $this->_processNumber($value, $context);
                 break;
-            case Azf_Service_Query_Tokenizer::T_QUOTED_STRING:
+            case Azf_Service_Lang_Tokenizer::T_QUOTED_STRING:
                 $this->_processQuotedString($value, $context);
                 break;
-            case Azf_Service_Query_Tokenizer::T_WHITESPACE:
+            case Azf_Service_Lang_Tokenizer::T_WHITESPACE:
 
                 break;
-            case Azf_Service_Query_Tokenizer::T_STRING:
+            case Azf_Service_Lang_Tokenizer::T_STRING:
                 $this->_processString($value, $context);
                 break;
         }

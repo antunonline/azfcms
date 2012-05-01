@@ -58,6 +58,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             return true;
         }
     }
+    
+    
+    /**
+     * Will return true if we are bootstraping LANG env
+     * @return boolean 
+     */
+    public function isLangEnv(){
+        if (0 !== strpos($this->getEnvironment(), "json-lang")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     /**
      * Initialize Azf classpath 
@@ -107,6 +120,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         }
         $this->getResourceLoader()
                 ->addResourceType("rests", "rests", "Rest");
+    }
+
+    
+    public function _initLangLoader() {
+        if(!$this->isLangEnv()){
+            return false;
+        }
+        $this->getResourceLoader()
+                ->addResourceType("resolvers", "resolvers", "Resolver");
     }
     
     /**

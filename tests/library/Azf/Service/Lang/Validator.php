@@ -1,21 +1,21 @@
 <?php
 
-class Azf_Service_Query_ValidatorTest extends PHPUnit_Framework_TestCase {
+class Azf_Service_Lang_ValidatorTest extends PHPUnit_Framework_TestCase {
 
     /**
      *
-     * @var Azf_Service_Query_Validator
+     * @var Azf_Service_Lang_Validator
      */
     protected $validator;
 
     protected function setUp() {
         parent::setUp();
 
-        $this->validator = new Azf_Service_Query_Validator();
+        $this->validator = new Azf_Service_Lang_Validator();
     }
 
     public function tokenize($query) {
-        return Azf_Service_Query_Tokenizer::getInstance()
+        return Azf_Service_Lang_Tokenizer::getInstance()
                         ->tokenize($query);
     }
 

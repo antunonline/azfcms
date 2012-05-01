@@ -1,6 +1,6 @@
 <?php
 
-class Azf_Service_Query_Tokenizer {
+class Azf_Service_Lang_Tokenizer {
 
     CONST T_STRING = "STRING";
     const T_WHITESPACE = "WHITESPACE";
@@ -10,7 +10,7 @@ class Azf_Service_Query_Tokenizer {
     
     /**
      *
-     * @var Azf_Service_Query_Tokenizer
+     * @var Azf_Service_Lang_Tokenizer
      */
     protected static $instance;
 
@@ -279,7 +279,7 @@ class Azf_Service_Query_Tokenizer {
     
     
     /**
-     * @return Azf_Service_Query_Tokenizer 
+     * @return Azf_Service_Lang_Tokenizer 
      */
     public static function getInstance(){
         if(empty(self::$instance)){

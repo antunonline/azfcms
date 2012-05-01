@@ -1,6 +1,6 @@
 <?php
 
-class Azf_Service_Query_Validator {
+class Azf_Service_Lang_Validator {
 
     const C_ROOT = "croot";
     const C_ARRAY_VALUE = "avalue";
@@ -48,9 +48,9 @@ class Azf_Service_Query_Validator {
 
     public function getDataTokens($addTokens = null) {
         $tokens = array(
-            Azf_Service_Query_Tokenizer::T_NUMBER,
-            Azf_Service_Query_Tokenizer::T_QUOTED_STRING,
-            Azf_Service_Query_Tokenizer::T_STRING,
+            Azf_Service_Lang_Tokenizer::T_NUMBER,
+            Azf_Service_Lang_Tokenizer::T_QUOTED_STRING,
+            Azf_Service_Lang_Tokenizer::T_STRING,
             '[', '{'
         );
         if (is_array($addTokens)) {
@@ -62,8 +62,8 @@ class Azf_Service_Query_Validator {
 
     public function getDictKeyTokens($addTokens = null) {
         $tokens = array(
-            Azf_Service_Query_Tokenizer::T_NUMBER,
-            Azf_Service_Query_Tokenizer::T_QUOTED_STRING
+            Azf_Service_Lang_Tokenizer::T_NUMBER,
+            Azf_Service_Lang_Tokenizer::T_QUOTED_STRING
         );
 
         if (is_array($addTokens)) {
@@ -92,7 +92,7 @@ class Azf_Service_Query_Validator {
                 $t = $tokens[$i];
             }
 
-            if ($t == Azf_Service_Query_Tokenizer::T_WHITESPACE)
+            if ($t == Azf_Service_Lang_Tokenizer::T_WHITESPACE)
                 continue;
 
             if (!$this->validateToken($bt, $t)) {
@@ -117,13 +117,13 @@ class Azf_Service_Query_Validator {
             case "":
                 $isValid = $this->_validateInitial($t);
                 break;
-            case Azf_Service_Query_Tokenizer::T_NUMBER:
+            case Azf_Service_Lang_Tokenizer::T_NUMBER:
                 $isValid = $this->validateContext($t);
                 break;
-            case Azf_Service_Query_Tokenizer::T_QUOTED_STRING:
+            case Azf_Service_Lang_Tokenizer::T_QUOTED_STRING:
                 $isValid = $this->validateContext($t);
                 break;
-            case Azf_Service_Query_Tokenizer::T_STRING:
+            case Azf_Service_Lang_Tokenizer::T_STRING:
                 $isValid = $this->_validateTString($t);
                 break;
             case ',':
@@ -190,7 +190,7 @@ class Azf_Service_Query_Validator {
         $inArray = in_array($t, $tokens);
 
         // If token is found and token is t_string
-        if ($inArray && $t == Azf_Service_Query_Tokenizer::T_STRING) {
+        if ($inArray && $t == Azf_Service_Lang_Tokenizer::T_STRING) {
 
             // Check string types
             $valueLower = strtolower($this->tValue);
@@ -226,9 +226,9 @@ class Azf_Service_Query_Validator {
 
     protected function _validateInitial($t) {
         return $this->inArray($t, array(
-                    Azf_Service_Query_Tokenizer::T_NUMBER,
-                    Azf_Service_Query_Tokenizer::T_QUOTED_STRING,
-                    Azf_Service_Query_Tokenizer::T_STRING,
+                    Azf_Service_Lang_Tokenizer::T_NUMBER,
+                    Azf_Service_Lang_Tokenizer::T_QUOTED_STRING,
+                    Azf_Service_Lang_Tokenizer::T_STRING,
                     '{', '['
                 ));
     }
@@ -261,7 +261,7 @@ class Azf_Service_Query_Validator {
     }
 
     protected function _validateNamespace($t) {
-        return $t == Azf_Service_Query_Tokenizer::T_STRING;
+        return $t == Azf_Service_Lang_Tokenizer::T_STRING;
     }
 
     protected function _validateSeparator($t) {

@@ -1,6 +1,6 @@
 <?php
 
-abstract class Azf_Service_Query_Resolver {
+abstract class Azf_Service_Lang_Resolver {
 
     protected $registeredNamespace = "";
     
@@ -82,8 +82,15 @@ abstract class Azf_Service_Query_Resolver {
     
     
     
+    public function initialize(){
+        
+    }
+    
+    
     abstract protected function _execute(array $namespaces, array $parameters);
 
+    
+    
 
 
 }

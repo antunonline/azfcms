@@ -1,27 +1,27 @@
 <?php
 
-class Azf_Service_Query_ProcessorTest extends PHPUnit_Framework_TestCase {
+class Azf_Service_Lang_ProcessorTest extends PHPUnit_Framework_TestCase {
     
     
     
     
     protected function getResolverMock($methods = array()){
-        return $this->getMock("Azf_Service_Query_Resolver", $methods);
+        return $this->getMock("Azf_Service_Lang_Resolver", $methods);
     }
     
     protected function tokenize($expression){
-        return Azf_Service_Query_Tokenizer::getInstance()
+        return Azf_Service_Lang_Tokenizer::getInstance()
                 ->tokenize($expression);
     }
     
     protected function validate(array $tokens){
-        $validator = new Azf_Service_Query_Validator();
+        $validator = new Azf_Service_Lang_Validator();
         return $validator->validate($tokens);
     }
     
     
     protected function execute(array $tokens, $resolvers){
-        $processor = new Azf_Service_Query_Processor();
+        $processor = new Azf_Service_Lang_Processor();
         foreach($resolvers as $namespace=>$resolver){
             $processor->addResolver($namespace, $resolver);
         }

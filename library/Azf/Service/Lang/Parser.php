@@ -1,6 +1,6 @@
 <?php
 
-class Azf_Service_Query_Parser {
+class Azf_Service_Lang_Parser {
 
     /**
      * alphanumeric name that must not start with a number 
@@ -37,7 +37,7 @@ class Azf_Service_Query_Parser {
 
     /**
      *
-     * @var Azf_Service_Query_Descriptor
+     * @var Azf_Service_Lang_Descriptor
      */
     protected $descriptor;
 
@@ -96,7 +96,7 @@ class Azf_Service_Query_Parser {
     }
 
     function __construct() {
-        $this->setDescriptor(new Azf_Service_Query_Descriptor());
+        $this->setDescriptor(new Azf_Service_Lang_Descriptor());
     }
 
     /**

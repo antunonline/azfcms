@@ -144,7 +144,7 @@ return declare("dijit.tree.dndSource", _dndSelector, {
 		this.targetAnchor = null;
 	},
 
-	_onDragMouse: function(e){
+	_onDragMouse: function(e){ 
 		// summary:
 		//		Helper method for processing onmousemove/onmouseover events while drag is in progress.
 		//		Keeps track of current drop target.
@@ -211,7 +211,7 @@ return declare("dijit.tree.dndSource", _dndSelector, {
 		}
 	},
 
-	onMouseMove: function(e){
+	onMouseMove: function(e){ 
 		// summary:
 		//		Called for any onmousemove/ontouchmove events over the Tree
 		// e: Event
@@ -226,7 +226,7 @@ return declare("dijit.tree.dndSource", _dndSelector, {
 		}else{
 			if(this.mouseDown && this.isSource &&
 				 (Math.abs(e.pageX-this._lastX)>=this.dragThreshold || Math.abs(e.pageY-this._lastY)>=this.dragThreshold)){
-				var nodes = this.getSelectedTreeNodes();
+				var nodes = this.getSelectedTreeNodes(); 
 				if(nodes.length){
 					if(nodes.length > 1){
 						//filter out all selected items which has one of their ancestor selected as well

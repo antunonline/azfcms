@@ -29,25 +29,42 @@
         <script type="text/javascript">
             require(['dojo/ready'],function(ready){
                 ready(function(){
-                    require(['azfcms/model','dijit/tree/TreeStoreModel','dijit/Tree','dijit/tree/dndSource'],function(model,TreeStoreModel,Tree,dndSource){
-                        var navigationStore = model.prepareRestStore('navigation','default');
-                        navigationStore.put = function(){
-                            
-                        }
+                    require(['dojo/store/JsonRest','dijit/Tree','dijit/tree/dndSource'
+                        ],function(JsonRest,Tree,dndSource){
                         
-                       
-                        var treeModel = new TreeStoreModel({
-                            store:navigationStore,
-                            childrenAttrs: ['childNodes'],
-                            query:{id:'1'},
-                            labelAttr:'id'
-                        });
+                        var store = new JsonRest({
+                            target:"/json-rest.php/default/navigation/",
+                            mayHaveChildren: function(item){
+                                
+                                return true;
+                            },
+                            getChildren: function(item, onComplete, onError){
+                                onComplete(item.childNodes);
+                            },
+                            getRoot: function(onItem, onError){
+                                this.get("1").then(onItem,onError)
+                            },
+                            getLabel: function(object){
+                                return object.id;
+                            },
+                            put: function(load){
+                                alert("PUT");
+                                  load({},{})
+                            },
+                            pasteItem: function(child, oldParent, newParent, bCopy, insertIndex){
+                                alert("OK")
+                            },
+                            remove: function(){
+                                alert("remove")
+                            }
+                        })
                         
                         
-                        new Tree({
-                            model:treeModel,
-                            dndController: dndSource
+                        var tree = new Tree({
+                            model:store,
+                             dndController: dndSource
                         },"tree");
+                        tree.startup();
                         
                     })
                 })
@@ -57,10 +74,9 @@
         </script>
     </head>
     <body class="claro">
-        
-        <div id="tree" style="width:600px;
-             height:600px;">
-            
+
+        <div id="tree" >
+
         </div>
     </body>
 </html>

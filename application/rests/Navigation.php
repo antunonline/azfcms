@@ -16,11 +16,10 @@ class Application_Rest_Navigation extends Azf_Rest_Provider_Abstract {
     }
 
     public function get(Azf_Rest_Request $request, Azf_Rest_Response $response) {
-        return array(
-            'id'=>$this->request->getId(),
-            'firstName'=>"First Name",
-            'lastName'=>"Last Name"
-        );
+        $navigation = Zend_Registry::get("navigationModel");
+        /* @var $navigation Azf_Model_Tree_Navigation */
+        $record = $navigation->getBranch($request->getId());
+        return $record;
     }
 
     public function index(Azf_Rest_Request $request, Azf_Rest_Response $response) {

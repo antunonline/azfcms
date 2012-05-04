@@ -32,22 +32,53 @@
                                     getLabel: function(item){
                                         return item.url;
                                     },
-                                    pasteItem: function(childItem, oldParentItem, newParentItem, bCopy){
-                                        console.debug("child: "+ childItem.url);
-                                        console.debug("oldParent: "+oldParentItem.url)
-                                        console.debug("newParent: " +newParentItem.url)
-                                        console.debug(arguments[4])
+                                    _getChildNodeIndex: function(child,parent){
+                                        var id = child.id;
+                                        for(var i = 0; i < parent.childNodes.length;i++){
+                                            if(id==parent.childNodes[i].id)
+                                                return i;
+                                        }
+                                        
+                                        return -1;
+                                    },
+                                    pasteItem: function(childItem, oldParentItem, newParentItem, bCopy, newChildIndex){
+                                        // Calculate old parent child index
+                                        var oldChildIndex = this._getChildNodeIndex(childItem,oldParentItem);
+                                        
+                                        // Remove child from the old position
+                                        oldParentItem.childNodes.splice(oldChildIndex, 1);
+                                        
+                                        // Insert child node into new place
+                                        newParentItem.childNodes.splice(newChildIndex,0,childItem);
+                                        
+                                        // If parent is the same, and only ordering is updated
+                                        if(oldParentItem.id==newParentItem.id){
+                                            // If new and old parents are the same
+                                            
+                                        } else {
+                                            // If parents differ
+                                            this.onChildrenChange(oldParentItem,oldParentItem.childNodes);
+                                        }
+                                        
+                                        
+                                        
+                                        // Trigger Tree UI changes
+                                        this.onChange(newParentItem);
+                                        this.onChildrenChange(newParentItem,newParentItem.childNodes);
                                     },
                                     newItem: function(args, parent, insertIndex){
                                         console.debug("newItem parent: "+ parent.url);
                                     },
-                                    put: function(){
+                                    onChange: function(item){
+                                        
+                                    }, 
+                                    onChildrenChange: function(parent, newChildrenList){
                                         
                                     }
                                     
                                 });
                                 
-                                var tree = new Tree({model:store,dndController: dndSource,
+var tree = new Tree({model:new Observable(store),dndController: dndSource,
                                 style:"width:400px;",betweenThreshold:5},'tree');
                                 tree.startup();
 			});

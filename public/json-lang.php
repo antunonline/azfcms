@@ -32,5 +32,6 @@ $expr = $_REQUEST['expr'];
 $server = new Azf_Service_Lang();
 $server->setResolver("user", "Application_Resolver_User");
 $server->setResolver("model", "Application_Resolver_Model");
+$server->setResolver("pluginDescriptor", "Application_Resolver_PluginDescriptor");
 echo $server->executeAndJson($expr);
 

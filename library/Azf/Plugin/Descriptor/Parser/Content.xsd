@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" targetNamespace="http://it-branch.com/xml/ns/plugin/content">
+    <xs:element name="plugin">
+        <xs:complexType >
+            <xs:sequence >
+                <xs:element name="name" minOccurs="1" maxOccurs="1"  ></xs:element>
+                <xs:element name="displayName" minOccurs="1" maxOccurs="1"  ></xs:element>
+                <xs:element name="description" minOccurs="1" maxOccurs="1"></xs:element>
+                <xs:element name="version"  maxOccurs="1" minOccurs="0" type="xs:decimal"></xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

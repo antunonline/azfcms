@@ -1,35 +1,9 @@
 define(
-    ['dojo/_base/declare','dojo/_base/Deferred'],function
-    (declare, Deferred)
+    ['dojo/_base/declare','azfcms/controller/AbstractEditorController'],function
+    (declare, AbstractEditorController)
         {
-        var _class = declare([],{
+        var _class = declare([AbstractEditorController],{
         
-        
-            constructor: function(){
-                /**
-                 * Reference of editor pane
-                 */
-                this.editorPane = null;
-                
-                /**
-                 * Reference of navigation node identifier
-                 */
-                this.nodeId = null;
-            },
-            
-            initDependencies: function(nodeId, ep){
-                this.editorPane = ep;
-                this.nodeId = nodeId;
-                
-                var d = new Deferred();
-                this.initialize(d); 
-                return d;
-            },
-            
-            initialize: function(callback){
-                callback.callback(this);
-            }
-            
         });
     
         return _class;

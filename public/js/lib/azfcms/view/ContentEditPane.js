@@ -4,12 +4,15 @@
  */
 define(
 ['dojo/_base/declare','dijit/layout/BorderContainer','dijit/layout/ContentPane',
-'dijit/form/ComboBox','dijit/form/TextBox','dijit/form/Button'],function
+'dijit/form/ComboBox','dijit/form/TextBox','dijit/form/Button',
+'dijit/form/Textarea'],function
 (declare, BorderContainer, ContentPane,
-ComboBox, TextBox, Button)
+ComboBox, TextBox, Button,
+Textarea)
 {
    var _class = declare([BorderContainer],{
        constructor: function(){
+           this.closable = true;
            
            this.metadataPane = new ContentPane({
                region:"right",
@@ -35,6 +38,7 @@ ComboBox, TextBox, Button)
        },
        
        _constuctMetadataPane:function(){
+           var cep = this;
            // Add Header
            this.addMetadataChildNode(document.createTextNode("Vrsta sadr\u017eaja"));
            this.addMetadataLineBreak(1);
@@ -51,20 +55,105 @@ ComboBox, TextBox, Button)
            var button = new Button({label:"Promjeni vrstu"});
            this.addMetadataChildNode(button.domNode);
            
-           // Add title text box
-           this.addMetadataLineBreak(3);
-           this.nameTextBox = new TextBox({});
-           this.addMetadataChildNode(this.nameTextBox.domNode);
+                     
+           
+           this.createMetadataTable();
+           // Add label
+           this.addMetadataTableChildText("Naziv:");
+           this.pageName = new TextBox({
+               style:"width:100%"
+           });
+           this.addMetadataTableChild(this.pageName.domNode);
+           
+           // add description box
+           this.addMetadataTableChildText("Opis:");
+           this.pageDescription = new Textarea({
+               style:"width:100%"
+           });
+           this.addMetadataTableChild(this.pageDescription.domNode);
+           
+           // add keywords box
+           this.addMetadataTableChildText("Kljucne rijeci:");
+           this.pageKeywords = new Textarea({
+               style:"width:100%"
+           });
+           this.addMetadataTableChild(this.pageKeywords.domNode);
+           
+           // add save button
+           this.addMetadataTableChildText("");
+           this.saveMetadataButton = new Button({
+               label:"Spremi"
+           });
+           this.addMetadataTableChild(this.saveMetadataButton.domNode);
            
            
+           this.saveMetadataButton.on("click",function(){
+               var title = cep.pageName.get("value");
+               var description = cep.pageDescription.get("value");
+               var keywords = cep.pageKeywords.get("value");
+               
+               cep.onMetadataSave(title, description, keywords)
+           });
            
+       },
+       
+       createMetadataTable: function(){
+           var table = document.createElement("table");
+           this.metadataTable = document.createElement("tbody");
+           table.appendChild(this.metadataTable);
+           this.addMetadataChildNode(table);
            
+           this.intMetadataCellIndex = 0;
+           this._addMetadataTableRow();
+       },
+       
+       _addMetadataTableRow: function(){
+           this.metadataRow  = document.createElement("tr");
+           this.metadataTable.appendChild(this.metadataRow);
+       },
+       
+       addMetadataTableChildText: function(text){
+           var t = document.createTextNode(text);
+           this.addMetadataTableChild(t);
+       },
+       
+       addMetadataTableChild: function(node){
+           if(this.intMetadataCellIndex==2){
+               this._addMetadataTableRow();
+               this.intMetadataCellIndex=0;
+           }
+           
+           var td = document.createElement("td");
+           if(this.intMetadataCellIndex==0){
+               td.style.paddingRight="10px";
+           }
+           
+           td.appendChild(node);
+           this.metadataRow.appendChild(td);
+           
+           this.intMetadataCellIndex++;
        },
        
        postCreate: function(){
            this.inherited(arguments);
            
            this.addChild(this.metadataPane);
+       },
+       
+       _setTitleAttr: function(title){
+           this.pageName.set("value",title);
+       },
+       
+       _setDescriptionAttr: function(description){
+           this.pageDescription.set("value",description);
+       },
+       
+       _setKeywordsAttr: function(keywords){
+           this.pageKeywords.set("value",keywords);
+       },
+       
+       onMetadataSave: function(title, description, keywords){
+           
        }
    }) ;
    

@@ -1,25 +1,14 @@
 define(
-    ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Editor'],function
-    (declare, ContentPane, Editor)
-        {
-        var _class = declare([ContentPane],{
+    ['dojo/_base/declare','azfcms/view/AbstractEditPane','dijit/Editor'],function
+    (declare, AbstractEditPane, Editor)
+    {
+        var _class = declare([AbstractEditPane],{
         
-        
-            constructor: function(adminDialog, navigationPane){
-                /**
-                 * Editor reference
-                 */
-                this.editor = null;
-                this.region = "center";
-             
-            },
-            postCreate: function(){
-                this.inherited(arguments);
+            init: function(){
                 
                 // Create editor
                 this.editor = new Editor();
                 this.set("content",this.editor);
-                
             }
         });
     

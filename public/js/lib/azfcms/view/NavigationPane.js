@@ -55,8 +55,10 @@ function
             
             var controller = this.contextController;
             // Register click listener
+            
+            var pane = this;
             this.tree.on("click",function(item){
-                controller.selectNode(item);
+                pane.onItemSelect(item)
             })
             
             // Add tree into content pane
@@ -66,9 +68,7 @@ function
             
             
             this.actionPane.set("content",this.menu);
-            this.addButton("Editiraj",new Function(), "dijitIconEdit");
-            this.addButton("Izbrisi",new Function(), "dijitIconDelete");
-            this.addButton("SEO Optimizacija",new Function(), "dijitIconSearch");
+            
         },
         
         /**
@@ -81,6 +81,13 @@ function
             });
             menuItem.on("click",onClick);
             this.menu.addChild(menuItem)
+        },
+        
+        /**
+         * This method will be called when the item is selected on tree widget
+         */
+        onItemSelect: function(item){
+            
         }
     });
 })

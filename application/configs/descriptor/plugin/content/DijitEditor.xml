@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <ns1:plugin
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xmlns:ns1='http://it-branch.com/xml/ns/plugin/content'
+    xsi:schemaLocation="http://it-branch.com/xml/ns/plugin/content /var/www/azfcms/library/Azf/Plugin/Descriptor/Parser/Content.xsd"
 >
-    <ns1:name>dijitEditor</ns1:name>
+    
+    <ns1:pluginIdentifier>dijitEditor</ns1:pluginIdentifier>
     <ns1:displayName>Dijit Editor</ns1:displayName>
     <ns1:description>WYSIWYG editor that uses dijit Editor widget for editing</ns1:description>
     <ns1:version>1.0</ns1:version>
-
+    <ns1:module>default</ns1:module>
+    <ns1:controller>dijiteditor</ns1:controller>
+    <ns1:action>produce</ns1:action>
+    
 </ns1:plugin>

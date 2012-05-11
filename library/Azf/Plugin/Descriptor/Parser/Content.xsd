@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
 <xs:schema version="1.0"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified" targetNamespace="http://it-branch.com/xml/ns/plugin/content">
-    <xs:element name="plugin">
-        <xs:complexType >
-            <xs:sequence >
-                <xs:element name="name" minOccurs="1" maxOccurs="1"  ></xs:element>
-                <xs:element name="displayName" minOccurs="1" maxOccurs="1"  ></xs:element>
-                <xs:element name="description" minOccurs="1" maxOccurs="1"></xs:element>
-                <xs:element name="version"  maxOccurs="1" minOccurs="0" type="xs:decimal"></xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+           targetNamespace="http://it-branch.com/xml/ns/plugin/content"
+           xmlns="http://it-branch.com/xml/ns/plugin/content"
+           elementFormDefault="qualified"
+>
+    <xs:element name="plugin" type="Plugin" />
+    <xs:complexType name="Plugin" >
+        <xs:sequence >
+            <xs:element name="pluginIdentifier" minOccurs="1" maxOccurs="1"  type="xs:string"></xs:element>
+            <xs:element name="displayName" minOccurs="1" maxOccurs="1"  type="xs:string"></xs:element>
+            <xs:element name="description" minOccurs="1" maxOccurs="1" type="xs:string"></xs:element>
+            <xs:element name="version"  maxOccurs="1" minOccurs="0" type="xs:decimal"></xs:element>
+            <xs:element name="module" minOccurs="1" maxOccurs="1" type="xs:string"></xs:element>
+            <xs:element name="controller" minOccurs="1" maxOccurs="1" type="xs:string"></xs:element>
+            <xs:element name="action" minOccurs="1" maxOccurs="1" type="xs:string"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
     
 </xs:schema>

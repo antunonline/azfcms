@@ -8,20 +8,20 @@ navigationModel, ContextController)
             // Admin dialog
             this.adminDialog = new AdminDialog();
             
-            /**
-             * Context controller
-             */
-            this.contextController = new ContextController(this.adminDialog);
             
             /**
              * Initialize navigation pane
              * 
              */
-            var navigationPane = new NavigationPane({
-                model:navigationModel,
-                controller:this.contextController
+            this.navigationPane = new NavigationPane({
+                model:navigationModel
             });
-            this.adminDialog.addChild(navigationPane);
+            this.adminDialog.addChild(this.navigationPane);
+            
+            /**
+             * Context controller
+             */
+            this.contextController = new ContextController(this.adminDialog,this.navigationPane);
         }
     });
     

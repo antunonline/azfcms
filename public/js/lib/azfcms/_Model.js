@@ -1,5 +1,5 @@
-define(['dojo/_base/declare'],
-    function(declare){
+define(['dojo/_base/declare','dojo/_base/xhr'],
+    function(declare, xhr){
         return declare(null,{
             constructor: function(JsonRpc, RestRpc, JsonRestStore){
                 this.JsonRpc = JsonRpc;
@@ -187,17 +187,18 @@ define(['dojo/_base/declare'],
             id,        // the string to the right of the !
             require,   // AMD require; usually a context-sensitive require bound to the module making the plugin request
             callback   // the function the plugin should call with the return value once it is done
-            ){  
+            ){ 
              // Do a POST request       
             xhr.post({
                 url:"/json-lang.php",
                 content:{expr:id},
                 load: callback,
+                handleAs:'json',
                 error: function(){
                     if(typeof console !='undefined'){
                         console.debug(arguments);
                     }
-                    throw "XHR Load error";
+                    throw "XHR lang service invocation failed.";
                 }
             })
         }

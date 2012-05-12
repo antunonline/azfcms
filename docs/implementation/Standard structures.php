@@ -53,7 +53,47 @@
  * 
  * Dynamic params is associative array that is merged with dynamic params
  * of it's parent nodes. This is very useful if we want to inherit configuration
- * from parent nodes.
+ * from parent nodes. The downside of such feature is that if we want to remove
+ * specific parameter, we will have to set such parameter to null value.
+ * 
+ * array(
+ *  // Value that will be used in metda keywords element
+ *  'metaKeywords'=>'', // REQUIRED
+ * 
+ *  // value that will be used in meta description element
+ *  'metaDescription'=>'', // REQUIRED
+ * 
+ *  // Value that will uniquely identify template which should be used 
+ *  // to render the content
+ *  'templateIdentifier'=>'', // REQUIRED
+ * )
+ * 
+ * 
+ *      //pluginParams//
+ * 
+ * Plugin params represent data values that are exclusively used by
+ * plugins. To be exact these parameters are used to identify and configure
+ * plugins used within the page. Plugin parameters also inherit other parameters 
+ * from parent nodes, which means that plugins defined in parent nodes will be
+ * shown in child nodes, unles overriden in child nodes.
+ * 
+ * Each plugin is composed of pluginIdentifier and plugin values. Plugin identifier
+ * can be retrieved by Azf_Model_Tree_Navigation.getPluginNames() method, which 
+ * will return list of plugin names present in the current node. 
+ * 
+ * Values are encapsulated in associative array that has few predefined keys
+ * 
+ * array(
+ * // This key points to value that will identify classes on the client side
+ * 'pluginIdentifier'=>'', // REQUIRED
+ * 
+ * // This key identifies position in the template, where the plugin will be shown
+ * 'position'=>'', // REQUIRED
+ * 
+ * // This key defines weight of the plugin. The weight of the plugin
+ * // is used to calculate ordering of plugins which are placed in the same position
+ * 'positionWeight'=>'' // REQUIRED
+ * )
  * 
  * 
  * 

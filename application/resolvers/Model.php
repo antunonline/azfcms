@@ -19,6 +19,11 @@ class Application_Resolver_Model extends Azf_Service_Lang_Resolver {
     protected function _classExists($className){
         return Zend_Loader_Autoloader::getInstance()->autoload($className);
     }
+    
+    protected function isAllowed($namespaces, $parameters) {
+        // TODO fix me
+        return true;
+    }
 
     
     /**

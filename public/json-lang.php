@@ -30,9 +30,6 @@ if(!isset($_REQUEST['expr']) || !is_string($_REQUEST['expr'])){
 
 $expr = $_REQUEST['expr'];
 $server = new Azf_Service_Lang();
-$server->setResolver("user", "Application_Resolver_User");
-$server->setResolver("model", "Application_Resolver_Model");
-$server->setResolver("navigation", "Application_Resolver_Navigation");
-$server->setResolver("pluginDescriptor", "Application_Resolver_PluginDescriptor");
+$server->setResolver("cms", "Azf_Service_Lang_Resolver_Auto");
 echo $server->executeAndJson($expr);
 

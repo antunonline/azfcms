@@ -11,7 +11,12 @@
  * 4. Create I18N service that can be used to easily translate client side programs to 
  *      other languages.
  * 
+ */
+
+/**
+ * TODO 12.05.2012
  * 
+ * @task Implement ACL checks in resolver classes 
  */
 
 /**  
@@ -51,7 +56,9 @@
  *  
  * All classes located in resolvers directory must subclass Azf_Service_Lang_Resolver
  * class and implement ACL checking which will guard methods from malicious users.
- * Also, since all methods are visible to the 
+ * Also, since all methods are visible to the resolver class, we need to create whitelist
+ * of all methods which can be invoked through json-lang service. 
+ * This whitelist should be integraded into the ACL.
  * 
  * 
  * 

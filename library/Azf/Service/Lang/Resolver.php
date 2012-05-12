@@ -3,16 +3,14 @@
 abstract class Azf_Service_Lang_Resolver {
 
     protected $registeredNamespace = "";
-    
     protected $namespaces = array();
-    
+
     /**
      *
      * @var array 
      */
     protected $parameters = array();
 
-    
     /**
      *
      * @return string
@@ -28,7 +26,7 @@ abstract class Azf_Service_Lang_Resolver {
     public function setRegisteredNamespace($registeredNamespace) {
         $this->registeredNamespace = $registeredNamespace;
     }
-    
+
     /**
      *
      * @return array
@@ -37,7 +35,6 @@ abstract class Azf_Service_Lang_Resolver {
         return $this->namespaces;
     }
 
-    
     /**
      *
      * @param array $namespaces 
@@ -45,7 +42,7 @@ abstract class Azf_Service_Lang_Resolver {
     public function setNamespaces(array $namespaces) {
         $this->namespaces = $namespaces;
     }
-    
+
     /**
      *
      * @return array
@@ -62,9 +59,6 @@ abstract class Azf_Service_Lang_Resolver {
         $this->parameters = $parameters;
     }
 
-        
-    
-    
     /**
      *
      * @param string $registeredNamespace
@@ -72,25 +66,30 @@ abstract class Azf_Service_Lang_Resolver {
      * @param array $parameters
      * @throws  BadMethodCallException
      */
-    public function execute($registeredNamespace, array $namespaces, array $parameters){
+    public function execute($registeredNamespace, array $namespaces, array $parameters) {
         $this->setRegisteredNamespace($registeredNamespace);
         $this->setNamespaces($namespaces);
         $this->setParameters($parameters);
-        
-        return $this->_execute($namespaces, $parameters);
+
+        if (!$this->isAllowed($namespaces, $parameters)) {
+            return "Not Allowed";
+        } else {
+            return $this->_execute($namespaces, $parameters);
+        }
     }
-    
-    
-    
-    public function initialize(){
+
+    /**
+     * Use this method to initialize resolver 
+     */
+    public function initialize() {
         
     }
-    
-    
+
     abstract protected function _execute(array $namespaces, array $parameters);
 
     
-    
-
+    protected function isAllowed($namespaces, $parameters) {
+        return false;
+    }
 
 }

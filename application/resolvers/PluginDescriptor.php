@@ -42,5 +42,11 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
         $pd = new Azf_Plugin_Descriptor();
         return $pd->getExtensionPlugins();
     }
+    
+    
+    protected function isAllowed($namespaces, $parameters) {
+        // TODO fix me
+        return true;
+    }
 
 }

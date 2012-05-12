@@ -8,8 +8,7 @@
  * 2. Implement template autoconfiguration, which will setup appropriate template
  *      in postRoute hook.
  * 3. Create client side model for server side navigational model.
- * 4. Create I18N service that can be used to easily translate client side programs to 
- *      other languages.
+ * 4. 
  * 
  */
 
@@ -17,11 +16,27 @@
  * TODO 12.05.2012
  * 
  * @task Implement ACL checks in resolver classes 
+ * @task Test auto-resolver implementation, no tests have been run against non-default modules
+ */
+
+
+/**************************************************************/
+/**************************************************************/
+/********************DONE**************************************/
+/**************************************************************/
+/**************************************************************/
+
+
+/**
+ * @done 12.05.2012 23:12
+ *Create I18N service that can be used to easily translate client side programs to 
+ *      other languages. 
  */
 
 /**  
  * @DateStartedWriting 12.05.2012
  * @TimeStartedWriting 18:39
+ * @TimeEndedWriting 22:49
  * @Title Refactoring json-lang service resolver implementation
  * 
  * @Description
@@ -61,10 +76,4 @@
  * This whitelist should be integraded into the ACL.
  * 
  * 
- * 
- * 
  */
-
-
-/********************DONE**************************************/
-

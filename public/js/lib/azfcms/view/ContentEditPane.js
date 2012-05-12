@@ -5,10 +5,10 @@
 define(
 ['dojo/_base/declare','dijit/layout/BorderContainer','dijit/layout/ContentPane',
 'dijit/form/ComboBox','dijit/form/TextBox','dijit/form/Button',
-'dijit/form/Textarea'],function
+'dijit/form/Textarea','dojo/i18n!azfcms/resources/nls/view'],function
 (declare, BorderContainer, ContentPane,
 ComboBox, TextBox, Button,
-Textarea)
+Textarea, nls)
 {
    var _class = declare([BorderContainer],{
        constructor: function(){
@@ -40,7 +40,7 @@ Textarea)
        _constuctMetadataPane:function(){
            var cep = this;
            // Add Header
-           this.addMetadataChildNode(document.createTextNode("Vrsta sadr\u017eaja"));
+           this.addMetadataChildNode(document.createTextNode(nls.cepContentType));
            this.addMetadataLineBreak(1);
            // Add combo box
            this.typeComboBox = new ComboBox({
@@ -52,28 +52,28 @@ Textarea)
            
            // Add change type button
            this.addMetadataLineBreak(2);
-           var button = new Button({label:"Promjeni vrstu"});
+           var button = new Button({label:nls.cepChangeType});
            this.addMetadataChildNode(button.domNode);
            
                      
            
            this.createMetadataTable();
            // Add label
-           this.addMetadataTableChildText("Naziv:");
+           this.addMetadataTableChildText(nls.cepPageTitle);
            this.pageName = new TextBox({
                style:"width:100%"
            });
            this.addMetadataTableChild(this.pageName.domNode);
            
            // add description box
-           this.addMetadataTableChildText("Opis:");
+           this.addMetadataTableChildText(nls.cepPageDescription);
            this.pageDescription = new Textarea({
                style:"width:100%"
            });
            this.addMetadataTableChild(this.pageDescription.domNode);
            
            // add keywords box
-           this.addMetadataTableChildText("Kljucne rijeci:");
+           this.addMetadataTableChildText(nls.cepPageKeywords);
            this.pageKeywords = new Textarea({
                style:"width:100%"
            });
@@ -82,7 +82,7 @@ Textarea)
            // add save button
            this.addMetadataTableChildText("");
            this.saveMetadataButton = new Button({
-               label:"Spremi"
+               label:nls.cepSave
            });
            this.addMetadataTableChild(this.saveMetadataButton.domNode);
            

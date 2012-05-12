@@ -1,11 +1,11 @@
 define(
 ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Tree',
 'dijit/layout/BorderContainer','dijit/Menu','dijit/MenuItem',
-'dijit/tree/dndSource'],
+'dijit/tree/dndSource','dojo/i18n!azfcms/resources/nls/view'],
 function
 (declare,ContentPane,Tree,
   BorderContainer,  Menu, MenuItem,
-  dndSource)
+  dndSource,nls)
 {
     return declare([BorderContainer],{
         constructor: function(args){
@@ -15,6 +15,9 @@ function
              * @property {azfcms/model/navigation}
              */
             this.model = args.model;
+            
+            // Set pane title
+            this.title = nls.npTitle;
             
             /**
              * Store context controller reference

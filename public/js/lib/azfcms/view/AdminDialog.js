@@ -1,13 +1,16 @@
 
 define(
     ['dojo/_base/declare','dijit/Dialog','dijit/layout/ContentPane','dijit/layout/TabContainer',
-    'dojo/window'],function
+    'dojo/window','dojo/i18n!azfcms/resources/nls/view'],function
     (declare,Dialog,ContentPane,TabContainer,
-        dojoWindow){
+        dojoWindow,nls){
         var _class = declare([Dialog],{
             constructor: function(){
                 // Define tab container reference
                 this.tabContainer = null;
+                
+                // Set 
+                this.title = nls.adTitle;
                 
                 /**
                  * Border container reference

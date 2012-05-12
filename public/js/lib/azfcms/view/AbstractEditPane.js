@@ -1,11 +1,14 @@
 define(
-    ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Editor'],function
-    (declare, ContentPane, Editor)
+    ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Editor',
+    'dojo/i18n!azfcms/resources/nls/view'],function
+    (declare, ContentPane, Editor,
+     nls)
         {
         var _class = declare([ContentPane],{
         
-            constructor: function(adminDialog, navigationPane){
+            constructor: function(){
                 this.region = "center";
+                this.title = nls.aepEditor;
             },
             
             postCreate: function(){

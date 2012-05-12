@@ -1,8 +1,8 @@
 define(
     ['dojo/_base/declare','azfcms/controller/ContentEditController','azfcms/view/ContentEditPane',
-    'azfcms/model','dojo/_base/lang'],function
+    'azfcms/model','dojo/_base/lang','dojo/i18n!azfcms/resources/nls/view'],function
     (declare, CEC, CEP,
-        model, lang)
+        model, lang, nls)
         {
         var _class = declare([],{
         
@@ -39,7 +39,7 @@ define(
              * Initialize navigation buttons
              */
             _initiNavigationButtons: function(){
-                this.navigationPane.addButton("Uredi sadrzaj",lang.hitch(this,function(){
+                this.navigationPane.addButton(nls.npEditContent,lang.hitch(this,function(){
                     this.editSelectedPageContent();
                 }),"dijitIconEdit")
             },

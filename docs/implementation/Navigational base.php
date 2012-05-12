@@ -41,8 +41,8 @@
 /**
  * ##Navigation node looup##
  * 
- * When the user requests a web page, he will implicitly provide some kind of URL.
- * That URL will be then parsed and will produce one of two kinds of values.
+ * When the user requests a web page, he will implicitly provide some kind of URL.   
+* That URL will be then parsed and will produce one of two kinds of values.
  * 
  * If the URL does not contain node identifier, value of -1 will be returned.
  * If the URL does contain identifier, that value will be returned. 
@@ -58,7 +58,37 @@
  * 
  * All above described procedures will be executed in Azf default route implementation. 
  * 
- * azfRouter->match{navigation model->match}
+ * R = Azf_Controller_Router_Route_Default
+ * N = Azf_Model_Tree_Navigation
+ * HR = Zend_Controller_Request_Http
+ * 
+ *               R              N
+ *               |              |
+ * match(HR)     |              |
+ * ------------->|              |
+ *               |              |
+ *               |              |
+ *               |  match(id)   |
+ *               |------------->|
+ *               |    id        |
+ *               |< - - - - - - | 
+ *               | getStaticParams(id)
+ *               |------------->|
+ *               |              |
+ *               | staticParams |
+ *               | < - - - - -  |
+ *  staticParams |              |
+ * < - - - - - - |
+ * 
+ * 
+ * From sequence diagram shown above this text we can clearly see how the process
+ * of generating MVC parameters work. Method match used in Navigation will validate given
+ * id and return appropriate value. If given input id is not valid, id of the home page
+ * will be returned. 
+ * 
+ * Then we have to load staticParams which will contain all required key/value pairs
+ * which are required by the Zend MVC implementation.
+ * 
  * 
  * 
  */

@@ -37,13 +37,17 @@
  * array(
  * // Zend MVC module, used to identify module 
  *  'module'=>'default', // REQUIRED
+ * 
  * // Value that will identify Zend MVC controller
  *  'controller'=>'index, // REQUIRED
+ * 
  * // Value that will identify controller action
  *  'action'=>'index', // REQUIRED
+ * 
  * // Value that will be used on the client side to identify javascript
  * // classes which can provide UI for content administration.
  *  'pluginIdentifier'=>'dijitEditor', // REQUIRED
+ * 
  * // Value that will be used as the body of the <title> element in the page
  *  'pageTitle'=>'Title' // REQUIRED
  * )

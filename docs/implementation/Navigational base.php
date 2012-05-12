@@ -41,15 +41,24 @@
 /**
  * ##Navigation node looup##
  * 
- * When the user requests a web page, he implicitly provide us with some kind of URL.
+ * When the user requests a web page, he will implicitly provide some kind of URL.
  * That URL will be then parsed and will produce one of two kinds of values.
  * 
  * If the URL does not contain node identifier, value of -1 will be returned.
- * If the URL does contain identifier, it's value will be returned. 
+ * If the URL does contain identifier, that value will be returned. 
  * 
- * At that point route will provided calculated value to match() function of navigation model, and
+ * At that point route will provide calculated value to match() function of navigation model, and
  * navigation model will based on the provided value load appropriate node. 
  * If the value is greather than 0, then node will be looked up by that identifier, otherwise
- * node with home value of 1 will be returned. 
+ * node with home value of 1 will be returned.
+ * 
+ * When we have identified node id, we will pass that node id to Navigation model which will return 
+ * parameters that will identify MVC stack.
+ * 
+ * 
+ * All above described procedures will be executed in Azf default route implementation. 
+ * 
+ * azfRouter->match{navigation model->match}
+ * 
  * 
  */

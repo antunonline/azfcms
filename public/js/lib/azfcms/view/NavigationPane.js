@@ -53,7 +53,10 @@ function
             this.tree = new Tree({
                 model:this.model,
                 region:"center",
-                dndController: dndSource
+                dndController: dndSource,
+                persist: false,
+                autoExpand: false,
+                betweenThreshold: 5
             });
             
             var controller = this.contextController;

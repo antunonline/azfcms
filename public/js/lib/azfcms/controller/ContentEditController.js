@@ -1,8 +1,8 @@
 define(
     ['dojo/_base/declare','dojo/_base/Deferred','azfcms/model',
-    'dojo/_base/lang'],function
+    'dojo/_base/lang','azfcms/model/navigation'],function
     (declare, Deferred, model,
-        lang)
+        lang, navigationModel)
         {
         var _class = declare([],{
         
@@ -28,7 +28,7 @@ define(
                 // Create closure referencable this
                 var cec = this; 
                 // Load static and dynamic plugin params
-                require(['azfcms/model![navigation.getStaticParams('+nodeId+'),navigation.getDynamicParams('+nodeId+')]'], function
+                navigationModel.getNodeParams(nodeId).then(function
                     (params){
                         var staticParams = params[0];
                         var dynamicParams = params[1];
@@ -99,20 +99,20 @@ define(
              * This method will be invoked when the parameters are loaded from the backend
              */
             _onParamsLoad: function(){
-                this.cep.set("name",this.staticParams.title);
-                this.cep.set("description",this.staticParams.description);
-                this.cep.set("keywords",this.staticParams.keywords);
+                this.cep.set("title",this.staticParams.pageTitle);
+                this.cep.set("description",this.dynamicParams.metaDescription);
+                this.cep.set("keywords",this.dynamicParams.metaKeywords);
             },
        
        
             onMetadataSave: function(title, description, keywords){
                 var nid = this.nodeId;
-                model.invoke("["+
-                    "navigation.setStaticParam("+nid+",'title','"+title+"'),"+
-                    "navigation.setStaticParam("+nid+",'description','"+description+"'),"+
-                    "navigation.setStaticParam("+nid+",'keywords','"+keywords+"')]"
-           
-                    )
+                navigationModel.setParams(nid,{
+                    pageTitle:title
+                },{
+                    metaKeywords: keywords,
+                    metaDescription:description
+                });
             }
         });
     

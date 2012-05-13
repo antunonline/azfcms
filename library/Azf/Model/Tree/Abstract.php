@@ -30,6 +30,8 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
     abstract protected function insertNode($l, $r, $parentId, $value);
 
     abstract protected function createTemporaryTable();
+    
+    abstract protected function getTemporaryTableName();
 
     abstract protected function moveNodeIntoTemporaryTable($node);
 
@@ -55,11 +57,19 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
     protected function _startTransaction() {
         $this->getAdapter()->beginTransaction();
+        $this->_lockTable();
+    }
+    
+    protected function _lockTable(){
         $this->getAdapter()->query("LOCK TABLES $this->_name WRITE");
     }
 
     protected function _endTransaction() {
         $this->getAdapter()->commit();
+        $this->_unlockTable();
+    }
+    
+    protected function _unlockTable(){
         $this->getAdapter()->query("UNLOCK TABLES");
     }
 
@@ -139,6 +149,22 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $this->_insertNode(1, 2, null, $value);
         $this->_endTransaction();
     }
+    
+    public function isTreeValid(){
+        $SQL = "SELECT count(id) as `count`, sum(l)+sum(r) as `sum` FROM $this->_name;";
+        $result = $this->getAdapter()->fetchRow($SQL);
+        
+        $rowCount = $result['count'];
+        $actualSum = $result['sum'];
+        $n = $rowCount*2;
+        
+        $expectedSum = ($n*($n+1))/2;
+        if($expectedSum==$actualSum){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function insertInto($id, $value) {
         $this->_startTransaction();
@@ -158,7 +184,12 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $newNode = $this->_insertNode($dstNode['r'], $dstNode['r'] + 1, $dstNode['id'], $value);
 
-        $this->_endTransaction();
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
 
         return $newNode;
     }
@@ -181,7 +212,12 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $newNode = $this->_insertNode($node['r'] + 1, $node['r'] + 2, $node['parentId'], $value);
 
 
-        $this->_endTransaction();
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
         return $newNode;
     }
 
@@ -203,8 +239,13 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $newNode = $this->_insertNode($node['l'], $node['r'], $node['parentId'], $value);
 
 
-        $this->_endTransaction();
-        return $newNode;
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
+        return true;
     }
 
     public function delete($id) {
@@ -227,7 +268,14 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $decreaseNextSiblingsSizeSQL = "UPDATE $this->_name SET r = r-?, l = l-? WHERE l > ? AND r > ? AND tid = ?;";
         $this->getAdapter()->query($decreaseNextSiblingsSizeSQL, array($nodeSize, $nodeSize, $node['r'], $node['r'], $this->tid));
 
-        $this->_endTransaction();
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
+        
+        return true;
     }
 
     public function deleteTree() {
@@ -239,6 +287,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $targetNode = $this->_find($targetId);
         $dstNode = $this->_find($dstId);
+        $temporaryTableName = $this->getTemporaryTableName();
 
         if (!$targetNode || !$dstNode) {
             $this->_rollBackTransaction();
@@ -281,10 +330,10 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
             $targetDstDistance = $dstNode['r'] - $targetNode['l'];
         }
 
-        $updateTemporaryTablePositionSQL = "UPDATE TemporaryTreeTable SET l = l+?, r = r+?;";
+        $updateTemporaryTablePositionSQL = "UPDATE `$temporaryTableName` SET l = l+?, r = r+?;";
         $this->getAdapter()->query($updateTemporaryTablePositionSQL, array($targetDstDistance, $targetDstDistance));
 
-        $updateTemporaryTableParentIdSQL = "UPDATE TemporaryTreeTable SET parentId = ? WHERE parentId = ? AND tid = ?;";
+        $updateTemporaryTableParentIdSQL = "UPDATE `$temporaryTableName` SET parentId = ? WHERE parentId = ? AND tid = ?;";
         $this->getAdapter()->query($updateTemporaryTableParentIdSQL, array($dstNode['id'], $targetNode['parentId'], $this->tid));
 
 
@@ -292,7 +341,12 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $this->_dropTemporaryTable();
 
 
-        $this->_endTransaction();
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
         return true;
     }
 
@@ -301,6 +355,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $targetNode = $this->_find($targetId);
         $dstNode = $this->_find($dstId);
+        $temporaryTableName = $this->getTemporaryTableName();
 
         if (!$targetNode || !$dstNode) {
             $this->_rollBackTransaction();
@@ -342,10 +397,10 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $targetDstDistance = $dstNode['l'] - $targetNode['l'] - $decreaseDstNodePointer;
 
-        $updateTemporaryTablePositionSQL = "UPDATE TemporaryTreeTable SET l = l+?, r = r+?;";
+        $updateTemporaryTablePositionSQL = "UPDATE `$temporaryTableName` SET l = l+?, r = r+?;";
         $this->getAdapter()->query($updateTemporaryTablePositionSQL, array($targetDstDistance, $targetDstDistance));
 
-        $updateTemporaryTableParentIdSQL = "UPDATE TemporaryTreeTable SET parentId = ? WHERE parentId = ? AND tid = ?;";
+        $updateTemporaryTableParentIdSQL = "UPDATE `$temporaryTableName` SET parentId = ? WHERE parentId = ? AND tid = ?;";
         $this->getAdapter()->query($updateTemporaryTableParentIdSQL, array($dstNode['parentId'], $targetNode['parentId'], $this->tid));
 
 
@@ -353,7 +408,12 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $this->_dropTemporaryTable();
 
 
-        $this->_endTransaction();
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
         return true;
     }
 
@@ -362,6 +422,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $targetNode = $this->_find($targetId);
         $dstNode = $this->_find($dstId);
+        $temporaryTableName = $this->getTemporaryTableName();
 
         if (!$targetNode || !$dstNode) {
             $this->_rollBackTransaction();
@@ -408,10 +469,10 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $targetDstDistance += $dstNode['r'] - $targetNode['l'];
 
 
-        $updateTemporaryTablePositionSQL = "UPDATE TemporaryTreeTable SET l = l+?, r = r+?;";
+        $updateTemporaryTablePositionSQL = "UPDATE `$temporaryTableName` SET l = l+?, r = r+?;";
         $this->getAdapter()->query($updateTemporaryTablePositionSQL, array($targetDstDistance, $targetDstDistance));
 
-        $updateTemporaryTableParentIdSQL = "UPDATE TemporaryTreeTable SET parentId = ? WHERE parentId = ? AND tid = ?;";
+        $updateTemporaryTableParentIdSQL = "UPDATE `$temporaryTableName` SET parentId = ? WHERE parentId = ? AND tid = ?;";
         $this->getAdapter()->query($updateTemporaryTableParentIdSQL, array($dstNode['parentId'], $targetNode['parentId'], $this->tid));
 
 
@@ -419,7 +480,12 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $this->_dropTemporaryTable();
 
 
-        $this->_endTransaction();
+        if($this->isTreeValid()){
+            $this->_endTransaction();
+        } else {
+            $this->_rollBackTransaction();
+            return false;
+        }
         return true;
     }
 

@@ -12,6 +12,8 @@ define(
                 // Set 
                 this.title = nls.adTitle;
                 
+                this.closable = false;
+                
                 /**
                  * Border container reference
                  */

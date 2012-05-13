@@ -35,8 +35,8 @@ class Azf_Model_Tree_Navigation extends Azf_Model_Tree_Abstract {
 
     protected function createTemporaryTable() {
         $sql = <<<SQL
-CREATE  TEMPORARY TABLE IF NOT EXISTS `TemporaryNavigation` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CREATE  TABLE IF NOT EXISTS `TemporaryNavigation` (
+  `id` INT UNSIGNED NOT NULL ,
   `parentId` INT UNSIGNED NULL ,
   `tid` INT UNSIGNED NOT NULL ,
   `l` INT UNSIGNED NULL ,
@@ -45,7 +45,9 @@ CREATE  TEMPORARY TABLE IF NOT EXISTS `TemporaryNavigation` (
   `url` VARCHAR(125) NULL ,
   `final` MEDIUMTEXT NOT NULL ,
   `plugins` MEDIUMTEXT NOT NULL ,
-  `abstract` MEDIUMTEXT NOT NULL);
+  `abstract` MEDIUMTEXT NOT NULL ,
+  `home` TINYINT(1) NOT NULL DEFAULT false ,
+  PRIMARY KEY (`id`) )
 SQL;
         $this->getAdapter()->query($sql);
     }
@@ -53,6 +55,21 @@ SQL;
     protected function dropTemporaryTable() {
         $sql = "DROP TABLE TemporaryNavigation;";
         $this->getAdapter()->query($sql);
+    }
+    
+    protected function getTemporaryTableName() {
+        return "TemporaryNavigation";
+    }
+
+    /**
+     * Disable table locking, for now 
+     */
+    protected function _lockTable() {
+        
+    }
+
+    protected function _unlockTable() {
+        
     }
 
     protected function insertNode($l, $r, $parentId, $value) {
@@ -133,24 +150,23 @@ SQL;
     public function setLastFetchConfigurationId($lastFetchConfigurationId) {
         $this->lastFetchConfigurationId = $lastFetchConfigurationId;
     }
-    
+
     /**
      *
      * @param string $sql 
      * @return Zend_Db_Statement_Interface
      */
-    public function _prepareStmt($sql){
+    public function _prepareStmt($sql) {
         return $this->getAdapter()->prepare($sql);
     }
-    
-    
+
     /**
      *
      * @param int $id 
      * @return string
      */
-    public function _getCacheKey($id){
-        return "i".$id;
+    public function _getCacheKey($id) {
+        return "i" . $id;
     }
 
     /**
@@ -224,15 +240,13 @@ SQL;
             }
         }
     }
-    
-    
-    
+
     /**
      *
      * @param array $row 
      * @return array
      */
-    protected function _fetchStaticConfig(array $row){
+    protected function _fetchStaticConfig(array $row) {
         return $this->_decodeConfig($row[self::FIELD_STATIC]);
     }
 
@@ -266,11 +280,11 @@ SQL;
         } else {
             throw new RuntimeException("Navigation record with ID $id does not exits");
         }
-        
+
         $this->_staticParams[$cacheKey] = $staticParams;
         $this->_dynamicParams[$cacheKey] = $dynamicParams;
         $this->_pluginsParams[$cacheKey] = $pluginParams;
-        
+
         return true;
     }
 
@@ -760,32 +774,31 @@ SQL;
     public function deletePlugin($id, $plugin) {
         $this->_deletePlugin($id, $plugin);
     }
-    
-    
+
     /**
      *
      * @param int $id 
      * @return int
      */
-    public function match($id){
+    public function match($id) {
         $stmt = $this->_prepareStmt("call fetchConfiguration (?);");
         $stmt->execute(array($id));
-        
+
         $row = $stmt->fetch();
-        if($row){
+        if ($row) {
             $id = $row['id'];
             $cacheKey = $this->_getCacheKey($id);
             $staticParams = $this->_fetchStaticConfig($row);
             $dynamicParams = array();
             $pluginParams = array();
-            
-            do{
+
+            do {
                 $this->_mergeConfigurationRow($row, $dynamicParams, $pluginParams);
-            }while($row = $stmt->fetch());
+            } while ($row = $stmt->fetch());
         } else {
             throw new RuntimeException("Can't load required navigation node set");
         }
-        
+
         $this->_staticParams[$cacheKey] = $staticParams;
         $this->_dynamicParams[$cacheKey] = $dynamicParams;
         $this->_pluginsParams[$cacheKey] = $pluginParams;

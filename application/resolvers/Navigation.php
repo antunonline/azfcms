@@ -34,8 +34,8 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
             return null;
         }
 
-        $method = array_pop($namespaces);
-
+        $method = array_shift($namespaces);
+        
         if (method_exists($this->getNavigation(), $method)) {
             return call_user_method_array($method, $this->getNavigation(), $parameters);
         } else {

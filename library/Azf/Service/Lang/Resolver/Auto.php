@@ -11,6 +11,11 @@
  * @author antun
  */
 class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
+    
+    /**
+     * @var array
+     */
+    protected $_loadedClasses = array();
 
     protected function _execute(array $namespaces, array $parameters) {
         $numOfNamespaces = sizeof($namespaces);
@@ -47,7 +52,7 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
         $className = "Application_Resolver_".$classSuffix;
         
         // Create instance of the resolver
-        $resolver = new $className();
+        $resolver = $this->_loadClass($className);
         
         // Pop method name
         $method = array_shift($namespaces);
@@ -74,13 +79,23 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
         $className = $moduleName."_Resolver_".$classSuffix;
         
         // Create instance of the resolver
-        $resolver = new $className();
+        $resolver = $this->_loadClass($className);
         
         // Pop method name
         $method = array_shift($namespaces);
         
         // Execute resolver
         return $this->_executeResolver($resolver,$classNamespace,$method,$parameters);
+    }
+    
+    protected function _loadClass($className){
+        if(isset($this->_loadedClasses[$className])) {
+            return $this->_loadedClasses[$className];
+        } else {
+            $this->_loadedClasses[$className] = new $className();
+            $this->_loadedClasses[$className]->initialize();
+            return $this->_loadedClasses[$className];
+        }
     }
     
     

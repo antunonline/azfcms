@@ -56,26 +56,26 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
     }
 
     protected function _startTransaction() {
-        $this->getAdapter()->beginTransaction();
+        $this->getAdapter()->query("begin work");
         $this->_lockTable();
     }
     
     protected function _lockTable(){
-        $this->getAdapter()->query("LOCK TABLES $this->_name WRITE");
+//        $this->getAdapter()->query("LOCK TABLES $this->_name WRITE");
     }
 
     protected function _endTransaction() {
-        $this->getAdapter()->commit();
+        $this->getAdapter()->query("begin");
         $this->_unlockTable();
     }
     
     protected function _unlockTable(){
-        $this->getAdapter()->query("UNLOCK TABLES");
+//        $this->getAdapter()->query("UNLOCK TABLES");
     }
 
     protected function _rollBackTransaction() {
-        $this->getAdapter()->rollBack();
-        $this->getAdapter()->query("UNLOCK TABLES");
+        $this->getAdapter()->query("rollback ");
+        $this->_unlockTable();
     }
 
     protected function _createTemporaryTable() {
@@ -151,7 +151,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
     }
     
     public function isTreeValid(){
-        $SQL = "SELECT count(id) as `count`, sum(l)+sum(r) as `sum` FROM $this->_name;";
+        $SQL = "SELECT count(id) as `count`, sum(l)+sum(r) as `sum` FROM $this->_name WHERE tid = $this->tid;";
         $result = $this->getAdapter()->fetchRow($SQL);
         
         $rowCount = $result['count'];
@@ -184,14 +184,14 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         $newNode = $this->_insertNode($dstNode['r'], $dstNode['r'] + 1, $dstNode['id'], $value);
 
+        
         if($this->isTreeValid()){
             $this->_endTransaction();
+            return $newNode;
         } else {
             $this->_rollBackTransaction();
             return false;
         }
-
-        return $newNode;
     }
 
     public function insertAfter($id, $value) {
@@ -214,11 +214,11 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         if($this->isTreeValid()){
             $this->_endTransaction();
+            return $newNode;
         } else {
             $this->_rollBackTransaction();
             return false;
         }
-        return $newNode;
     }
 
     public function insertBefore($id, $value) {
@@ -241,11 +241,11 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
         if($this->isTreeValid()){
             $this->_endTransaction();
+            return $newNode;
         } else {
             $this->_rollBackTransaction();
             return false;
         }
-        return true;
     }
 
     public function delete($id) {
@@ -268,14 +268,14 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
         $decreaseNextSiblingsSizeSQL = "UPDATE $this->_name SET r = r-?, l = l-? WHERE l > ? AND r > ? AND tid = ?;";
         $this->getAdapter()->query($decreaseNextSiblingsSizeSQL, array($nodeSize, $nodeSize, $node['r'], $node['r'], $this->tid));
 
+        
         if($this->isTreeValid()){
             $this->_endTransaction();
+            return true;
         } else {
             $this->_rollBackTransaction();
             return false;
         }
-        
-        return true;
     }
 
     public function deleteTree() {
@@ -283,91 +283,92 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
     }
 
     public function moveInto($targetId, $dstId) {
-        $this->_startTransaction();
-
-        $targetNode = $this->_find($targetId);
-        $dstNode = $this->_find($dstId);
+        $moveNode = $this->_find($targetId);
+        $intoNode = $this->_find($dstId);
         $temporaryTableName = $this->getTemporaryTableName();
 
-        if (!$targetNode || !$dstNode) {
-            $this->_rollBackTransaction();
+        if (!$moveNode || !$intoNode) {
             return false;
         }
 
-        if ($targetNode['l'] < $dstNode['l'] && $targetNode['r'] > $dstNode['r']) {
-            $this->_rollBackTransaction();
+        if ($moveNode['l'] < $intoNode['l'] && $moveNode['r'] > $intoNode['r']) {
             return false;
         }
-
-        $targetNodeSize = abs($targetNode['l'] - $targetNode['r']) + 1;
-        if ($dstNode['l'] > $targetNode['l']) {
-            $dstNode['l']-=$targetNodeSize;
-            $dstNode['r']-=$targetNodeSize;
-        }
-
+        
         $this->_createTemporaryTable();
-        $this->_moveNodeIntoTemporaryTable($targetNode);
+        $this->_startTransaction();
+
+        $targetNodeSize = abs($moveNode['l'] - $moveNode['r']) + 1; 
+        if ($intoNode['l'] > $moveNode['l']) {
+            $intoNode['l']-=$targetNodeSize;
+            $intoNode['r']-=$targetNodeSize;
+        }else if($intoNode['l']==1){
+            $intoNode['r']-=$targetNodeSize;
+        }
+
+        $this->_moveNodeIntoTemporaryTable($moveNode);
 
         $deleteTargetNodeSQL = "DELETE FROM $this->_name WHERE l >= ? AND r <= ? AND tid = ?;";
-        $this->getAdapter()->query($deleteTargetNodeSQL, array($targetNode['l'], $targetNode['r'], $this->tid));
+        $this->getAdapter()->query($deleteTargetNodeSQL, array($moveNode['l'], $moveNode['r'], $this->tid));
 
         $decreaseSizeOfDeletedNodeParents = "UPDATE $this->_name SET r = r-? WHERE l <= ? AND r >= ? AND tid = ?;";
-        $this->getAdapter()->query($decreaseSizeOfDeletedNodeParents, array($targetNodeSize, $targetNode['l'], $targetNode['r'], $this->tid));
+        $this->getAdapter()->query($decreaseSizeOfDeletedNodeParents, array($targetNodeSize, $moveNode['l'], $moveNode['r'], $this->tid));
 
         $decreaseNextSiblingsOfDeletedNode = "UPDATE $this->_name SET l= l-?, r = r-? WHERE l > ? AND r > ? AND tid = ?;";
-        $this->getAdapter()->query($decreaseNextSiblingsOfDeletedNode, array($targetNodeSize, $targetNodeSize, $targetNode['r'], $targetNode['r'], $this->tid));
+        $this->getAdapter()->query($decreaseNextSiblingsOfDeletedNode, array($targetNodeSize, $targetNodeSize, $moveNode['r'], $moveNode['r'], $this->tid));
 
         $increaseDstParentSizeSQL = "UPDATE $this->_name SET r = r+? WHERE l <= ? AND r >= ? AND tid = ?;";
-        $this->getAdapter()->query($increaseDstParentSizeSQL, array($targetNodeSize, $dstNode['l'], $dstNode['r'], $this->tid));
+        $this->getAdapter()->query($increaseDstParentSizeSQL, array($targetNodeSize, $intoNode['l'], $intoNode['r'], $this->tid));
 
         $increaseDstNextSiblingsSizeSQL = "UPDATE $this->_name SET l = l+?, r = r+? WHERE l > ? AND r > ? AND tid = ?;";
-        $this->getAdapter()->query($increaseDstNextSiblingsSizeSQL, array($targetNodeSize, $targetNodeSize, $dstNode['r'], $dstNode['r'], $this->tid));
+        $this->getAdapter()->query($increaseDstNextSiblingsSizeSQL, array($targetNodeSize, $targetNodeSize, $intoNode['r'], $intoNode['r'], $this->tid));
 
-        $targetNodeIsAfterDstNode = $targetNode['r'] > $dstNode['l'];
+        $targetNodeIsAfterDstNode = $moveNode['r'] > $intoNode['l'];
         if ($targetNodeIsAfterDstNode) {
-            $targetDstDistance = $dstNode['r'] - $targetNode['l'];
+            $targetDstDistance = $intoNode['r'] - $moveNode['l'];
         } else {
-            $targetDstDistance = $dstNode['r'] - $targetNode['l'];
+            $targetDstDistance = $intoNode['r'] - $moveNode['l'];
         }
 
         $updateTemporaryTablePositionSQL = "UPDATE `$temporaryTableName` SET l = l+?, r = r+?;";
         $this->getAdapter()->query($updateTemporaryTablePositionSQL, array($targetDstDistance, $targetDstDistance));
 
         $updateTemporaryTableParentIdSQL = "UPDATE `$temporaryTableName` SET parentId = ? WHERE parentId = ? AND tid = ?;";
-        $this->getAdapter()->query($updateTemporaryTableParentIdSQL, array($dstNode['id'], $targetNode['parentId'], $this->tid));
+        $this->getAdapter()->query($updateTemporaryTableParentIdSQL, array($intoNode['id'], $moveNode['parentId'], $this->tid));
 
 
         $this->_mergeTemporaryTable();
-        $this->_dropTemporaryTable();
 
 
         if($this->isTreeValid()){
             $this->_endTransaction();
+            $this->_dropTemporaryTable();
+            return true;
         } else {
             $this->_rollBackTransaction();
+            $this->_dropTemporaryTable();
             return false;
         }
-        return true;
     }
 
     public function moveBefore($targetId, $dstId) {
-        $this->_startTransaction();
 
         $targetNode = $this->_find($targetId);
         $dstNode = $this->_find($dstId);
         $temporaryTableName = $this->getTemporaryTableName();
 
         if (!$targetNode || !$dstNode) {
-            $this->_rollBackTransaction();
             return false;
         }
 
 
         if (($targetNode['l'] < $dstNode['l'] && $targetNode['r'] > $dstNode['r']) ||
                 $dstNode['l'] == "1") {
-            $this->_rollBackTransaction();
             return false;
         }
+        
+        $this->_createTemporaryTable();
+        $this->_startTransaction();
 
         $targetNodeSize = abs($targetNode['l'] - $targetNode['r']) + 1;
 
@@ -377,7 +378,6 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
             $decreaseDstNodePointer = 0;
         }
 
-        $this->_createTemporaryTable();
         $this->_moveNodeIntoTemporaryTable($targetNode);
 
         $deleteTargetNodeSQL = "DELETE FROM $this->_name WHERE l >= ? AND r <= ? AND tid = ?;";
@@ -405,36 +405,36 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
 
         $this->_mergeTemporaryTable();
-        $this->_dropTemporaryTable();
 
 
         if($this->isTreeValid()){
             $this->_endTransaction();
+            $this->_dropTemporaryTable();
+            return true;
         } else {
             $this->_rollBackTransaction();
+            $this->_dropTemporaryTable();
             return false;
         }
-        return true;
     }
 
     public function moveAfter($targetId, $dstId) {
-        $this->_startTransaction();
-
         $targetNode = $this->_find($targetId);
         $dstNode = $this->_find($dstId);
         $temporaryTableName = $this->getTemporaryTableName();
 
         if (!$targetNode || !$dstNode) {
-            $this->_rollBackTransaction();
             return false;
         }
 
 
         if (($targetNode['l'] < $dstNode['l'] && $targetNode['r'] > $dstNode['r']) ||
                 ($dstNode['l'] == "1")) {
-            $this->_rollBackTransaction();
             return false;
         }
+        
+        $this->_createTemporaryTable();
+        $this->_startTransaction();
 
         $targetNodeSize = abs($targetNode['l'] - $targetNode['r']) + 1;
 
@@ -447,7 +447,6 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
             $increaseTargetNodeSize = 0;
         }
 
-        $this->_createTemporaryTable();
         $this->_moveNodeIntoTemporaryTable($targetNode);
 
         $deleteTargetNodeSQL = "DELETE FROM $this->_name WHERE l >= ? AND r <= ? AND tid = ?;";
@@ -477,16 +476,17 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
 
 
         $this->_mergeTemporaryTable();
-        $this->_dropTemporaryTable();
 
 
         if($this->isTreeValid()){
             $this->_endTransaction();
+            $this->_dropTemporaryTable();
+            return true;
         } else {
             $this->_rollBackTransaction();
+            $this->_dropTemporaryTable();
             return false;
         }
-        return true;
     }
 
     public function getTree($cols = null, $showMetadataColumns = false) {

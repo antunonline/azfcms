@@ -106,7 +106,7 @@ class Azf_Service_Lang {
             $this->_initializeProcessor();
 
             return $this->getProcessor()->process($tokens);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException $e) { 
             return "Syntax error";
         }
     }

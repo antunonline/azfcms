@@ -10,7 +10,8 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+        $this->view->navigation = new Application_View_Helper_Navigation();
+        $this->view->navigation->setView($this->view);
     }
 
     public function index1Action()

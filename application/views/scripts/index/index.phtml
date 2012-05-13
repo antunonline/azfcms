@@ -3,6 +3,18 @@
         <title>AZFCMS</title>
     </head>
     <body>
+        <div>
+            <ul>
+                <?php 
+                $tree = $this->navigation->getMenuTree();
+                foreach($tree['childNodes'] as $item){
+                    ?>
+                <li><a href="<?=$item['url']?>"><?=$item['title'] ?></a></li>
+                <?php
+                }
+                ?>
+            </ul>
+        </div>
         Another Zend Framework CMS
     </body>
 </html>

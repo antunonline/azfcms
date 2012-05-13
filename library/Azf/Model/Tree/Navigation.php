@@ -65,7 +65,7 @@ SQL;
      * Disable table locking, for now 
      */
     protected function _lockTable() {
-        
+
     }
 
     protected function _unlockTable() {

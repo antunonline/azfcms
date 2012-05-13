@@ -11,8 +11,10 @@
  *  Implement template autoconfiguration, which will setup appropriate template
  *      in postRoute hook.
  * 
+ * Write documentation of how to use navigation components in template.
  * 
- *  Create client side model for server side navigational model.
+ * 
+ *  
  * 
  * 
  *  
@@ -33,6 +35,11 @@
 /**************************************************************/
 /**************************************************************/
 
+/**
+ *@done 13.05.2012 16:51
+ * 
+ * Create client side model for server side navigational model. 
+ */
 
 /**
  * @done 12.05.2012 23:12

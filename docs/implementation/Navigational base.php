@@ -90,5 +90,44 @@
  * which are required by the Zend MVC implementation.
  * 
  * 
+ */
+
+
+/**
+ *  //  Navigation in Templates     //
  * 
+ * To ease the development of templates we have written few view helpers
+ * which expose Naivgation model hierarchies in template. 
+ * These helpers also generate URL links and point to child nodes which can be used
+ * to construct dynamic deep menus.
+ * 
+ * View helper class that shall provide build-in navigation trafersal API is called
+ * Application_View_Helper_Navigation, and can be accessed through navigation()
+ * call in template context.
+ * 
+ * Returned array structures will be standardnized and will contain prepared data
+ * so that we don't have to escape or construct provided values.
+ * 
+ * Structure of navigation item is a simple associative array with following keys:
+ * 
+ * array(
+ * // This key will point to user visible name of the page link
+ * 'title'=>"",
+ * 
+ * // This key will point to URL of the page that this link represents
+ * 'url'=>'',
+ * 
+ * // Through this key we can find out if this link points to currently opened page
+ * 'isSelected'=>false,
+ * 
+ * // This key contains child nodes which are equivalent to this array.
+ * 'childNodes'=>array()
+ * )
+ * 
+ * If we want to load all menus, we can use following function within template
+ * $this->navigation->getMenus();
+ * 
+ * 
+ * If we want to load child nodes of currently selected page 
+ * $this->navigation->getContextMenus()
  */

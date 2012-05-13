@@ -59,6 +59,10 @@ class Azf_Model_Tree_Default extends Azf_Model_Tree_Abstract {
     protected function getTableName() {
         return "Tree";
     }
+
+    protected function getTemporaryTableName() {
+        return "TemporaryTreeTable";
+    }
     
 
 }

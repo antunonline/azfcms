@@ -6,4 +6,4 @@ CREATE TABLE `Tree` (
   `r` int(10) unsigned NOT NULL,
   `value` varchar(40) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM
+) ENGINE=InnoDB

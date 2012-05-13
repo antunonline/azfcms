@@ -17,7 +17,7 @@ class Azf_Model_Tree_DefaultTest extends PHPUnit_Framework_TestCase {
 
     /**
      *
-     * @var Application_Model_DbTable_TreeModel
+     * @var Azf_Model_Tree_Abstract
      */
     protected $model;
 
@@ -78,64 +78,74 @@ class Azf_Model_Tree_DefaultTest extends PHPUnit_Framework_TestCase {
 
     public function testInsertInto1() {
 
-        $this->model->insertInto(1, "HELLO");
+        $this->assertTrue(false != $this->model->insertInto(1, "testInsertInto1"));
+        $this->assertEquals($this->getTreeSum(1, 42), $this->getDbTreeSum());
+    }
 
+    public function testInsertInto6() {
+
+        $this->assertTrue(false !== $this->model->insertInto(6, "testInsertInto6"));
         $this->assertEquals($this->getTreeSum(1, 42), $this->getDbTreeSum());
     }
 
     public function testInsertInto11() {
 
-        $this->assertTrue(false !== $this->model->insertInto(11, "HELLO"));
+        $this->assertTrue(false !== $this->model->insertInto(11, "testInsertInto11"));
 
         $this->assertEquals($this->getTreeSum(1, 42), $this->getDbTreeSum());
     }
 
     public function testInsertAfter1() {
-        $this->assertFalse($this->model->insertAfter(1, "IT"));
+        $this->assertFalse($this->model->insertAfter(1, "testInsertAfter1"));
 
         $this->assertEquals($this->getTreeSum(1, 40), $this->getDbTreeSum());
     }
 
     public function testInsertAfter4() {
-        $this->model->insertAfter(4, "IT");
+        $this->model->insertAfter(4, "testInsertAfter4");
 
         $this->assertEquals($this->getTreeSum(1, 42), $this->getDbTreeSum());
     }
 
     public function testInsertBefore6() {
-        $this->model->insertBefore(6, "IT");
+        $this->model->insertBefore(6, "testInsertBefore6");
 
         $this->assertEquals($this->getTreeSum(1, 42), $this->getDbTreeSum());
     }
 
     public function testInsertDoubleBefore6() {
-        $this->model->insertBefore(6, "IT");
-        $this->model->insertBefore(6, "IT1");
+        $this->model->insertBefore(6, "testInsertDoubleBefore6");
+        $this->model->insertBefore(6, "testInsertDoubleBefore6 double");
 
         $this->assertEquals($this->getTreeSum(1, 44), $this->getDbTreeSum());
     }
 
     public function testDelete6() {
-        $this->model->delete(6);
-
-        $this->assertEquals($this->getTreeSum(1, 38), $this->getDbTreeSum());
+        $this->assertTrue($this->model->delete(6));
     }
 
     public function testDelete13And6() {
-        $this->model->delete(13);
-        $this->model->delete(6);
+        $this->assertTrue($this->model->delete(13));
+        $this->assertTrue($this->model->delete(6));
 
         $this->assertEquals($this->getTreeSum(1, 36), $this->getDbTreeSum());
     }
 
     public function testDelete14() {
-        $this->model->delete(14);
+        $this->assertTrue($this->model->delete(14));
         $this->assertEquals($this->getTreeSum(1, 26), $this->getDbTreeSum());
         $this->assertTree($this->model->getTree(null, true));
     }
 
     public function testMove14Into2() {
         $this->assertTrue($this->model->moveInto(14, 2));
+
+        $this->assertEquals($this->getTreeSum(1, 40), $this->getDbTreeSum());
+        $this->assertTree($this->model->getTree(null, true));
+    }
+
+    public function testMove13Into1() {
+        $this->assertTrue($this->model->moveInto(13, 1));
 
         $this->assertEquals($this->getTreeSum(1, 40), $this->getDbTreeSum());
         $this->assertTree($this->model->getTree(null, true));

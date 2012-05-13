@@ -60,7 +60,6 @@ class Azf_Auth_Adapter_User implements Zend_Auth_Adapter_Interface {
      */
     public function setPassword($password) {
         $this->password = sha1($password);
-        echo $this->password;
     }
 
     /**

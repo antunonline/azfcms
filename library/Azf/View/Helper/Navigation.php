@@ -201,10 +201,12 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
     public function getBreadCrumbs(){
         if(empty($this->_breadCrumbs)){
             $tree = $this->getTree();
-            $breadCrumbs = $this->_constructBreadCrumbs($tree);
-        } else {
-            return $this->_breadCrumbs;
+            $breadCrumbs = array();
+            $this->_constructBreadCrumbs($tree,$this->getContextId(),$breadCrumbs);
+            $breadCrumbs = array_reverse($breadCrumbs);
+            $this->setBreadCrumbs($breadCrumbs);
         }
+        return $this->_breadCrumbs;
     }
 
     /**
@@ -216,13 +218,14 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
      */
     protected function _constructBreadCrumbs(array $menuTree, $contextId,array &$breadcrumbs){
         if($menuTree['id']==$contextId){
-            return $menuTree;
+            return true;
         } else {
             foreach($menuTree['childNodes'] as $node){
-                $outcome = $this->_constructBreadCrumbs($menuTree, $contextId);
+                $outcome = $this->_constructBreadCrumbs($node, $contextId, $breadcrumbs);
                 if($outcome){
-                    unset($outcome['childNodes']);
-                    return $outcome;
+                    unset($node['childNodes']);
+                    $breadcrumbs[] = $node;
+                    return true;
                 }
             }
         }

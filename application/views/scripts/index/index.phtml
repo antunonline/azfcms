@@ -29,6 +29,20 @@
                 ?>
             </ul>
         </div>
+        <div>
+            <h3>Breadcrumbs menu</h3>
+            <ul>
+                <?php 
+                $crumbs = $this->navigation->getBreadCrumbs();
+              
+                foreach($crumbs as $item){
+                    ?>
+                <li><a href="<?=$item['url']?>"><?=$item['title'] ?></a></li>
+                <?php
+                }
+                ?>
+            </ul>
+        </div>
         
         Another Zend Framework CMS
     </body>

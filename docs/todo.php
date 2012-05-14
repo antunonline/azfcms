@@ -2,7 +2,7 @@
 
 /**
  * --
- * Create Azf_View_Helper_Navigation::getBreadCrumbs method
+ * 
  * 
  * --
  * Transition page title value from pageTitle static param into
@@ -47,6 +47,12 @@
 /********************DONE**************************************/
 /**************************************************************/
 /**************************************************************/
+
+/**
+ *@done 14.05.2012 21:12
+ * 
+ * Create Azf_View_Helper_Navigation::getBreadCrumbs method 
+ */
 
 /**
  *@done 13.05.2012 16:51

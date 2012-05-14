@@ -90,8 +90,8 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
      * @return int 
      */
     public function getContextId() {
-        return $this->_contextId;
-    }
+            return $this->_contextId;
+        }
 
     /**
      *

@@ -11,7 +11,7 @@
  * @author Antun Horvat <at> it-branch.com
  */
 class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_Abstract {
-
+    
     /**
      *
      * @var Azf_Model_Tree_Navigation

@@ -7,7 +7,7 @@
             <h3>Glavni menu</h3>
             <ul>
                 <?php 
-                $tree = $this->navigation->getMenuTree();
+                $tree = $this->navigation->getTree();
                 foreach($tree['childNodes'] as $item){
                     ?>
                 <li><a href="<?=$item['url']?>"><?=$item['title'] ?></a></li>
@@ -20,7 +20,7 @@
             <h3>Kontekstualan menu</h3>
             <ul>
                 <?php 
-                $tree = $this->navigation->getContextMenus();
+                $tree = $this->navigation->getContext();
                 foreach($tree['childNodes'] as $item){
                     ?>
                 <li><a href="<?=$item['url']?>"><?=$item['title'] ?></a></li>

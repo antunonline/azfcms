@@ -126,9 +126,12 @@
  * )
  * 
  * If we want to load all menus, we can use following function within template
- * $this->navigation->getMenuTree();
+ * $this->navigation->getTree();
  * 
  * 
  * If we want to load child nodes of currently selected page 
- * $this->navigation->getContextMenus()
+ * $this->navigation->getContext()
+ * 
+ * To load create breadcrumbs menu we can use 
+ * $this->navigation->getBreadCrumbs();
  */

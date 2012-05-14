@@ -47,9 +47,6 @@
  * // Value that will be used on the client side to identify javascript
  * // classes which can provide UI for content administration.
  *  'pluginIdentifier'=>'dijitEditor', // REQUIRED
- * 
- * // Value that will be used as the body of the <title> element in the page
- *  'pageTitle'=>'Title' // REQUIRED
  * )
  * 
  * 

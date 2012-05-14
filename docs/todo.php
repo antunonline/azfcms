@@ -1,17 +1,30 @@
 <?php
 
 /**
+ * --
+ * Create Azf_View_Helper_Navigation::getBreadCrumbs method
+ * 
+ * --
+ * Transition page title value from pageTitle static param into
+ * title Navigation table column.
  * 
  * 
- * 
+ * --
  * Create API that will expose capabilities of present templates. Also
  *      create a web service that will expose these capabilities to client side programs.
  * 
- * 
+ * --
  *  Implement template autoconfiguration, which will setup appropriate template
  *      in postRoute hook.
  * 
+ * --
  * Write documentation of how to use navigation components in template.
+ * 
+ * 
+ * 
+ * --
+ * Create a GUI for creating a new web page. New GUI should be integrated
+ * into NavigationPane.
  * 
  * 
  *  

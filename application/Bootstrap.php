@@ -179,6 +179,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $this->getPluginResource("frontcontroller")->getFrontController()->getRouter()->addRoute('default',$route);
     }
     
+    public function _initBootstrapPlugin(){
+        if(!$this->isMvcEnvironment())
+            return;
+        
+        Zend_Controller_Front::getInstance()->registerPlugin(new Azf_Controller_Plugin_Bootstrap());
+    }
+    
     /**
      * INitialize session env 
      */

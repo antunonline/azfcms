@@ -35,7 +35,7 @@ class Azf_Model_Tree_Navigation extends Azf_Model_Tree_Abstract {
 
     protected function createTemporaryTable() {
         $sql = <<<SQL
-CREATE  TABLE IF NOT EXISTS `TemporaryNavigation` (
+CREATE TEMPORARY TABLE `TemporaryNavigation` (
   `id` INT UNSIGNED NOT NULL ,
   `parentId` INT UNSIGNED NULL ,
   `tid` INT UNSIGNED NOT NULL ,
@@ -47,7 +47,8 @@ CREATE  TABLE IF NOT EXISTS `TemporaryNavigation` (
   `plugins` MEDIUMTEXT NOT NULL ,
   `abstract` MEDIUMTEXT NOT NULL ,
   `home` TINYINT(1) NOT NULL DEFAULT false ,
-  PRIMARY KEY (`id`) )
+  `title` VARCHAR(45) NOT NULL)
+ENGINE = InnoDB
 SQL;
         $this->getAdapter()->query($sql);
     }
@@ -77,6 +78,7 @@ SQL;
         $initialConfig = $this->_encodeConfig(array());
         $disabled = isset($value->disabled) ? $value->disabled : 1;
         $url = isset($value->url) ? $value->url : "/";
+        $title = isset($value->title) ? $value->title: "";
         $final = isset($value->final) ? $value->final : "/";
         $plugins = isset($value->plugins) ? $this->_encodeConfig($value->plugins) : $initialConfig;
         $abstract = isset($value->abstract) ? $this->_encodeConfig($value->abstract) : $initialConfig;
@@ -88,6 +90,7 @@ SQL;
             'tid' => $this->tid,
             'disabled' => $disabled,
             'url' => $url,
+            'title' => $title,
             'final' => $final,
             'plugins' => $plugins,
             'abstract' => $abstract

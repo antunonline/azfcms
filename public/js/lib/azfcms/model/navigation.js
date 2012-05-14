@@ -43,7 +43,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          * @return {String} 
          */
         getLabel: function(item){
-            return item.url;
+            return item.title;
         },
         
         /**

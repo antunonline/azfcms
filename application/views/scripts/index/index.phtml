@@ -4,6 +4,7 @@
     </head>
     <body>
         <div>
+            <h3>Glavni menu</h3>
             <ul>
                 <?php 
                 $tree = $this->navigation->getMenuTree();
@@ -15,6 +16,20 @@
                 ?>
             </ul>
         </div>
+        <div>
+            <h3>Kontekstualan menu</h3>
+            <ul>
+                <?php 
+                $tree = $this->navigation->getContextMenus();
+                foreach($tree['childNodes'] as $item){
+                    ?>
+                <li><a href="<?=$item['url']?>"><?=$item['title'] ?></a></li>
+                <?php
+                }
+                ?>
+            </ul>
+        </div>
+        
         Another Zend Framework CMS
     </body>
 </html>

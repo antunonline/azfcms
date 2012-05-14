@@ -32,6 +32,7 @@
  *  # plugins - Serialized plugin parameters
  *  # abstract - Serialized dynamic parameters
  *  # home - Flag that is used to identify home page
+ *  # title - Page title
  * 
  * 
  * 
@@ -125,7 +126,7 @@
  * )
  * 
  * If we want to load all menus, we can use following function within template
- * $this->navigation->getMenus();
+ * $this->navigation->getMenuTree();
  * 
  * 
  * If we want to load child nodes of currently selected page 

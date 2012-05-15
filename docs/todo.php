@@ -5,8 +5,7 @@
  * 
  * 
  * --
- * Transition page title value from pageTitle static param into
- * title Navigation table column.
+ * 
  * 
  * 
  * --
@@ -47,6 +46,14 @@
 /********************DONE**************************************/
 /**************************************************************/
 /**************************************************************/
+
+/**
+ *@done 14.05.2012 21:49
+ * 
+ * Transition page title value from pageTitle static param into
+ * title Navigation table column.
+ */
+
 
 /**
  *@done 14.05.2012 21:12

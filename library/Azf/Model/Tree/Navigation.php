@@ -57,7 +57,7 @@ SQL;
         $sql = "DROP TABLE TemporaryNavigation;";
         $this->getAdapter()->query($sql);
     }
-    
+
     protected function getTemporaryTableName() {
         return "TemporaryNavigation";
     }
@@ -66,7 +66,7 @@ SQL;
      * Disable table locking, for now 
      */
     protected function _lockTable() {
-
+        
     }
 
     protected function _unlockTable() {
@@ -78,7 +78,7 @@ SQL;
         $initialConfig = $this->_encodeConfig(array());
         $disabled = isset($value->disabled) ? $value->disabled : 1;
         $url = isset($value->url) ? $value->url : "/";
-        $title = isset($value->title) ? $value->title: "";
+        $title = isset($value->title) ? $value->title : "";
         $final = isset($value->final) ? $value->final : "/";
         $plugins = isset($value->plugins) ? $this->_encodeConfig($value->plugins) : $initialConfig;
         $abstract = isset($value->abstract) ? $this->_encodeConfig($value->abstract) : $initialConfig;
@@ -841,6 +841,29 @@ SQL;
     public function getContextualMenu($nodeId, $userId) {
         $return = $this->getAdapter()->fetchAll("call navigation_contextMenu (?,?);", array($nodeId, $userId));
         return $return;
+    }
+
+    /**
+     *
+     * @param int $nodeId
+     * @param string $title 
+     */
+    public function setTitle($nodeId, $title) {
+        $this->getAdapter()->update($this->_name, array(
+            'title' => $title
+                ), 
+                array("id=?" => $nodeId, "tid=?"=> $this->tid));
+    }
+
+    /**
+     *
+     * @param int $nodeId
+     * @param string $url 
+     */
+    public function setUrl($nodeId, $url) {
+        $this->getAdapter()->update($this->_name, array(
+            'url' => $url
+                ), array("id=?" => $nodeId, "tid=?"=> $this->tid));
     }
 
 }

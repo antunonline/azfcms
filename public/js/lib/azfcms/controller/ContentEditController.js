@@ -17,12 +17,16 @@ define(
                 this.staticParams = null;
             
                 this.dynamicParams = null;
+                
+                this.node = null;
             },
         
-            init: function(nodeId, cep){
+            init: function(nodeId, node, cep){
                 var d = new Deferred();
                 // Store nodeId ref.
                 this.nodeId = nodeId;
+                // Store node ref.
+                this.node = node;
                 // Store cep ref.
                 this.cep = cep;
                 // Create closure referencable this
@@ -99,7 +103,7 @@ define(
              * This method will be invoked when the parameters are loaded from the backend
              */
             _onParamsLoad: function(){
-                this.cep.set("title",this.staticParams.pageTitle);
+                this.cep.set("title",this.node.title);
                 this.cep.set("description",this.dynamicParams.metaDescription);
                 this.cep.set("keywords",this.dynamicParams.metaKeywords);
             },
@@ -107,12 +111,7 @@ define(
        
             onMetadataSave: function(title, description, keywords){
                 var nid = this.nodeId;
-                navigationModel.setParams(nid,{
-                    pageTitle:title
-                },{
-                    metaKeywords: keywords,
-                    metaDescription:description
-                });
+                navigationModel.setMetaValues(nid,title,description,keywords);
             }
         });
     

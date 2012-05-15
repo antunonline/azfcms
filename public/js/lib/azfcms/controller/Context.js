@@ -39,9 +39,23 @@ define(
              * Initialize navigation buttons
              */
             _initiNavigationButtons: function(){
+                var objects = {
+                    
+                };
+                
                 this.navigationPane.addButton(nls.npEditContent,lang.hitch(this,function(){
                     this.editSelectedPageContent();
                 }),"dijitIconEdit")
+                
+                
+                this.navigationPane.addButton(nls.npCreatePage,lang.hitch(this,function(){
+                    require(['azfcms/view/CreatePageDialog'],function(CreatePageDialog){
+                        if(typeof objects.createPageDialog == 'undefined'){
+                            objects.createPageDialog = new CreatePageDialog();
+                        }
+                        objects.createPageDialog.show();
+                    })
+                }),"dijitIconCreate")
             },
             
             
@@ -67,7 +81,7 @@ define(
                 this.adminDialog.addChild(cep);
             
                 var cec = new CEC();
-                cec.init(this.selectedNode.id,cep);
+                cec.init(this.selectedNode.id,this.selectedNode,cep);
             }
         });
     

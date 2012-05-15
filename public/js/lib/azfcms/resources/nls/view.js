@@ -14,6 +14,7 @@ define({
     adTitle: "Administracijska konzola",
     npTitle: "Izbornik stranica",
     npEditContent: "Uredi sadr\u017eaj",
+    npCreatePage: "Dodaj stranicu",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",
@@ -22,7 +23,12 @@ define({
     cepChangeType: "Promijeni vrstu sadr\u017eaja",
     cepSave:"Spremi",
     
-    aepEditor: "Editor stranice"
+    aepEditor: "Editor stranice",
+    
+    cpdTitle:"Nova stranica",
+    cpdNewPageNameLabel:"Naziv stranice",
+    cpdNewPageTypeLabel:"Vrsta stranice",
+    cpdNewPageCreateButton:"Dodaj stranicu"
   },
 
   de: true,

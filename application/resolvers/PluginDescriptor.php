@@ -23,6 +23,10 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
         }
     }
     
+    protected function isAllowed($namespaces, $parameters) {
+        return true;
+    }
+    
     
     /**
      *
@@ -43,10 +47,5 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
         return $pd->getExtensionPlugins();
     }
     
-    
-    protected function isAllowed($namespaces, $parameters) {
-        // TODO fix me
-        return true;
-    }
 
 }

@@ -271,6 +271,47 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
         },
         
         
+        /**
+         * @param {Number} node
+         * @param {String} title
+         * @return {dojo.Deferred}
+         */
+        setTitle: function(node,title){
+            var call = ['cms.navigation.setTitle(',node,',\'',title,'\')'].join("");
+            return model.invoke(call);
+        },
+        
+        
+        /**
+         * @param {Number} node
+         * @param {String} url
+         * @return {dojo.Deferred}
+         */
+        setUrl: function(node,url){
+            var call = ['cms.navigation.setUrl(',node,',\'',url,'\')'].join("");
+            return model.invoke(call);
+        },
+        
+        
+        /**
+         * @param {Number} ndoe
+         * @param {String} title
+         * @param {String} description
+         * @param {String} keywords
+         */
+        setMetaValues: function(node, title, description, keywords){
+            var call = [
+                '[',
+                'cms.navigation.setTitle(',node,',\'',title,'\'),',
+                'cms.navigation.setDynamicParam(',node,',\'metaDescription\',\'',description,'\'),',
+                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',keywords,'\')',
+                ']'
+            ].join("");
+            
+            return model.invoke(call);
+        },
+        
+        
         // =======================================================================
         // Callbacks
 

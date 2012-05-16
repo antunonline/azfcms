@@ -38,7 +38,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         
         
         if(in_array($method,array('insertInto'))){
-            call_user_method_array($method, $this, $parameters);
+            return call_user_method_array($method, $this, $parameters);
         }
         else if (method_exists($this->getNavigation(), $method)) {
             return call_user_method_array($method, $this->getNavigation(), $parameters);
@@ -65,14 +65,23 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         return $pd->getExtensionPlugins();
     }
     
-    public function insertInto($id, $value, $pluginIdentifier){
-        $navigatino = $this->getNavigation();
-        $id = $navigatino->insertInto($id, array(
+    
+    /**
+     *
+     * @param int $intoId
+     * @param array $value
+     * @param string $pluginIdentifier
+     * @return id 
+     */
+    public function insertInto($intoId, $value, $pluginIdentifier){
+        $navigation = $this->getNavigation();
+        $newId = $navigation->insertInto($intoId, array(
             'title'=>$value['title'],
-            'url'=>isset($value['url'])?$value['url']:""
+            'url'=>isset($value['url'])?$value['url']:urlencode($value['title'])
         ));
-        $navigatino->setStaticParam($id, 'pluginIdentifier', $pluginIdentifier);
-        return $id;
+        
+        $navigation->setStaticParam($newId, 'pluginIdentifier', $pluginIdentifier);
+        return $newId;
     }
     
     protected function isAllowed($namespaces, $parameters) {

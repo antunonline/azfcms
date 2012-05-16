@@ -15,6 +15,7 @@ define({
     npTitle: "Izbornik stranica",
     npEditContent: "Uredi sadr\u017eaj",
     npCreatePageAction: "Dodaj stranicu",
+    npEditPageAction: "Uredi stranicu",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",

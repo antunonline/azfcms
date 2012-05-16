@@ -1,5 +1,6 @@
 define(
     ['dojo/_base/declare','dojo/_base/Deferred','azfcms/model',
+        
     'dojo/_base/lang','azfcms/model/navigation'],function
     (declare, Deferred, model,
         lang, navigationModel)
@@ -21,7 +22,8 @@ define(
                 this.node = null;
             },
         
-            init: function(nodeId, node, cep){
+            init: function(node, cep){
+                var nodeId = node.id;
                 var d = new Deferred();
                 // Store nodeId ref.
                 this.nodeId = nodeId;

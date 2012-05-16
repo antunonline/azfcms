@@ -95,8 +95,9 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     init: function(initCallback, adminDialog){
                         this.ad = adminDialog;
                         var self = this;
-                        require(['azfcms/view/navigation/ContentEdit','azfcms/controller/navigation/ContentEdit'],function
-                            (cep,cec){
+                        require(['azfcms/view/navigation/ContentEdit','azfcms/controller/navigation/ContentEdit','azfcms/model'],function
+                            (cep,cec,model){
+                                self.model = model;
                                 self.CEP = cep;
                                 self.CEC = cec;
                                 initCallback();
@@ -104,7 +105,9 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         
                     },
                     callback: function(item){
-                        var cep = new this.CEP();
+                        var cep = new this.CEP({
+                            typeStore:this.model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
+                        });
                         var cec = new this.CEC();
                         cec.init(item,cep);
                         this.ad.addChild(cep);

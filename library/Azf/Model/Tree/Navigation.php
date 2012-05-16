@@ -79,7 +79,7 @@ SQL;
         $disabled = isset($value->disabled) ? $value->disabled : 1;
         $url = isset($value->url) ? $value->url : "/";
         $title = isset($value->title) ? $value->title : "";
-        $final = isset($value->final) ? $value->final : "/";
+        $final = isset($value->final) ? $this->_encodeConfig($value->final) : $initialConfig;
         $plugins = isset($value->plugins) ? $this->_encodeConfig($value->plugins) : $initialConfig;
         $abstract = isset($value->abstract) ? $this->_encodeConfig($value->abstract) : $initialConfig;
 
@@ -295,7 +295,6 @@ SQL;
         $id = (int) $id;
         $cacheKey = "i" . $id;
         $record = array(
-            'id' => $id,
             'plugins' => $this->_encodeConfig($this->_pluginsParams[$cacheKey]),
             self::FIELD_STATIC => $this->_encodeConfig($this->_staticParams[$cacheKey]),
             self::FIELD_DYNAMIC => $this->_encodeConfig($this->_dynamicParams[$cacheKey])

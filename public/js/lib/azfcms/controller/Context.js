@@ -1,8 +1,6 @@
 define(
-    ['dojo/_base/declare','azfcms/controller/ContentEditController','azfcms/view/ContentEditPane',
-    'azfcms/model','dojo/_base/lang','dojo/i18n!azfcms/resources/nls/view'],function
-    (declare, CEC, CEP,
-        model, lang, nls)
+    ['dojo/_base/declare'],function
+    (declare)
         {
         var _class = declare([],{
         
@@ -46,26 +44,6 @@ define(
         
             selectNode: function(node){
                 this.selectedNode = node;
-            },
-        
-            editNode: function(){
-            
-            },
-        
-            editSelectedPageContent: function(){
-                this.buildContentEditor();
-            },
-        
-            buildContentEditor: function(){
-                if(this.selectedNode==null){
-                    return;
-                }
-                
-                var cep = new CEP();
-                this.adminDialog.addChild(cep);
-            
-                var cec = new CEC();
-                cec.init(this.selectedNode.id,this.selectedNode,cep);
             }
         });
     

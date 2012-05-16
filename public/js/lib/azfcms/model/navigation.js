@@ -314,11 +314,19 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
                 '[',
                 'cms.navigation.setTitle(',node,',\'',title,'\'),',
                 'cms.navigation.setDynamicParam(',node,',\'metaDescription\',\'',description,'\'),',
-                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',keywords,'\')',
+                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',keywords,'\'),',
+                'cms.navigation.getBranch('+node+")",
                 ']'
             ].join("");
             
-            return model.invoke(call);
+            var response =  model.invoke(call);
+            var self = this;
+            
+            response.then(function(args){
+                var node = args[3];
+                self.onChange(node);
+            })
+            return response;
         },
         
         

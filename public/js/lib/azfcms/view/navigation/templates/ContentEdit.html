@@ -1,0 +1,47 @@
+<div  style="width:100%; height:100%;">
+    <div data-dojo-type='dijit.layout.BorderContainer'
+         data-dojo-attach-point='borderContainer'
+         style="width:100%; height:100%;" >
+
+        
+
+        <div data-dojo-type="dijit.layout.ContentPane"
+             region="right" style="width:200px;">
+            ${cepContentType}
+            <br />
+            <br />
+            <input type="text" data-dojo-type="dijit.form.FilteringSelect" 
+                   data-dojo-props="labelAttr:'displayName',searchAttr:'displayName',required:true"
+                   data-dojo-attach-point="pageType"/>
+            <br />
+            <br />
+            <button 
+                data-dojo-type="dijit.form.Button"
+                data-dojo-attach-poing="spremi" >${cepChangeType}</button>
+            <br />
+            <br />
+            <br />
+            ${cepPageTitle}
+            <input type="text" style="width:100%"
+                   data-dojo-type="dijit.form.TextBox" 
+                   data-dojo-attach-point="pageName" />
+            ${cepPageDescription}
+            <input type="text" style="width:100%"
+                   data-dojo-type="dijit.form.Textarea" 
+                   data-dojo-attach-point="pageDescription" />
+            ${cepPageKeywords}
+            <input type="text" style="width:100%"
+                   data-dojo-type="dijit.form.Textarea" 
+                   data-dojo-attach-point="pageKeywords" />
+             <br />
+             <br />
+            <button 
+                data-dojo-type="dijit.form.Button"
+                data-dojo-attach-event="onClick:_save"
+                data-dojo-attach-poing="spremi" >${cepSave}</button>
+
+
+
+        </div>
+    </div>
+</div>        

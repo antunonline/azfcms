@@ -15,8 +15,8 @@
         <script>
             var env;
             require(
-            ['azfcms/bootstrap/adminEnv','azfcms/view/ContentEditPane'],function
-            (adminEnv,CEP){
+            ['azfcms/bootstrap/adminEnv'],function
+            (adminEnv){
                 adminEnv.adminDialog.show();
                 env = adminEnv;
                 

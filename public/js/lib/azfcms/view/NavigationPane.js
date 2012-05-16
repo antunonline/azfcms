@@ -81,6 +81,7 @@ function
          * Add button 
          */
         addButton: function(label, onClick, iconClass){
+            
             var menuItem = new MenuItem({
                 label:label,
                 iconClass:iconClass

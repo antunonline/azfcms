@@ -56,7 +56,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
     }
 
     protected function _startTransaction() {
-        $this->getAdapter()->query("begin work");
+        $this->getAdapter()->query("begin");
         $this->_lockTable();
     }
     
@@ -65,7 +65,7 @@ abstract class Azf_Model_Tree_Abstract extends Zend_Db_Table_Abstract {
     }
 
     protected function _endTransaction() {
-        $this->getAdapter()->query("begin");
+        $this->getAdapter()->query("commit");
         $this->_unlockTable();
     }
     

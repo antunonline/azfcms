@@ -1,7 +1,7 @@
 define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
-    'dojo/store/Memory'],
+    'azfcms/store/Lang'],
     function(declare, xhr, Deferred,
-            Memory){
+            LangStore){
         return declare(null,{
             constructor: function(JsonRpc, RestRpc, JsonRestStore){
                 this.JsonRpc = JsonRpc;
@@ -217,8 +217,15 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
                 return d;
             },
             
-            prepareInvokeStore: function(expr){
-                
+            /**
+             * @param {String} expr
+             * @return {dojo.store.api.Store}
+             */
+            prepareLangStore: function(expr){
+                return new LangStore({
+                    expr:expr,
+                    model:this
+                });
             }
         });
     });

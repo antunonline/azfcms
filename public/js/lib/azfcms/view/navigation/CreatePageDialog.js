@@ -19,16 +19,38 @@ define(
             postCreate: function(){
                 this.inherited(arguments);
                 
+                // Set style
+                this.set("style","height:100%");
+                
                 // Set labels
                 this.createButton.set("label",nls.cpdNewPageCreateButton);
             },
             
             _save: function(){
-                this.onAction(this.pageName.get("value"),this.pageType.get("item").pluginIdentifier);
+                if(this.pageType.isValid()){
+                    this.onAction(this.pageName.get("value"),this.pageType.get("item").pluginIdentifier);
+                }
+                
+            },
+            
+            disable: function(){
+                this.pageName.set("disabled",true);
+                this.pageType.set("disabled",true);
+                this.createButton.set("disabled",true);
+            },
+            enable: function(){
+                this.pageName.set("disabled",false);
+                this.pageType.set("disabled",false);
+                this.createButton.set("disabled",false);
             },
             
             onAction: function(title, type){
                 
+            },
+            
+            reset: function(){
+                this.pageName.set("value","");
+                this.pageType.set("value","");
             }
         })    
             
@@ -37,16 +59,12 @@ define(
                 var context = this;
                 
                 // Set style
-                this.style = "width:400px;height:200px;"
+                this.style = "width:400px;"
                 this.title = nls.cpdTitle
                 
                 // Create form widget
                 this.form = new _Form();
                 this.store = args.store;
-                // Bind events
-                this.form.on("action",function(name,type){
-                    context.onAction(name,type);
-                });
                 
                 // Set select types
                 this.form.pageType.set("store",args.store);
@@ -57,10 +75,6 @@ define(
                 this.inherited(arguments);
                 // Set form widget body
                 this.set("content",this.form);
-                
-            },
-            
-            onAction: function(title,type){
                 
             }
         });

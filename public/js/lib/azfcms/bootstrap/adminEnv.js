@@ -84,12 +84,12 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     init: function(initCallback,navigationPane){
                         var context = this;
                         require(
-                            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage','azfcms/model/cms',
-                            'azfcms/model!cms.pluginDescriptor.getContentPlugins()','dojo/store/Memory'],function
-                            (CPD,CPC,cmsModel,
-                            data,Memory){
+                            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
+                            'azfcms/model'],function
+                            (CPD,CPC,
+                            model){
                                 context.cpd = new CPD({
-                                    store:new Memory({data:data})
+                                    store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
                                 });
                                 context.cpc = new CPC(context.cpd);
                             

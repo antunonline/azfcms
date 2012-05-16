@@ -39,39 +39,50 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
             _constructNavigationActions: function(){
             
                 var actionDefinitions = this._getNavigationActionDefinitions();
-                var navigationPane = this.navigationPane;
-                var context = {};
+                var adminDialog = this.adminDialog;
                 for(var i in actionDefinitions){
+                    // Load current definition
                     var definition = actionDefinitions[i];
+                    // Load label
                     var label = nls[definition.i18nButtonLabelPointer];
+                    // Load icon class
                     var iconClass = definition.iconClass;
-                    context[i]={};
-                    var storage = context[i];
+                    // Create callback
+                    var callback = this._buildCallback(definition,adminDialog);
                 
-                    var callback = function(item){
-                    
-                        if('isInit' in storage == false){
-                            storage.isInit=false;
-                            storage.d = new Deferred();
-                            definition.init(function(){
-                                storage.d.callback()
-                                },navigationPane);
-                            storage.d.then(function(){
-                                storage.i=true;
+                    // 
+                    this.navigationPane.addButton(label,callback,iconClass);
+                }
+            },
+            
+            _buildCallback: function(definition,adminDialog){
+                return function(item){
+                    // If init is not called
+                    if('isInit' in definition == false){
+                        definition.isInit=false;
+                        definition.d = new Deferred();
+                        // Call init with callback function as the first arg
+                        definition.init(function(){
+                            definition.d.isInit=false;
+                            definition.d.callback()
+                        },adminDialog);
+                        // When action is initialize, execute callback
+                        definition.d.then(function(){
+                            definition.i=true;
+                            definition.callback(item);
+                        })
+                        
+                        // If init is called
+                    } else {
+                        if(definition.isInit==false){
+                            definition.d.then(function(){
                                 definition.callback(item);
                             })
+                            definition.isInit=true;
                         } else {
-                            if(storage.isInit==false){
-                                storage.d.then(function(){
-                                    definition.callback(item);
-                                })
-                            } else {
-                                definition.callback(item);
-                            }
+                            definition.callback(item);
                         }
                     }
-                
-                    this.navigationPane.addButton(label,callback,iconClass);
                 }
             },
         
@@ -79,15 +90,36 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
             _getNavigationActionDefinitions: function(){
                 return [
                 {
-                    i18nButtonLabelPointer: 'npCreatePageAction',
+                    i18nButtonLabelPointer: 'npEditPageAction',
                     iconClass:'dijitIconEdit',
-                    init: function(initCallback,navigationPane){
+                    init: function(initCallback, adminDialog){
+                        this.ad = adminDialog;
+                        var self = this;
+                        require(['azfcms/view/navigation/ContentEdit','azfcms/controller/navigation/ContentEdit'],function
+                            (cep,cec){
+                                self.CEP = cep;
+                                self.CEC = cec;
+                                initCallback();
+                            })
+                        
+                    },
+                    callback: function(item){
+                        var cep = new this.CEP();
+                        var cec = new this.CEC();
+                        cec.init(item,cep);
+                        this.ad.addChild(cep);
+                    }
+                },
+                {
+                    i18nButtonLabelPointer: 'npCreatePageAction',
+                    iconClass:'dijitIconDocuments',
+                    init: function(initCallback,adminDialog){
                         var context = this;
                         require(
                             ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
                             'azfcms/model'],function
                             (CPD,CPC,
-                            model){
+                                model){
                                 context.cpd = new CPD({
                                     store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
                                 });

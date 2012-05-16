@@ -36,7 +36,11 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
 
         $method = array_shift($namespaces);
         
-        if (method_exists($this->getNavigation(), $method)) {
+        
+        if(in_array($method,array('insertInto'))){
+            call_user_method_array($method, $this, $parameters);
+        }
+        else if (method_exists($this->getNavigation(), $method)) {
             return call_user_method_array($method, $this->getNavigation(), $parameters);
         } else {
             return null;
@@ -59,6 +63,16 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     public function getExtensionPlugins() {
         $pd = new Azf_Plugin_Descriptor();
         return $pd->getExtensionPlugins();
+    }
+    
+    public function insertInto($id, $value, $pluginIdentifier){
+        $navigatino = $this->getNavigation();
+        $id = $navigatino->insertInto($id, array(
+            'title'=>$value['title'],
+            'url'=>isset($value['url'])?$value['url']:""
+        ));
+        $navigatino->setStaticParam($id, 'pluginIdentifier', $pluginIdentifier);
+        return $id;
     }
     
     protected function isAllowed($namespaces, $parameters) {

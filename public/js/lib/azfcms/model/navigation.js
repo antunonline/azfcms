@@ -271,6 +271,16 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
         },
         
         
+        insertInto: function(id,title,type){
+            var context = this;
+            var call = ['[cms.navigation.insertInto(',id,',{\'title\':\'',title,'\'},\''+type+'\'),',
+            'cms.navigation.getBranch(',id,')]'].join('');
+            return model.invoke(call).then(function(args){
+                context.onChildrenChange(args[1],args[1].childNodes);
+            });
+        },
+        
+        
         /**
          * @param {Number} node
          * @param {String} title

@@ -1,5 +1,7 @@
-define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred'],
-    function(declare, xhr, Deferred){
+define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
+    'dojo/store/Memory'],
+    function(declare, xhr, Deferred,
+            Memory){
         return declare(null,{
             constructor: function(JsonRpc, RestRpc, JsonRestStore){
                 this.JsonRpc = JsonRpc;
@@ -213,6 +215,10 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred'],
                 var d = new Deferred();
                 this.load(expr,null,d.callback, d.errback)
                 return d;
+            },
+            
+            prepareInvokeStore: function(expr){
+                
             }
         });
     });

@@ -1,7 +1,7 @@
 define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
-        'dojo/store/util/QueryResults'],
+        'dojo/store/Memory'],
     function(model,Deferred, declare,
-    QueryResults){
+    Memory){
         
     var _class = declare([],{
         
@@ -11,17 +11,16 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
         getContentPluginStore: function(){
             // If store is already loaded
             if(typeof this.getContentPluginStoreLoaded != 'undefined'){
-                return this.contentPluginStoreQueryResults;
+                return this.contentPluginStore;
             }
             
             var cms = this;
-            var promise = model.invoke("cms.pluginDescriptor.getContentPlugins()").
-                then(function(results){
-                    cms.getContentPluginStoreLoaded = true;
-                });
+            var promise = model.invoke("cms.pluginDescriptor.getContentPlugins()")
                 
-            this.contentPluginStoreQueryResults = new QueryResults(promise);
-            return this.contentPluginStoreQueryResults;
+            this.contentPluginStore = new Memory({
+                data:promise
+            });
+            return this.contentPluginStore;
         }
     });
     

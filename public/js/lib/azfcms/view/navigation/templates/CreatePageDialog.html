@@ -7,12 +7,12 @@
             </tr>
             <tr>
                 <td>${newPageType}:</td>
-                <td><input type="text" data-dojo-type="dijit.form.Select" data-dojo-attach-point="pageType" /></td>
+                <td><input type="text" data-dojo-type="dijit.form.FilteringSelect" data-dojo-attach-point="pageType" data-dojo-props="labelAttr:'displayName',searchAttr:'displayName'" /></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
                 <td>
-                    <button data-dojo-type="dijit.form.Button" data-dojo-attach-point="createButton" />
+                    <button data-dojo-type="dijit.form.Button" data-dojo-attach-event='onClick: _save' data-dojo-attach-point="createButton" />
                 </td>
             </tr>
         </tbody>

@@ -14,7 +14,7 @@ define({
     adTitle: "Administracijska konzola",
     npTitle: "Izbornik stranica",
     npEditContent: "Uredi sadr\u017eaj",
-    npCreatePage: "Dodaj stranicu",
+    npCreatePageAction: "Dodaj stranicu",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",

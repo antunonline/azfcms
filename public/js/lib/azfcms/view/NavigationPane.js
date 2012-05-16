@@ -85,7 +85,10 @@ function
                 label:label,
                 iconClass:iconClass
             });
-            menuItem.on("click",onClick);
+            var tree = this.tree;
+            menuItem.on("click",function(){
+                onClick(tree.get("selectedItem"));
+            });
             this.menu.addChild(menuItem)
         },
         

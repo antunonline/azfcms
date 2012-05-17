@@ -55,6 +55,42 @@ class Azf_Plugin_Descriptor {
     public function setExtensionPlugins($extensionPlugins) {
         $this->_extensionPlugins = $extensionPlugins;
     }
+    
+    
+    /**
+     *
+     * @param string $pluginIdentifier 
+     * @return array|null
+     */
+    public function getContentPlugin($pluginIdentifier){
+        $plugins = $this->getContentPlugins();
+        return $this->_findPlugin($pluginIdentifier, $plugins);
+    }
+    
+    
+    /**
+     *
+     * @param string $pluginIdentifier 
+     * @return array|null
+     */
+    public function getExtensionPlugin($pluginIdentifier){
+        $plugins = $this->getExtensionPlugins();
+        return $this->_findPlugin($pluginIdentifier, $plugins);
+    }
+    
+    /**
+     *
+     * @param type $identifier
+     * @param array $plugins 
+     */
+    protected function _findPlugin($identifier,array $plugins){
+        foreach($plugins as $plug){
+            if($plug['pluginIdentifier']==$identifier){
+                return $plug;
+            }
+        } 
+        return null;
+    }
 
     public function __construct() {
         ;

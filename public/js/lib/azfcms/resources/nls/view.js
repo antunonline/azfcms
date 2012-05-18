@@ -6,6 +6,7 @@
  * np = azfcms/view/NavigationPane
  * cep = azfcms/view/ContentEditPane
  * aep = azfcms/view/AbstractEditPane
+ * dpd = azfcms/view/navigation/DeletePageDialog
  * 
  */
 
@@ -29,7 +30,9 @@ define({
     cpdTitle:"Nova stranica",
     cpdNewPageNameLabel:"Naziv stranice",
     cpdNewPageTypeLabel:"Vrsta stranice",
-    cpdNewPageCreateButton:"Dodaj stranicu"
+    cpdNewPageCreateButton:"Dodaj stranicu",
+    
+    dpdMessage:'\u017delite li izbrisati stranicu ${0}?'
   },
 
   de: true,

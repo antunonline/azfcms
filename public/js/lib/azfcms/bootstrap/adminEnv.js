@@ -137,6 +137,31 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         }
                         
                     }
+                },
+                {
+                    i18nButtonLabelPointer: 'npCreatePageAction',
+                    iconClass:'dijitIconDelete',
+                    init: function(initCallback,adminDialog){
+                        var context = this;
+                        require(
+                            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
+                            'azfcms/model'],function
+                            (CPD,CPC,
+                                model){
+                                context.cpd = new CPD({
+                                    store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
+                                });
+                                context.cpc = new CPC(context.cpd);
+                            
+                                initCallback();
+                            })
+                    },
+                    callback: function(item){
+                        if(item){
+                            this.cpc.show(item);
+                        }
+                        
+                    }
                 }
                 ];
             }

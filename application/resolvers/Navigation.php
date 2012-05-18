@@ -13,6 +13,19 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @var Azf_Plugin_Descriptor
      */
     protected $pluginDescriptor;
+    
+    /**
+     *
+     * @var Zend_Controller_Front
+     */
+    protected $frontController;
+    
+    
+    /**
+     *
+     * @var Azf_Controller_Router_Route_Fixed
+     */
+    protected $route;
 
     /**
      *
@@ -55,7 +68,48 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     public function setPluginDescriptor($pluginDescriptor) {
         $this->pluginDescriptor = $pluginDescriptor;
     }
+    
+    /**
+     *
+     * @return Zend_Controller_Front
+     */
+    public function getFrontController() {
+        if(empty($this->frontController)){
+            $fc = $this->_getFrontController();
+            $this->setFrontController($fc);
+        }
+        return $this->frontController;
+    }
 
+    /**
+     *
+     * @param Zend_Controller_Front $frontController 
+     */
+    public function setFrontController(Zend_Controller_Front $frontController) {
+        $this->frontController = $frontController;
+    }
+
+    /**
+     *
+     * @return Azf_Controller_Router_Route_Fixed 
+     */
+    public function getRoute() {
+        if(empty($this->route)){
+            $route = $this->getFrontController()->getRouter()->getRoute("default");
+            $this->setRoute($route);
+        }
+        return $this->route;
+    }
+
+    /**
+     *
+     * @param Azf_Controller_Router_Route_Fixed $route 
+     */
+    public function setRoute(Azf_Controller_Router_Route_Fixed $route) {
+        $this->route = $route;
+    }
+
+    
     public function initialize() {
         parent::initialize();
         $this->setNavigation(Zend_Registry::get("navigationModel"));
@@ -146,25 +200,78 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
         $response = new Zend_Controller_Response_Http();
         
+        
+    }
+    
+    public function overrideDeleteNode($nodeId){
+        // Get node branch
+        $navigation = $this->getNavigation();
+        $branch = $navigation->getBranch($nodeId);
+        // Initiate delete hooks which will clean plugin associated resources
+        $this->_deleteBranch($branch);
+        
+        // Delete node
+        $navigation->delete($nodeId);
+    }
+    
+    
+    /**
+     *
+     * @param array $node 
+     */
+    protected function _deleteBranch($node){
+        $id = $node['id'];
+        $pluginIdentifier = $this->getNavigation()->getStaticParam($id, 'pluginIdentifier');
+        $p = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
+        
+        
+        $mvcParams = array(
+            'module'=>$p['module'],
+            'controller'=>$p['controller'],
+            'action'=>'uninstallpage'
+        );
+        try{
+            $this->_callMvc($id, $mvcParams);
+        }catch(Exception $e){
+            
+        }
+        
+        foreach($node['childNodes'] as $cnode){
+            $this->_deleteBranch($cnode);
+        }
+    }
+    
+    
+    
+    protected function _getFrontController(){
+        
         // Initialize front controller
         $fc = Zend_Controller_Front::getInstance();
         $fc->throwExceptions(true);
         $application = $GLOBALS['application'];
         /* @var $application Zend_Application */
+        $response = new Zend_Controller_Response_Http();
+        $fc->setResponse($response);
         
         $fc->setParam('bootstrap',$application->getBootstrap());
         // Add route 
         $r = $fc->getRouter();
         /* @var $r Zend_Controller_Router_Rewrite */
-        $routeDefaults = array(
-            'id'=>$id,
-            'action'=>'installpage'
-        )+$plugin;
-        $r->addRoute("default", new Zend_Controller_Router_Route_Regex(".*",$routeDefaults));
+        $r->addRoute("default", new Azf_Controller_Router_Route_Fixed());
+        return $fc;
         
+    }
+    
+    protected function _callMvc($id,$mvcParams){
+        // Get Front Controller
+        $fc = $this->getFrontController();
+        $route = $this->getRoute();
+        $params = array(
+            'id'=>$id
+        )+$mvcParams;
+        $route->setMvcParams($params);
         // Dispatch request
-        $fc->dispatch(null,$response);
-        // Prepare controller
+        $fc->dispatch(null,null);
         
     }
     

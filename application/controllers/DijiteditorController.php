@@ -35,11 +35,11 @@ class DijiteditorController extends Zend_Controller_Action
     }
     
     
-    public function uninstallPage(){
-        $this->_helper->viewRenderer->setNoRender(true);
-        $id = $this->getRequest()->getParam("id");
-        $navigation = $this->getNavigation();
-        $navigation->setStaticParam($id, 'body', 'null');
+    /**
+     * Use this action to uninstall the page
+     */
+    public function uninstallpageAction(){
+        
     }
 
 

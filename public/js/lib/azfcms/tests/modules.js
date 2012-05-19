@@ -6,7 +6,8 @@ define(['require'],function(require){
     require([
         './_Model',
         './view/modules',
-        './controller/modules'
+        './controller/modules',
+        './model/modules'
         ])
 })
 

@@ -28,6 +28,8 @@ define(
                 this.cancelButton.set("disabled",false);
             },
             _setMessageAttr: function(message){
+                if(typeof message == 'undefined') 
+                    message = "";
                 var template = nls.dpdMessage;
                 this.message.innerHTML = string.substitute(template,[message]);
             },

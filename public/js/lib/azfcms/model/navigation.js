@@ -1,13 +1,28 @@
-define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,lang,Deferred){
-    var preparedJsonStore = model.prepareRestStore("navigation","default");
+define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
+    'dojo/_base/declare'],function(model,lang,Deferred,
+    declare){
     
-    return lang.mixin(preparedJsonStore,{
+    
+    var _class = declare(null,{
+        constructor: function(args){
+            if(typeof args == 'undefined')
+                args = {};
+            lang.mixin(this,args);
+            
+            if("model" in args == false){
+                this.model = model;
+            } 
+            
+            var preparedJsonStore = this.model.prepareRestStore("navigation","default");
+            lang.mixin(this,preparedJsonStore);
+        },
+        
         getRoot: function(onComplete, onError){
             this.get("1").then(onComplete, onError);
         },
             
         mayHaveChildren: function(item){
-            return true;
+            return "childNodes" in item;
         },
         
         /**
@@ -54,7 +69,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          * @param {Number} index
          */
         pasteItem: function(childItem, oldParentItem, newParentItem, bCopy, index){
-            var navigationModel = this;
+            var self = this;
             var updateServer;
             
             // Remove child from old parent
@@ -66,7 +81,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
                 newParentItem.childNodes[newParentItem.childNodes.length] = childItem;
                 // Push changes to the server
                 updateServer = function(){
-                    return navigationModel.moveInto(childItem.id, newParentItem.id);
+                    return self.moveInto(childItem.id, newParentItem.id);
                 }
             // If child node is set to the exact position in tree, 
             } else {
@@ -74,12 +89,12 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
                 
                 if(atId != null) {
                     updateServer = function(){
-                        return navigationModel.moveBefore(childItem.id,atId);
+                        return self.moveBefore(childItem.id,atId);
                     }
                 } else {
                     atId=this._getAfterChildId(newParentItem,index);
                     updateServer = function(){
-                        return navigationModel.moveAfter(childItem.id,atId);
+                        return self.moveAfter(childItem.id,atId);
                     }
                 }
                 // Update new parent
@@ -90,8 +105,8 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
             // update tree widget
             updateServer().then(function(){
                 // Update tree model
-                navigationModel.onChildrenChange(oldParentItem,oldParentItem.childNodes);
-                navigationModel.onChildrenChange(newParentItem,newParentItem.childNodes);
+                self.onChildrenChange(oldParentItem,oldParentItem.childNodes);
+                self.onChildrenChange(newParentItem,newParentItem.childNodes);
             });
             
             
@@ -157,7 +172,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
             ']'
             ];
             
-            return model.invoke(expr.join(""));
+            return this.model.invoke(expr.join(""));
         },
         
         /**
@@ -172,7 +187,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
             // Wrap calls in array
             var invoke = ['[',calls,']'].join("");
             // Call server
-            return model.invoke(invoke);
+            return this.model.invoke(invoke);
         },
         
         /**
@@ -188,7 +203,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
             // Wrap calls in array
             var invoke = ['[',calls,']'].join("");
             // Call server
-            return model.invoke(invoke);
+            return this.model.invoke(invoke);
         },
         
         /**
@@ -233,11 +248,19 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
             
             var staticCalls = this._constructSetStatic(nodeId,staticParams);
             var dynamicCalls = this._constructSetDynamic(nodeId,dynamicParams);
+            var calls = [];
             
-            var calls = [staticCalls,dynamicCalls].join(",");
+            if(staticCalls.length){
+                calls.push(staticCalls);
+            }
+            if(dynamicCalls.length){
+                calls.push(dynamicCalls);
+            }
+            
+            calls = calls.join(",");
             var invoke = ['[',calls,']'].join("");
             
-            return model.invoke(invoke);
+            return this.model.invoke(invoke);
         },
         
         /**
@@ -247,7 +270,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          */
         moveBefore:function(node, before){
             var call = ['cms.navigation.moveBefore(',node,',',before,')'].join('');
-            return model.invoke(call);
+            return this.model.invoke(call);
         },
         
         /**
@@ -257,7 +280,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          */
         moveAfter: function(node, after){
             var call = ['cms.navigation.moveAfter(',node,',',after,')'].join('');
-            return model.invoke(call);
+            return this.model.invoke(call);
         },
         
         /**
@@ -267,18 +290,41 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          */
         moveInto: function(node, into){
             var call = ['cms.navigation.moveInto(',node,',',into,')'].join('');
-            return model.invoke(call);
+            return this.model.invoke(call);
         },
         
         
+        /**
+         * @param {Number} id
+         * @param {String} title
+         * @param {String} type
+         * @return {dojo.Deferred}
+         */
         insertInto: function(id,title,type){
             var context = this;
             var call = ['[cms.navigation.insertInto(',id,',{\'title\':\'',title,'\'},\''+type+'\'),',
             'cms.navigation.getBranch(',id,')]'].join('');
-            return model.invoke(call).then(function(args){
+            return this.model.invoke(call).then(function(args){
                 context.onChildrenChange(args[1],args[1].childNodes);
             });
         },
+
+
+        /**
+         * @param {object} item
+         * @return {dojo.Deferred}
+         */
+        remove: function(item){
+            var self = this;
+            var call = ['[cms.navigation.deleteNode(',item.id,"),cms.navigation.getBranch(",item.parentId,")]"].join('');
+            var response = this.model.invoke(call);
+            response.then(function(response){
+                self.onChildrenChange(response[1],response[1].childNodes);
+            })
+            
+            return response;
+        },
+        
         
         
         /**
@@ -288,7 +334,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          */
         setTitle: function(node,title){
             var call = ['cms.navigation.setTitle(',node,',\'',title,'\')'].join("");
-            return model.invoke(call);
+            return this.model.invoke(call);
         },
         
         
@@ -299,7 +345,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
          */
         setUrl: function(node,url){
             var call = ['cms.navigation.setUrl(',node,',\'',url,'\')'].join("");
-            return model.invoke(call);
+            return this.model.invoke(call);
         },
         
         
@@ -319,7 +365,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
                 ']'
             ].join("");
             
-            var response =  model.invoke(call);
+            var response =  this.model.invoke(call);
             var self = this;
             
             response.then(function(args){
@@ -352,11 +398,11 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred'],function(model,l
         // tags:
         //		callback
         }
-        
-        
-        
-        
     });
     
+    var instance = new _class();
+    instance._class = _class;
+    
+    return instance;
     
 })

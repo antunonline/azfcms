@@ -1,0 +1,855 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true">
+            
+        </script>
+        <script type="text/javascript">
+            require(['doh','azfcms/model/navigation','dojo/domReady!','dojo/_base/Deferred',
+                'dojo/aspect'],function
+            (doh,navigation,ready, Deferred,
+            aspect){
+            
+                doh.register('azfcms.tests.model.navigation',[
+                    {
+                        name:"Test .getRoot()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = {};
+                    
+                            // Create mock store
+                            var store = {
+                                get: function(actual){
+                                    if(actual == 1){
+                                        var d = new Deferred();
+                                        d.callback(expected);
+                                        return d;
+                                    } else {
+                                        a.callback(false,"Get is not called with root node id of 1");
+                                    }
+                                }
+                            }
+                        
+                            // Create mock model
+                            var model = {
+                                prepareRestStore: function(){
+                                    return store;
+                                }
+                            }
+                        
+                            // Construct navigation model
+                            var n = new navigation._class({
+                                model:model
+                            });
+                            // Run test
+                            n.getRoot(function(actual){
+                                // If getRoot returned value from store.get call
+                                if(actual==expected){
+                                    a.callback(true);
+                                } else {
+                                    a.callback(false);
+                                }
+                            })
+                         
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .mayHaveChildren(item)",
+                        runTest: function(){
+                            var n = new navigation._class();
+                        
+                            doh.t(n.mayHaveChildren({childNodes:[]}))
+                            doh.f(n.mayHaveChildren({}))
+                        }
+                    },
+                    {
+                        name:"Test .getChildren(parentItem, onComplete)",
+                        runTest: function(){
+                            var n = new navigation._class();
+                            var a = new doh.Deferred();
+                            var expected = {};
+                            n.getChildren({childNodes:expected},function(actual){
+                                if(actual==expected){
+                                    a.callback(true);
+                                } else {
+                                    a.callback(false);
+                                }
+                            });
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:" Test pastItem() -> moveInto()",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveInto: function(childId, parentId){
+                                    if(childId == 3 && parentId == 20){
+                                        a.callback(true)
+                                        return new Deferred()
+                                    } else {
+                                        a.errback(false,"moveInto id's are not valid");
+                                        return new Deferred();
+                                    }
+                                }
+                            });
+                        
+                            var childNode = {
+                                id:3,
+                                childNodes:[]
+                            }
+                            var oldParent = {
+                                id:10,
+                                childNodes:[
+                                    childNode
+                                ]
+                            };
+                            var newParent = {
+                                id:20,
+                                childNodes:[]
+                            };
+                        
+                            n.pasteItem(childNode,oldParent,newParent, false)
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .pasteItem() -> moveBefore()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveBefore: function(childid, beforeId){
+                                    var d = new Deferred();
+                                    if(childid == 3 && beforeId==22){
+                                        a.callback(true);
+                                        return d;
+                                    } 
+                                    a.callback(false,".moveBefore() was not called with expected values");
+                                    return d;
+                                }
+                            });
+                        
+                            var child = {
+                                id:3
+                            }
+                            var oldParent = {
+                                id:10,
+                                childNodes: [
+                                    child
+                                ]
+                            };
+                            var newParent = {
+                                id:20,
+                                childNodes: [
+                                    {id:22,childNodes:[]}
+                                ]
+                            }
+                        
+                            n.pasteItem(child,oldParent,newParent,false,0);
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .pasteItem() -> .moveBefore() type 1",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveBefore: function(childId, beforeId){
+                                    var d = new Deferred();
+                                    if(childId == 4 && beforeId == 46){
+                                        a.callback(true);
+                                        return d;
+                                    }
+                                    a.callback(false,".moveBefore() was not called with expected values");
+                                    return d;
+                                }
+                            });
+                        
+                            var child = {
+                                id:4,
+                                childNodes: []
+                            };
+                            var oldParent = {
+                                id:20,
+                                childNodes: [
+                                    {id:41,childNodes:[]},
+                                    child
+                                ]
+                            }
+                            var newParent = {
+                                id:30,
+                                childNodes: [
+                                    {id:44,childNodes:[]},
+                                    {id:45,childNodes:[]},
+                                    {id:46,childNodes:[]}
+                                ]
+                            };
+                        
+                            n.pasteItem(child,oldParent,newParent,false,2);
+                        
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .pasteItem() -> moveAfter()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveAfter: function(childId, afterId){
+                                    var d = new Deferred();
+                                    if(childId == 4 && afterId == 46){
+                                        a.callback(true);
+                                        return d;
+                                    }
+                                
+                                    a.callback(false,".moveAfter() was not called with expected values")
+                                    return d;
+                                }
+                            });
+                        
+                            var child = {
+                                id:4,
+                                childNodes:[]
+                            };
+                            var oldParent = {
+                                id:20,
+                                childNodes: [
+                                    child
+                                ]
+                            };
+                            var newParent = {
+                                id:33,
+                                childNodes: [
+                                    {id:44,childNodes:[]},
+                                    {id:45,childNodes:[]},
+                                    {id:46,childNodes:[]}
+                                ]
+                            }
+                        
+                            n.pasteItem(child,oldParent,newParent,false,3);
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .pasteItem() -> onChildrenChange for moveInto cases",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveInto: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                },
+                                moveAfter: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                },
+                                moveBefore: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                }
+                            });
+                        
+                            var child = {
+                                id:4,
+                                childNodes:[]
+                            };
+                            var oldParent = {
+                                id:20,
+                                childNodes: [
+                                    {id:64,childNodes:[]},
+                                    child,
+                                    {id:74,childNodes:[]}
+                                ]
+                            };
+                            var newParent = {
+                                id:33,
+                                childNodes: [
+                                    {id:44,childNodes:[]},
+                                    {id:45,childNodes:[]},
+                                    {id:46,childNodes:[]}
+                                ]
+                            }
+                        
+                            var oldParentOk, newParentOk = false;
+                            aspect.before(n,"onChildrenChange",function(parent,childNodes){
+                           
+                                if(parent.id==oldParent.id){
+                                    oldParentOk = 
+                                        childNodes[0].id==64 &&
+                                        childNodes[1].id==74 &&
+                                        childNodes.length == 2;
+                                } else if(parent.id==newParent.id){
+                                    newParentOk  = 
+                                        childNodes[0].id==44 &&
+                                        childNodes[1].id==45 &&
+                                        childNodes[2].id==46 &&
+                                        childNodes[3].id==4 &&
+                                        childNodes.length == 4;
+                                } else {
+                                    a.errback("onChildrenChange received unexpected value");
+                                }
+                            
+                                if(oldParentOk && newParentOk)
+                                    a.callback(true);
+                            
+                                return arguments;
+                            })
+                        
+                            n.pasteItem(child,oldParent,newParent,false);
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .pasteItem() -> onChildrenChange for moveAfter cases",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveInto: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                },
+                                moveAfter: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                },
+                                moveBefore: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                }
+                            });
+                        
+                            var child = {
+                                id:4,
+                                childNodes:[]
+                            };
+                            var oldParent = {
+                                id:20,
+                                childNodes: [
+                                    {id:64,childNodes:[]},
+                                    child,
+                                    {id:74,childNodes:[]}
+                                ]
+                            };
+                            var newParent = {
+                                id:33,
+                                childNodes: [
+                                    {id:44,childNodes:[]},
+                                    {id:45,childNodes:[]},
+                                    {id:46,childNodes:[]}
+                                ]
+                            }
+                        
+                            var oldParentOk, newParentOk = false;
+                            aspect.before(n,"onChildrenChange",function(parent,childNodes){
+                           
+                                if(parent.id==oldParent.id){
+                                    oldParentOk = 
+                                        childNodes[0].id==64 &&
+                                        childNodes[1].id==74 &&
+                                        childNodes.length == 2;
+                                } else if(parent.id==newParent.id){
+                                    newParentOk  = 
+                                        childNodes[0].id==44 &&
+                                        childNodes[1].id==4 &&
+                                        childNodes[2].id==45 &&
+                                        childNodes[3].id==46 &&
+                                        childNodes.length == 4;
+                                } else {
+                                    a.errback("onChildrenChange received unexpected value");
+                                }
+                            
+                                if(oldParentOk && newParentOk)
+                                    a.callback(true);
+                            
+                                return arguments;
+                            })
+                        
+                            n.pasteItem(child,oldParent,newParent,false,1);
+                        
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .pasteItem() -> onChildrenChange for moveBefore cases",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var n = new navigation._class({
+                                moveInto: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                },
+                                moveAfter: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                },
+                                moveBefore: function(){
+                                    var d = new Deferred();
+                                    d.callback();
+                                    return d;
+                                }
+                            });
+                        
+                            var child = {
+                                id:4,
+                                childNodes:[]
+                            };
+                            var oldParent = {
+                                id:20,
+                                childNodes: [
+                                    {id:64,childNodes:[]},
+                                    child,
+                                    {id:74,childNodes:[]}
+                                ]
+                            };
+                            var newParent = {
+                                id:33,
+                                childNodes: [
+                                    {id:44,childNodes:[]},
+                                    {id:45,childNodes:[]},
+                                    {id:46,childNodes:[]}
+                                ]
+                            }
+                        
+                            var oldParentOk, newParentOk = false;
+                            aspect.before(n,"onChildrenChange",function(parent,childNodes){
+                           
+                                if(parent.id==oldParent.id){
+                                    oldParentOk = 
+                                        childNodes[0].id==64 &&
+                                        childNodes[1].id==74 &&
+                                        childNodes.length == 2;
+                                } else if(parent.id==newParent.id){
+                                    newParentOk  = 
+                                        childNodes[0].id==4 &&
+                                        childNodes[1].id==44 &&
+                                        childNodes[2].id==45 &&
+                                        childNodes[3].id==46 &&
+                                        childNodes.length == 4;
+                                } else {
+                                    a.errback("onChildrenChange received unexpected value");
+                                }
+                            
+                                if(oldParentOk && newParentOk)
+                                    a.callback(true);
+                            
+                                return arguments;
+                            })
+                        
+                            n.pasteItem(child,oldParent,newParent,false,0);
+                        
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .getNodeParams()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.getStaticParams(3),cms.navigation.getDynamicParams(3)]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                        
+                            n.getNodeParams(3);
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .setStaticParams()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.setStaticParam(3,'name','value'),cms.navigation.setStaticParam(3,'lastName','value')]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                        
+                            n.setStaticParams(3,{
+                                name:"value",
+                                lastName:"value"
+                            });
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .setDynamicParams()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.setDynamicParam(3,'name','value'),cms.navigation.setDynamicParam(3,'lastName','value')]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                        
+                            n.setDynamicParams(3,{
+                                name:"value",
+                                lastName:"value"
+                            });
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .setParams()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.setStaticParam(3,'name','value'),cms.navigation.setStaticParam(3,'lastName','value'),"
+                                +"cms.navigation.setDynamicParam(3,'name','value'),cms.navigation.setDynamicParam(3,'lastName','value')]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                        
+                            n.setParams(3,{
+                                name:"value",
+                                lastName:"value"
+                            },{
+                                name:"value",
+                                lastName:"value"
+                            });
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .setParams() - case 1",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "["
+                                +"cms.navigation.setDynamicParam(3,'name','value'),cms.navigation.setDynamicParam(3,'lastName','value')]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                        
+                            n.setParams(3,{
+                            },{
+                                name:"value",
+                                lastName:"value"
+                            });
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .setParams() - case 2",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "["
+                                +"cms.navigation.setStaticParam(3,'name','value'),cms.navigation.setStaticParam(3,'lastName','value')]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                        
+                            n.setParams(3,{
+                                name:"value",
+                                lastName:"value"
+                            },{
+                            });
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .moveBefore",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "cms.navigation.moveBefore(33,44)";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.moveBefore(33,44);
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .moveAfter",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "cms.navigation.moveAfter(33,44)";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.moveAfter(33,44);
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .moveInto",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "cms.navigation.moveInto(33,44)";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.moveInto(33,44);
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .insertInto",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.insertInto(33,{'title':'Title'},'Type'),cms.navigation.getBranch(33)]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                            return new Deferred();
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.insertInto(33,"Title","Type");
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .remove",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.deleteNode(33),cms.navigation.getBranch(44)]";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                            
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                        return new Deferred();
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.remove({id:33,parentId:44});
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .remove - case 1",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = {
+                                childNodes:[]
+                            };
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(){
+                                       var d = new Deferred();
+                                       d.callback([null,expected]);
+                                       return d;
+                                       
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            });
+                            
+                            aspect.before(n,'onChildrenChange',function(actual, children){
+                                a.callback(actual==expected && children==expected.childNodes,"method navigation.onChildrenChange recieved unexpected value");
+                            });
+                            
+                            
+                            n.remove({id:33,parentId:44});
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .setUrl",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "cms.navigation.setUrl(33,'/some/url')";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                            return new Deferred();
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.setUrl(33,"/some/url");
+                            return a;
+                        }
+                    },
+                
+                    {
+                        name:"Test .setMetaValues",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "[cms.navigation.setTitle(33,'Title')," 
+                            +"cms.navigation.setDynamicParam(33,'metaDescription','Description'),"
+                            +"cms.navigation.setDynamicParam(33,'metaKeywords','Keywords'),"
+                            +"cms.navigation.getBranch(33)]"
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                            return new Deferred();
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.setMetaValues(33,"Title","Description","Keywords");
+                            return a;
+                        }
+                    }
+                
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body>
+        <div>DOH tests</div>
+    </body>
+</html>

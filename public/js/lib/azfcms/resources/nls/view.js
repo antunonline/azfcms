@@ -17,6 +17,7 @@ define({
     npEditContent: "Uredi sadr\u017eaj",
     npCreatePageAction: "Dodaj stranicu",
     npEditPageAction: "Uredi stranicu",
+    npDeletePageAction: "Izbriši stranicu",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",
@@ -32,7 +33,10 @@ define({
     cpdNewPageTypeLabel:"Vrsta stranice",
     cpdNewPageCreateButton:"Dodaj stranicu",
     
-    dpdMessage:'\u017delite li izbrisati stranicu ${0}?'
+    dpdMessage:'Brisanjem ove stranice isto tako \u010dete izbrisati sve stranice koje se nalaze unutar nje. <br />Želite li doista izbrisati stranicu "${0}"? ',
+    dpdTitle:'Brisanje stranice',
+    dpdCancelButton:'Ne',
+    dpdConfirmButton:'Izbri\u0161i stranicu'
   },
 
   de: true,

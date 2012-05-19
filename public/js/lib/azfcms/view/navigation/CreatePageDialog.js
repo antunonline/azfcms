@@ -74,8 +74,12 @@ define(
             postCreate: function(){
                 this.inherited(arguments);
                 // Set form widget body
-                this.set("content",this.form);
-                
+                this.set("content",this.form);   
+            },
+            
+            show: function(title){
+                this.form.set("message",title);
+                this.inherited(arguments);
             }
         });
     

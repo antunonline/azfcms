@@ -1,0 +1,109 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script>
+            require(
+            ['azfcms/view/navigation/DeletePageDialog','dojo/domReady!',
+                'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
+                'azfcms/controller/navigation/DeletePage'],function
+            (DeletePageDialog,ready,
+            dijit,doh, nls,
+            DeletePageController){
+                //              
+                var d = new DeletePageDialog()
+                var form = d.form;
+                var c = new DeletePageController({
+                    view:d
+                });
+                d.show();
+                
+                doh.register('DialogTests',[
+                    {
+                        name:"Test activate method",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = "test";
+                            var view = new DeletePageDialog({
+                                show: function(actual){
+                                    if(actual==expected){
+                                        a.callback(true);
+                                    } else {
+                                        a.callback(false)
+                                    }
+                                },
+                                hide: function(){
+                                    
+                                }
+                            })
+                            var c = new DeletePageController({
+                                view:view
+                            });
+                            c.activate({title:expected});
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test confirm event",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var expected = {
+                                id:0,
+                                title:""
+                            };
+                            
+                            var model = {
+                                remove: function(actual){
+                                    if(actual==expected){
+                                        a.callback(true);
+                                    } else {
+                                        a.callback(false);
+                                    }
+                                }
+                            }
+                            var c = new DeletePageController({
+                                view:new DeletePageDialog(),
+                                model:model
+                            });
+                            c.item = expected;
+                            
+                            c.view.form.onConfirm();
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test cancel event",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var v = new DeletePageDialog();
+                            var c = new DeletePageController({
+                                view:v
+                            })
+                            
+                            v.hide = function(){
+                                a.callback(true);
+                            }
+                            
+                            v.form.onCancel();
+                            
+                            return a;
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

@@ -13,9 +13,9 @@ and open the template in the editor.
         <script>
             require(
             ['azfcms/view/navigation/DeletePageDialog','dojo/domReady!',
-                'dijit','doh'],function
+                'dijit','doh','dojo/i18n!azfcms/resources/nls/view'],function
             (DeletePageDialog,ready,
-            dijit,doh){
+            dijit,doh, nls){
                 //              
                 var d = new DeletePageDialog()
                 var form = d.form;
@@ -75,6 +75,18 @@ and open the template in the editor.
                             
                         }
                     },
+                    {
+                        name:"Check Cancel label",
+                        runTest: function(){
+                            doh.t(document.body.innerHTML.indexOf(nls.dpdCancelButton)>0);
+                        }
+                    },
+                    {
+                        name:"Check Confirm label",
+                        runTest: function(){
+                            doh.t(document.body.innerHTML.indexOf(nls.dpdConfirmButton)>0);
+                        }
+                    }
                 ]);
                 doh.run();
             })

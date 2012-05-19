@@ -72,7 +72,7 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                             definition.callback(item);
                         })
                         
-                        // If init is called
+                    // If init is called
                     } else {
                         if(definition.isInit==false){
                             definition.d.then(function(){
@@ -139,26 +139,26 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     }
                 },
                 {
-                    i18nButtonLabelPointer: 'npCreatePageAction',
+                    i18nButtonLabelPointer: 'npDeletePageAction',
                     iconClass:'dijitIconDelete',
                     init: function(initCallback,adminDialog){
-                        var context = this;
+                        var self = this;
                         require(
-                            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
+                            ['azfcms/view/navigation/DeletePageDialog','azfcms/controller/navigation/DeletePage',
                             'azfcms/model'],function
-                            (CPD,CPC,
+                            (DPD,DPC,
                                 model){
-                                context.cpd = new CPD({
-                                    store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
+                                var view = new DPD();
+                                self.controller = new DPC({
+                                    view:view
                                 });
-                                context.cpc = new CPC(context.cpd);
                             
                                 initCallback();
                             })
                     },
                     callback: function(item){
                         if(item){
-                            this.cpc.show(item);
+                            this.controller.activate(item);
                         }
                         
                     }

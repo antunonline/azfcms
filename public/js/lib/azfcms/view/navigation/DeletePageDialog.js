@@ -15,8 +15,8 @@ define(
             widgetsInTemplate:true,
             constructor: function(){
                 // Set label values
-                this.newPageLabel = nls.cpdNewPageNameLabel;
-                this.newPageType = nls.cpdNewPageTypeLabel;
+                this.dpdCancelButton = nls.dpdCancelButton;
+                this.dpdConfirmButton = nls.dpdConfirmButton;
             },
             
             disable: function(){
@@ -47,7 +47,7 @@ define(
                 
                 // Set style
                 this.style = "width:400px;"
-                this.title = nls.cpdTitle
+                this.title = nls.dpdTitle
                 
                 // Create form widget
                 this.form = new _Form();
@@ -60,6 +60,11 @@ define(
                 // Set form widget body
                 this.set("content",this.form);
                 
+            },
+            
+            show: function(title){
+                this.form.set("message",title);
+                this.inherited(arguments);
             }
         });
     

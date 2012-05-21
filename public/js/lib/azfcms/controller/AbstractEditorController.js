@@ -18,16 +18,17 @@ define(
             },
             
             initDependencies: function(nodeId, ep){
+                var self = this;
                 this.editorPane = ep;
                 this.nodeId = nodeId;
                 
                 var d = new Deferred();
-                this.initialize(d); 
+                this.initialize(function(){d.callback(self)}); 
                 return d;
             },
             
             initialize: function(callback){
-                callback.callback(this);
+                callback();
             }
             
         });

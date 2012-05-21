@@ -5,7 +5,8 @@ define([
     'require'
 ],function(require){
     require([
-        './navigation/modules'
+        './navigation/modules',
+        './content/modules'
     ])
 });
 

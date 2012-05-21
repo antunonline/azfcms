@@ -204,14 +204,54 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     }
     
     public function overrideDeleteNode($nodeId){
+        // Find node
         // Get node branch
         $navigation = $this->getNavigation();
-        $branch = $navigation->getBranch($nodeId);
+        $branch = $navigation->getBranch($nodeId,null,true);
         // Initiate delete hooks which will clean plugin associated resources
         $this->_deleteBranch($branch);
         
         // Delete node
         $navigation->delete($nodeId);
+        
+        // Return parent branch
+        return $navigation->getBranch($branch['parentId']);
+        
+    }
+    
+    /**
+     *  @param int $id
+     *  @param mixed $content
+     */
+    public function overrideSetContent($id, $content){
+        $pluginIdentifier = $this->navigation->getStaticParam($id, "pluginIdentifier");
+        $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
+        
+        $mvc = array(
+            'module'=>$plugin['module'],
+            'controller'=>$plugin['controller'],
+            'action'=>'set',
+            'content'=>$content
+        );
+        return $this->_callMvc($id, $mvc,'production');
+    }
+    
+    
+    /**
+     * @param int $id
+     * @param mixed $content
+     */
+    public function overrideGetContent($id){
+        $pluginIdentifier = $this->navigation->getStaticParam($id, "pluginIdentifier");
+        $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
+        
+        $mvc = array(
+            'module'=>$plugin['module'],
+            'controller'=>$plugin['controller'],
+            'action'=>'get',
+        );
+        
+        return $this->_callMvc($id, $mvc,'production');
     }
     
     
@@ -231,7 +271,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
             'action'=>'uninstallpage'
         );
         try{
-            $this->_callMvc($id, $mvcParams);
+            $this->_callMvc($id, $mvcParams,'production');
         }catch(Exception $e){
             
         }
@@ -244,12 +284,13 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     
     
     protected function _getFrontController(){
-        
-        // Initialize front controller
-        $fc = Zend_Controller_Front::getInstance();
-        $fc->throwExceptions(true);
         $application = $GLOBALS['application'];
         /* @var $application Zend_Application */
+        $fc = $application->getBootstrap()->getPluginResource("frontcontroller")->getFrontController();
+        
+        // Initialize front controller
+        $fc->throwExceptions(true);
+        
         $response = new Zend_Controller_Response_Http();
         $fc->setResponse($response);
         
@@ -262,17 +303,45 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         
     }
     
-    protected function _callMvc($id,$mvcParams){
+    /**
+     * Initialize specific bootstrap env
+     * @param type $env 
+     */
+    protected function _initBootstrapEnv($env){
+        $application = $GLOBALS['application'];
+        /* @var $application Zend_Application */
+        $application->getBootstrap()->envBootstrap($env);
+    }
+    
+    /**
+     *
+     * @param int $id
+     * @param array $mvcParams
+     * @param null|string $inEnvironment
+     * @return array 
+     */
+    protected function _callMvc($id,$mvcParams,$inEnvironment=null){
+        
+        if($inEnvironment){
+            $this->_initBootstrapEnv($inEnvironment);
+        }
         // Get Front Controller
         $fc = $this->getFrontController();
+        $response = new Zend_Controller_Response_Http();
         $route = $this->getRoute();
+        
         $params = array(
             'id'=>$id
         )+$mvcParams;
-        $route->setMvcParams($params);
+        $route->setParams($params);
         // Dispatch request
-        $fc->dispatch(null,null);
+        // Start caching
+        ob_start();
         
+        $fc->dispatch(null,$response);
+        // End caching
+        ob_get_clean();
+        return $response->getBody(true);
     }
     
     

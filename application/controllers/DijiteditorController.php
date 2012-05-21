@@ -19,7 +19,8 @@ class DijiteditorController extends Zend_Controller_Action
     public function renderAction()
     {
         $this->_helper->viewRenderer->setNoRender(true);
-        echo $this->_helper->context->getStaticParam("body");
+        echo $this->_helper->context->getStaticParam("content");
+        
     }
 
     
@@ -30,7 +31,7 @@ class DijiteditorController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
         $id = $this->getRequest()->getParam("id");
         $navigation = $this->getNavigation();
-        $navigation->setStaticParam($id, "body", null);
+        $navigation->setStaticParam($id, "content", "");
         
     }
     
@@ -40,6 +41,24 @@ class DijiteditorController extends Zend_Controller_Action
      */
     public function uninstallpageAction(){
         
+    }
+    
+    /**
+     * Get content out of this content plugin 
+     */
+    public function getAction(){
+        $this->_helper->viewRenderer->setNoRender(true);
+        echo $this->_helper->context->getStaticParam("content");
+    }
+    
+    /**
+     * Set content into this content plugin
+     */
+    public function setAction(){
+        $this->_helper->viewRenderer->setNoRender(true);
+        $content = $this->_getParam("content");
+        echo $content;
+        $this->getNavigation()->setStaticParam($this->_getParam("id"), "content", $content);
     }
 
 

@@ -1,0 +1,98 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/claro/claro.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true" ></script>
+        <script type="text/javascript">
+            require(['doh','dojo/domReady!','azfcms/view/content/DijitEditor',
+                'dojo/aspect'],function(doh,domReady,DijitEditor,
+            aspect){
+                var e = new DijitEditor();
+                e.placeAt(document.body);
+                doh.register("azfcms.tests.view.content.DijitEditor",[
+                    {
+                        name:"Test constructor",
+                        runTest: function(){
+                            var e = new DijitEditor({
+                                content:"HELLO WORLD"
+                            });
+                            e.placeAt(document.body);
+                            // Is editor present in HTML?
+                            doh.t(e.editor.iframe.contentDocument.body.innerHTML.indexOf("HELLO WORLD")>1);
+                        }
+                    },
+                    
+                    {
+                        name:"Test .set('content')",
+                        runTest: function(){
+                            var e = new DijitEditor();
+                            e.placeAt(document.body);
+                            
+                            e.set("content","THIS IS VERY COOL");
+                            doh.t(e.editor.iframe.contentDocument.body.innerHTML.indexOf("THIS IS VERY COOL")>0);
+                        }
+                    },
+                    
+                    {
+                        name:"Test .get('content')",
+                        runTest: function(){
+                            var e = new DijitEditor();
+                            e.placeAt(document.body);
+                            
+                            e.set("content","THIS IS VERY COOL");
+                            doh.is(e.get("content"),"THIS IS VERY COOL");
+                        }
+                    },
+                    
+                    {
+                        name:"Test .onSave()",
+                        runTest: function(){
+                            var a = new doh.Deferred();
+                            var e = new DijitEditor();
+                            e.placeAt(document.body);
+                            
+                            var expected = "SOME CONTENT";
+                            e.set("content",expected);
+                            aspect.before(e,"onSave",function(actual){
+                                a.callback(actual==expected,"Expected value is not provided");
+                            })
+                            e.saveButton.onClick({});
+                            
+                            return a;
+                        }
+                    },
+                    
+                    {
+                        name:"Test .disable()",
+                        runTest: function(){
+                            e.disable();
+                            doh.t(e.editor.get("disabled"));
+                            doh.t(e.saveButton.get("disabled"));
+                        }
+                    },
+                    
+                    {
+                        name:"Test .enable()",
+                        runTest: function(){
+                            e.enable();
+                            doh.f(e.editor.get("disabled"));
+                            doh.f(e.saveButton.get("disabled"));
+                        }
+                    }
+                ]);
+                
+                doh.run();
+            });
+        </script>
+    </head>
+    <body class="claro">
+        <div>azfcms.tests.view.content.DijitEditor</div>
+    </body>
+</html>

@@ -60,6 +60,7 @@ define(
             },
        
             _build: function(staticParams, dynamicParams){
+                var self = this;
                 // Create deferred
                 var d = new Deferred();
                 // Create closure accessable this 
@@ -73,7 +74,7 @@ define(
                 require(['azfcms/controller/content/'+pluginIdentifier, 'azfcms/view/content/'+pluginIdentifier],
                     function(EC, EP){
                         var ep = cec._buildEditorPane(EP,cep);
-                        cec._buildController(EC,this.nodeId,EC).then(function(controller){
+                        cec._buildController(EC,self.nodeId,ep).then(function(controller){
                             d.callback(controller)
                         });
                     })
@@ -95,7 +96,7 @@ define(
         * THis method will initialize editor controller and initialize it.
         * @return {dojo.Deferred}
         */
-            _buildController: function(EditorController, ep,nodeId){
+            _buildController: function(EditorController, nodeId, ep){
                 var ec = new EditorController();
                 var d = ec.initDependencies(nodeId, ep);
                 return d;

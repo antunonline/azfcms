@@ -1,0 +1,137 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/claro/claro.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true" ></script>
+        <script type="text/javascript">
+            require(['doh','dojo/domReady!','azfcms/view/content/DijitEditor',
+                'dojo/aspect','azfcms/controller/content/DijitEditor','dojo/_base/Deferred'],function(doh,domReady,DijitEditor,
+            aspect, Controller, Deferred){
+                var e = new DijitEditor();
+                e.placeAt(document.body);
+                doh.register("azfcms.tests.controller.content.DijitEditor",[
+                    {
+                        name: "Test .initialize(callback) callback call",
+                        runTest: function(){
+                            var c = new Controller();
+                            c.model = {
+                                getContent: function(){
+                                    return new Deferred();
+                                }
+                            };
+                            c.editorPane = {
+                                onSave: function(){
+                                    
+                                },
+                                disable:function(){
+                                    
+                                }, 
+                                enable: function(){
+                                    
+                                },
+                                on: function(){
+                                    
+                                }
+                            };
+                            
+                            var a = new doh.Deferred();
+                            c.initialize(function(){
+                                a.callback(true);
+                            });
+                            return a;
+                        }
+                    },
+                    {
+                        name: "Test .model.getContent call" ,
+                        runTest: function(){
+                            var expected = "test";
+                            var c = new Controller();
+                            c.model = {
+                                getContent: function(){
+                                    var d = new Deferred();
+                                    d.callback({"default":expected});
+                                    return d;
+                                }
+                            };
+                            c.editorPane = {
+                                onSave: function(){
+                                    
+                                },
+                                disable:function(){
+                                    
+                                }, 
+                                enable: function(){
+                                    
+                                },
+                                on: function(){
+                                    
+                                },
+                                set: function(arg1,actual){
+                                    a.callback(actual==expected,"Editor Pane received unexpected value");
+                                }
+                            };
+                            
+                            var a = new doh.Deferred();
+                            c.initialize(function(){
+                                
+                            });
+                            return a;
+                        }
+                    },
+                    {
+                        name: "Test .model.setContent call" ,
+                        runTest: function(){
+                            var expected = "test";
+                            var c = new Controller();
+                            c.model = {
+                                getContent: function(){
+                                    var d = new Deferred();
+                                    
+                                    return d;
+                                },
+                                setContent: function(id,actual){
+                                    a.callback(actual==expected, "Model did not receive expected value");
+                                    return new Deferred();
+                                }
+                            };
+                            c.editorPane = {
+                                onSave: function(){
+                                    
+                                },
+                                disable:function(){
+                                    
+                                }, 
+                                enable: function(){
+                                    
+                                },
+                                on: function(){
+                                    
+                                },
+                                set: function(arg1,actual){
+                                    
+                                }
+                            };
+                            
+                            var a = new doh.Deferred();
+                            c.setContent(expected);
+                            
+                            return a;
+                        }
+                    }
+                ]);
+                
+                doh.run();
+            });
+        </script>
+    </head>
+    <body class="claro">
+        <div>azfcms.tests.view.content.DijitEditor</div>
+    </body>
+</html>

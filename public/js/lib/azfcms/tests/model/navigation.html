@@ -736,7 +736,7 @@ and open the template in the editor.
                         name:"Test .remove",
                         runTest: function(){
                             var a = new doh.Deferred();
-                            var expected = "[cms.navigation.deleteNode(33),cms.navigation.getBranch(44)]";
+                            var expected = "cms.navigation.deleteNode(33)";
                             var n = new navigation._class({
                                 model:{
                                     invoke: function(actual){
@@ -769,7 +769,7 @@ and open the template in the editor.
                                 model:{
                                     invoke: function(){
                                        var d = new Deferred();
-                                       d.callback([null,expected]);
+                                       d.callback(expected);
                                        return d;
                                        
                                     },
@@ -840,6 +840,58 @@ and open the template in the editor.
                             })
                             
                             n.setMetaValues(33,"Title","Description","Keywords");
+                            return a;
+                        }
+                    },
+                    
+                    {
+                        name: "Test .setContent()",
+                        runTest: function(){
+                         var a = new doh.Deferred();
+                            var expected = "cms.navigation.setContent(33,'{\"name\":\"value\"}')";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                            return new Deferred();
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.setContent(33,{name:"value"});
+                            return a;
+                        }
+                    },
+                    
+                    {
+                        name: "Test .getContent()",
+                        runTest: function(){
+                         var a = new doh.Deferred();
+                            var expected = "cms.navigation.getContent(33)";
+                            var n = new navigation._class({
+                                model:{
+                                    invoke: function(actual){
+                                        if(actual==expected){
+                                            a.callback(true);
+                                            return new Deferred();
+                                        } else {
+                                            a.errback("model.invoke recieved unexpected value");
+                                        }
+                                    },
+                                    prepareRestStore: function(){
+                                        return {};
+                                    }
+                                }
+                            })
+                            
+                            n.getContent(33);
                             return a;
                         }
                     }

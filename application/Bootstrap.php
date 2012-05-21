@@ -3,6 +3,8 @@
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     
     
+    protected $_initEnvs = array();
+    
     /**
      *
      * @var Bootstrap
@@ -15,6 +17,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      */
     public static function getInstance(){
         return self::$instance;
+    }
+    
+    /**
+     *
+     * @param string $env 
+     */
+    public function setEnvironment($env){
+        $this->_environment = $env;
     }
     
     /**
@@ -71,6 +81,32 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             return true;
         }
     }
+    
+    /**
+     * Bootstrap specific environment
+     * @param string $env
+     * @return null
+     */
+    public function envBootstrap($env){
+        if(in_array($env,$this->_initEnvs)){
+            return ;
+        }
+        // Set env. name
+        $this->setEnvironment($env);
+        // Get local bootstrap method names
+        $localResourceNames = $this->getClassResourceNames();
+        // Remove local resource names from run list
+        $this->_run = array_diff($this->_run,$localResourceNames);
+        // Run
+        $this->bootstrap();
+    }
+    
+    
+    
+    public function _initSaveEnv(){
+        // Registered this env as bootstraped
+        $this->_initEnvs[] = $this->getEnvironment();
+    }
 
     /**
      * Initialize Azf classpath 
@@ -78,6 +114,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     public function _initAzfClassPath() {
         Zend_Loader_Autoloader::getInstance()->registerNamespace("Azf");
     }
+    
     
 
     /**

@@ -1,7 +1,23 @@
 define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
-    'dojo/_base/declare'],function(model,lang,Deferred,
-    declare){
+    'dojo/_base/declare','dojo/_base/json'],function(model,lang,Deferred,
+    declare,json){
     
+    
+        
+        /**
+         * SIngle quote escape
+         */
+        _s = function(value){
+            return value.replace("'","\\'");
+        };
+        
+        
+        /**
+         * SIngle quote escape
+         */
+        _d = function(value){
+            return value.replace("\"","\\\"");
+        };
     
     var _class = declare(null,{
         constructor: function(args){
@@ -14,7 +30,9 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             } 
             
             var preparedJsonStore = this.model.prepareRestStore("navigation","default");
+            var remove = this.remove;
             lang.mixin(this,preparedJsonStore);
+            this.remove = remove;
         },
         
         getRoot: function(onComplete, onError){
@@ -216,7 +234,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             
             var tmp = "";
             for(var key in params){
-                tmp = "cms.navigation.setStaticParam("+nodeId+",'"+key+"','"+params[key]+"')"
+                tmp = "cms.navigation.setStaticParam("+nodeId+",'"+_s(key)+"','"+_s(params[key])+"')"
                 expr[expr.length]=tmp;
             }
             return expr.join(",");
@@ -232,7 +250,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             
             var tmp = "";
             for(var key in params){
-                tmp = "cms.navigation.setDynamicParam("+nodeId+",'"+key+"','"+params[key]+"')"
+                tmp = "cms.navigation.setDynamicParam("+nodeId+",'"+_s(key)+"','"+_s(params[key])+"')"
                 expr[expr.length]=tmp;
             }
             return expr.join(",");
@@ -302,7 +320,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          */
         insertInto: function(id,title,type){
             var context = this;
-            var call = ['[cms.navigation.insertInto(',id,',{\'title\':\'',title,'\'},\''+type+'\'),',
+            var call = ['[cms.navigation.insertInto(',id,',{\'title\':\'',_s(title),'\'},\''+_s(type)+'\'),',
             'cms.navigation.getBranch(',id,')]'].join('');
             return this.model.invoke(call).then(function(args){
                 context.onChildrenChange(args[1],args[1].childNodes);
@@ -311,15 +329,18 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
 
 
         /**
-         * @param {object} item
+         * @param {object|Number} item
          * @return {dojo.Deferred}
          */
         remove: function(item){
+            if(typeof item == 'object'){
+                item = item.id;
+            }
             var self = this;
-            var call = ['[cms.navigation.deleteNode(',item.id,"),cms.navigation.getBranch(",item.parentId,")]"].join('');
+            var call = ['cms.navigation.deleteNode(',item,")"].join('');
             var response = this.model.invoke(call);
             response.then(function(response){
-                self.onChildrenChange(response[1],response[1].childNodes);
+                self.onChildrenChange(response,response.childNodes);
             })
             
             return response;
@@ -333,7 +354,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @return {dojo.Deferred}
          */
         setTitle: function(node,title){
-            var call = ['cms.navigation.setTitle(',node,',\'',title,'\')'].join("");
+            var call = ['cms.navigation.setTitle(',node,',\'',_s(title),'\')'].join("");
             return this.model.invoke(call);
         },
         
@@ -344,7 +365,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @return {dojo.Deferred}
          */
         setUrl: function(node,url){
-            var call = ['cms.navigation.setUrl(',node,',\'',url,'\')'].join("");
+            var call = ['cms.navigation.setUrl(',node,',\'',_s(url),'\')'].join("");
             return this.model.invoke(call);
         },
         
@@ -359,8 +380,8 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             var call = [
                 '[',
                 'cms.navigation.setTitle(',node,',\'',title,'\'),',
-                'cms.navigation.setDynamicParam(',node,',\'metaDescription\',\'',description,'\'),',
-                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',keywords,'\'),',
+                'cms.navigation.setDynamicParam(',node,',\'metaDescription\',\'',_s(description),'\'),',
+                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',_s(keywords),'\'),',
                 'cms.navigation.getBranch('+node+")",
                 ']'
             ].join("");
@@ -373,6 +394,21 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
                 self.onChange(node);
             })
             return response;
+        },
+        
+        setContent: function(id, content){
+            if(typeof content == 'object' || typeof content == 'array'){
+                content = json.toJson(content);
+            } 
+            
+            var call = ['cms.navigation.setContent(',id,",'",_s(content),"')"].join("");
+            return this.model.invoke(call);
+        },
+        
+        
+        getContent: function(id){
+            var call = ["cms.navigation.getContent(",id,")"].join("");
+            return this.model.invoke(call);
         },
         
         

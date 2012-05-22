@@ -198,8 +198,9 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      */
     public function _prepareInseredPage($id,$pluginIdentifier){
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
-        $response = new Zend_Controller_Response_Http();
         
+        // Call MVC
+        $this->_callMvc($id, array('action'=>'installpage')+$plugin, "production");
         
     }
     

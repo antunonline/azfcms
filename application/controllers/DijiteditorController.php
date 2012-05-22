@@ -29,9 +29,13 @@ class DijiteditorController extends Zend_Controller_Action
      */
     public function installpageAction(){
         $this->_helper->viewRenderer->setNoRender(true);
-        $id = $this->getRequest()->getParam("id");
+        $id = $this->_getParam("id");
         $navigation = $this->getNavigation();
         $navigation->setStaticParam($id, "content", "");
+        
+        $navigation->setStaticParam($id, "module", "default");
+        $navigation->setStaticParam($id, "controller", "dijiteditor");
+        $navigation->setStaticParam($id, "action", "render");
         
     }
     
@@ -47,6 +51,7 @@ class DijiteditorController extends Zend_Controller_Action
      * Get content out of this content plugin 
      */
     public function getAction(){
+        Zend_Layout::getMvcInstance()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         echo $this->_helper->context->getStaticParam("content");
     }
@@ -55,6 +60,7 @@ class DijiteditorController extends Zend_Controller_Action
      * Set content into this content plugin
      */
     public function setAction(){
+        Zend_Layout::getMvcInstance()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         $content = $this->_getParam("content");
         echo $content;

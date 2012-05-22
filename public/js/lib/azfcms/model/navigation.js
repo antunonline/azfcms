@@ -7,16 +7,16 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
         /**
          * SIngle quote escape
          */
-        _s = function(value){
-            return value.replace("'","\\'");
+        var _s = function(value){
+            return value.replace(/'/g,"\\'");
         };
         
         
         /**
          * SIngle quote escape
          */
-        _d = function(value){
-            return value.replace("\"","\\\"");
+        var _d = function(value){
+            return value.replace(/"/g,"\\\"");
         };
     
     var _class = declare(null,{

@@ -107,6 +107,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         // Registered this env as bootstraped
         $this->_initEnvs[] = $this->getEnvironment();
     }
+    
+    public function _initLayout(){
+        if($this->isMvcEnvironment()==false)
+            return;
+        
+        Zend_Layout::startMvc(array(
+            'layoutPath'=>APPLICATION_PATH."/views/layouts",
+            'layout'=>'greenforest'
+        ));
+    }
 
     /**
      * Initialize Azf classpath 

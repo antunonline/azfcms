@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<dataset>
+    <Navigation id="1" parentId="1" tid="1" l="1" r="2" disabled="0" url="/" 
+    final="{}" plugins="{}" abstract="{}" home="0" title="Some" />
+    <Navigation id="2" parentId="1" tid="1" l="1" r="2" disabled="0" url="/" 
+    final="{}" plugins="{}" abstract="{}" home="0" title="Some" />
+    <Navigation id="3" parentId="1" tid="1" l="1" r="2" disabled="0" url="/" 
+    final="{}" plugins="{}" abstract="{}" home="0" title="Some" />
+    <Navigation id="4" parentId="1" tid="1" l="1" r="2" disabled="0" url="/" 
+    final="{}" plugins="{}" abstract="{}" home="0" title="Some" />
+    
+    <Plugin id="1" type="type1" displayName="On1" 
+    displayDescription="Desc One" region="left" params="{}" />
+    <Plugin id="2" type="type2" displayName="On2" 
+    displayDescription="Desc One" region="left" params="{}" />
+    <Plugin id="3" type="type3" displayName="On3" 
+    displayDescription="Desc One" region="left" params="{}" />
+    <Plugin id="4" type="type4" displayName="On4" 
+    displayDescription="Desc One" region="left" params="{}" />
+    <Plugin id="5" type="type5" displayName="On5" 
+    displayDescription="Desc One" region="right" params="{}" />
+    <Plugin id="6" type="type6" displayName="On6" 
+    displayDescription="Desc One" region="right" params="{}" />
+    
+    <NavigationPlugin id="1" navigationId="1" pluginId="1" weight="100" />
+    <NavigationPlugin id="2" navigationId="1" pluginId="2" weight="110" />
+    <NavigationPlugin id="3" navigationId="1" pluginId="3" weight="90" />
+    <NavigationPlugin id="4" navigationId="2" pluginId="1" weight="100" />
+    <NavigationPlugin id="5" navigationId="3" pluginId="2" weight="100" />
+    <NavigationPlugin id="6" navigationId="3" pluginId="3" weight="100" />
+    <NavigationPlugin id="7" navigationId="4" pluginId="4" weight="100" />
+    <NavigationPlugin id="8" navigationId="4" pluginId="5" weight="100" />
+</dataset>

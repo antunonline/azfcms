@@ -102,4 +102,11 @@ class Azf_PHPUnit_Db_SchemaUtils {
                 AND aclGroupId = $aclGroupId");
     }
     
+    
+    public static function buildSchema(){
+        $con = self::getZendConnection();
+        $sql = file_get_contents(__DIR__."/../../../../../docs/SQL/EMPTY_SCHEMA.sql");
+        $con->query($sql);
+    }
+    
 }

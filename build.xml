@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<project name="azfcms">
+    <property name="output" value="${basedir}/buildOutput" />
+    
+    <target name="init" >
+        <mkdir dir="${output}/CodeCoverage" />
+    </target>
+    
+    <target name="clean" >
+        <delete     dir="${output}/CodeCoverage" />
+    </target>
+
+    <target name="phpunit" >
+        <exec executable="phpunit" dir="${basedir}/tests" >
+            <arg line="--coverage-clover ${output}/CodeCoverage/clover.xml --coverage-html ${output}/CodeCoverage/ ." />
+        </exec>
+    </target>
+</project>

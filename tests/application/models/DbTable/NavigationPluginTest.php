@@ -1,7 +1,7 @@
 <?php
 require './../application/models/DbTable/NavigationPlugin.php';
 class Application_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_Database_TestCase {
-    
+     
     
     public function assertTableContains(array $expectedRow, PHPUnit_Extensions_Database_DataSet_ITable $table, $message = '') {
         // Load data

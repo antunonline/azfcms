@@ -14,8 +14,17 @@ Application_Model_DbTable_NavigationPlugin = {
 Application_Model_DbTable_Plugin = {
     insertPlugin:function(name,description,type,region,params){},
     getPluginParams:function(pluginId){},
+    findAllByNavigationId: function(navigationId){},
     _decode: function(params){},
     deleteById:function(id){}
+}
+
+Azf_Controller_Action_Helper_ExtendedPlugin = {
+    
+}
+
+Azf_Plugin_Extension_Manager = {
+    
 }
 
 Azf_Template_Descriptor = {
@@ -35,8 +44,10 @@ Application_Plugin_Extension_Abstract = {
 Azf_Plugin_Extension_Manager = {
     setUp:function(type,pluginId){},
     tearDown:function(type,pluginId){},
-    _getPluginInstance: function(type, pluginId){},
+    render:function(navigationId,response){},
+    _getPluginInstance: function(type, pluginId, pluginParams/*optional*/){},
     getPluginParams: function(pluginId){},
+    getPluginDefinitions: function(navigationId){},
     getModel: function(){},
     getClassName: function(type){},
     _constructPlugin: function(type,pluginParams){}

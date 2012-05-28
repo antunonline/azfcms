@@ -17,7 +17,7 @@ and open the template in the editor.
     </target>
 
     <target name="phpunit" >
-        <exec executable="phpunit" dir="${basedir}/tests" >
+        <exec executable="phpunit" dir="${basedir}/tests" failonerror="true">
             <arg line="--coverage-clover ${output}/CodeCoverage/clover.xml --coverage-html ${output}/CodeCoverage/ ." />
         </exec>
     </target>

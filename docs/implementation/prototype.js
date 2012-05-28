@@ -1,6 +1,6 @@
 azfcms.model.cms.addExtensionPlugin(function(name,description,type,region,weight,enable){
     Application_Resolver_ExtensionPlugin.addExtensionPlugin(function(){
-        var pluginId = Application_Model_DbTable_Plugin.insertPlugin(function(name,description,type,region,params){});
+        var pluginId = Azf_Model_DbTable_Plugin.insertPlugin(function(name,description,type,region,params){});
         
         var Azf_Plugin_Extension_Abstract = 
         Azf_Plugin_Extension_Manager.setUp(function(type, pluginId){
@@ -8,10 +8,10 @@ azfcms.model.cms.addExtensionPlugin(function(name,description,type,region,weight
                 if(is_array(pluginParams)==false){
                     // Construct plugin params if not present
                     pluginParams = Azf_Plugin_Extension_Manager.getPluginParams(function(pluginId){
-                        Application_Model_DbTable_Plugin = Azf_Plugin_Extension_Manager.getModel();
-                        return Application_Model_DbTable_Plugin.getPluginParams(function(pluginId){
-                            var params = Application_Model_DbTable_Plugin.find(pluginId)['params'];
-                            return Application_Model_DbTable_Plugin._decode(params);
+                        Azf_Model_DbTable_Plugin = Azf_Plugin_Extension_Manager.getModel();
+                        return Azf_Model_DbTable_Plugin.getPluginParams(function(pluginId){
+                            var params = Azf_Model_DbTable_Plugin.find(pluginId)['params'];
+                            return Azf_Model_DbTable_Plugin._decode(params);
                         })
                     })
                 } 
@@ -42,7 +42,7 @@ azfcms.model.cms.addExtensionPlugin(function(name,description,type,region,weight
 azfcms.model.cms.removeExtensionPlugin(function(pluginId){
     Application_Resolver_ExtensionPlugin.removeExtensionPlugin(function(pluginId){
         // Load plugin type
-        var type = Application_Model_DbTable_Plugin.find(pluginId)['type'];
+        var type = Azf_Model_DbTable_Plugin.find(pluginId)['type'];
         
         // Remove plugin related resources
         Azf_Plugin_Extension_Manager.tearDown(function(type, pluginId){
@@ -55,8 +55,8 @@ azfcms.model.cms.removeExtensionPlugin(function(pluginId){
         });
     
         // Delete plugin
-        Application_Model_DbTable_Plugin.deleteById(function(pluginId){
-            Application_Model_DbTable_Plugin['delete']();
+        Azf_Model_DbTable_Plugin.deleteById(function(pluginId){
+            Azf_Model_DbTable_Plugin['delete']();
         })
     })
 })
@@ -72,16 +72,71 @@ azfcms.model.cms.getTemplateRegionsStore(function(navigationId){
 })
 
 
+
+Azf_Template_Descriptor.getTemplate(function(templateIdentifier){
+    var templates = 
+    Azf_Template_Descriptor.getTemplates(function(){
+        if(Azf_Template_Descriptor._templates==null){
+            Azf_Template_Descriptor._initTemplates(function(){
+                var path = Azf_Template_Descriptor.getTemplateDirectoryPath(function(){
+                    if(Azf_Template_Descriptor._templateDirectoryPath==null){
+                        Azf_Template_Descriptor._initTemplateDirectoryPath();
+                    }
+                    return Azf_Template_Descriptor._templateDirectoryPath;
+                });
+    
+                var potentialTemplateFilePaths = 
+                Azf_Template_Descriptor._buildPotentialTemplateFilePaths(function(){
+                    var potentialTemplateFilePaths = [];
+                    var templateDirectoryPath = Azf_Template_Descriptor.getTemplateDirectoryPath();
+
+                    var iterator = new DirectoryIterator(templateDirectoryPath);
+                    foreach(function(iterator, path){
+                        if(path.endsWith(".xml")){
+                            potentialTemplateFilePaths.push(path);
+                        }
+                    });
+
+                    return potentialTemplateFilePaths;
+                });
+    
+                var parsedTemplates = 
+                Azf_Template_Descriptor._parseTemplateFiles(function(potentialTemplateFilePaths){
+                    var schema = Azf_Template_Descriptor.getSchemaSource();
+                    var parsedTemplates = [];
+        
+                    for(var path in potentialTemplateFilePaths){
+                        DomDocument.loadXmlFromFile(path);
+                        if(DomDocument.schemaValidateFromSource(schema)){
+                            parsedTemplates.push(Azf_Template_Descriptor.templateToArray(DomDocument));
+                        }
+                    }
+        
+                    return parsedTemplates;
+                });
+    
+                Azf_Template_Descriptor.setTemplates(parsedTemplates);
+            })
+        }
+        else {
+            return Azf_Template_Descriptor._templates;
+        }
+    });
+    
+    return templates[templateIdentifier];
+})
+
+
 azfcms.model.cms.getRegionPluginsStore(function(nodeId, region){
     return getRegionExtendedPluginsStore.getRegionExtendedPluginsStore(function(nodeId, region){
-        return Application_Model_DbTable_NavigationPlugin.findAllByNavigationAndRegion(nodeId,region);
+        return Azf_Model_DbTable_NavigationPlugin.findAllByNavigationAndRegion(nodeId,region);
     });
 })
 
 
 azfcms.model.cms.enableExtensionPlugin(function(nodeId, pluginId,weight){
     return Application_Resolver_ExtensionPlugin.enableExtensionPlugin(function(nodeId, pluginId, weight){
-        return Application_Model_DbTable_NavigationPlugin.bind(nodeId, pluginId, weight);
+        return Azf_Model_DbTable_NavigationPlugin.bind(nodeId, pluginId, weight);
     })
 
 })
@@ -89,7 +144,7 @@ azfcms.model.cms.enableExtensionPlugin(function(nodeId, pluginId,weight){
 
 azfcms.model.cms.disableExtensionPlugin(function(nodeId,pluginId){
     return Application_Resolver_ExtensionPlugin.disableExtensinPlugin(function(nodeId,pluginId){
-        Application_Model_DbTable_NavigationPlugin.unbind(nodeId,pluginId);
+        Azf_Model_DbTable_NavigationPlugin.unbind(nodeId,pluginId);
         return true;
         
     });
@@ -98,11 +153,11 @@ azfcms.model.cms.disableExtensionPlugin(function(nodeId,pluginId){
 azfcms.model.cms.setExtensionPluginValues(function(navigationId, pluginId, name,description,region,weight,enable){
     return Application_Resolver_ExtensionPlugin.setExtensionPluginValues(function(navigationId, pluginId, name,description,region,weight,enable){
         if(enabled==false){
-            Application_Model_DbTable_NavigationPlugin.unbind(navigationId, pluginId);
+            Azf_Model_DbTable_NavigationPlugin.unbind(navigationId, pluginId);
         } else {
-            Application_Model_DbTable_NavigationPlugin.updateWeightByNavigationIdAndPluginId(navigationId, pluginId, weight);
+            Azf_Model_DbTable_NavigationPlugin.updateWeightByNavigationIdAndPluginId(navigationId, pluginId, weight);
         }
-        Application_Model_DbTable_Plugin.updatePluginValues(pluginId, name,description, region);
+        Azf_Model_DbTable_Plugin.updatePluginValues(pluginId, name,description, region);
         
     })
 })
@@ -210,31 +265,40 @@ azfcms.view.ExtendedEditorPane.onExtendedEdit(function(pluginId,type){
 
 
 Azf_Controller_Action_Helper_ExtendedPlugin.postDispatch(function(){
+    // Load navigationId
     var navigationId = Zend_Controller_Request_Http.getParam("id");
-    Azf_Plugin_Extension_Manager.render(function(navigationId, Zend_Controller_Response_Http){
+    // Produce rendered responses
+    var responses = Azf_Plugin_Extension_Manager.render(function(navigationId, Zend_Controller_Response_Http){
         var plugins = Azf_Plugin_Extension_Manager.getPluginDefinitions(function(navigationId){
-            return Application_Model_DbTable_Plugin.findAllByNavigationId(function(navigationId){
+            return Azf_Model_DbTable_Plugin.findAllByNavigationId(function(navigationId){
                 var rows = Zend_Db_Adapter_Abstract.fetchAll("");
                 for(var row in rows){
-                    row['params'] = Application_Model_DbTable_NavigationPlugin._decode(row['params']);
+                    row['params'] = Azf_Model_DbTable_Plugin._decode(row['params']);
                 }
                 return rows;
             });
         });
         
-        var responses = {};
+        var responseChunks = {};
         for(var plugin in plugins){
             var Azf_Plugin_Extension_Abstract = Azf_Plugin_Extension_Manager._getPluginInstance(plugin['type'],plugin['id'],plugin['params']);
             ob_start();
             Azf_Plugin_Extension_Abstract.render();
-            responses[plugin['region']].push(ob_get_end());
+            responseChunks[plugin['region']].push(ob_get_end());
         }
         
-        foreach(function(responses, region, response){
-            var rendered = response.join("");
-            Zend_Controller_Response_Http.setBody(region,rendered);
-        })
+        var responses = {};
+        foreach(function(responseChunks, region, responseChunk){
+            responses[region] = responseChunk.join("");
+        });
+        return responses;
     });
+    
+    // Inject responses into response object
+    foreach(function(responses,region,body){
+        Zend_Controller_Response_Http.setBody("region",body);
+    });
+    
     
 })
 

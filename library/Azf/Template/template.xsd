@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           xmlns="http://it-branch.com/xml/ns/template.xsd"
+           targetNamespace="http://it-branch.com/xml/ns/template.xsd"
+>
+    <xs:element name="template" type="template"></xs:element>
+    <xs:complexType name="template">
+        <xs:all >
+            <xs:element name="name" type="xs:string"></xs:element>
+            <xs:element name="description" type="xs:string"></xs:element>
+            <xs:element name="identifier" type="xs:Name"></xs:element>
+            <xs:element name="regions" type="regions"></xs:element>
+        </xs:all>  
+    </xs:complexType>
+    <xs:complexType name="regions">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="region" type="region"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="region">
+        <xs:all >
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="identifier" type="xs:Name"/>
+        </xs:all>
+    </xs:complexType>
+</xs:schema>

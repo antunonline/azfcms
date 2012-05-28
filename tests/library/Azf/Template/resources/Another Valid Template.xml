@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<template
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://it-branch.com/xml/ns/template.xsd'
+    xsi:schemaLocation='http://it-branch.com/xml/ns/template.xsd file:/var/www/azfcms/library/Azf/Template/template.xsd'>
+    <name>Another Template</name>
+    <description>Another Template Description</description>
+    <identifier>anotherTemplate</identifier>
+    <regions>
+        <region>
+            <name>Left Region</name>
+            <identifier>leftRegion</identifier>
+        </region>
+        <region>
+            <name>Right Region</name>
+            <identifier>rightRegion</identifier>
+        </region>
+    </regions>
+
+</template>

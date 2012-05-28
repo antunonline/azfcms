@@ -4,14 +4,14 @@
  */
 
 
-Application_Model_DbTable_NavigationPlugin = {
+Azf_Model_DbTable_NavigationPlugin = {
     bind: function(nodeId,pluginId,weight){},
     unbind: function(nodeId,pluginId){},
     findAllByNavigationAndRegion:function(nodeId,region){},
     updateWeightByNavigationIdAndPluginId: function(navigationId, pluginId, weight){}
 }
 
-Application_Model_DbTable_Plugin = {
+Azf_Model_DbTable_Plugin = {
     insertPlugin:function(name,description,type,region,params){},
     getPluginParams:function(pluginId){},
     findAllByNavigationId: function(navigationId){},
@@ -20,16 +20,41 @@ Application_Model_DbTable_Plugin = {
 }
 
 Azf_Controller_Action_Helper_ExtendedPlugin = {
-    
+    postDispatch: function(){}
 }
 
 Azf_Plugin_Extension_Manager = {
     
 }
 
+Template = {
+    name:"",
+    description:"",
+    identifier:"",
+    regions:[
+        {name:"",identifier:""}
+    ]
+}
+
+
 Azf_Template_Descriptor = {
+    _templates: null,
+    _templateDirectoryPath: null,
+    _classPath:null,
+    setTemplates: function(templates){},
+    getTemplates: function(){},
+    getTemplate:function(templateIdentifier){},
     getRegions:function(templateIdentifier){},
-    getTemplate:function(templateIdentifier){}
+    getTemplateDirectoryPath: function(){},
+    setTemplateDirectoryPath: function(path){},
+    getClassPath: function(){},
+    setClassPath:function(path){},
+    getSchemaSource: function(){},
+    templateToArray: function(DomDocument){},
+    _initTemplateDirectoryPath: function(){},
+    _initTemplates: function(){},
+    _buildPotentialTemplateFilePaths: function(){},
+    _parseTemplateFiles:function(templateFilePaths){}
 }
 
 Azf_Model_Tree_Navigation = {

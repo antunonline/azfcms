@@ -258,8 +258,32 @@ azfcms.view.ExtendedEditorPane.onExtendedEdit(function(pluginId,type){
             
             var controller = azfcms.controller.ExtendedEditController._buildController(function(pluginId, extendedEditorPane){
                 var controller = new azfcms.controller.AbstractExtendedController();
+                azfcms.controller.AbstractExtendedController.initializeDependencies(function(pluginId, pane){
+                    azfcms.controller.AbstractExtendedController.pluginId = pluginId;
+                    azfcms.controller.AbstractExtendedController.editorPane = pane;
+                    azfcms.controller.AbstractExtendedController.init();
+                })
             });
         })
+    })
+});
+
+azfcms.view.ExtendedEditorPane.onItemSelect(function(item){
+    azfcms.controller.ExtendedEditController.onItemSelect(function(item){
+        azfcms.view.ExtendedEditorPane.disable();
+        azfcms.controller.ExtendedEditController.pluginItem = plugin;
+        var form = "form";
+        azfcms.view.ExtendedEditorPane.set(function(form,plugin){
+            azfcms.view.ExtendedEditorPane._setFormAttr(function(plugin){
+                azfcms.view.ExtendedEditorPane.nameText.set("value",plugin.name);
+                azfcms.view.ExtendedEditorPane.descriptionText.set("value",plugin.description);
+                azfcms.view.ExtendedEditorPane.typeSelect.set("value",plugin.type);
+                azfcms.view.ExtendedEditorPane.weightText.set("value",plugin.weight);
+                azfcms.view.ExtendedEditorPane.disabledRadio.set("value",plugin.disabledRadio);
+            })
+        });
+        azfcms.view.ExtendedEditorPane.enable();
+        azfcms.view.ExtendedEditorPane.typeSelect.set("disabled",true);
     })
 })
 

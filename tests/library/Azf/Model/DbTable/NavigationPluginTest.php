@@ -1,6 +1,6 @@
 <?php
-require './../application/models/DbTable/NavigationPlugin.php';
-class Application_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_Database_TestCase {
+
+class Azf_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_Database_TestCase {
      
     
     public function assertTableContains(array $expectedRow, PHPUnit_Extensions_Database_DataSet_ITable $table, $message = '') {
@@ -30,10 +30,10 @@ class Application_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_
     
     /**
      *
-     * @return \Application_Model_DbTable_Plugin 
+     * @return \Azf_Model_DbTable_NavigationPlugin 
      */
     public function getModel(){
-        return new Application_Model_DbTable_Plugin(array('db'=>  Azf_PHPUnit_Db_ConnectionFactory::getConnection()));
+        return new \Azf_Model_DbTable_NavigationPlugin(array('db'=>  Azf_PHPUnit_Db_ConnectionFactory::getConnection()));
     }
     
     
@@ -111,5 +111,6 @@ class Application_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_
         $this->assertTrue($expected->matches($actual));
         
     }
+
     
 }

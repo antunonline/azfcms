@@ -120,15 +120,17 @@ azfcms.controller.ExtendedEditController = {
      * @property {azfcms.model.cms}
      */
     model: azfcms.model.cms,
+    pluginItem:null,
+    
     _buildRequire: function(type){},
     _buildController: function(pluginId, extendedEditorPane){},
     onNew: function(name,description,type,region,weight,enable){},
     onSave: function(pluginId, name,description,region,weight,enable){},
     onDelete:function(item){},
-    onDelete: function(pluginId){},
     onDisable: function(navigationId, pluginId){},
     onEnable: function(navigationId, pluginId, weight){},
-    onExtendedEdit: function(pluginId,type){}
+    onExtendedEdit: function(pluginId,type){},
+    onItemSelect: function(item){}
 }
 
 
@@ -154,16 +156,21 @@ azfcms.view.ExtendedEditorPane = {
     enable:function(){},
     addChild: function(pane){},
     reloadGrid: function(){},
+    _setFormAttr: function(plugin){},
     onNew: function(name,description,type,region,weight,enable){},
     onSave: function(pluginId, name,description,region,weight,enable){},
     onDelete: function(pluginId){},
     onDisable: function(navigationId, pluginId){},
     onEnable: function(navigationId, pluginId, weight){},
-    onExtendedEdit: function(pluginId,type){}
+    onExtendedEdit: function(pluginId,type){},
+    onItemSelect: function(item){}
 }
 
 azfcms.controller.AbstractExtendedController = {
-    
+    editorPane:null,
+    pluginId:null,
+    initializeDependencies: function(pluginId, editorPane){},
+    init: function(){}
 }
 
 azfcms.view.AbstractExtendedPane = {

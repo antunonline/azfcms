@@ -2,13 +2,16 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
+DROP SCHEMA IF EXISTS `azfcms` ;
+CREATE SCHEMA IF NOT EXISTS `azfcms` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
+USE `azfcms` ;
 
 -- -----------------------------------------------------
--- Table `Navigation`
+-- Table `azfcms`.`Navigation`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Navigation` ;
+DROP TABLE IF EXISTS `azfcms`.`Navigation` ;
 
-CREATE  TABLE IF NOT EXISTS `Navigation` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`Navigation` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `parentId` INT UNSIGNED NULL ,
   `tid` INT UNSIGNED NOT NULL ,
@@ -26,11 +29,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ACLGroup`
+-- Table `azfcms`.`ACLGroup`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ACLGroup` ;
+DROP TABLE IF EXISTS `azfcms`.`ACLGroup` ;
 
-CREATE  TABLE IF NOT EXISTS `ACLGroup` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`ACLGroup` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `resource` VARCHAR(60) NOT NULL ,
   `privilege` VARCHAR(60) NOT NULL ,
@@ -40,11 +43,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `User`
+-- Table `azfcms`.`User`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `User` ;
+DROP TABLE IF EXISTS `azfcms`.`User` ;
 
-CREATE  TABLE IF NOT EXISTS `User` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`User` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `loginName` VARCHAR(45) NOT NULL ,
   `firstName` VARCHAR(45) NOT NULL ,
@@ -54,59 +57,59 @@ CREATE  TABLE IF NOT EXISTS `User` (
   `verified` TINYINT UNSIGNED NOT NULL DEFAULT 0 ,
   `verificationKey` VARCHAR(32) NOT NULL ,
   `cTime` TIMESTAMP NOT NULL DEFAULT NOW() ,
-  `rTime` VARCHAR(45) NOT NULL DEFAULT 0 ,
+  `rTime` TIMESTAMP NOT NULL DEFAULT '2000-01-01' ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `email_UNIQUE` ON `User` (`email` ASC) ;
+CREATE UNIQUE INDEX `email_UNIQUE` ON `azfcms`.`User` (`email` ASC) ;
 
-CREATE UNIQUE INDEX `loginName_UNIQUE` ON `User` (`loginName` ASC) ;
+CREATE UNIQUE INDEX `loginName_UNIQUE` ON `azfcms`.`User` (`loginName` ASC) ;
 
 
 -- -----------------------------------------------------
--- Table `Navigation_ACLGroup`
+-- Table `azfcms`.`Navigation_ACLGroup`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Navigation_ACLGroup` ;
+DROP TABLE IF EXISTS `azfcms`.`Navigation_ACLGroup` ;
 
-CREATE  TABLE IF NOT EXISTS `Navigation_ACLGroup` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`Navigation_ACLGroup` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `navigationId` INT UNSIGNED NOT NULL ,
   `aclGroupId` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
-CREATE INDEX `navigationId` ON `Navigation_ACLGroup` (`navigationId` ASC) ;
+CREATE INDEX `navigationId` ON `azfcms`.`Navigation_ACLGroup` (`navigationId` ASC) ;
 
-CREATE INDEX `aclGroupId_1` ON `Navigation_ACLGroup` (`aclGroupId` ASC) ;
+CREATE INDEX `aclGroupId_1` ON `azfcms`.`Navigation_ACLGroup` (`aclGroupId` ASC) ;
 
 
 -- -----------------------------------------------------
--- Table `User_ACLGroup`
+-- Table `azfcms`.`User_ACLGroup`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `User_ACLGroup` ;
+DROP TABLE IF EXISTS `azfcms`.`User_ACLGroup` ;
 
-CREATE  TABLE IF NOT EXISTS `User_ACLGroup` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`User_ACLGroup` (
   `id` INT UNSIGNED NOT NULL ,
   `userId` INT UNSIGNED NOT NULL ,
   `aclGroupId` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
-CREATE INDEX `userId` ON `User_ACLGroup` (`userId` ASC) ;
+CREATE INDEX `userId` ON `azfcms`.`User_ACLGroup` (`userId` ASC) ;
 
-CREATE INDEX `aclGroupId` ON `User_ACLGroup` (`aclGroupId` ASC) ;
+CREATE INDEX `aclGroupId` ON `azfcms`.`User_ACLGroup` (`aclGroupId` ASC) ;
 
 
 -- -----------------------------------------------------
--- Table `Plugin`
+-- Table `azfcms`.`Plugin`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Plugin` ;
+DROP TABLE IF EXISTS `azfcms`.`Plugin` ;
 
-CREATE  TABLE IF NOT EXISTS `Plugin` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`Plugin` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `type` VARCHAR(45) NOT NULL ,
-  `displayName` VARCHAR(60) NOT NULL ,
-  `displayDescription` VARCHAR(255) NOT NULL ,
+  `name` VARCHAR(60) NOT NULL ,
+  `description` VARCHAR(255) NOT NULL ,
   `region` VARCHAR(45) NOT NULL ,
   `params` VARCHAR(45) NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -114,11 +117,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `NavigationPlugin`
+-- Table `azfcms`.`NavigationPlugin`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `NavigationPlugin` ;
+DROP TABLE IF EXISTS `azfcms`.`NavigationPlugin` ;
 
-CREATE  TABLE IF NOT EXISTS `NavigationPlugin` (
+CREATE  TABLE IF NOT EXISTS `azfcms`.`NavigationPlugin` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `navigationId` INT NOT NULL ,
   `pluginId` INT NOT NULL ,
@@ -126,16 +129,21 @@ CREATE  TABLE IF NOT EXISTS `NavigationPlugin` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_NavigationPlugin_2` ON `NavigationPlugin` (`pluginId` ASC) ;
+CREATE INDEX `fk_NavigationPlugin_2` ON `azfcms`.`NavigationPlugin` (`pluginId` ASC) ;
 
-CREATE INDEX `fk_NavigationPlugin_1` ON `NavigationPlugin` (`navigationId` ASC) ;
+CREATE INDEX `fk_NavigationPlugin_1` ON `azfcms`.`NavigationPlugin` (`navigationId` ASC) ;
 
 
 -- -----------------------------------------------------
 -- procedure navigation_completeUserMenu
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_completeUserMenu`;
-CREATE PROCEDURE `navigation_completeUserMenu` (IN userId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_completeUserMenu`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_completeUserMenu` (IN userId INT)
 BEGIN
 SELECT DISTINCT n.* FROM User_ACLGroup ua
 JOIN Navigation_ACLGroup na ON ua.aclGroupId = na.aclGroupId
@@ -150,11 +158,18 @@ END
 
 $$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure navigation_breadCrumbMenu
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_breadCrumbMenu`;
-CREATE PROCEDURE `navigation_breadCrumbMenu` (IN nodeId INT, IN userId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_breadCrumbMenu`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_breadCrumbMenu` (IN nodeId INT, IN userId INT)
 BEGIN
 SELECT n.id , n.url FROM User_ACLGroup ua
 JOIN Navigation_ACLGroup na ON ua.aclGroupId = na.aclGroupId
@@ -165,11 +180,18 @@ ORDER BY n.l ASC;
 END
 $$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure navigation_rootMenu
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_rootMenu`;
-CREATE PROCEDURE `navigation_rootMenu` (IN userId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_rootMenu`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_rootMenu` (IN userId INT)
 BEGIN
 SELECT DISTINCT n.id, n.url FROM User_ACLGroup ua
 JOIN Navigation_ACLGroup na ON ua.aclGroupId = na.aclGroupId
@@ -178,11 +200,18 @@ WHERE ua.userId = userId
 ORDER BY n.l;
 END$$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure navigation_contextMenu
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_contextMenu`;
-CREATE PROCEDURE `navigation_contextMenu` (IN contextId INT, IN userId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_contextMenu`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_contextMenu` (IN contextId INT, IN userId INT)
 BEGIN
 SELECT DISTINCT n.id, n.url FROM User_ACLGroup ua
 JOIN Navigation_ACLGroup na ON ua.aclGroupId = na.aclGroupId
@@ -191,11 +220,18 @@ WHERE ua.userId = userId
 ORDER BY n.l;
 END$$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure navigation_disable
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_disable`;
-CREATE PROCEDURE `navigation_disable` (IN nodeId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_disable`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_disable` (IN nodeId INT)
 BEGIN
 DECLARE l, r, i INT DEFAULT 0;
 DECLARE node CURSOR FOR SELECT n.l, n.r FROM Navigation n WHERE n.id = nodeId;
@@ -211,11 +247,18 @@ IF l != 0 THEN
 END IF;
 END$$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure navigation_enable
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_enable`;
-CREATE PROCEDURE `navigation_enable` (IN nodeId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_enable`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_enable` (IN nodeId INT)
 BEGIN
 DECLARE l, r, i INT DEFAULT 0;
 DECLARE node CURSOR FOR SELECT n.l, n.r FROM Navigation n WHERE n.id = nodeId;
@@ -231,11 +274,18 @@ IF l != 0 THEN
 END IF;
 END$$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure navigation_dynamicParams
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `navigation_dynamicParams`;
-CREATE PROCEDURE `navigation_dynamicParams` (IN nodeId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`navigation_dynamicParams`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`navigation_dynamicParams` (IN nodeId INT)
 BEGIN
 SELECT n.abstract AS abstract FROM Navigation n1
 JOIN Navigation n ON n.l <= n1.l AND n.r >= n1.r
@@ -243,11 +293,18 @@ WHERE n1.id = nodeId AND n.parentId IS NOT NULL
 ORDER BY n.l DESC;
 END$$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure fetchConfiguration
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `fetchConfiguration`;
-CREATE PROCEDURE `fetchConfiguration` (IN nodeId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`fetchConfiguration`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`fetchConfiguration` (IN nodeId INT)
 BEGIN
 IF nodeId = -1 THEN
 (SELECT 1 AS resultSet, n.id, n.url,n.final, n.`abstract`, n.plugins FROM Navigation n
@@ -268,17 +325,26 @@ ORDER BY n.l DESC);
 END IF;
 END$$
 
+DELIMITER ;
+
 -- -----------------------------------------------------
 -- procedure user_fetchAclRules
 -- -----------------------------------------------------
-DROP procedure IF EXISTS `user_fetchAclRules`;
-CREATE PROCEDURE `user_fetchAclRules` (IN userId INT)
+
+USE `azfcms`;
+DROP procedure IF EXISTS `azfcms`.`user_fetchAclRules`;
+
+DELIMITER $$
+USE `azfcms`$$
+CREATE PROCEDURE `azfcms`.`user_fetchAclRules` (IN userId INT)
 BEGIN
  SELECT DISTINCT a.id, a.resource, a.privilege FROM User u
 JOIN User_ACLGroup ua ON ua.userId = u.id
 JOIN ACLGroup a ON ua.aclGroupId = a.id
 WHERE u.id = userId;
 END$$
+
+DELIMITER ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

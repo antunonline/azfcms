@@ -10,7 +10,7 @@
  *
  * @author antun
  */
-class Application_Model_DbTable_Plugin extends Zend_Db_Table_Abstract{
+class Azf_Model_DbTable_NavigationPlugin extends Zend_Db_Table_Abstract{
     protected $_name = "NavigationPlugin";
     protected $_primary = "id";
     

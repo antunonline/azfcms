@@ -1,5 +1,5 @@
 CREATE  TABLE IF NOT EXISTS `azfcms`.`Navigation` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `id` INT NOT NULL AUTO_INCREMENT ,
   `parentId` INT UNSIGNED NULL ,
   `tid` INT UNSIGNED NOT NULL ,
   `l` INT UNSIGNED NULL ,
@@ -9,6 +9,7 @@ CREATE  TABLE IF NOT EXISTS `azfcms`.`Navigation` (
   `final` MEDIUMTEXT NOT NULL ,
   `plugins` MEDIUMTEXT NOT NULL ,
   `abstract` MEDIUMTEXT NOT NULL ,
-  `home` TINYINT NOT NULL DEFAULT 0 ,
+  `home` TINYINT(1) NOT NULL DEFAULT false ,
+  `title` VARCHAR(45) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB

@@ -59,19 +59,19 @@ class Azf_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_Database
     
     public function testFindAllByNavigationAndRegion(){
         $actual = $this->getModel()->findAllByNavigationAndRegion(1, "left");
-        // id, navigationId , pluginId, weight, displayName, displayDescription, `type`, 0 as disabled
+        // id, navigationId , pluginId, weight, name, description, `type`, 0 as disabled
         $expected = array(
             array('id'=>"3", 'navigationId'=>"1", 'pluginId'=>"3",'weight'=>"90",
-                'displayName'=>'On3','displayDescription'=>'Desc One',
+                'name'=>'On3','description'=>'Desc One',
                 'type'=>'type3','disabled'=>"0"),
             array('id'=>"1", 'navigationId'=>"1", 'pluginId'=>"1",'weight'=>"100",
-                'displayName'=>'On1','displayDescription'=>'Desc One',
+                'name'=>'On1','description'=>'Desc One',
                 'type'=>'type1','disabled'=>"0"),
             array('id'=>"2", 'navigationId'=>"1", 'pluginId'=>"2",'weight'=>"110",
-                'displayName'=>'On2','displayDescription'=>'Desc One',
+                'name'=>'On2','description'=>'Desc One',
                 'type'=>'type2','disabled'=>"0"),
             array('id'=>null, 'navigationId'=>null, 'pluginId'=>"4",'weight'=>"0",
-                'displayName'=>'On4','displayDescription'=>'Desc One',
+                'name'=>'On4','description'=>'Desc One',
                 'type'=>'type4','disabled'=>"1"),
         );
         
@@ -81,13 +81,13 @@ class Azf_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_Database
     
     public function testFindAllByNavigation1AndRegionRightRegion(){
         $actual = $this->getModel()->findAllByNavigationAndRegion(1, "right");
-        // id, navigationId , pluginId, weight, displayName, displayDescription, `type`, 0 as disabled
+        // id, navigationId , pluginId, weight, name, description, `type`, 0 as disabled
         $expected = array(
             array('id'=>null, 'navigationId'=>null, 'pluginId'=>"5",'weight'=>"0",
-                'displayName'=>'On5','displayDescription'=>'Desc One',
+                'name'=>'On5','description'=>'Desc One',
                 'type'=>'type5','disabled'=>"1"),
             array('id'=>null, 'navigationId'=>null, 'pluginId'=>"6",'weight'=>"0",
-                'displayName'=>'On6','displayDescription'=>'Desc One',
+                'name'=>'On6','description'=>'Desc One',
                 'type'=>'type6','disabled'=>"1")
         );
         

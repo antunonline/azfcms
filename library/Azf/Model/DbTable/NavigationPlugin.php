@@ -52,12 +52,12 @@ class Azf_Model_DbTable_NavigationPlugin extends Zend_Db_Table_Abstract{
      * @return array()
      */
     public function findAllByNavigationAndRegion($navigationId, $regionId){
-        $SQL = "(SELECT np.id, np.navigationId , np.pluginId, np.weight, p.displayName, p.displayDescription, p.`type`, 0 as disabled  FROM Navigation n
+        $SQL = "(SELECT np.id, np.navigationId , np.pluginId, np.weight, p.name, p.description, p.`type`, 0 as disabled  FROM Navigation n
 left JOIN NavigationPlugin np ON n.id = np.navigationId
 left JOIN Plugin p ON np.pluginId=p.id
 WHERE n.id=? AND p.region=?) 
 UNION  (
-SELECT null as id, null as navigationId, p.id as pluginId, 0 as weight, p.displayName, p.displayDescription, p.`type`, 1 as disabled FROM Plugin p
+SELECT null as id, null as navigationId, p.id as pluginId, 0 as weight, p.name, p.description, p.`type`, 1 as disabled FROM Plugin p
 WHERE p.region=? AND p.id NOT IN (SELECT np.pluginId FROM Navigation n
 left JOIN NavigationPlugin np ON n.id = np.navigationId
 left JOIN Plugin p ON np.pluginId=p.id

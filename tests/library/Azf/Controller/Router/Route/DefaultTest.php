@@ -27,7 +27,7 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
      * @return PHPUnit_Framework_MockObject_MockObject
      */
     public function getNavigationMock(array $methods) {
-        return $this->getMock("Azf_Model_Tree_Navigation", $methods+array("__construct"));
+        return $this->getMock("Azf_Model_Tree_Navigation", array_merge(array("__construct"),$methods));
     }
 
     /**
@@ -171,6 +171,8 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
        $mock->expects($this->once())
                ->method("getStaticParams")
                ->will($this->returnValue(array()));
+       $mock->expects($this->exactly(0))
+               ->method("match");
        $route = $this->getRouteInstance($mock);
        $route->match("/SEO+KEYWORD/1.html?arg1=value1");
        
@@ -188,6 +190,8 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
        $mock->expects($this->once())
                ->method("getStaticParams")
                ->will($this->returnValue(array()));
+       $mock->expects($this->exactly(0))
+               ->method("match");
        $route = $this->getRouteInstance($mock);
        $route->match("/SEO+KEYWORD/1.html");
        

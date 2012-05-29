@@ -28,16 +28,10 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
      */
     protected $navigation;
 
-    public static function setUpTable() {
-        if (!Azf_PHPUnit_Db_Utils::tableExist("Navigation")) {
-            Azf_PHPUnit_Db_Utils::createTable("Navigation");
-        }
-    }
 
     public static function setUpBeforeClass() {
         Azf_PHPUnit_Db_ConnectionFactory::initDefaultDbTableAdapter();
         parent::setUpBeforeClass();
-        self::setUpTable();
     }
 
     public function truncateTable() {

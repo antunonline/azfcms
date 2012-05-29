@@ -13,12 +13,27 @@ and open the template in the editor.
     </target>
     
     <target name="clean" >
-        <delete     dir="${output}/CodeCoverage" />
+        <delete     dir="${output}" />
     </target>
 
-    <target name="phpunit" >
+    <target name="phpunit" depends="initSchema">
         <exec executable="phpunit" dir="${basedir}/tests" failonerror="true">
             <arg line="--coverage-clover ${output}/CodeCoverage/clover.xml --coverage-html ${output}/CodeCoverage/ ." />
+        </exec>
+    </target>
+    
+    <target name="initSchema">
+        <exec executable="mysql">
+            <arg line="-uazfcms -pazfcms " />
+            <redirector inputstring="drop database azfcms" />
+        </exec>
+        <exec executable="mysql">
+            <arg line="-uazfcms -pazfcms " />
+            <redirector inputstring="CREATE database azfcms" />
+        </exec>
+        <exec executable="mysql" >
+            <arg line="-uazfcms -pazfcms azfcms " />
+            <redirector input="docs/SQL/EMPTY_SCHEMA.sql" />
         </exec>
     </target>
 </project>

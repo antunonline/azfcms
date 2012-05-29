@@ -138,7 +138,7 @@ class Azf_Template_Descriptor {
             throw new RuntimeException("constant Application_Path is not defined");
         }
 
-        $this->setTemplateDirectoryPath(realpath(APPLICATION_PATH . "/configs/descriptor/template"));
+        $this->setTemplateDirectoryPath(APPLICATION_PATH . "/configs/descriptor/template");
     }
 
     /**

@@ -161,7 +161,7 @@ class Azf_Template_Descriptor {
 
         foreach ($iterator as $item) {
             /* @var $item DirectoryIterator */
-            if (strtolower($item->getExtension()) == "xml" && $item->isReadable()) {
+            if (strtolower(substr($item->getFilename(), strrpos($item->getFilename(), ".")+1)) == "xml" && $item->isReadable()) {
                 $potentialTemplateFilePath[] = $item->getPath() . DIRECTORY_SEPARATOR . $item->getFilename();
             }
         }

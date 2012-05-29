@@ -21,6 +21,11 @@ and open the template in the editor.
             <arg line="--coverage-clover ${output}/CodeCoverage/clover.xml --coverage-html ${output}/CodeCoverage/ ." />
         </exec>
     </target>
+
+    <target name="rawphpunit" depends="initSchema">
+        <exec executable="phpunit" dir="${basedir}/tests" failonerror="true">
+        </exec>
+    </target>
     
     <target name="initSchema">
         <exec executable="mysql">

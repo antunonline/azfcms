@@ -167,11 +167,11 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
     *@test 
     */
    public function testMatch_assembleWithMatchedValues(){
-       $mock = $this->getNavigationMock(array('getStaticParams'));
+       $mock = $this->getNavigationMock(array('getStaticParams','match'));
        $mock->expects($this->once())
                ->method("getStaticParams")
                ->will($this->returnValue(array()));
-       $mock->expects($this->exactly(0))
+       $mock->expects($this->exactly(1))
                ->method("match");
        $route = $this->getRouteInstance($mock);
        $route->match("/SEO+KEYWORD/1.html?arg1=value1");
@@ -186,11 +186,11 @@ class Azf_Controller_Router_Route_DefaultTest extends PHPUnit_Framework_TestCase
     *@test 
     */
    public function testMatch_assembleWithoutMatchedValues(){
-       $mock = $this->getNavigationMock(array('getStaticParams'));
+       $mock = $this->getNavigationMock(array('getStaticParams','match'));
        $mock->expects($this->once())
                ->method("getStaticParams")
                ->will($this->returnValue(array()));
-       $mock->expects($this->exactly(0))
+       $mock->expects($this->exactly(1))
                ->method("match");
        $route = $this->getRouteInstance($mock);
        $route->match("/SEO+KEYWORD/1.html");

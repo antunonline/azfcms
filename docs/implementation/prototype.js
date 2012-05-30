@@ -20,7 +20,7 @@ azfcms.model.cms.addExtensionPlugin(function(name,description,type,region,weight
                 return Azf_Plugin_Extension_Manager._constructPlugin(function(type, pluginParams){
                     var className = Azf_Plugin_Extension_Manager.getClassName(type);
                     return new className(function(pluginParams){
-                        return Azf_Plugin_Extension_Abstract.__construct(function(pluginParams){
+                        return Azf_Plugin_Extension_Abstract.__construct(function(pluginParams/*optional*/){
                             Azf_Plugin_Extension_Abstract.setParams(pluginParams);
                         })
                     })
@@ -63,7 +63,7 @@ azfcms.model.cms.removeExtensionPlugin(function(pluginId){
 
 
 azfcms.model.cms.getTemplateRegionsStore(function(navigationId){
-    return Application_Resolver_Template.getTemplateRegions(function(){
+    return Application_Resolver_Template.getTemplateRegionsMethod(function(){
         var templateIdentifier = Azf_Model_Tree_Navigation.getDynamicParam(navigationId, 'templateIdentifier');
         return Azf_Template_Descriptor.getRegions(function(templateIdentifier){
             return this.getTemplate(templateIdentifier)['regions'];
@@ -292,7 +292,7 @@ Azf_Controller_Action_Helper_ExtendedPlugin.postDispatch(function(){
     // Load navigationId
     var navigationId = Zend_Controller_Request_Http.getParam("id");
     // Produce rendered responses
-    var responses = Azf_Plugin_Extension_Manager.render(function(navigationId, Zend_Controller_Response_Http){
+    var responses = Azf_Plugin_Extension_Manager.render(function(navigationId){
         var plugins = Azf_Plugin_Extension_Manager.getPluginDefinitions(function(navigationId){
             return Azf_Model_DbTable_Plugin.findAllByNavigationId(function(navigationId){
                 var rows = Zend_Db_Adapter_Abstract.fetchAll("");

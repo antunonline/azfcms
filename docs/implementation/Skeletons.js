@@ -23,9 +23,6 @@ Azf_Controller_Action_Helper_ExtendedPlugin = {
     postDispatch: function(){}
 }
 
-Azf_Plugin_Extension_Manager = {
-    
-}
 
 Template = {
     name:"",
@@ -69,7 +66,7 @@ Application_Plugin_Extension_Abstract = {
 Azf_Plugin_Extension_Manager = {
     setUp:function(type,pluginId){},
     tearDown:function(type,pluginId){},
-    render:function(navigationId,response){},
+    render:function(navigationId){},
     _getPluginInstance: function(type, pluginId, pluginParams/*optional*/){},
     getPluginParams: function(pluginId){},
     getPluginDefinitions: function(navigationId){},
@@ -88,7 +85,7 @@ Azf_Plugin_Extension_Abstract = {
 
 
 Application_Resolver_Template = {
-    getTemplateRegions: function(){}
+    getTemplateRegionsMethod: function(){}
     
 }
 

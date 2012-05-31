@@ -1,5 +1,5 @@
-azfcms.model.cms.addExtensionPlugin(function(name,description,type,region,weight,enable){
-    Application_Resolver_ExtensionPlugin.addExtensionPlugin(function(){
+azfcms.model.cms.addExtensionPlugin(function(navigationId, name,description,type,region,weight,enable){
+    Application_Resolver_ExtensionPlugin.addExtensionPluginMethod(function(){
         var pluginId = Azf_Model_DbTable_Plugin.insertPlugin(function(name,description,type,region,params){});
         
         var Azf_Plugin_Extension_Abstract = 
@@ -40,7 +40,7 @@ azfcms.model.cms.addExtensionPlugin(function(name,description,type,region,weight
 
 
 azfcms.model.cms.removeExtensionPlugin(function(pluginId){
-    Application_Resolver_ExtensionPlugin.removeExtensionPlugin(function(pluginId){
+    Application_Resolver_ExtensionPlugin.removeExtensionPluginMethod(function(pluginId){
         // Load plugin type
         var type = Azf_Model_DbTable_Plugin.find(pluginId)['type'];
         
@@ -128,14 +128,14 @@ Azf_Template_Descriptor.getTemplate(function(templateIdentifier){
 
 
 azfcms.model.cms.getRegionPluginsStore(function(nodeId, region){
-    return getRegionExtendedPluginsStore.getRegionExtendedPluginsStore(function(nodeId, region){
+    return Application_Resolver_ExtensionPlugin.getRegionExtensionPluginsMethod(function(nodeId, region){
         return Azf_Model_DbTable_NavigationPlugin.findAllByNavigationAndRegion(nodeId,region);
     });
 })
 
 
 azfcms.model.cms.enableExtensionPlugin(function(nodeId, pluginId,weight){
-    return Application_Resolver_ExtensionPlugin.enableExtensionPlugin(function(nodeId, pluginId, weight){
+    return Application_Resolver_ExtensionPlugin.enableExtensionPluginMethod(function(nodeId, pluginId, weight){
         return Azf_Model_DbTable_NavigationPlugin.bind(nodeId, pluginId, weight);
     })
 
@@ -143,7 +143,7 @@ azfcms.model.cms.enableExtensionPlugin(function(nodeId, pluginId,weight){
 
 
 azfcms.model.cms.disableExtensionPlugin(function(nodeId,pluginId){
-    return Application_Resolver_ExtensionPlugin.disableExtensinPlugin(function(nodeId,pluginId){
+    return Application_Resolver_ExtensionPlugin.disableExtensionPluginMethod(function(nodeId,pluginId){
         Azf_Model_DbTable_NavigationPlugin.unbind(nodeId,pluginId);
         return true;
         
@@ -151,7 +151,7 @@ azfcms.model.cms.disableExtensionPlugin(function(nodeId,pluginId){
 })
 
 azfcms.model.cms.setExtensionPluginValues(function(navigationId, pluginId, name,description,region,weight,enable){
-    return Application_Resolver_ExtensionPlugin.setExtensionPluginValues(function(navigationId, pluginId, name,description,region,weight,enable){
+    return Application_Resolver_ExtensionPlugin.setExtensionPluginValuesMethod(function(navigationId, pluginId, name,description,region,weight,enable){
         if(enabled==false){
             Azf_Model_DbTable_NavigationPlugin.unbind(navigationId, pluginId);
         } else {
@@ -167,128 +167,135 @@ azfcms.model.getExtensionPluginStore(function(){
 })
 
 
-azfcms.view.ExtendedEditorPane.constructor(function(args){
+azfcms.controller.ExtensionEditorController.constructor(function(args){
+    this.navigationId = args.navigationId;
+    
+})
+
+azfcms.view.ExtensionEditorPane.constructor(function(args){
     args = {
         regionStore: azfcms.model.cms.getTemplateRegionsStore(navigationId),
         gridStore: azfcms.model.cms.getRegionPluginsStore(nodeId, region),
         typeStore: azfcms.model.cms.getExtensionPluginStore()
     }
-    azfcms.view.ExtendedEditorPane.regionStore = args.regionStore;
-    azfcms.view.ExtendedEditorPane.typeStore = args.typeStore;
-    azfcms.view.ExtendedEditorPane.gridStore = args.pluginsStore;
+    azfcms.view.ExtensionEditorPane.regionStore = args.regionStore;
+    azfcms.view.ExtensionEditorPane.typeStore = args.typeStore;
+    azfcms.view.ExtensionEditorPane.gridStore = args.pluginsStore;
 });
 
-azfcms.view.ExtendedEditorPane.postCreate(function(args){
-    azfcms.view.ExtendedEditorPane.pluginGrid.set("store",azfcms.view.ExtendedEditorPane.gridStore);
-    azfcms.view.ExtendedEditorPane.typeSelect.set("store",azfcms.view.ExtendedEditorPane.typeStore);
-    azfcms.view.ExtendedEditorPane.regionSelect.set("store",azfcms.view.ExtendedEditorPane.regionStore);
+azfcms.view.ExtensionEditorPane.postCreate(function(args){
+    azfcms.view.ExtensionEditorPane.pluginGrid.set("store",azfcms.view.ExtensionEditorPane.gridStore);
+    azfcms.view.ExtensionEditorPane.typeSelect.set("store",azfcms.view.ExtensionEditorPane.typeStore);
+    azfcms.view.ExtensionEditorPane.regionSelect.set("store",azfcms.view.ExtensionEditorPane.regionStore);
    
 })
 
-azfcms.view.ExtendedEditorPane.onNew(function(name,description,type,region,weight,enable){
+azfcms.view.ExtensionEditorPane.onNew(function(name,description,type,region,weight,enable){
     if(region==false || type == false)return;
-    azfcms.controller.ExtendedEditController.onNew(function(){
-        azfcms.view.ExtendedEditorPane.disable();
-        azfcms.model.cms.addExtensionPlugin(name, description, type, region, weight, enable)(function(){
+    azfcms.controller.ExtensionEditorController.onNew(function(){
+        azfcms.view.ExtensionEditorPane.disable();
+        var navigationId = azfcms.controller.ExtensionEditorController.navigationId;
+        azfcms.model.cms.addExtensionPlugin(navigationId, description, type, region, weight, enable)(
+        function(){
             
-            azfcms.view.ExtendedEditorPane.reloadGrid(function(){
-                azfcms.view.ExtendedEditorPane.pluginGrid.set("store",azfcms.view.ExtendedEditorPane.gridStore)
+            azfcms.view.ExtensionEditorPane.reloadGrid(function(){
+                azfcms.view.ExtensionEditorPane.pluginGrid.set("store",azfcms.view.ExtensionEditorPane.gridStore)
             });
-            azfcms.view.ExtendedEditorPane.enable();
+            azfcms.view.ExtensionEditorPane.enable();
         })
     })
 });
 
 
-azfcms.view.ExtendedEditorPane.onSave(function(navigationId, pluginId, name,description,region,weight,enable){
-    azfcms.controller.ExtendedEditController.onSave(function(pluginId, name,description,region,weight,enable){
-        azfcms.view.ExtendedEditorPane.disable();
+azfcms.view.ExtensionEditorPane.onSave(function(navigationId, pluginId, name,description,region,weight,enable){
+    azfcms.controller.ExtensionEditorController.onSave(function(pluginId, name,description,region,weight,enable){
+        azfcms.view.ExtensionEditorPane.disable();
         azfcms.model.cms.setExtensionPluginValues(navigationId, pluginId, name,description,region,weight,enable)(function(){
-            azfcms.view.ExtendedEditorPane.enable();
+            azfcms.view.ExtensionEditorPane.enable();
         })(function(){
-            azfcms.view.ExtendedEditorPane.reloadGrid();
-            azfcms.view.ExtendedEditorPane.enable();
+            azfcms.view.ExtensionEditorPane.reloadGrid();
+            azfcms.view.ExtensionEditorPane.enable();
         })
     })
 });
 
-azfcms.view.ExtendedEditorPane.onDelete(function(pluginId){
-    azfcms.controller.ExtendedEditController.onDelete(function(pluginId){
-        azfcms.view.ExtendedEditorPane.disable();
+azfcms.view.ExtensionEditorPane.onDelete(function(pluginId){
+    azfcms.controller.ExtensionEditorController.onDelete(function(pluginId){
+        azfcms.view.ExtensionEditorPane.disable();
         azfcms.model.cms.removeExtensionPlugin(pluginId)(function(){
-            azfcms.view.ExtendedEditorPane.reloadGrid();
-            azfcms.view.ExtendedEditorPane.enable();
+            azfcms.view.ExtensionEditorPane.reloadGrid();
+            azfcms.view.ExtensionEditorPane.enable();
         })
     })
 });
 
 
-azfcms.view.ExtendedEditorPane.onDisable(function(){
-    azfcms.controller.ExtendedEditController.onDisable(function(navigationId, pluginId){
-        azfcms.view.ExtendedEditorPane.disable();
+azfcms.view.ExtensionEditorPane.onDisable(function(){
+    azfcms.controller.ExtensionEditorController.onDisable(function(navigationId, pluginId){
+        azfcms.view.ExtensionEditorPane.disable();
         azfcms.model.cms.disableExtensionPlugin(navigationId, pluginId)(function(){
-            azfcms.view.ExtendedEditorPane.reloadGrid();
-            azfcms.view.ExtendedEditorPane.enable();
+            azfcms.view.ExtensionEditorPane.reloadGrid();
+            azfcms.view.ExtensionEditorPane.enable();
         })
     })
 })
 
-azfcms.view.ExtendedEditorPane.onEnable(function(navigationId, pluginId, weight){
-    azfcms.controller.ExtendedEditController.onEnable(function(navigationId, pluginId, weight){
-        azfcms.view.ExtendedEditorPane.disable();
+azfcms.view.ExtensionEditorPane.onEnable(function(navigationId, pluginId, weight){
+    azfcms.controller.ExtensionEditorController.onEnable(function(navigationId, pluginId, weight){
+        azfcms.view.ExtensionEditorPane.disable();
         azfcms.model.cms.enableExtensionPlugin(navigationId, pluginId, weight)(function(){
-            azfcms.view.ExtendedEditorPane.enable();
+            azfcms.view.ExtensionEditorPane.enable();
         })
     })
 })
 
 
 
-azfcms.view.ExtendedEditorPane.onExtendedEdit(function(pluginId,type){
-    azfcms.controller.ExtendedEditController.onExtendedEdit(function(){
-        var modules = azfcms.controller.ExtendedEditController._buildRequire(type);
-        require(modules,function(AbstractExtendedController, AbstractExtendedPane){
-            var pane = azfcms.controller.ExtendedEditController._buildEditorPane(function(AbstractExtendedPane){
-                var pane  = new azfcms.view.AbstractExtendedPane._constructor();
-                azfcms.view.ExtendedEditorPane.addChild(function(pane){
-                    azfcms.view.ExtendedEditorPane.tabContainer.addChild(pane)
+azfcms.view.ExtensionEditorPane.onExtensionEdit(function(pluginId,type){
+    azfcms.controller.ExtensionEditorController.onExtensionEdit(function(){
+        var modules = azfcms.controller.ExtensionEditorController._buildRequire(type);
+        require(modules,function(AbstractExtensionController, AbstractExtensionPane){
+            var pane = azfcms.controller.ExtensionEditorController._buildEditorPane(function(AbstractExtensionPane){
+                var pane  = new azfcms.view.AbstractExtensionPane._constructor();
+                azfcms.view.ExtensionEditorPane.addChild(function(pane){
+                    azfcms.view.ExtensionEditorPane.tabContainer.addChild(pane)
                 });
                 return pane;
             });
             
-            var controller = azfcms.controller.ExtendedEditController._buildController(function(pluginId, extendedEditorPane){
-                var controller = new azfcms.controller.AbstractExtendedController();
-                azfcms.controller.AbstractExtendedController.initializeDependencies(function(pluginId, pane){
-                    azfcms.controller.AbstractExtendedController.pluginId = pluginId;
-                    azfcms.controller.AbstractExtendedController.editorPane = pane;
-                    azfcms.controller.AbstractExtendedController.init();
+            var controller = azfcms.controller.ExtensionEditorController._buildController(function(pluginId, ExtensionEditorPane){
+                var controller = new azfcms.controller.AbstractExtensionController();
+                azfcms.controller.AbstractExtensionController.initializeDependencies(function(pluginId, pane){
+                    azfcms.controller.AbstractExtensionController.pluginId = pluginId;
+                    azfcms.controller.AbstractExtensionController.editorPane = pane;
+                    azfcms.controller.AbstractExtensionController.init();
                 })
             });
         })
     })
 });
 
-azfcms.view.ExtendedEditorPane.onItemSelect(function(item){
-    azfcms.controller.ExtendedEditController.onItemSelect(function(item){
-        azfcms.view.ExtendedEditorPane.disable();
-        azfcms.controller.ExtendedEditController.pluginItem = plugin;
+azfcms.view.ExtensionEditorPane.onItemSelect(function(item){
+    azfcms.controller.ExtensionEditorController.onItemSelect(function(item){
+        azfcms.view.ExtensionEditorPane.disable();
+        azfcms.controller.ExtensionEditorController.pluginItem = plugin;
         var form = "form";
-        azfcms.view.ExtendedEditorPane.set(function(form,plugin){
-            azfcms.view.ExtendedEditorPane._setFormAttr(function(plugin){
-                azfcms.view.ExtendedEditorPane.nameText.set("value",plugin.name);
-                azfcms.view.ExtendedEditorPane.descriptionText.set("value",plugin.description);
-                azfcms.view.ExtendedEditorPane.typeSelect.set("value",plugin.type);
-                azfcms.view.ExtendedEditorPane.weightText.set("value",plugin.weight);
-                azfcms.view.ExtendedEditorPane.disabledRadio.set("value",plugin.disabledRadio);
+        azfcms.view.ExtensionEditorPane.set(function(form,plugin){
+            azfcms.view.ExtensionEditorPane._setFormAttr(function(plugin){
+                azfcms.view.ExtensionEditorPane.nameText.set("value",plugin.name);
+                azfcms.view.ExtensionEditorPane.descriptionText.set("value",plugin.description);
+                azfcms.view.ExtensionEditorPane.typeSelect.set("value",plugin.type);
+                azfcms.view.ExtensionEditorPane.weightText.set("value",plugin.weight);
+                azfcms.view.ExtensionEditorPane.disabledRadio.set("value",plugin.disabledRadio);
             })
         });
-        azfcms.view.ExtendedEditorPane.enable();
-        azfcms.view.ExtendedEditorPane.typeSelect.set("disabled",true);
+        azfcms.view.ExtensionEditorPane.enable();
+        azfcms.view.ExtensionEditorPane.typeSelect.set("disabled",true);
     })
 })
 
 
-Azf_Controller_Action_Helper_ExtendedPlugin.postDispatch(function(){
+Azf_Controller_Action_Helper_ExtensionPlugin.postDispatch(function(){
     // Load navigationId
     var navigationId = Zend_Controller_Request_Http.getParam("id");
     // Produce rendered responses

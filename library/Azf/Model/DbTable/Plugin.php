@@ -19,7 +19,7 @@ class Azf_Model_DbTable_Plugin extends Zend_Db_Table_Abstract {
      * @param array $params
      * @return int Description
      */
-    public function insertPlugin($name, $description, $type, $region, array $params) {
+    public function insertPlugin($name, $description, $type, $region, array $params=array()) {
         $serializedParams = $this->_encode($params);
 
         return $this->insert(array(

@@ -90,11 +90,11 @@ Application_Resolver_Template = {
 }
 
 Application_Resolver_ExtensionPlugin = {
-    addExtensionPlugin: function(name,description,type,region,weight,enable){},
-    removeExtensionPlugin: function(type,pluginId){},
-    enableExtensionPlugin:function(nodeId, pluginId, weight){},
-    disableExtensinPlugin:function(nodeId,pluginId){},
-    getRegionExtendedPluginsStore: function(nodeId, region){}
+    addExtensionPluginMethod: function(navigationId,name,description,type,region,weight,enable){},
+    removeExtensionPluginMethod: function(type,pluginId){},
+    enableExtensionPluginMethod:function(nodeId, pluginId, weight){},
+    disableExtensinPluginMethod:function(nodeId,pluginId){},
+    getRegionExtensionPluginsMethod: function(nodeId, region){}
 }
 
 Application_Resolver_PluginDescriptor = {
@@ -108,7 +108,7 @@ var azfcms = {
 }
 
 
-azfcms.controller.ExtendedEditController = {
+azfcms.controller.ExtendedEditorController = {
     /**
      * @property {azfcms.view.ExtendedEditorPane}
      */
@@ -118,6 +118,11 @@ azfcms.controller.ExtendedEditController = {
      */
     model: azfcms.model.cms,
     pluginItem:null,
+    
+    /**
+     * @property {Number}
+     */
+    navigationId:null,
     
     _buildRequire: function(type){},
     _buildController: function(pluginId, extendedEditorPane){},
@@ -176,6 +181,7 @@ azfcms.view.AbstractExtendedPane = {
 
 
 azfcms.model.cms = {
+    addExtensionPlugin: function(navigationId, name,description,type,region,weight,enable){},
     getRegionPluginsStore:function(nodeId, region){},
     getTemplateRegionsStore:function(navigationId){},
     getExtensionPluginStore: function(){},

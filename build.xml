@@ -41,4 +41,11 @@ and open the template in the editor.
             <redirector input="docs/SQL/EMPTY_SCHEMA.sql" />
         </exec>
     </target>
+    
+    <target name="selenium">
+        
+        <exec executable="phpunit" dir="${basedir}/tests" >
+            <arg line="Selenium.php" />
+        </exec>
+    </target>
 </project>

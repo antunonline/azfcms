@@ -1,0 +1,40 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script>
+            require(
+            ['azfcms/view/ExtendedEditorPane','dojo/domReady!',
+                'dijit','doh','dojo/i18n!azfcms/resources/nls/view'],function
+            (ExtendedEditorPane,ready,
+            dijit,doh, nls){
+                //              
+                
+                doh.register('ExtendedEditorPane',[
+                    {
+                        name:"Test True",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                
+                            });
+                            eep.placeAt(document.body);
+                            doh.t(true);
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

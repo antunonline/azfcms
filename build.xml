@@ -44,7 +44,7 @@ and open the template in the editor.
     
     <target name="selenium">
         
-        <exec executable="phpunit" dir="${basedir}/tests" >
+        <exec executable="phpunit" dir="${basedir}/tests"  failonerror="true">
             <arg line="Selenium.php" />
         </exec>
     </target>

@@ -4,12 +4,12 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     
     public function setUp(){
         $this->setBrowser("firefox");
-        $this->setBrowserUrl("file://".__DIR__);
+        $this->setBrowserUrl("http://azfcms.poljana.vrw");
         
     }
     
     public function testDoh(){
-        $this->open("file://".__DIR__."/../public/js/lib/util/doh/runner.html?testModule=azfcms.tests.modules");
+        $this->open("http://azfcms.poljana.vrw/public/js/lib/util/doh/runner.html?testModule=azfcms.tests.modules");
         $this->waitForTextPresent("TEST SUMMARY:");
         
         

@@ -14,10 +14,6 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
         array(
             'name'=>'Newest Google Chrome',
             'browser'=>'*googlechrome'
-        ),
-        array(
-            'name'=>'Newest Opera',
-            'browser'=>'*opera'
         )
     );
     

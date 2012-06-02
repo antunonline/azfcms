@@ -6,11 +6,25 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     protected $screenshotPath = '/var/www/azfcms-screenshots/';
     protected $screenshotUrl = 'http://azfcms-screenshots.poljana.vrw';
     
+    public static $browsers = array(
+        array(
+            'name'=>"Newest Firefox",
+            'browser'=>'*firefox'
+        ),
+        array(
+            'name'=>'Newest Google Chrome',
+            'browser'=>'*googlechrome'
+        ),
+        array(
+            'name'=>'Newest Opera',
+            'browser'=>'*opera'
+        )
+    );
+    
     public function setUp(){
         $this->captureScreenshotOnFailure = true;
         $this->screenshotPath = getenv('screenshotLocalPath');
         $this->screenshotUrl = getenv('screenshotRemoteBasePath');
-        $this->setBrowser("firefox");
         $this->setBrowserUrl(getenv('apacheRemoteBasePath'));
         
     }

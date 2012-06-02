@@ -18,7 +18,6 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     );
     
     public function setUp(){
-        $this->captureScreenshotOnFailure = true;
         $this->screenshotPath = getenv('screenshotLocalPath');
         $this->screenshotUrl = getenv('screenshotRemoteBasePath');
         $this->setBrowserUrl(getenv('apacheRemoteBasePath'));

@@ -46,6 +46,10 @@ and open the template in the editor.
         
         <exec executable="phpunit" dir="${basedir}/tests"  failonerror="true">
             <arg line="Selenium.php" />
+            <env key="apacheLocalPath" value="${apacheLocalPath}" />
+            <env key="apacheRemoteBasePath" value="${apacheRemoteBasePath}" />
+            <env key="screenshotLocalPath" value="${screenshotLocalPath}" />
+            <env key="screenshotRemoteBasePath" value="${screenshotRemoteBasePath}" />
         </exec>
     </target>
 </project>

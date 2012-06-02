@@ -2,9 +2,6 @@
 
 class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     
-    protected $captureScreenshotOnFailure = false;
-    protected $screenshotPath = '/var/www/azfcms-screenshots/';
-    protected $screenshotUrl = 'http://azfcms-screenshots.poljana.vrw';
     
     public static $browsers = array(
         array(
@@ -13,13 +10,17 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
         ),
         array(
             'name'=>'Newest Google Chrome',
-            'browser'=>'*googlechrome'
+            'browser'=>'*googlechrome',
+            'host'=>'poljana.vrw'
+        ),
+        array(
+            'name'=>'Newest Opera ',
+            'browser'=>'*opera',
+            'host'=>'poljana.vrw'
         )
     );
     
     public function setUp(){
-        $this->screenshotPath = getenv('screenshotLocalPath');
-        $this->screenshotUrl = getenv('screenshotRemoteBasePath');
         $this->setBrowserUrl(getenv('apacheRemoteBasePath'));
         
     }
@@ -28,7 +29,6 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
         $this->open("public/js/lib/util/doh/runner.html?testModule=azfcms.tests.modules");
         $this->waitForTextPresent("TEST SUMMARY:");
         $log = $this->getText("id=logBody");
-        $this->takeScreenshot();
         $this->assertTextPresent("0 errors",$log);
         $this->assertTextPresent("0 failures",$log);
         echo $log;

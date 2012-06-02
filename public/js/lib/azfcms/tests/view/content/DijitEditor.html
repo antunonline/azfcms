@@ -20,34 +20,47 @@ and open the template in the editor.
                     {
                         name:"Test constructor",
                         runTest: function(){
+                            var a = new doh.Deferred();
                             var e = new DijitEditor({
                                 content:"HELLO WORLD"
                             });
-                            e.placeAt(document.body);
+                            e.placeAt(document.body)
                             // Is editor present in HTML?
-                            doh.t(e.editor.iframe.contentDocument.body.innerHTML.indexOf("HELLO WORLD")>1);
+                            window.setTimeout(function(){
+                                a.callback(e.get("content")=="HELLO WORLD");
+                            },500);
+                            
+                            return a;
                         }
                     },
                     
                     {
                         name:"Test .set('content')",
                         runTest: function(){
+                            var a = new doh.Deferred();
                             var e = new DijitEditor();
                             e.placeAt(document.body);
                             
                             e.set("content","THIS IS VERY COOL");
-                            doh.t(e.editor.iframe.contentDocument.body.innerHTML.indexOf("THIS IS VERY COOL")>0);
+                            window.setTimeout(function(){
+                            a.callback(e.get("content")=="THIS IS VERY COOL");
+                            },500);
+                            return a;
                         }
                     },
                     
                     {
                         name:"Test .get('content')",
                         runTest: function(){
+                            var a = new doh.Deferred();
                             var e = new DijitEditor();
                             e.placeAt(document.body);
                             
                             e.set("content","THIS IS VERY COOL");
-                            doh.is(e.get("content"),"THIS IS VERY COOL");
+                            window.setTimeout(function(){
+                            a.callback(e.get("content")=="THIS IS VERY COOL");
+                            },500);
+                            return a;
                         }
                     },
                     
@@ -63,7 +76,10 @@ and open the template in the editor.
                             aspect.before(e,"onSave",function(actual){
                                 a.callback(actual==expected,"Expected value is not provided");
                             })
-                            e.saveButton.onClick({});
+                            
+                            window.setTimeout(function(){
+                                e.saveButton.onClick({});
+                            }, 500);
                             
                             return a;
                         }

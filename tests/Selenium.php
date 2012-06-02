@@ -2,7 +2,7 @@
 
 class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     
-    protected $captureScreenshotOnFailure = TRUE;
+    protected $captureScreenshotOnFailure = false;
     protected $screenshotPath = '/var/www/azfcms-screenshots/';
     protected $screenshotUrl = 'http://azfcms-screenshots.poljana.vrw';
     

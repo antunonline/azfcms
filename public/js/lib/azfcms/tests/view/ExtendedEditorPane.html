@@ -1,7 +1,3 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,24 +5,88 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
-        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/soriaGrid.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+
+            }
+        </style>
         <script>
+            var o = {}
             require(
             ['azfcms/view/ExtendedEditorPane','dojo/domReady!',
-                'dijit','doh','dojo/i18n!azfcms/resources/nls/view'],function
+                'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
+                'dojo/store/Memory','dojo/dom'],function
             (ExtendedEditorPane,ready,
-            dijit,doh, nls){
+            dijit,doh, nls,
+            Memory,dom){
                 //              
+                var typeStore = new Memory({
+                    data:[
+                    {
+                        name:"type1",
+                        displayName:"Type One"
+                    },
+                    {
+                        name:"type2",
+                        displayName:"Type Two"
+                    },
+                ]
+                });
+                
+                var regionStore = new Memory({
+                    data:[
+                    {
+                        name:"Region 1",
+                        identifier:"region1"
+                    },
+                    {
+                        name:"Region 2",
+                        identifier:"region2"
+                    }
+                ]
+                });
+                var gridStore = new Memory({data:[
+                    {
+                        name:"Name",
+                        description:"Description",
+                        position:"110",
+                        enabled:"true"
+                    }
+                ]})
                 
                 doh.register('ExtendedEditorPane',[
                     {
-                        name:"Test True",
+                        name:"Test Constructor",
                         runTest: function(){
                             var eep = new ExtendedEditorPane({
-                                
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
                             });
-                            eep.placeAt(document.body);
+                            eep.placeAt("inputContainer");
+                            eep.resize();
                             doh.t(true);
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .disable method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            eep.disable();
+                            
+                            
+                            
+                            eep.destroy();
                         }
                     }
                 ]);
@@ -35,6 +95,8 @@ and open the template in the editor.
         </script>
     </head>
     <body class="soria">
-
+        <div style="width:100%;height:100%" id="inputContainer">
+            
+        </div>
     </body>
 </html>

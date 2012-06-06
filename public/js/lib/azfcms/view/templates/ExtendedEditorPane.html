@@ -3,24 +3,106 @@
          data-dojo-type="dijit.layout.TabContainer"
          data-dojo-attach-point="tabContainer">
         <div
-            data-dojo-type="dijit.layout.BorderContainer"
+            data-dojo-type="dijit.layout.ContentPane"
             data-dojo-props="title:'Props'">
-            
-            <div>
+
+            <div data-dojo-attach-point="regionSelectionNode" style="position:relative">
+                <div style="position: absolute;left:20px;top:5px;">
                 <span>Dio stranice:</span>
                 <select 
                     data-dojo-type="dijit.form.FilteringSelect" 
-                    data-dojo-attach-point="regionSelect" ></select>
+                    data-dojo-attach-point="regionSelect" 
+                    data-dojo-props="searchAttr:'name'"></select>
+                </div>
             </div>
 
-            <div data-dojo-type="dojox.grid.DataGrid"
-                 data-dojo-attach-point="pluginGrid">
-                
-            </div>
-            
-            <div 
-                data-dojo-type="dijit.layout.ContentPane">
-                
+            <table data-dojo-type="dojox.grid.DataGrid"
+                   style="height:200px"
+                   data-dojo-attach-point="pluginGrid">
+                <thead>
+                    <tr>
+                        <th width="200px;" field="name" >Naziv</th>
+                        <th width="200px;" field="description">Opis</th>
+                        <th width="200px;" field="enabled" >Iskljucen</th>
+                        <th width="200px;" field="position">Pozicija</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div
+                data-dojo-attach-point="formNode"
+                style="position: relative;width:100%;">
+                <div>&nbsp;</div>
+                <div style="position:absolute; left:20px;right:20px;padding:5px;"
+                     class="dijitColorPalette">
+                    <table style="width:100%;height:100px">
+                        <tbody>
+                            <tr>
+                                <td >Naziv:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.TextBox"
+                                           data-dojo-attach-point="nameText" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Opis:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.TextBox"
+                                           data-dojo-attach-point="descriptionText" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Vrsta:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.FilteringSelect"
+                                           data-dojo-attach-point="typeSelect"
+                                           data-dojo-props="searchAttr:'displayName'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Dio stranice:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.FilteringSelect"
+                                           data-dojo-attach-point="formRegionSelect" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pozicija:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.TextBox"
+                                           data-dojo-attach-point="weightText" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Isključen:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.CheckBox"
+                                           data-dojo-attach-point="disabledCheckBox" />
+                                </td>
+                            </tr>
+                            <tr >
+                                <td colspan="2">
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="saveButton"
+                                        data-dojo-attach-event="onClick:_onSave">Spremi</button>
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="customEditButton"
+                                        data-dojo-attach-event="onClick:_onExtendedEdit">Editiraj dodatne vrijednosti</button>
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="addButton"
+                                        data-dojo-attach-event="onClick:_onCreate">Dodaj plugin</button>
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="removeButton"
+                                        data-dojo-attach-event="onClick:_onDelete">Izbriši plugin</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>

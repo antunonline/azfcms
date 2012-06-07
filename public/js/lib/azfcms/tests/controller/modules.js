@@ -8,6 +8,7 @@ define([
         './navigation/modules',
         './content/modules'
     ])
+    doh.registerUrl("azfcms.tests.controller.ExtensionEditorController", require.toUrl('')+'/azfcms/tests/controller/ExtensionEditorController.html')
 });
 
 

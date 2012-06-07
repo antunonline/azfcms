@@ -18,13 +18,14 @@
 
             <table data-dojo-type="dojox.grid.DataGrid"
                    style="height:200px"
-                   data-dojo-attach-point="pluginGrid">
+                   data-dojo-attach-point="pluginGrid"
+                   data-dojo-props="selectionMode:'single'">
                 <thead>
                     <tr>
                         <th width="200px;" field="name" >Naziv</th>
                         <th width="200px;" field="description">Opis</th>
                         <th width="200px;" field="enabled" >Iskljucen</th>
-                        <th width="200px;" field="position">Pozicija</th>
+                        <th width="200px;" field="weight">Pozicija</th>
                     </tr>
                 </thead>
             </table>
@@ -78,6 +79,8 @@
                                 <td>
                                     <input data-dojo-type="dijit.form.CheckBox"
                                            data-dojo-attach-point="disabledCheckBox" />
+                                    <button data-dojo-type="dijit.form.Button"
+                                            data-dojo-attach-point="stateButton">Spremi</button>
                                 </td>
                             </tr>
                             <tr >

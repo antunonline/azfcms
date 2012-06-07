@@ -33,7 +33,8 @@
                             name:"type2",
                             displayName:"Type Two"
                         },
-                    ]
+                    ],
+                    idProperty:"name"
                 });
                 
                 var regionStore = new Memory({
@@ -46,14 +47,27 @@
                             name:"Region 2",
                             identifier:"region2"
                         }
-                    ]
+                    ],
+                    idProperty:"identifier"
                 });
                 var gridStore = new Memory({data:[
                         {
-                            name:"Name",
-                            description:"Description",
-                            position:"110",
-                            enabled:"true"
+                            id:1,
+                            name:"Name/1",
+                            description:"Description/1",
+                            weight:"110",
+                            type:'type1',
+                            region:'region1',
+                            enabled:true
+                        },
+                        {
+                            id:2,
+                            name:"Name/2",
+                            description:"Description/2",
+                            weight:"110",
+                            type:'type2',
+                            region:'region2',
+                            enabled:false
                         }
                     ]})
                 

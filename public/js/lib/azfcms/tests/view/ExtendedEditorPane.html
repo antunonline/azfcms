@@ -18,44 +18,58 @@
             require(
             ['azfcms/view/ExtendedEditorPane','dojo/domReady!',
                 'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
-                'dojo/store/Memory','dojo/dom'],function
+                'dojo/store/Memory','dojo/dom','dijit/layout/ContentPane'],function
             (ExtendedEditorPane,ready,
             dijit,doh, nls,
-            Memory,dom){
+            Memory,dom, ContentPane){
                 //              
                 var typeStore = new Memory({
                     data:[
-                    {
-                        name:"type1",
-                        displayName:"Type One"
-                    },
-                    {
-                        name:"type2",
-                        displayName:"Type Two"
-                    },
-                ]
+                        {
+                            name:"type1",
+                            displayName:"Type One"
+                        },
+                        {
+                            name:"type2",
+                            displayName:"Type Two"
+                        },
+                    ],
+                    idProperty:"name"
                 });
                 
                 var regionStore = new Memory({
                     data:[
-                    {
-                        name:"Region 1",
-                        identifier:"region1"
-                    },
-                    {
-                        name:"Region 2",
-                        identifier:"region2"
-                    }
-                ]
+                        {
+                            name:"Region 1",
+                            identifier:"region1"
+                        },
+                        {
+                            name:"Region 2",
+                            identifier:"region2"
+                        }
+                    ],
+                    idProperty:"identifier"
                 });
                 var gridStore = new Memory({data:[
-                    {
-                        name:"Name",
-                        description:"Description",
-                        position:"110",
-                        enabled:"true"
-                    }
-                ]})
+                        {
+                            id:1,
+                            name:"Name/1",
+                            description:"Description/1",
+                            weight:"110",
+                            type:'type1',
+                            region:'region1',
+                            enabled:"true"
+                        },
+                        {
+                            id:2,
+                            name:"Name/2",
+                            description:"Description/2",
+                            weight:"110",
+                            type:'type2',
+                            region:'region2',
+                            enabled:"false"
+                        }
+                    ]})
                 
                 doh.register('ExtendedEditorPane',[
                     {
@@ -84,9 +98,325 @@
                             eep.resize();
                             eep.disable();
                             
+                            doh.t(eep.tabContainer.get("disabled"));
+                            doh.t(eep.regionSelect.get("disabled"));
+                            doh.t(eep.nameText.get("disabled"));
+                            doh.t(eep.descriptionText.get("disabled"));
+                            doh.t(eep.typeSelect.get("disabled"));
+                            doh.t(eep.formRegionSelect.get("disabled"));
+                            doh.t(eep.weightText.get("disabled"));
+                            doh.t(eep.disabledCheckBox.get("disabled"));
+                            doh.t(eep.saveButton.get("disabled"));
+                            doh.t(eep.customEditButton.get("disabled"));
+                            doh.t(eep.removeButton.get("disabled"));
+                            doh.t(eep.addButton.get("disabled"));
                             
                             
                             eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .enabled method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            eep.disable();
+                            eep.enable();
+                            
+                            doh.f(eep.tabContainer.get("disabled"));
+                            doh.f(eep.regionSelect.get("disabled"));
+                            doh.f(eep.nameText.get("disabled"));
+                            doh.f(eep.descriptionText.get("disabled"));
+                            doh.f(eep.typeSelect.get("disabled"));
+                            doh.f(eep.formRegionSelect.get("disabled"));
+                            doh.f(eep.weightText.get("disabled"));
+                            doh.f(eep.disabledCheckBox.get("disabled"));
+                            doh.f(eep.saveButton.get("disabled"));
+                            doh.f(eep.customEditButton.get("disabled"));
+                            doh.f(eep.removeButton.get("disabled"));
+                            doh.f(eep.addButton.get("disabled"));
+                            
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .addChild method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var cp = ContentPane = new ContentPane({title:"TEST"});
+                            eep.addChild(cp);
+                            
+                            var nodes = eep.tabContainer.containerNode.childNodes;
+                            var found = false;
+                            for(var i = 0 ; i < nodes.length; i++){
+                                if(nodes[i]==cp.domNode)
+                                    found=true;
+                            }
+                            
+                            doh.t(found);
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test ._setFormAttr, ._getFormAttr method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            var actual = eep.get("form");
+                            
+                            doh.is(expected.id,actual.id);
+                            doh.is(expected.name,actual.name);
+                            doh.is(expected.description,actual.description);
+                            doh.is(expected.type,actual.type);
+                            doh.is(expected.region,actual.region);
+                            doh.is(expected.weight,actual.weight);
+                            doh.is(expected.enabled,actual.enabled);
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .onSave method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            
+                            eep.on("save",function(id,name,description,type,region,weight,enabled){
+                                
+                                doh.is(expected.id,id);
+                                doh.is(expected.name,name);
+                                doh.is(expected.description,description);
+                                doh.is(expected.type,type);
+                                doh.is(expected.region,region);
+                                doh.is(expected.weight,weight);
+                                doh.is(expected.enabled,enabled);
+                                d.callback(true);
+                            }); 
+                            eep._onSave();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onNew method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("new",function(name,description,type,region,weight,enabled){
+                                
+                                doh.is(expected.name,name);
+                                doh.is(expected.description,description);
+                                doh.is(expected.type,type);
+                                doh.is(expected.region,region);
+                                doh.is(expected.weight,weight);
+                                doh.is(expected.enabled,enabled);
+                                d.callback(true);
+                            });
+                            eep._onCreate();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onExtendedEdit method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("extendedEdit",function(pluginId,type){
+                                doh.is(expected.id,pluginId);
+                                doh.is(expected.type,type);
+                                d.callback(true);
+                            });
+                            eep._onExtendedEdit();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onDelete method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("delete",function(pluginId){
+                                doh.is(expected.id,pluginId);
+                                d.callback(true);
+                            });
+                            eep._onDelete();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onEnable method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:true
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("enable",function(pluginId,weight){
+                                doh.is(expected.id,pluginId);
+                                doh.is(expected.weight,weight);
+                                d.callback(true);
+                            });
+                            eep._onStateChange();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onDisable method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                id:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("disable",function(pluginId){
+                                doh.is(expected.id,pluginId);
+                                d.callback(true);
+                            });
+                            eep._onStateChange();
+                            eep.destroy();
+                            return d;
                         }
                     }
                 ]);
@@ -96,7 +426,7 @@
     </head>
     <body class="soria">
         <div style="width:100%;height:100%" id="inputContainer">
-            
+
         </div>
     </body>
 </html>

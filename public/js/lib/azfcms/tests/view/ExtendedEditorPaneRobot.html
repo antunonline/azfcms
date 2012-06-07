@@ -42,6 +42,73 @@
                         }
                     },
                     {
+                        name: 'Test .onItemSelect 1',
+                        timeout: 4166,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            var expected = {
+                                id:1,
+                                name:'Name/1',
+                                description:'Description/1',
+                                type:'type1',
+                                region:'region1',
+                                weight:'110',
+                                enabled:true
+                            };
+                            var connection = dijit.byId('view').on("itemSelect",function(actual){
+                                doh.is(expected.id,actual.id);
+                                doh.is(expected.name,actual.name);
+                                doh.is(expected.description,actual.description);
+                                doh.is(expected.type,actual.type);
+                                doh.is(expected.region,actual.region);
+                                doh.is(expected.weight,actual.weight);
+                                doh.is(expected.enabled,actual.enabled);
+                                d.callback(true)
+                                connection.remove();
+                            });
+                            
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(291, 65, 1, 947, true);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('TD')[1]; }, 506, 100, 89, 13);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test .onItemSelect 2',
+                        timeout: 4166,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            var expected = {
+                                id:2,
+                                name:'Name/2',
+                                description:'Description/2',
+                                type:'type2',
+                                region:'region2',
+                                weight:'110',
+                                enabled:false
+                            };
+                            var connection = dijit.byId('view').on("itemSelect",function(actual){
+                                doh.is(expected.id,actual.id);
+                                doh.is(expected.name,actual.name);
+                                doh.is(expected.description,actual.description);
+                                doh.is(expected.type,actual.type);
+                                doh.is(expected.region,actual.region);
+                                doh.is(expected.weight,actual.weight);
+                                doh.is(expected.enabled,actual.enabled);
+                                connection.remove();
+                                d.callback(true)
+                            });
+                            
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(257, 84, 1, 928, true);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('TD')[5]; }, 395, 100, 55, 11);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            return d;
+                        }
+                    },
+                    {
                         name: 'Test nameText input element',
                         timeout: 4136,
                         runTest: function(){
@@ -179,6 +246,24 @@
                         }
                     },
                     {
+                        name: 'Test stateButton',
+                        timeout: 3700,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            dijit.byId('view').stateButton.on("click",function(){
+                                d.callback();
+                            })
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(333, 357, 1, 807, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[5]; }, 26);
+                            doh.robot.mouseMoveAt('dijit_form_Button_0_label', 1, 100, 21, 4);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.sequence(function(){
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
                         name: 'Test saveButton button',
                         timeout: 3778,
                         runTest: function(){
@@ -186,7 +271,7 @@
                             doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
                             doh.robot.mouseMove(69, 384, 1, 808, true);
                             doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[5]; }, 116);
-                            doh.robot.mouseMoveAt('dijit_form_Button_0_label', 2, 100, 35, 3);
+                            doh.robot.mouseMoveAt('dijit_form_Button_1_label', 2, 100, 35, 3);
                             doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
                             dijit.byId('view')._onSave=function(){
                                 d.callback(true);
@@ -201,7 +286,7 @@
                             var d = new doh.Deferred();
                             doh.robot.mouseMove(159, 382, 338, 536, true);
                             doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[11]; }, 231);
-                            doh.robot.mouseMoveAt('dijit_form_Button_1', 8, 100, 63.399993896484375, 3.399993896484375);
+                            doh.robot.mouseMoveAt('dijit_form_Button_2', 8, 100, 63.399993896484375, 3.399993896484375);
                             doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
                             
                             dijit.byId('view')._onExtendedEdit = function(){
@@ -217,7 +302,7 @@
                             var d = new doh.Deferred();
                             doh.robot.mouseMove(309, 385, 127, 496, true);
                             doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[17]; }, 255);
-                            doh.robot.mouseMoveAt('dijit_form_Button_2_label', 6, 100, 46.600006103515625, 5.399993896484375);
+                            doh.robot.mouseMoveAt('dijit_form_Button_3_label', 6, 100, 46.600006103515625, 5.399993896484375);
                             doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
                             dijit.byId('view')._onCreate = function(){
                                 d.callback(true);
@@ -232,7 +317,7 @@
                             var d = new doh.Deferred();
                             doh.robot.mouseMove(372, 386, 168, 808, true);
                             doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[23]; }, 183);
-                            doh.robot.mouseMoveAt('dijit_form_Button_3_label', 6, 100, 17.79998779296875, 6.399993896484375);
+                            doh.robot.mouseMoveAt('dijit_form_Button_4_label', 6, 100, 17.79998779296875, 6.399993896484375);
                             doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
                             dijit.byId('view')._onDelete = function(){
                                 d.callback(true);
@@ -240,13 +325,13 @@
                             return d;
                         }
                     }
-                    ]);
+                ]);
                 
-                    doh.robot.sequence(function(){
-                        doh.run();
-                    })
+                doh.robot.sequence(function(){
+                    doh.run();
+                })
                 
-                });
+            });
         </script>
     </head>
     <body class="soria">

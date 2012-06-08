@@ -6,17 +6,20 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     public static $browsers = array(
         array(
             'name'=>"Newest Firefox",
-            'browser'=>'*firefox'
+            'browser'=>'*firefox',
+            'timeout'=>240
         ),
         array(
             'name'=>'Newest Google Chrome',
             'browser'=>'*googlechrome',
-            'host'=>'poljana.vrw'
+            'host'=>'poljana.vrw',
+            'timeout'=>240
         ),
         array(
             'name'=>'Newest Opera ',
             'browser'=>'*opera',
-            'host'=>'poljana.vrw'
+            'host'=>'poljana.vrw',
+            'timeout'=>240
         )
     );
     

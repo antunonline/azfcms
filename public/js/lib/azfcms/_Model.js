@@ -1,8 +1,22 @@
 define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
     'azfcms/store/Lang'],
     function(declare, xhr, Deferred,
-            LangStore){
+        LangStore){
         return declare(null,{
+            /**
+         * SIngle quote escape
+         */
+            _s:function(value){
+                return value.replace(/'/g,"\\'");
+            },
+        
+        
+            /**
+         * SIngle quote escape
+         */
+            _d : function(value){
+                return value.replace(/"/g,"\\\"");
+            },
             constructor: function(JsonRpc, RestRpc, JsonRestStore){
                 this.JsonRpc = JsonRpc;
                 this.RestRpc = RestRpc;
@@ -183,8 +197,8 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
             },
             
             /**
-             * json-lang service invocator
-             */
+         * json-lang service invocator
+         */
             load:function(
                 id,        // the string to the right of the !
                 require,   // AMD require; usually a context-sensitive require bound to the module making the plugin request
@@ -218,9 +232,9 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
             },
             
             /**
-             * @param {String} expr
-             * @return {dojo.store.api.Store}
-             */
+         * @param {String} expr
+         * @return {dojo.store.api.Store}
+         */
             prepareLangStore: function(expr){
                 return new LangStore({
                     expr:expr,

@@ -44,6 +44,36 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
                 var call = this.createCall('cms.extensionPlugin.getRegionExtensionPlugins',[navigationId,region]);
                 return this.model.prepareLangStore(call);
             },
+            
+            getTemplateRegionsStore:function(navigationId){
+                var call = this.createCall('cms.template.getTemplateRegions',[navigationId]);
+                return this.model.prepareLangStore(call);
+            },
+            
+            getExtensionPluginStore: function(){
+                var call = "cms.pluginDescriptor.getExtensionPlugins()";
+                return this.model.prepareLangStore(call);
+            },
+            
+            setExtensionPluginValues: function(navigationId,pluginId,name,description,region,weight,enable){
+                var call = this.createCall("cms.extensionPlugin.setExtensionPluginValues",[navigationId,pluginId,name,description,region,weight,enable])
+                return this.model.prepareLangStore(call);
+            },
+            
+            removeExtensionPlugin:function(pluginId){
+                var call = this.createCall('cms.extensionPlugin.removeExtensionPlugin',[pluginId]);
+                return this.model.invoke(call);
+            },
+            
+            disableExtensionPlugin:function(nodeId,pluginId){
+                var call = this.createCall("cms.extensionPlugin.disableExtensionPlugin",[nodeId, pluginId]);
+                return this.model.invoke(call);
+            },
+            
+            enableExtensionPlugin:function(nodeId, pluginId,weight){
+                var call = this.createCall('cms.extensionPlugin.enableExtensionPlugin',[nodeId,pluginId,weight]);
+                return this.model.invoke(call);
+            },
         
             /**
          * @return {dojo.store.util.QueryResults}

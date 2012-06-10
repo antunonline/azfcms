@@ -6,7 +6,7 @@
  * @author antun
  */
 class Azf_Plugin_Extension_Manager {
-    
+
     /**
      *
      * @var Azf_Model_DbTable_Plugin
@@ -20,12 +20,19 @@ class Azf_Plugin_Extension_Manager {
      */
     public function setUp($type, $pluginId) {
         $instance = $this->_getPluginInstance($type, $pluginId);
-
-
-        try {
-            $instance->setUp();
-        } catch (Exception $e) {
-            
+        /* @var $instance Azf_Plugin_Extension_Abstract */
+        if ($instance) {
+            $instance->setId($pluginId);
+            try {
+                $instance->setUp();
+                if($instance->isParamsDirty()){
+                    $params = $instance->getParams();
+                    $this->getModel()->setPluginParams($pluginId, $params);
+                    $instance->clearParamsDirty();
+                }
+            } catch (Exception $e) {
+                
+            }
         }
     }
 
@@ -39,6 +46,7 @@ class Azf_Plugin_Extension_Manager {
 
 
         if ($instance) {
+            $instance->setId($pluginId);
             try {
                 $instance->tearDown();
             } catch (Exception $exc) {
@@ -65,9 +73,10 @@ class Azf_Plugin_Extension_Manager {
             $instance = $this->_getPluginInstance($plugin['type'], null, $plugin['params']);
             // Load region name
             $region = $plugin['region'];
-            
+
             // If instance is loaded
             if ($instance) {
+                $instance->setId($plugin['id']);
                 try {
                     // Start output buffering
                     ob_start();
@@ -86,13 +95,13 @@ class Azf_Plugin_Extension_Manager {
                 }
             }
         }
-        
+
         // Set rendered array values
-        foreach($responseChunks as $region => $chunks){
+        foreach ($responseChunks as $region => $chunks) {
             $rendered[$region] = implode("", $chunks);
         }
-        
-        
+
+
         return $rendered;
     }
 
@@ -105,13 +114,13 @@ class Azf_Plugin_Extension_Manager {
      * 
      */
     protected function _getPluginInstance($type, $pluginId, $pluginParams = null) {
-        if(is_array($pluginParams)==false){
+        if (is_array($pluginParams) == false) {
             $pluginParams = $this->getModel()->getPluginParams($pluginId);
         }
-        if(!is_array($pluginParams)){
+        if (!is_array($pluginParams)) {
             return null;
         }
-        
+
         $instance = $this->_constructPlugin($type, $pluginParams);
         return $instance;
     }
@@ -129,24 +138,24 @@ class Azf_Plugin_Extension_Manager {
      * @return Azf_Model_DbTable_Plugin
      */
     public function getModel() {
-        if(empty($this->_model)){
+        if (empty($this->_model)) {
             $this->_initModel();
         }
         return $this->_model;
     }
-    
+
     /**
      * 
      */
-    protected function _initModel(){
+    protected function _initModel() {
         $this->setModel(new Azf_Model_DbTable_Plugin());
     }
-    
+
     /**
      * 
      * @param Azf_Model_DbTable_Plugin $model
      */
-    public function setModel(Azf_Model_DbTable_Plugin $model){
+    public function setModel(Azf_Model_DbTable_Plugin $model) {
         $this->_model = $model;
     }
 
@@ -155,7 +164,7 @@ class Azf_Plugin_Extension_Manager {
      * @param type $type
      */
     public function getClassName($type) {
-        return "Application_Plugin_Extension_".  ucfirst($type);
+        return "Application_Plugin_Extension_" . ucfirst($type);
     }
 
     /**

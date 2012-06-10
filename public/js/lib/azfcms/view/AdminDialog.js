@@ -20,7 +20,7 @@ define(
                 this.borderContainer = null;
                 
                 // Set style
-                this.style = "width:80%;height:80%"
+                this.style = "width:95%;height:95%"
             },
             
             postCreate: function(){
@@ -55,7 +55,7 @@ define(
             resize: function(){
                 
                 // Calculate height
-                var height = dojoWindow.getBox().h*0.8 - 40;
+                var height = dojoWindow.getBox().h*0.95 - 40;
 
                 var style = "width:100%;height:"+String(height)+"px";
 

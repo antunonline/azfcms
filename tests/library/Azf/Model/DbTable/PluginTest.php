@@ -78,6 +78,26 @@ class Azf_Model_DbTable_PluginTest extends PHPUnit_Extensions_Database_TestCase{
         $this->assertEquals($expected,$actual);
     }
     
+    public function testSetPluginParams(){
+        $expected = '{"a":"b","c":"d"}';
+        $params = array(
+            'a'=>'b',
+            'c'=>'d'
+        );
+        $mock = $this->getMockBuilder("Azf_Model_DbTable_Plugin")
+                ->disableOriginalConstructor()
+                ->setMethods(array('update'))->getMock();
+        $mock->expects($this->once())
+                ->method("update")
+                ->with(array(
+                    'params'=>$expected
+                ),array(
+                    'id=?'=>33
+                ));
+        
+        $mock->setPluginParams(33,$params);
+    }
+    
     public function testFindAllByNavigationid(){
         $expected = array(
             array(
@@ -175,7 +195,6 @@ class Azf_Model_DbTable_PluginTest extends PHPUnit_Extensions_Database_TestCase{
         $expected = $expectedDataSet->getTable("Plugin");
         
         $this->assertTablesEqual($expected, $actual);
-        
         
     }
 }

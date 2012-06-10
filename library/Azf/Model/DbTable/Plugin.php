@@ -49,6 +49,22 @@ class Azf_Model_DbTable_Plugin extends Zend_Db_Table_Abstract {
         $params = $this->getAdapter()->fetchOne("SELECT params FROM Plugin WHERE id = ?", array($pluginId));
         return $this->_decode($params);
     }
+    
+    /**
+     * 
+     * @param int $pluginId
+     * @param array $params
+     * @return int
+     */
+    public function setPluginParams($pluginId, array $params){
+        $stream = $this->_encode($params);
+        $data = array(
+            'params'=>$stream
+        );
+        $where = array('id=?'=>$pluginId);
+        
+        return $this->update($data, $where);
+    }
 
     /**
      * 
@@ -125,6 +141,8 @@ ORDER BY p.region, np.weight";
         
         return $this->update($data, $where);
     }
+    
+    
 
 }
 

@@ -16,13 +16,14 @@
         <script>
             var o = {}
             require(
-            ['azfcms/view/ExtendedEditorPane','dojo/domReady!',
+            ['azfcms/view/ExtensionEditorPane','dojo/domReady!',
                 'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
                 'dojo/store/Memory','dojo/dom','dijit/layout/ContentPane'],function
             (ExtendedEditorPane,ready,
             dijit,doh, nls,
             Memory,dom, ContentPane){
                 //              
+                
                 var typeStore = new Memory({
                     data:[
                         {

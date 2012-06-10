@@ -18,6 +18,7 @@ define({
     npCreatePageAction: "Dodaj stranicu",
     npEditPageAction: "Uredi stranicu",
     npDeletePageAction: "Izbriši stranicu",
+    npPagePluginsAction: "Prikaži pluginove",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",

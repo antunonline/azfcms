@@ -104,5 +104,27 @@ ORDER BY p.region, np.weight";
         return json_encode($params);
     }
 
+    
+    /**
+     * 
+     * @param string $pluginId
+     * @param string $name
+     * @param string $description
+     * @param string $region
+     * @return boolean
+     */
+    public function updatePluginValues($pluginId, $name, $description,  $region) {
+        $data = array(
+            'name'=>$name,
+            'description'=>$description,
+            'region'=>$region
+        );
+        $where = array(
+            'id=?'=>$pluginId
+        );
+        
+        return $this->update($data, $where);
+    }
+
 }
 

@@ -65,7 +65,7 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         definition.init(function(){
                             definition.d.isInit=false;
                             definition.d.callback()
-                        },adminDialog);
+                        },adminDialog,item);
                         // When action is initialize, execute callback
                         definition.d.then(function(){
                             definition.i=true;
@@ -159,6 +159,42 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     callback: function(item){
                         if(item){
                             this.controller.activate(item);
+                        }
+                        
+                    }
+                },
+                {
+                    i18nButtonLabelPointer: 'npPagePluginsAction',
+                    iconClass:'dijitIconDocument',
+                    init: function(initCallback,adminDialog, item){
+                        var self = this;
+                        require(
+                            ['azfcms/view/ExtensionEditorPane','azfcms/controller/ExtensionEditorController',
+                            'azfcms/model','azfcms/model/cms','dojo/query'],function
+                            (EEP,EEC,
+                                model,cms,query){
+                                var requireLink = "<link rel='stylesheet' type='text/css' href='"+require.toUrl('')+'/dojox/grid/resources/claroGrid.css'+"' />";
+                                requireLink += "<link rel='stylesheet' type='text/css' href='"+require.toUrl('')+'/dojox/grid/resources/Grid.css'+"' />";
+                                query("head").addContent(requireLink);
+                                var view = new EEP({
+                                    regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
+                                    gridStore:cms.getRegionPluginsStore(item.id, ""),
+                                    typeStore:cms.getExtensionPluginStore(),
+                                    closable:true
+                                });
+                                adminDialog.addChild(view);
+                                self.controller = new EEC({
+                                    editorPane:view,
+                                    navigationId:item.id,
+                                    model:cms
+                                });
+                            
+                                initCallback();
+                            })
+                    },
+                    callback: function(item){
+                        if(item){
+                            
                         }
                         
                     }

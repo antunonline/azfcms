@@ -18,6 +18,13 @@ class Application_Resolver_Template extends Azf_Service_Lang_Resolver{
      */
     protected $template;
     
+    
+    /**
+     *
+     * @var Azf_Model_Tree_Navigation
+     */
+    protected $navigationModel;
+    
     /**
      * 
      * @return Azf_Template_Descriptor
@@ -34,6 +41,27 @@ class Application_Resolver_Template extends Azf_Service_Lang_Resolver{
         $this->template = $template;
     }
     
+    
+    /**
+     * 
+     * @return Azf_Model_Tree_Navigation
+     */
+    public function getNavigationModel() {
+        if(!$this->navigationModel){
+            $this->setNavigationModel(Zend_Registry::get("navigationModel"));
+        }
+        return $this->navigationModel;
+    }
+
+    /**
+     * 
+     * @param Azf_Model_Tree_Navigation $navigationModel
+     */
+    public function setNavigationModel(Azf_Model_Tree_Navigation $navigationModel) {
+        $this->navigationModel = $navigationModel;
+    }
+
+        
     /**
      * Initialize obj. 
      */
@@ -73,6 +101,23 @@ class Application_Resolver_Template extends Azf_Service_Lang_Resolver{
         if(!is_string($templateIdentifier)) {
             return null;
         }
+        return $this->getTemplate()->getRegions($templateIdentifier);
+    }
+    
+    
+    /**
+     * 
+     * @param int $navigationId
+     * @return array|null
+     */
+    public function getTemplateRegionsForNavigationMethod($navigationId){
+        $navigationModel = $this->getNavigationModel();
+        
+        $templateIdentifier = $navigationModel->getStaticParam($navigationId, "templateIdentifier");
+        if(!$templateIdentifier){
+            $templateIdentifier=  Zend_Registry::get("defaultTemplate");
+        }
+        
         return $this->getTemplate()->getRegions($templateIdentifier);
     }
     

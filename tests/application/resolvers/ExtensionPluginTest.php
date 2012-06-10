@@ -188,6 +188,48 @@ class Application_Resolver_ExtensionPluginTest extends PHPUnit_Framework_TestCas
     }
     
     
+    public function testSetExtensionPluginValuesMethod(){
+        $pluginModelMock = $this->getPluginModelMock(array('updatePluginValues'));
+        $pluginModelMock->expects($this->once())
+                ->method("updatePluginValues")
+                ->with(23,"name","description","region")
+                ->will($this->returnValue(1));
+        
+        $navigationPluginModelMock = $this->getNavigationPluginModelMock(array("bind"));
+        $navigationPluginModelMock->expects($this->once())
+                ->method("bind")
+                ->with(22,23,400)
+                ->will($this->returnValue(1));
+        
+        $resolver = $this->getResolver();
+        $resolver->setModel($pluginModelMock);
+        $resolver->setNavigationPluginModel($navigationPluginModelMock);
+        
+        $resolver->setExtensionPluginValuesMethod(22, 23, "name", "description",  "region", 400, true);
+    }
+    
+    
+    public function testSetExtensionPluginValuesMethodCase1(){
+        $pluginModelMock = $this->getPluginModelMock(array('updatePluginValues'));
+        $pluginModelMock->expects($this->once())
+                ->method("updatePluginValues")
+                ->with(23,"name","description","region")
+                ->will($this->returnValue(1));
+        
+        $navigationPluginModelMock = $this->getNavigationPluginModelMock(array("unbind"));
+        $navigationPluginModelMock->expects($this->once())
+                ->method("unbind")
+                ->with(22,23)
+                ->will($this->returnValue(1));
+        
+        $resolver = $this->getResolver();
+        $resolver->setModel($pluginModelMock);
+        $resolver->setNavigationPluginModel($navigationPluginModelMock);
+        
+        $resolver->setExtensionPluginValuesMethod(22, 23, "name", "description",  "region", 0, false);
+    }
+    
+    
     public function testExecute(){
         $expected = array(
             array(1,2,3),

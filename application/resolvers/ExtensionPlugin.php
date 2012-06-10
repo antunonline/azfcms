@@ -28,7 +28,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
     
     /**
      * 
-     * @return \Azf_Plugin_Extension_Manager
+     * @return Azf_Plugin_Extension_Manager
      */
     public function getManager(){
         if(empty($this->manager)){
@@ -155,6 +155,16 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      */
     public function getRegionExtensionPluginsMethod($nodeId, $region) {
         return $this->getNavigationPluginModel()->findAllByNavigationAndRegion($nodeId, $region);
+    }
+    
+    public function setExtensionPluginValuesMethod($navigationId, $pluginId, $name, $description, $type, $weight, $enable){
+        if($enable){
+            $this->getNavigationPluginModel()->bind($navigationId, $pluginId,$weight);
+        } else {
+            $this->getNavigationPluginModel()->unbind($navigationId, $pluginId);
+        }
+        
+        return $this->getModel()->updatePluginValues($pluginId,$name,$description, $type);
     }
 
     protected function _execute(array $namespaces, array $parameters) {

@@ -147,5 +147,36 @@ class Azf_Model_DbTable_PluginTest extends PHPUnit_Extensions_Database_TestCase{
         
         $this->assertEquals($expected,$actual);
     }
+    
+    
+    public function testUpdatePluginValues(){
+        $this->getInstance()->updatePluginValues(2, "my", "description", "top");
+        
+        $pluginTable = $this->getDataSet()->getTable("Plugin");
+        
+        $expectedArray = array();
+        for($i = 0; $pluginTable->getRowCount()>$i;$i++){
+            if($i==1){
+                $expectedArray[] = array(
+                    'id'=>2,
+                    'type'=>'type2',
+                    'name'=>'my',
+                    'description'=>'description',
+                    'region'=>'top',
+                    'params'=>"{}"
+                );
+            } else {
+                $expectedArray[] = $pluginTable->getRow($i);
+            }
+        }
+        
+        $actual = $this->getConnection()->createQueryTable("Plugin", "select * from Plugin;");
+        $expectedDataSet = new Azf_PHPUnit_Db_ArrayDataSet(array('Plugin'=>$expectedArray));
+        $expected = $expectedDataSet->getTable("Plugin");
+        
+        $this->assertTablesEqual($expected, $actual);
+        
+        
+    }
 }
 

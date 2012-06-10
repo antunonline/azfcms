@@ -179,8 +179,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
     
     /**
-     * Initialize log obj. 
-     */
+     * Initialize log obj.      */
     public function _initLog() {
         $logWriter = new Zend_Log_Writer_Null();
         $log = new Zend_Log($logWriter);
@@ -291,6 +290,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         
         Zend_Registry::set("acl",$acl);
         return $acl;
+    }
+    
+    
+    public function _initDefaulTemplateIdentifier(){
+        $defaultTemplate = $this->getOption("defaultTemplate");
+        Zend_Registry::set("defaultTemplate",$defaultTemplate);
     }
 }
 

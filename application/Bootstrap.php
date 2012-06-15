@@ -147,6 +147,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
             $resource->init();
         }
     }
+    
+    public function _initGlobalLoader(){
+        $this->getResourceLoader()
+                ->addResourceType("plugins", "plugins","Plugin");
+    }
 
     /**
      * Initialize rpc namespace 

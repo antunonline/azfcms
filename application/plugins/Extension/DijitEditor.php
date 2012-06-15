@@ -13,11 +13,12 @@
 class Application_Plugin_Extension_DijitEditor extends Azf_Plugin_Extension_Abstract {
 
     public function render() {
-        
+        $params = $this->getParams();
+        echo $params['body'];
     }
 
     public function setUp() {
-        
+        $this->setParam("body", "THIS IS VERY COOL:)");
     }
 
     public function tearDown() {

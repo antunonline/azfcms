@@ -176,25 +176,33 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 var requireLink = "<link rel='stylesheet' type='text/css' href='"+require.toUrl('')+'/dojox/grid/resources/claroGrid.css'+"' />";
                                 requireLink += "<link rel='stylesheet' type='text/css' href='"+require.toUrl('')+'/dojox/grid/resources/Grid.css'+"' />";
                                 query("head").addContent(requireLink);
-                                var view = new EEP({
-                                    regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
-                                    gridStore:cms.getRegionPluginsStore(item.id, ""),
-                                    typeStore:cms.getExtensionPluginStore(),
-                                    closable:true
-                                });
-                                adminDialog.addChild(view);
-                                self.controller = new EEC({
-                                    editorPane:view,
-                                    navigationId:item.id,
-                                    model:cms
-                                });
-                            
-                                initCallback();
+                                self.EEP = EEP;
+                                self.EEC = EEC;
+                                self.cms = cms;
+                                self.adminDialog = adminDialog;
+                                self.typeStore = cms.getExtensionPluginStore();
+                                self.typeStore.query({}).then(function(){
+                                    initCallback();
+                                    
+                                })
+                                
                             })
                     },
                     callback: function(item){
                         if(item){
-                            
+                            var cms = this.cms;
+                            var view = new this.EEP({
+                                    regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
+                                    gridStore:cms.getRegionPluginsStore(item.id, ""),
+                                    typeStore:this.typeStore,
+                                    closable:true
+                                });
+                                this.adminDialog.addChild(view);
+                                new this.EEC({
+                                    editorPane:view,
+                                    navigationId:item.id,
+                                    model:cms
+                                });
                         }
                         
                     }

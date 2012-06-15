@@ -229,6 +229,19 @@ class Application_Resolver_ExtensionPluginTest extends PHPUnit_Framework_TestCas
         $resolver->setExtensionPluginValuesMethod(22, 23, "name", "description",  "region", 0, false);
     }
     
+    public function testFindPluginsByNavigationAndRegionMethod(){
+        $navigationPluginModel = $this->getNavigationPluginModelMock(array("findAllByNavigationAndRegion"));
+        $navigationPluginModel->expects($this->once())
+                ->method("findAllByNavigationAndRegion")
+                ->with(33,'left')
+                ->will($this->returnValue(array()));
+        
+        $resolver = $this->getResolver();
+        $resolver->setNavigationPluginModel($navigationPluginModel);
+        
+        $this->assertEquals(array(),$resolver->findPluginsByNavigationAndRegionMethod(33, "left"));
+    }
+    
     
     public function testExecute(){
         $expected = array(

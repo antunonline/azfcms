@@ -49,17 +49,21 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
             
             getTemplateRegionsStore:function(navigationId){
                 var call = this.createCall('cms.template.getTemplateRegions',[navigationId]);
-                return this.model.prepareLangStore(call);
+                var store = this.model.prepareLangStore(call);
+                store.idProperty = "identifier";
+                return store;
             },
             
             getExtensionPluginStore: function(){
                 var call = "cms.pluginDescriptor.getExtensionPlugins()";
-                return this.model.prepareLangStore(call);
+                var store = this.model.prepareLangStore(call);
+                store.idProperty="name"
+                return store;
             },
             
             setExtensionPluginValues: function(navigationId,pluginId,name,description,region,weight,enable){
                 var call = this.createCall("cms.extensionPlugin.setExtensionPluginValues",[navigationId,pluginId,name,description,region,weight,enable])
-                return this.model.prepareLangStore(call);
+                return this.model.invoke(call);
             },
             
             removeExtensionPlugin:function(pluginId){
@@ -79,7 +83,14 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
             
             getTemplateRegionsForNavigationStore:function(navigationId){
                 var call = this.createCall("cms.template.getTemplateRegionsForNavigation",[navigationId]);
-                return this.model.prepareLangStore(call);
+                var store = this.model.prepareLangStore(call);
+                store.idProperty = "identifier";
+                return store;
+            },
+            
+            findPluginsByNavigationAndRegion:function(navigationId,region){
+                var call = this.createCall("cms.extensionPlugin.findPluginsByNavigationAndRegion",[navigationId,region]);
+                return this.model.invoke(call);
             },
         
             /**

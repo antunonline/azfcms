@@ -9,11 +9,13 @@
             <div data-dojo-attach-point="regionSelectionNode" style="position:relative">
                 <div style="position: absolute;left:20px;top:5px;">
                 <span>Dio stranice:</span>
-                <select 
+                <input 
                     data-dojo-type="dijit.form.FilteringSelect" 
                     data-dojo-attach-point="regionSelect" 
-                    data-dojo-props="searchAttr:'name'"></select>
+                    data-dojo-attach-event="onChange:_onRegionSelect"
+                    data-dojo-props="labelAttr:'name',searchAttr:'name',selectOnClick:true,autoComplete:false" />
                 </div>
+                
             </div>
 
             <table data-dojo-type="dojox.grid.DataGrid"
@@ -24,7 +26,7 @@
                     <tr>
                         <th width="200px;" field="name" >Naziv</th>
                         <th width="200px;" field="description">Opis</th>
-                        <th width="200px;" field="enabled" >Iskljucen</th>
+                        <th width="200px;" field="disabled" >Iskljucen</th>
                         <th width="200px;" field="weight">Pozicija</th>
                     </tr>
                 </thead>
@@ -80,7 +82,9 @@
                                     <input data-dojo-type="dijit.form.CheckBox"
                                            data-dojo-attach-point="disabledCheckBox" />
                                     <button data-dojo-type="dijit.form.Button"
-                                            data-dojo-attach-point="stateButton">Spremi</button>
+                                            data-dojo-attach-point="stateButton"
+                                            data-dojo-attach-event="onClick:_onStateChange"
+                                            >Spremi</button>
                                 </td>
                             </tr>
                             <tr >

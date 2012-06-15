@@ -65,7 +65,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
     }
     
     public function _initModel(){
-        $this->setModel(Azf_Model_DbTable_Plugin());
+        $this->setModel(new Azf_Model_DbTable_Plugin());
     }
     
     /**
@@ -165,6 +165,16 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
         }
         
         return $this->getModel()->updatePluginValues($pluginId,$name,$description, $type);
+    }
+    
+    /**
+     * 
+     * @param int $navigationId
+     * @param string $region
+     * @return array
+     */
+    public function findPluginsByNavigationAndRegionMethod($navigationId, $region){
+        return $this->getNavigationPluginModel()->findAllByNavigationAndRegion($navigationId, $region);
     }
 
     protected function _execute(array $namespaces, array $parameters) {

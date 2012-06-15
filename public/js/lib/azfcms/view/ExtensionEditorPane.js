@@ -6,13 +6,13 @@
 define(
     ['dojo/_base/declare','dojo/text!./templates/ExtendedEditorPane.html','dijit/_Widget',
     'dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dojo/dom-style',
-    'dojo/data/ObjectStore','dojo/_base/lang',
+    'dojo/data/ObjectStore','dojo/_base/lang','azfcms/model/cms',
 
     'dijit/layout/TabContainer','dijit/layout/ContentPane','dojox/grid/DataGrid',
-    'dijit/form/FilteringSelect','dijit/form/CheckBox'],function
+    'dijit/form/FilteringSelect','dijit/form/CheckBox','dijit/form/TextBox'],function
     (declare,templateString,_Widget,
         _TemplatedMixin, _WidgetsInTemplateMixin, domStyle,
-        ObjectStore,lang)
+        ObjectStore,lang,cms)
         {
         return declare([_Widget,_TemplatedMixin, _WidgetsInTemplateMixin],{
             templateString: templateString,
@@ -37,17 +37,24 @@ define(
                 this.regionSelectionNode=null;
                 this.formNode=null;
                 this.pluginId=0;
+                this.model = cms;
             },
             postCreate: function(){
                 this.inherited(arguments);
-                this.pluginGrid.set("store",new ObjectStore({
+                
+                this.legacyStore = new ObjectStore({
                     objectStore:this.gridStore
-                    }));
+                    });
+                    
+
+                this.pluginGrid.set("store",this.legacyStore);
                 this.typeSelect.set("store",this.typeStore);
                 this.regionSelect.set("store",this.regionStore);
                 this.formRegionSelect.set("store",this.regionStore);
                 this.pluginGrid.startup();
                 this.tabContainer.containerNode.style.overflow="auto";
+                
+                
                 
                 var self = this;
                 this.pluginGrid.on("rowClick",function(e){
@@ -136,27 +143,40 @@ define(
             addChild: function(pane){
                 this.tabContainer.addChild(pane);
             },
-            reloadGrid: function(){
-                
+            reloadGrid: function(navigationId, region){
+                var callback = this.model.findPluginsByNavigationAndRegion(navigationId, region);
+                var self = this;
+                callback.then(function(data){
+                    self.gridStore.setData(data)
+                    self.pluginGrid.setStore(new ObjectStore({objectStore:self.gridStore}));
+                });
+                return callback;
             },
             _setFormAttr: function(plugin){
                 this.nameText.set("value",plugin.name);
                 this.descriptionText.set("value",plugin.description);
                 
+                var region = "";
+                if("region" in plugin){
+                    region = plugin.region;
+                } else {
+                    region = this.regionSelect.get("item").identifier;
+                }
+                
                 this.typeSelect.set("value",plugin.type);
-                this.formRegionSelect.set("value",plugin.region);
+                this.formRegionSelect.set("value",region);
                 this.weightText.set("value",plugin.weight);
-                this.disabledCheckBox.set("value",plugin.enabled?"on":"off");
-                this.pluginId = plugin.id;
+                this.disabledCheckBox.set("value",!plugin.enabled);
+                this.pluginId = plugin.pluginId;
             },
             _getFormAttr:function(){
                 return {
                     'id':this.pluginId,
                     'name':this.nameText.get("value"),
                     'description':this.descriptionText.get("value"),
-                    "type":this.typeSelect.get("value"),
-                    'region':this.formRegionSelect.get("value"),
-                    'weight':this.weightText.get("value"),
+                    "type":this.typeSelect.get("item").name,
+                    'region':this.formRegionSelect.get("item").identifier,
+                    'weight':parseInt(this.weightText.get("value")),
                     "enabled":this.disabledCheckBox.get("value")=="on"
                 };
             },
@@ -177,7 +197,7 @@ define(
             },
             _onStateChange: function(){
                 var f = this.get('form');
-                var enabled = f.enabled;
+                var enabled = !f.disabled;
                 
                 if(enabled){
                     this.onEnable(f.id,f.weight);
@@ -185,12 +205,17 @@ define(
                     this.onDisable(f.id);
                 }
             },
+            _onRegionSelect:function(){
+              var item = this.regionSelect.get("item");
+              this.onRegionSelect(item.identifier);
+            },
             onNew: function(name,description,type,region,weight,enable){},
             onSave: function(pluginId, name,description,region,weight,enable){},
             onDelete: function(pluginId){},
             onDisable: function(pluginId){},
             onEnable: function(pluginId, weight){},
             onExtendedEdit: function(pluginId,type){},
-            onItemSelect: function(item){}
+            onItemSelect: function(item){},
+            onRegionSelect:function(region){}
         })
     })

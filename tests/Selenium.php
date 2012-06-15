@@ -29,7 +29,7 @@ class SeleniumTestRunner extends PHPUnit_Extensions_SeleniumTestCase {
     }
     
     public function testDoh(){
-        $this->open("public/js/lib/util/doh/runner.html?testModule=azfcms.tests.modules");
+        $this->open("js/lib/util/doh/runner.html?testModule=azfcms.tests.modules");
         $this->waitForTextPresent("TEST SUMMARY:");
         $log = $this->getText("id=logBody");
         $this->assertTextPresent("0 errors",$log);

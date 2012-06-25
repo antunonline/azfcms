@@ -1,0 +1,20 @@
+<div style="width:100%;height:100%;position:relative" data-dojo-attach-point="domNode">
+    <div data-dojo-type="dijit.layout.BorderContainer" style="width:100%;height:100%" data-dojo-attach-point="borderContainer">
+        <div region="top" data-dojo-type="dijit.Toolbar" data-dojo-attach-point="toolbar">
+            <div data-dojo-type="dijit.form.Button">&nbsp;</div>
+        </div>
+
+        <div data-dojo-attach-point="gridContentPane" region="center" style="position: relative;" data-dojo-type="dijit.layout.ContentPane">
+            <table  style="width:100%;height:100%;"  data-dojo-type="dojox.grid.DataGrid" data-dojo-attach-point="grid">
+                <thead>
+                    <tr>
+                        <th width="200px" field="name">Name</th>
+                        <th width="200px" field="date">Date</th>
+                        <th width="200px" field="type">Type</th>
+                        <th width="200px" field="size">Size</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['doh','azfcms/view/FilesystemPane','dojo/store/Memory','dojo/query'],function
+            (doh,FilesystemPane, Memory,query){
+                var treeStore = new Memory({
+                    data:[
+                        {
+                            name:"Root",
+                            childNodes:[
+                                {
+                                    name:"Child1",
+                                    childNodes:[
+                                        {
+                                            name:"Child1.1"
+                                        },
+                                        {
+                                            name:"Child1.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:"Child2",
+                                    childNodes:[
+                                        {
+                                            name:"Child2.1"
+                                        },
+                                        {
+                                            name:"Child2.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:"Child3",
+                                    childNodes:[
+                                        {
+                                            name:"Child3.1"
+                                        },
+                                        {
+                                            name:"Child3.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:"Child4",
+                                    childNodes:[
+                                        {
+                                            name:"Child4.1"
+                                        },
+                                        {
+                                            name:"Child4.2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    idProperty:"name",
+                    getRoot:function(callback){
+                        callback(this.get("Root"));
+                    },
+                    mayHaveChildren:function(item){
+                        if("childNodes" in item){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    getChildren:function(parentItem, callback){
+                        callback(parentItem.childNodes);
+                    },
+                    getLabel:function(item){
+                        return item.name;
+                    }
+                });
+                
+                var gridStore = new Memory({
+                    data:[
+                        {
+                            dirname:"folder1",
+                            name:"File1",
+                            date:"18.01.2012",
+                            type:"JPG",
+                            size:"1803300",
+                            permissions:"073"
+                            
+                        },
+                        {
+                            dirname:"folder1",
+                            name:"File2",
+                            date:"18.01.2012",
+                            type:"JPG",
+                            size:"1803300",
+                            permissions:"073"
+                            
+                        },
+                        {
+                            dirname:"folder1",
+                            name:"File3",
+                            date:"18.01.2012",
+                            type:"JPG",
+                            size:"1803300",
+                            permissions:"073"
+                            
+                        },
+                        {
+                            dirname:"folder1",
+                            name:"File4",
+                            date:"18.01.2012",
+                            type:"JPG",
+                            size:"1803300",
+                            permissions:"073"
+                            
+                        }
+                    ],
+                    idProperty:"name"
+                })
+                
+                
+                doh.register('azfcms.view.FilesystemPane',[
+                    {
+                        name:"Testing constructor",
+                        runTest:function(){
+                            var widget = new FilesystemPane({
+                                treeStore:treeStore,
+                                gridStore:gridStore
+                            });
+                            widget.placeAt(document.body);
+                            widget.resize();
+                            widget.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .addAction",
+                        runTest:function(){
+                            var widget = new FilesystemPane({
+                                treeStore:treeStore,
+                                gridStore:gridStore
+                            });
+                            widget.placeAt(document.body);
+                            widget.resize();
+                            
+                            widget.addAction("Test",function(){},"dijitIconSave");
+                            doh.is(2,query("#"+widget.toolbar.containerNode.id+" >*").length);
+                            
+                            
+                            widget.destroy();
+                        }
+                    },
+                    {
+                        name:"Last test, will not destroy rendering, used for preview",
+                        runTest:function(){
+                            var widget = new FilesystemPane({
+                                treeStore:treeStore,
+                                gridStore:gridStore
+                            });
+                            widget.placeAt(document.body);
+                            widget.resize();
+                            widget.disable();
+                            window.w = widget;
+                        }
+                    }
+                ]);
+                
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+        
+    </body>
+</html>

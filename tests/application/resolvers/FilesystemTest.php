@@ -10,7 +10,7 @@
  *
  * @author antun
  */
-require "vfsStream/vfsStream.php";
+require_once "vfsStream/vfsStream.php";
 
 class Application_Resolver_FilesystemTest extends PHPUnit_Framework_TestCase {
 

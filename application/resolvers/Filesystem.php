@@ -94,7 +94,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
                 'dirname' => '/'.trim(substr($file->getPath(),$baseDirStrLen), "/\\."),
                 'name' => $file->getBasename(),
                 'date' => $file->getCTime(),
-                'type' => $file->getExtension(),
+                'type' => pathinfo($file->getFilename(), PATHINFO_EXTENSION),
                 'size' => $file->getSize(),
                 'permissions' => substr(sprintf('%o', $file->getPerms()), -4)
             );

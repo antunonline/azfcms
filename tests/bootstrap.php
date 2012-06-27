@@ -18,3 +18,8 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance()->registerNamespace("Azf");
 Zend_Loader_Autoloader::getInstance()->registerNamespace("PHPUnit");
+$resource = new Zend_Loader_Autoloader_Resource(array(
+    'namespace'=>'Application',
+    'basePath'=>'../application/'
+));
+$resource->addResourceType("resolvers", "resolvers", "Resolver");

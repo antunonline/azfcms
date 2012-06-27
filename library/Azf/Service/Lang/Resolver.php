@@ -85,9 +85,21 @@ abstract class Azf_Service_Lang_Resolver {
         
     }
 
-    abstract protected function _execute(array $namespaces, array $parameters);
+    protected function _execute(array $namespaces, array $parameters) {
+        if (count($namespaces) != 1) {
+            return false;
+        }
 
-    
+        $method = array_shift($namespaces) . "Method";
+
+
+        if (method_exists($this, $method)) {
+            return call_user_method_array($method, $this, $parameters);
+        } else {
+            return false;
+        }
+    }
+
     protected function isAllowed($namespaces, $parameters) {
         return false;
     }

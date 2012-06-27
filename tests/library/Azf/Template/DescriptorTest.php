@@ -4,7 +4,7 @@
  * /usr/share/php/vfsStream/vfsStream.php
  * /usr/share/php should be in include_path php.ini variable
  */
-require 'vfsStream/vfsStream.php';
+require_once 'vfsStream/vfsStream.php';
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.

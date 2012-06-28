@@ -71,7 +71,7 @@ define(
                     })
                 })
             },
-            onSave: function(pluginId, name,description,type, region,weight,enable){
+            onSave: function(pluginId, name,description, region,weight,enable){
                 var self = this;
                 this.editorPane.disable();
                 this.model.setExtensionPluginValues(this.navigationId, pluginId,name,description, region,weight,enable).then(function(){
@@ -86,6 +86,7 @@ define(
                 var self = this;
                 this.editorPane.disable();
                 this.model.removeExtensionPlugin(pluginId).then(function(){
+                    var region = self.editorPane.regionSelect.get('item').identifier;
                     self.editorPane.reloadGrid(self.navigationId,region).
                     then(function(){
                         self.editorPane.enable();
@@ -96,7 +97,7 @@ define(
                 var self = this;
                 this.editorPane.disable();
                 this.model.disableExtensionPlugin(this.navigationId,pluginId).then(function(){
-                    self.editorPane.reloadGrid(self.navigationId,self.editorPane.get('form').region).
+                    self.editorPane.reloadGrid(self.navigationId,self.editorPane.regionSelect.get('item').identifier).
                     then(function(){
                         self.editorPane.enable();
                     })
@@ -106,7 +107,7 @@ define(
                 var self = this;
                 this.editorPane.disable();
                 this.model.enableExtensionPlugin(this.navigationId, pluginId).then(function(){
-                    self.editorPane.reloadGrid(self.navigationId,self.editorPane.get('form').region).
+                    self.editorPane.reloadGrid(self.navigationId,self.editorPane.regionSelect.get('item').identifier).
                     then(function(){
                         self.editorPane.enable();
                     })

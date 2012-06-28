@@ -184,7 +184,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -192,16 +192,17 @@
                                 weight:'100',
                                 enabled:false
                             };
+                            
                             eep.set("form",expected);
                             var actual = eep.get("form");
                             
-                            doh.is(expected.id,actual.id);
-                            doh.is(expected.name,actual.name);
-                            doh.is(expected.description,actual.description);
-                            doh.is(expected.type,actual.type);
-                            doh.is(expected.region,actual.region);
-                            doh.is(expected.weight,actual.weight);
-                            doh.is(expected.enabled,actual.enabled);
+                            doh.is(expected.pluginId,actual.pluginId,"_getFormAttr.pluginId value is not expected");
+                            doh.is(expected.name,actual.name,"_getFormAttr.name value is not expected");
+                            doh.is(expected.description,actual.description,"_getFormAttr.description value is not expected");
+                            doh.is(expected.type,actual.type,"_getFormAttr.type value is not expected");
+                            doh.is(expected.region,actual.region,"_getFormAttr.region value is not expected");
+                            doh.is(expected.weight,actual.weight,"_getFormAttr.weight value is not expected");
+                            doh.is(expected.enabled,actual.enabled,"_getFormAttr.enabled value is not expected");
                             
                             eep.destroy();
                         }
@@ -218,7 +219,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -231,15 +232,15 @@
                             var d = new doh.Deferred();
                             
                             
-                            eep.on("save",function(id,name,description,type,region,weight,enabled){
+                            eep.on("save",function(pluginId,name,description,type,region,weight,enabled){
                                 
-                                doh.is(expected.id,id);
-                                doh.is(expected.name,name);
-                                doh.is(expected.description,description);
-                                doh.is(expected.type,type);
-                                doh.is(expected.region,region);
-                                doh.is(expected.weight,weight);
-                                doh.is(expected.enabled,enabled);
+                                doh.is(expected.pluginId,pluginId,"_getFormAttr.pluginId value is not expected");
+                                doh.is(expected.name,name,"_getFormAttr.name value is not expected");
+                                doh.is(expected.description,description,"_getFormAttr.description value is not expected");
+                                doh.is(expected.type,type,"_getFormAttr.type value is not expected");
+                                doh.is(expected.region,region,"_getFormAttr.region value is not expected");
+                                doh.is(expected.weight,weight,"_getFormAttr.weight value is not expected");
+                                doh.is(expected.enabled,enabled,"_getFormAttr.enabled value is not expected");
                                 d.callback(true);
                             }); 
                             eep._onSave();
@@ -259,7 +260,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -298,7 +299,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -311,7 +312,7 @@
                             var d = new doh.Deferred();
                             
                             eep.on("extendedEdit",function(pluginId,type){
-                                doh.is(expected.id,pluginId);
+                                doh.is(expected.pluginId,pluginId);
                                 doh.is(expected.type,type);
                                 d.callback(true);
                             });
@@ -332,7 +333,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -345,7 +346,7 @@
                             var d = new doh.Deferred();
                             
                             eep.on("delete",function(pluginId){
-                                doh.is(expected.id,pluginId);
+                                doh.is(expected.pluginId,pluginId);
                                 d.callback(true);
                             });
                             eep._onDelete();
@@ -365,7 +366,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -378,10 +379,11 @@
                             var d = new doh.Deferred();
                             
                             eep.on("enable",function(pluginId,weight){
-                                doh.is(expected.id,pluginId);
+                                doh.is(expected.pluginId,pluginId);
                                 doh.is(expected.weight,weight);
                                 d.callback(true);
                             });
+                            
                             eep._onStateChange();
                             eep.destroy();
                             return d;
@@ -399,7 +401,7 @@
                             eep.resize();
                             
                             var expected = {
-                                id:1,
+                                pluginId:1,
                                 name:'name',
                                 description:'description',
                                 type:'type1',
@@ -412,9 +414,10 @@
                             var d = new doh.Deferred();
                             
                             eep.on("disable",function(pluginId){
-                                doh.is(expected.id,pluginId);
+                                doh.is(expected.pluginId,pluginId);
                                 d.callback(true);
                             });
+                            
                             eep._onStateChange();
                             eep.destroy();
                             return d;

@@ -81,7 +81,8 @@
                         name:"Test .onNew event listener",
                         runTest: function(){
                             var isDisabled,isNavigationIdOk,isNameOk,isDescriptionOk,
-                            isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk = false;
+                            isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk,
+                                isRegionSelecteSetOk= false;
                             
                             
                             var d = new doh.Deferred();
@@ -95,6 +96,7 @@
                                 doh.t(isWeightOk,"Is weight passed to addExtensionPlugin ok");
                                 doh.t(isEnableOk, "Is enable passed to addExtensionPlugin ok");
                                 doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                doh.t(isRegionSelecteSetOk,"Is proper value passed to eep.regionSelect.set() function call");
                                 d.callback(true);
                             }
                             
@@ -103,6 +105,14 @@
                                 disable:function(){isDisabled=true;},
                                 reloadGrid:function(){
                                     isReloadGridOk = true;
+                                    var a = new Deferred();
+                                    a.callback(true);
+                                    return a;
+                                },
+                                regionSelect:{
+                                    set:function(key,region){
+                                        isRegionSelecteSetOk = region=="region";
+                                    }
                                 }
                             });
                             var eec = new EEC({
@@ -126,14 +136,14 @@
                             eec.onNew("name", "description", "type", "region", 200, true)
                             
                             return d;
-                            
                         }
                     },
                     {
                         name:"Test .onSave event listener",
                         runTest: function(){
                             var isDisabled,isNavigationIdOk, isPluginIdOk,isNameOk,isDescriptionOk,
-                            isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk = false;
+                            isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk,
+                                isRegionSelecteSetOk= false;
                             
                             
                             var d = new doh.Deferred();
@@ -144,10 +154,10 @@
                                 doh.t(isNameOk,"Is name passed to setExtensionPluginValues ok");
                                 doh.t(isDescriptionOk,"Is description passed to setExtensionPluginValues ok");
                                 doh.t(isRegionOk,"Is region passed to setExtensionPluginValues ok");
-                                doh.t(isTypeOk,"Is type passed to setExtensionPluginValues ok");
                                 doh.t(isWeightOk,"Is weight passed to setExtensionPluginValues ok");
                                 doh.t(isEnableOk, "Is enable passed to setExtensionPluginValues ok");
                                 doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                doh.t(isRegionSelecteSetOk,"Is proper value passed to eep.regionSelect.set() function call");
                                 d.callback(true);
                             }
                             
@@ -156,18 +166,25 @@
                                 disable:function(){isDisabled=true;},
                                 reloadGrid:function(){
                                     isReloadGridOk = true;
+                                    var a = new Deferred();
+                                    a.callback(true);
+                                    return a;
+                                },
+                                regionSelect:{
+                                    set:function(key,region){
+                                        isRegionSelecteSetOk = region=="region";
+                                    }
                                 }
                             });
                             var eec = new EEC({
                                 editorPane:eep,
                                 navigationId:1,
                                 model:{
-                                    setExtensionPluginValues: function(navigationId ,pluginId, name,description,type,region,weight,enable){
+                                    setExtensionPluginValues: function(navigationId ,pluginId, name,description,region,weight,enable){
                                         isNavigationIdOk = navigationId==1;
                                         isPluginIdOk = pluginId==33;
                                         isNameOk = name=="name";
                                         isDescriptionOk = description == "description";
-                                        isTypeOk = type == "type";
                                         isRegionOk = region=="region";
                                         isWeightOk = weight == 200;
                                         isEnableOk = enable == true;
@@ -177,7 +194,7 @@
                                     }
                                 }
                             });
-                            eec.onSave(33,"name", "description", "type", "region", 200, true)
+                            eec.onSave(33,"name", "description", "region", 200, true)
                             
                             return d;
                             
@@ -186,7 +203,8 @@
                     {
                         name:"Test .onDelete event listener",
                         runTest: function(){
-                            var isDisabled,isPluginIdOk,isReloadGridOk = false;
+                            var isDisabled,isPluginIdOk,isReloadGridOk,
+                                isRegionSelecteSetOk = false;
                             
                             
                             var d = new doh.Deferred();
@@ -202,6 +220,19 @@
                                 disable:function(){isDisabled=true;},
                                 reloadGrid:function(){
                                     isReloadGridOk = true;
+                                    var a = new Deferred();
+                                    a.callback(true);
+                                    return a;
+                                },
+                                regionSelect:{
+                                    set:function(key,region){
+                                        isRegionSelecteSetOk = region=="region";
+                                    },
+                                    get:function(){
+                                        return {
+                                            'identifier':'region'
+                                        }
+                                    }
                                 }
                             });
                             var eec = new EEC({
@@ -242,6 +273,16 @@
                                 disable:function(){isDisabled=true;},
                                 reloadGrid:function(){
                                     isReloadGridOk = true;
+                                    var a = new Deferred();
+                                    a.callback(true);
+                                    return a;
+                                },
+                                regionSelect:{
+                                    get:function(){
+                                        return {
+                                            'identifier':'region'
+                                        }
+                                    }
                                 }
                             });
                             var eec = new EEC({
@@ -283,6 +324,16 @@
                                 disable:function(){isDisabled=true;},
                                 reloadGrid:function(){
                                     isReloadGridOk = true;
+                                    var a = new Deferred();
+                                    a.callback(true);
+                                    return a;
+                                },
+                                regionSelect:{
+                                    get:function(){
+                                        return {
+                                            'identifier':'region'
+                                        }
+                                    }
                                 }
                             });
                             var eec = new EEC({

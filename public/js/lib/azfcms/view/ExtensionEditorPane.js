@@ -166,27 +166,27 @@ define(
                 this.typeSelect.set("value",plugin.type);
                 this.formRegionSelect.set("value",region);
                 this.weightText.set("value",plugin.weight);
-                this.disabledCheckBox.set("value",!plugin.enabled);
+                this.disabledCheckBox.set("checked",!plugin.enabled);
                 this.pluginId = plugin.pluginId;
             },
             _getFormAttr:function(){
                 return {
-                    'id':this.pluginId,
+                    'pluginId':this.pluginId,
                     'name':this.nameText.get("value"),
                     'description':this.descriptionText.get("value"),
                     "type":this.typeSelect.get("item").name,
                     'region':this.formRegionSelect.get("item").identifier,
                     'weight':parseInt(this.weightText.get("value")),
-                    "enabled":this.disabledCheckBox.get("value")=="on"
+                    "enabled":this.disabledCheckBox.get("checked")==false
                 };
             },
             _onSave:function(){
                 var f = this.get('form');
-                this.onSave(f.id,f.name,f.description,f.type,f.region,f.weight,f.enabled);
+                this.onSave(f.pluginId,f.name,f.description,f.type,f.region,f.weight,f.enabled);
             },
             _onExtendedEdit:function(){
                 var f= this.get('form');
-                this.onExtendedEdit(f.id,f.type);
+                this.onExtendedEdit(f.pluginId,f.type);
             },
             _onDelete: function(){
                 this.onDelete(this.pluginId);
@@ -197,12 +197,11 @@ define(
             },
             _onStateChange: function(){
                 var f = this.get('form');
-                var enabled = !f.disabled;
                 
-                if(enabled){
-                    this.onEnable(f.id,f.weight);
+                if(f.enabled){
+                    this.onEnable(f.pluginId,f.weight);
                 } else {
-                    this.onDisable(f.id);
+                    this.onDisable(f.pluginId);
                 }
             },
             _onRegionSelect:function(){

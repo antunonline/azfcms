@@ -1,0 +1,36 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true">
+            
+        </script>
+        <script type="text/javascript">
+            require(['doh','dojo/domReady!','dojo/_base/Deferred',
+                'dojo/aspect','dojo/_base/lang','azfcms/model',
+            'azfcms/store/QueryLangStore'],function
+            (doh,ready, Deferred,
+            aspect, lang, model,
+            QueryLangStore){
+            
+                doh.register('azfcms.tests.store.QueryLangStore',[
+                    {
+                        name:"Test .constructore",
+                        runTest:function(){
+                            doh.t(true);
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body>
+        <div>DOH tests</div>
+    </body>
+</html>

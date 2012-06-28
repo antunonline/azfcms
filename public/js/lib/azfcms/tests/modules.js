@@ -7,7 +7,8 @@ define(['require'],function(require){
         './_Model',
         './view/modules',
         './controller/modules',
-        './model/modules'
+        './model/modules',
+        './store/modules'
         ])
 })
 

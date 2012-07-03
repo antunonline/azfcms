@@ -12,7 +12,7 @@
 
             }
         </style>
-        <script>
+        <script type="text/javascript">
             var o = {}
             require(
             ['doh','azfcms/view/FilesystemPane','dojo/store/Memory','dojo/query'],function
@@ -130,53 +130,143 @@
                     idProperty:"name"
                 })
                 
+                var isRobot = window.location.toString().indexOf("?robot")==-1;
+                if(isRobot){
+                    doh.register('azfcms.view.FilesystemPane',[
+                        {
+                            name:"Testing constructor",
+                            runTest:function(){
+                                var widget = new FilesystemPane({
+                                    treeStore:treeStore,
+                                    gridStore:gridStore
+                                });
+                                widget.placeAt(document.body);
+                                widget.resize();
+                                widget.destroy();
+                            }
+                        },
+                        {
+                            name:"Test .addAction",
+                            runTest:function(){
+                                var widget = new FilesystemPane({
+                                    treeStore:treeStore,
+                                    gridStore:gridStore
+                                });
+                                widget.placeAt(document.body);
+                                widget.resize();
+                            
+                                widget.addAction("Test",function(){},"dijitIconSave");
+                                doh.is(2,query("#"+widget.toolbar.containerNode.id+" >*").length);
+                            
+                            
+                                widget.destroy();
+                            }
+                        },
+                        {
+                            name:"Test .reloadGrid",
+                            runTest:function(){
+                                var widget = new FilesystemPane({
+                                    treeStore:treeStore,
+                                    gridStore:gridStore
+                                });
+
+                                widget.placeAt(document.body);
+                                widget.resize();
+                            
+                                var a = new doh.Deferred();
+                                var expectedQuery = {};
+                                widget.grid.setQuery  = function(query){
+                                    doh.t(expectedQuery==query,"Provided query value is not expected");
+                                    a.callback(true);
+                                }
+                                widget.reloadGrid(expectedQuery);
+                            
+                            
+                                widget.destroy();
+                                return a;
+                            }
+                        },
+                        {
+                            name:"Test .reload without provided grid query argument",
+                            runTest:function(){
+                                var widget = new FilesystemPane({
+                                    treeStore:treeStore,
+                                    gridStore:gridStore
+                                });
+
+                                widget.placeAt(document.body);
+                                widget.resize();
+                            
+                                var a = new doh.Deferred();
+                                var expectedQuery = widget.grid.query = {};
+                                widget.grid.setQuery  = function(query){
+                                    doh.t(expectedQuery==query,"Provided query value is not expected");
+                                    a.callback(true);
+                                }
+                                widget.reload();
+                            
+                            
+                                widget.destroy();
+                                return a;
+                            }
+                        },
+                        {
+                            name:"Test .reload with provided grid query argument",
+                            runTest:function(){
+                                var widget = new FilesystemPane({
+                                    treeStore:treeStore,
+                                    gridStore:gridStore
+                                });
+
+                                widget.placeAt(document.body);
+                                widget.resize();
+                            
+                                var a = new doh.Deferred();
+                                var expectedQuery = {a:2};
+                                widget.grid.setQuery  = function(query){
+                                    doh.t(expectedQuery==query,"Provided query argument is not expected")
+                                    a.callback(true);
+                                }
+                                widget.reload(expectedQuery);
+                            
+                            
+                                widget.destroy();
+                                return a;
+                            }
+                        },
+                        {
+                            name:"Last test, will be used for robot tests",
+                            runTest:function(){
+                                var widget = new FilesystemPane({
+                                    treeStore:treeStore,
+                                    gridStore:gridStore
+                                });
+                                widget.placeAt(document.body);
+                                widget.resize();
+                            }
+                        }
+                    ]);
                 
-                doh.register('azfcms.view.FilesystemPane',[
-                    {
-                        name:"Testing constructor",
-                        runTest:function(){
-                            var widget = new FilesystemPane({
-                                treeStore:treeStore,
-                                gridStore:gridStore
-                            });
-                            widget.placeAt(document.body);
-                            widget.resize();
-                            widget.destroy();
-                        }
-                    },
-                    {
-                        name:"Test .addAction",
-                        runTest:function(){
-                            var widget = new FilesystemPane({
-                                treeStore:treeStore,
-                                gridStore:gridStore
-                            });
-                            widget.placeAt(document.body);
-                            widget.resize();
+                    doh.run();
+                }
+                // If this request is initiated by dojo robot
+                else{
+                    var widget = new FilesystemPane({
+                        treeStore:treeStore,
+                        gridStore:gridStore,
+                        style:"width:800px;height:600px;"
+                    });
+                    widget.placeAt(document.body);
+                    widget.resize();
+                    
+                    if(window.location.toString().indexOf("robot-recorder")>-1){
+                        require(['dojox/robot/recorder'],function(){
                             
-                            widget.addAction("Test",function(){},"dijitIconSave");
-                            doh.is(2,query("#"+widget.toolbar.containerNode.id+" >*").length);
-                            
-                            
-                            widget.destroy();
-                        }
-                    },
-                    {
-                        name:"Last test, will not destroy rendering, used for preview",
-                        runTest:function(){
-                            var widget = new FilesystemPane({
-                                treeStore:treeStore,
-                                gridStore:gridStore
-                            });
-                            widget.placeAt(document.body);
-                            widget.resize();
-                            widget.disable();
-                            window.w = widget;
-                        }
+                        })
                     }
-                ]);
+                }
                 
-                doh.run();
+                
             })
         </script>
     </head>

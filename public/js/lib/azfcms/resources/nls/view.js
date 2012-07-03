@@ -7,6 +7,7 @@
  * cep = azfcms/view/ContentEditPane
  * aep = azfcms/view/AbstractEditPane
  * dpd = azfcms/view/navigation/DeletePageDialog
+ * up = azfcms/view/UploadPanel
  * 
  */
 
@@ -37,7 +38,11 @@ define({
     dpdMessage:'Brisanjem ove stranice isto tako \u010dete izbrisati sve stranice koje se nalaze unutar nje. <br />Želite li doista izbrisati stranicu "${0}"? ',
     dpdTitle:'Brisanje stranice',
     dpdCancelButton:'Ne',
-    dpdConfirmButton:'Izbri\u0161i stranicu'
+    dpdConfirmButton:'Izbri\u0161i stranicu',
+    
+    upUploadMessage:"Izaberite dadoteke za učitavanje",
+    upSubmitMessage:"Učitaj dadoteke",
+    upCancelMessage:"Zatvori"
   },
 
   de: true,

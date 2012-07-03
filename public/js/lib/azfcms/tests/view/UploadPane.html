@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['azfcms/view/UploadPane','dojo/domReady!',
+                'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
+                'dojo/dom','dijit/Dialog'],function
+            (UploadPane,ready,
+            dijit,doh, nls,
+            dom,Dialog){
+                //              
+                
+               
+                var dialog = new Dialog({
+                    style:"width:350px;"
+                });
+                dialog.startup();
+               
+                var isRobot = window.location.toString().indexOf("?robot")>-1;
+                
+                if(!isRobot){
+                    
+                
+                    doh.register('ExtendedEditorPane',[
+                        {
+                            name:"Test construcor",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                                pane.destroy();
+                            
+                            }
+                        },
+                        {
+                            name:"Test getForm",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                                doh.is(pane.form,pane.getForm());
+                                pane.destroy();
+                            
+                            }
+                        },
+                        {
+                            name:"Test disable",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                                pane.disable();
+                                doh.is(pane.file1Input.disabled,true);
+                                doh.is(pane.file2Input.disabled,true);
+                                doh.is(pane.file3Input.disabled,true);
+                                pane.destroy();
+                            
+                            }
+                        },
+                        {
+                            name:"Test enable",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                                pane.disable();
+                                pane.enable();
+                                doh.is(pane.file1Input.disabled,false);
+                                doh.is(pane.file2Input.disabled,false);
+                                doh.is(pane.file3Input.disabled,false);
+                                pane.destroy();
+                            
+                            }
+                        },
+                        {
+                            name:"Test _onUpload",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                            
+                            
+                                var a = new doh.Deferred();
+                                var isFormOk, isPreventDefaultOk, isStopPropagationOk,
+                                isOnUploadOk = false;
+                            
+                                function isOk(){
+                                    doh.t(isFormOk);
+                                    doh.t(isPreventDefaultOk);
+                                    doh.t(isStopPropagationOk);
+                                    doh.t(isOnUploadOk);
+                                    a.callback(true);
+                                }
+                                pane.onUpload = function(form){
+                                    isFormOk = form == pane.getForm();
+                                    isOnUploadOk=true;
+                                    isOk();
+                                }
+                            
+                                pane._onUpload({
+                                    preventDefault:function(){
+                                        isPreventDefaultOk=true;
+                                    },
+                                    stopPropagation:function(){
+                                        isStopPropagationOk=true
+                                    }
+                                })
+                                pane.destroy();
+                                return a;
+                            }
+                        },
+                        {
+                            name:"Test _onCancel",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                            
+                            
+                                var a = new doh.Deferred();
+                                var  isPreventDefaultOk, isStopPropagationOk,
+                                isCancelOk = false;
+                            
+                                function isOk(){
+                                    doh.t(isPreventDefaultOk);
+                                    doh.t(isStopPropagationOk);
+                                    doh.t(isCancelOk);
+                                    a.callback(true);
+                                }
+                                pane.onCancel = function(){
+                                    isCancelOk=true;
+                                    isOk();
+                                }
+                            
+                                pane._onCancel({
+                                    preventDefault:function(){
+                                        isPreventDefaultOk=true;
+                                    },
+                                    stopPropagation:function(){
+                                        isStopPropagationOk=true
+                                    }
+                                })
+                                pane.destroy();
+                                return a;
+                            }
+                        },
+                        {
+                            name:"Last test used for pane preview",
+                            runTest:function(){
+                                var pane = new UploadPane();
+                                dialog.set("content",pane);
+                                dialog.show()
+                            
+                            }
+                        }
+                    ]);
+                    doh.run();
+                }
+                
+                if(isRobot){
+                    var pane = new UploadPane({
+                    style:"width:400px;height:200px;"
+                    });
+                    pane.placeAt(document.body);
+                    
+                    
+                    if(window.location.toString().indexOf("robot-recorder")>-1){
+                        require(["dojox/robot/recorder"],new Function())
+                    }
+                }
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

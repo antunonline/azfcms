@@ -48,6 +48,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 this.inherited(arguments);
             },
             postCreate:function(){
+                var self = this;
                 this.inherited(arguments);
             
                 // Add tree
@@ -55,6 +56,10 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                     model:this.treeStore,
                     region:"left",
                     style:"width:300px;"
+                });
+                tree.on("click",function(item){
+                    self.treeSelect=item;
+                    self.onTreeSelect(item);
                 });
                 this.borderContainer.addChild(tree);
             
@@ -116,24 +121,34 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 
                 this.toolbar.addChild(button);
             },
-            reloadGrid:function(){
-                
+            reloadGrid:function(query){
+                this.grid.setQuery(query);
             },
             reloadTree:function(){
                 
             },
-            reload:function(){},//TODO
+            reload:function(){
+                var query ;
+                if(arguments.length == 1){
+                    query = arguments[0];
+                } else {
+                    query = this.grid.query;
+                }
+                
+                this.reloadGrid(query);
+                this.reloadTree();
+            },
             getGridSelection:function(){
-                return [
-                JsFile
-                ]
+                return this.grid.selection.getSelected();
             },
-            getTreeSelection:function(){
-                return JsFile|null
+            getTreeSelection:function(){                
+                if("treeSelect"in this){
+                    return this.treeSelect;
+                } else {
+                    return null;
+                }
             },
-            onTreeSelect:function(item){
-                item==JsFile||null
-            }
+            onTreeSelect:function(item){}
         });
     
     

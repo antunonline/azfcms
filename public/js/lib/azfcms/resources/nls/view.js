@@ -7,7 +7,8 @@
  * cep = azfcms/view/ContentEditPane
  * aep = azfcms/view/AbstractEditPane
  * dpd = azfcms/view/navigation/DeletePageDialog
- * up = azfcms/view/UploadPanel
+ * up = azfcms/view/UploadPane
+ * cp = azfcms/view/Confirmpane
  * 
  */
 
@@ -42,7 +43,10 @@ define({
     
     upUploadMessage:"Izaberite dadoteke za učitavanje",
     upSubmitMessage:"Učitaj dadoteke",
-    upCancelMessage:"Zatvori"
+    upCancelMessage:"Zatvori",
+    
+    cpAcceptLabel:"Da",
+    cpRejectLabel:"Ne"
   },
 
   de: true,

@@ -17,10 +17,10 @@
             require(
             ['azfcms/view/UploadPane','dojo/domReady!',
                 'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
-                'dojo/dom','dijit/Dialog'],function
+                'dojo/dom','dijit/Dialog','azfcms/model/cms'],function
             (UploadPane,ready,
             dijit,doh, nls,
-            dom,Dialog){
+            dom,Dialog,cms){
                 //              
                 
                
@@ -30,8 +30,9 @@
                 dialog.startup();
                
                 var isRobot = window.location.toString().indexOf("?robot")>-1;
+                var isUploadTest = window.location.toString().indexOf("?uploadTest")>-1;
                 
-                if(!isRobot){
+                if(!isRobot&&!isUploadTest){
                     
                 
                     doh.register('ExtendedEditorPane',[
@@ -166,7 +167,7 @@
                 
                 if(isRobot){
                     var pane = new UploadPane({
-                    style:"width:400px;height:200px;"
+                        style:"width:400px;height:200px;"
                     });
                     pane.placeAt(document.body);
                     
@@ -174,6 +175,24 @@
                     if(window.location.toString().indexOf("robot-recorder")>-1){
                         require(["dojox/robot/recorder"],new Function())
                     }
+                }
+                
+                if(isUploadTest){
+                    require(['azfcms/model'],function(model){
+                        var pane = new UploadPane({
+                            style:"width:400px;height:200px;"
+                        });
+                        
+                        pane.on("upload",function(form){
+                            cms.uploadFiles({"dirname":"/","name":"netigso","date":1341431412,"type":"","size":4096,"permissions":"0775"},form).then(function(){
+                                console.debug(form);
+                            });
+                        })
+                        var dialog = new Dialog();
+                        dialog.set("content",pane);
+                        dialog.show();
+                        
+                    })
                 }
             })
         </script>

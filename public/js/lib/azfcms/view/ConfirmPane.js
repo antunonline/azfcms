@@ -35,6 +35,11 @@ define(
                 else 
                     this.acceptButton.set("label",this.cpAcceptLabel);
             },
+            fireReject:function(){
+                if(this.callback.length>0){
+                    this._onReject();
+                }
+            },
             _setMessageAttr:function(value){
                 this.messageNode.innerHTML = value;
             },

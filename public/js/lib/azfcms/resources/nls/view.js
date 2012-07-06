@@ -9,6 +9,7 @@
  * dpd = azfcms/view/navigation/DeletePageDialog
  * up = azfcms/view/UploadPane
  * cp = azfcms/view/Confirmpane
+ * utl = azfcms/view/Util
  * 
  */
 
@@ -46,7 +47,9 @@ define({
     upCancelMessage:"Zatvori",
     
     cpAcceptLabel:"Da",
-    cpRejectLabel:"Ne"
+    cpRejectLabel:"Ne",
+    
+    utlConfirmDialogTitle:"Pitanje"
   },
 
   de: true,

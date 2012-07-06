@@ -21,12 +21,12 @@ define(
             model:null,
             constructor:function(args){
                 lang.mixin(this,args);
-                if("idProperty" in args == false){
+                if("idProperty" in args == false && this.idProperty == false){
                     throw "QueryLangStore.constructor: idPropery value is not provided to the class constructor";
                 }
                 this.idProperty = args.idProperty;
                 
-                if("model" in args){
+                if(typeof args.model != 'undefined'){
                     this.model = args.model;
                 } else {
                     this.model = model;

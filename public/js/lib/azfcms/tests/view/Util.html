@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['azfcms/view/Util','dojo/domReady!','azfcms/view/ConfirmPane',
+                'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
+                'dojo/dom','dijit/Dialog'],function
+        (Util,ready,ConfirmPane,
+        dijit,doh, nls,
+        dom,Dialog){
+            //              
+                window.util = new Util();
+               
+            var isRobot = window.location.toString().indexOf("?robot")>-1;
+                
+            if(!isRobot){
+                    
+                
+                doh.register('azfcms.tests.view.Util',[
+                    {
+                        name:"Test getConfirmDialog",
+                        runTest:function(){
+                            var util = new Util();
+                            doh.t(util.getConfirmDialog() instanceof Dialog);
+                            doh.is(util.getConfirmDialog(),util.getConfirmDialog());
+                            
+                        }
+                    },
+                    {
+                        name:"Test getConfirmPane",
+                        runTest:function(){
+                            var util = new Util();
+                            doh.t(util.getConfirmPane() instanceof ConfirmPane);
+                            doh.is(util.getConfirmPane(),util.getConfirmPane());
+                            
+                        }
+                    },
+                    {
+                        name:"Test confirm",
+                        runTest:function(){
+                            var util = new Util();
+                            util.confirm(function(value){
+                                alert(value?"YES":"NO");
+                            },"DO YOU AGREE?","YES I DO", "I DO NOT");
+                            
+                        }
+                    }
+                    ]);
+                doh.run();
+            }
+                
+            if(isRobot){
+                    
+                if(window.location.toString().indexOf("robot-recorder")>-1){
+                    require(["dojox/robot/recorder"],new Function())
+                }
+            }
+        })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

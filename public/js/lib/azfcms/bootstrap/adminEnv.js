@@ -206,6 +206,41 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         }
                         
                     }
+                },
+                {
+                    i18nButtonLabelPointer: 'npPagePluginsAction',
+                    iconClass:'dijitIconDocument',
+                    init: function(initCallback,adminDialog, item){
+                        var self = this;
+                        require(
+                            ['azfcms/view/FilesystemPane','azfcms/controller/FilesystemPaneController',
+                            'azfcms/store/Filesystem'],function
+                            (FP,FPC,FSStore){
+                                self.adminDialog = adminDialog;
+                                self.FP = FP
+                                self.FPC = FPC;
+                                self.gridStore = new FSStore({
+                                    
+                                })
+                                self.treeStore = new FSStore({
+                                    getOptions:{file:false}
+                                })
+                                initCallback()
+                            })
+                    },
+                    callback: function(item){
+                        var fp = new this.FP({
+                            gridStore:this.gridStore,
+                            treeStore:this.treeStore
+                        });
+                        var fpc = new this.FPC({
+                            view:fp
+                        })
+                        
+                        this.adminDialog.addChild(fp);
+                        fp.resize();
+                        
+                    }
                 }
                 ];
             }

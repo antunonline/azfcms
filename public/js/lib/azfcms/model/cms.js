@@ -9,26 +9,7 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
             },
         
             createCall:function(method,args){
-                var call = [method];
-                var callArgs = [];
-                var arg;
-                for(var i = 0; args.length>i;i++){
-                    arg = args[i];
-                
-                    if(typeof arg == 'string'){
-                        callArgs.push("'"+this.model._s(arg)+"'")
-                    }else if(typeof arg=="number") {
-                        callArgs.push(String(arg));
-                    } else {
-                        if(arg) callArgs.push("true");
-                        else callArgs.push("false");
-                    }
-                }
-            
-                call.push("(");
-                if(callArgs.length) call.push(callArgs.join(","));
-                call.push(")");
-                return call.join("");
+                return this.model.createCall(method,args);
             },
         
             /**
@@ -109,6 +90,32 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
                     data:promise
                 });
                 return this.contentPluginStore;
+            },
+            
+            /**
+             * @param {Form} form
+             * @return {dojo.Deferred}
+             */
+            uploadFiles:function(directory,form){
+                var method = "cms.filesystem.uploadFiles";
+                var call = this.createCall(method,[directory]);
+                
+                return this.model.invokeWithForm(call,form);
+            },
+            
+            /**
+             * Delete provided JS files
+             */
+            deleteFiles:function(files){
+                var method = "cms.filesystem.deleteFiles";
+                var call = this.createCall(method,[files]);
+                return this.model.invoke(call);
+            },
+            
+            createDirectory:function(name){
+                var method = "cms.filesystem.createDirectory";
+                var call = this.createCall(method,[name]);
+                return this.model.invoke(call);
             }
         });
     

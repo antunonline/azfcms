@@ -5,7 +5,9 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
     public function initialize() {
         parent::initialize();
     }
-
+    protected function isAllowed($namespaces, $parameters) {
+        return true;
+    }
 
     /**
      *
@@ -83,6 +85,8 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
 
         $baseDirStrLen = strlen($this->getBaseDir());
         foreach ($iterator as $file) {
+            if($file->isDot())
+                continue;
             if ($filter['directory'] == false && $file->isDir())
                 continue;
             if ($filter['hidden'] == false && substr_compare($file->getFilename(), ".", 0, 1) === 0)
@@ -103,7 +107,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         return $files;
     }
 
-    public function getFileListMethod($directory, array $filter) {
+    public function getFileListMethod($directory, $filter=array()) {
         $normalizedFilter = $this->normalizeFilter($filter);
         return $this->getDirectoryFileList($directory, $normalizedFilter);
     }
@@ -143,7 +147,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         return true;
     }
 
-    public function deleteFilesMethod(array $files) {
+    public function deleteFilesMethod($files) {
         foreach($files as $file){
             $this->deleteFile($file);
         }

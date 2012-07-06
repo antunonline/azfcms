@@ -7,7 +7,7 @@
 define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
     'dojo/_base/lang','dojo/_base/declare','dojo/text!./templates/FilesystemPane.html',
     'dojo/data/ObjectStore','dojo/query','dojox/grid/DataGrid','dojo/dom-style',
-    'dijit/form/Button',
+    'dijit/form/Button','dojo/aspect',
 
     'dojo/NodeList-manipulate',
     'dijit/layout/ContentPane','dijit/layout/BorderContainer','dijit/Tree',
@@ -15,7 +15,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
     (_TemplatedMixin,_WidgetsInTemplateMixin,_Widget,
         lang,declare,templateString,
         ObjectStore,query,Grid,domStyle,
-        Button,
+        Button,aspect,
 
         CP,BC,Tree)
         {
@@ -33,7 +33,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
          */
             constructor:function(args){
                 if(!this.isFirstConstruct){
-                    var url = require.toUrl("")+"/dojox/grid/resources/soriaGrid.css";
+                    var url = require.toUrl("")+"/dojox/grid/resources/claroGrid.css";
                     query("head").append("<link rel='stylesheet' type='text/css' href='"+url+"' />");
                     this.isFirstConstruct = true;
                 }
@@ -50,12 +50,12 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
             postCreate:function(){
                 var self = this;
                 this.inherited(arguments);
-            
                 // Add tree
                 var tree = this.tree = new dijit.Tree({
                     model:this.treeStore,
                     region:"left",
-                    style:"width:300px;"
+                    style:"width:300px;",
+                    persist:false
                 });
                 tree.on("click",function(item){
                     self.treeSelect=item;
@@ -67,13 +67,35 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 // If gridStore does not inherit dojo.data.api.Read interface
                 var gridStore;
                 if("getFeatures" in this.gridStore ==false){
-                    this.gridStore = gridStore = new ObjectStore({
+                    // Alter grid store so that it will work with ObjectStore 
+                    // strange transformation of query object
+                    aspect.before(this.gridStore,"query",function(query){
+                        var modifiedQuery={};
+                        for(var name in query){
+                            modifiedQuery[name] = query[name].toString();
+                        }
+                        return [modifiedQuery];
+                    });
+                    gridStore = new ObjectStore({
                         objectStore:this.gridStore
                     });
                 } else {
                     gridStore= this.gridStore;
                 }
-                this.grid.setStore(gridStore);
+                
+                // Convert timestamps to dates
+                aspect.after(this.gridStore,"query",function(promise){
+                    promise.then(function(items){
+                         var d = new Date();
+                        for(var i = 0; i < items.length;i++){
+                           d = new Date(items[i].date*1000);
+                            items[i].date = d.getUTCDay()+"."+d.getUTCMonth()+"."+d.getUTCFullYear()
+                        }
+                    })
+                    return promise;
+                })
+                
+                this.grid.setStore(gridStore,{});
                 
             },
             enable:function(){
@@ -104,7 +126,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 this.borderContainer.resize();
                 
                 this.grid.set("style",this._getComputedGridStyle());
-                this.grid.setStore(this.gridStore);
+                this.reload();
             },
             _getComputedGridStyle:function(){
                 var compS = domStyle.getComputedStyle(this.gridContentPane);
@@ -125,7 +147,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 this.grid.setQuery(query);
             },
             reloadTree:function(){
-                
+                this.tree.set("model",this.treeStore);
             },
             reload:function(){
                 var query ;

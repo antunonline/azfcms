@@ -1,7 +1,7 @@
 define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
-    'azfcms/store/Lang'],
+    'azfcms/store/Lang','dojo/io/iframe','dojo/json'],
     function(declare, xhr, Deferred,
-        LangStore){
+        LangStore,iframe,json){
         return declare(null,{
             /**
          * SIngle quote escape
@@ -100,7 +100,34 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
                 this.preparedRestStores[name] = restStore;
             },
             _ucfirst: function(value){
-                return value[0].toUpperCase()+value.substring(1);
+                return value.substring(0,1).toUpperCase()+value.substring(1);
+            },
+            
+            createCall:function(method,args){
+                var call = [method];
+                var callArgs = [];
+                var arg;
+                for(var i = 0; args.length>i;i++){
+                    arg = args[i];
+                
+                    if(typeof arg == 'string'){
+                        callArgs.push("'"+this._s(arg)+"'")
+                    }else if(typeof arg=="number") {
+                        callArgs.push(String(arg));
+                    } 
+                    else if(typeof arg=='boolean'){
+                        if(arg) callArgs.push("true");
+                        else callArgs.push("false");   
+                    }
+                    else {
+                        callArgs.push(json.stringify(arg));
+                    }
+                }
+            
+                call.push("(");
+                if(callArgs.length) call.push(callArgs.join(","));
+                call.push(")");
+                return call.join("");
             },
         
         
@@ -228,6 +255,25 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
             invoke: function(expr){
                 var d = new Deferred();
                 this.load(expr,null,d.callback, d.errback)
+                return d;
+            },
+            invokeWithForm:function(expr,form){
+                var d = new Deferred();
+                iframe.send({
+                    url:"/json-lang.php",
+                    content:{
+                        expr:expr,
+                        "MAX_FILE_SIZE":"1000000000",
+                        'render-type':'render-in-textarea'
+                    },
+                    handleAs:"json",
+                    form:form
+                })
+                .then(
+                    function(value){d.callback(value);},
+                    function(value){d.errback(value);}
+                );
+                
                 return d;
             },
             

@@ -39,7 +39,7 @@ define(
     
             _buildRequire: function(type){
                 function _ucFirst(str) {
-                    return str[0].toUpperCase()+str.substring(1);
+                    return str.substring(0,1).toUpperCase()+str.substring(1);
                     
                 }
                 var name = _ucFirst(type);

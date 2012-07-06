@@ -1,7 +1,7 @@
 
 define(
-    ['dojo/_base/declare','dojo/_base/lang'],function
-    (declare, lang){
+    ['dojo/_base/declare','dojo/_base/lang','azfcms/view/util','dojo/i18n!azfcms/resources/nls/view'],function
+    (declare, lang,util,nls){
         return declare([],{
             constructor: function(args){
                 /**
@@ -24,6 +24,10 @@ define(
                 this.navigationId = args.navigationId;
                 
                 this._attachEventListeners();
+                
+                if(!this.util) {
+                    this.util = util;
+                }
             },
             
             _attachEventListeners: function(){
@@ -84,14 +88,19 @@ define(
             },
             onDelete:function(pluginId){
                 var self = this;
-                this.editorPane.disable();
-                this.model.removeExtensionPlugin(pluginId).then(function(){
-                    var region = self.editorPane.regionSelect.get('item').identifier;
-                    self.editorPane.reloadGrid(self.navigationId,region).
-                    then(function(){
-                        self.editorPane.enable();
+                this.util.confirm(function(confirmed){
+                    if(!confirmed)
+                        return; 
+                    
+                    self.editorPane.disable();
+                    self.model.removeExtensionPlugin(pluginId).then(function(){
+                        var region = self.editorPane.regionSelect.get('item').identifier;
+                        self.editorPane.reloadGrid(self.navigationId,region).
+                        then(function(){
+                            self.editorPane.enable();
+                        })
                     })
-                })
+                },nls.eecDeleteConfirmation);
             },
             onDisable: function(pluginId){
                 var self = this;
@@ -106,7 +115,7 @@ define(
             onEnable: function(pluginId, weight){
                 var self = this;
                 this.editorPane.disable();
-                this.model.enableExtensionPlugin(this.navigationId, pluginId).then(function(){
+                this.model.enableExtensionPlugin(this.navigationId, pluginId,weight).then(function(){
                     self.editorPane.reloadGrid(self.navigationId,self.editorPane.regionSelect.get('item').identifier).
                     then(function(){
                         self.editorPane.enable();
@@ -132,6 +141,7 @@ define(
                 this.editorPane.disable();
                 this.editorPane.reloadGrid(this.navigationId,region).
                 then(function(){
+                    self.editorPane.resetForm();
                     self.editorPane.enable();
                 })
                 

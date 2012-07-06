@@ -208,7 +208,7 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     }
                 },
                 {
-                    i18nButtonLabelPointer: 'npPagePluginsAction',
+                    i18nButtonLabelPointer: 'npFilesystemAction',
                     iconClass:'dijitIconDocument',
                     init: function(initCallback,adminDialog, item){
                         var self = this;
@@ -230,6 +230,8 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     },
                     callback: function(item){
                         var fp = new this.FP({
+                            closable:true,
+                            title:nls.npFilesystemAction,
                             gridStore:this.gridStore,
                             treeStore:this.treeStore
                         });

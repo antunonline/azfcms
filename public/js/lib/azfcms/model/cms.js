@@ -1,7 +1,7 @@
 define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
-    'dojo/store/Memory'],
+    'dojo/store/Memory','azfcms/store/QueryLangStore'],
     function(model,Deferred, declare,
-        Memory){
+        Memory,QueryLangStore){
         
         var _class = declare([],{
             constructor:function(){

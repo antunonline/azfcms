@@ -111,6 +111,14 @@ class Azf_Model_DbTable_NavigationPluginTest extends PHPUnit_Extensions_Database
         $this->assertTrue($expected->matches($actual));
         
     }
+    
+    public function testIsBinded(){
+        $this->markTestIncomplete();
+    }
+    
+    public function testUpdateWeightByNavigationAndPluginId(){
+        $this->markTestIncomplete();
+    }
 
     
 }

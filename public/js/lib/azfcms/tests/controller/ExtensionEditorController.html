@@ -307,15 +307,16 @@
                     {
                         name:"Test .onEnable event listener",
                         runTest: function(){
-                            var isDisabled,isNavigationIdOk,isPluginIdOk,isReloadGridOk = false;
+                            var isDisabled,isNavigationIdOk,isPluginIdOk,isReloadGridOk, isWeightOk = false;
                             
                             
                             var d = new doh.Deferred();
                             function isOk(){
                                 doh.t(isDisabled,"Is disabled function call");
-                                doh.t(isNavigationIdOk,"Is navigation id passed to disableExtensionPlugin")
-                                doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues");
+                                doh.t(isNavigationIdOk,"Is navigation id passed to enableExtensionPlugin")
+                                doh.t(isPluginIdOk, "Is plugin id passed to enableExtensionPlugin");
                                 doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                doh.t(isWeightOk,"Is weight passed to enableExtensionPlugin ok function call");
                                 d.callback(true);
                             }
                             
@@ -340,16 +341,17 @@
                                 editorPane:eep,
                                 navigationId:1,
                                 model:{
-                                    enableExtensionPlugin: function(navigationId,pluginId){
+                                    enableExtensionPlugin: function(navigationId,pluginId,weight){
                                         isNavigationIdOk = navigationId==1;
                                         isPluginIdOk = pluginId==33; 
+                                        isWeightOk = weight == 100;
                                         var a = new Deferred();
                                         a.callback(true);
                                         return a;
                                     } 
                                 }
                             });
-                            eec.onEnable(33);
+                            eec.onEnable(33,100);
                             
                             return d;
                             

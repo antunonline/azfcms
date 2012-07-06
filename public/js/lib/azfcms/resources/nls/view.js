@@ -10,6 +10,8 @@
  * up = azfcms/view/UploadPane
  * cp = azfcms/view/Confirmpane
  * utl = azfcms/view/Util
+ * eep = azfcms/view/ExtensionEditorPane
+ * eec = azfcms/controller/ExtensionEditorController
  * 
  */
 
@@ -22,6 +24,7 @@ define({
     npEditPageAction: "Uredi stranicu",
     npDeletePageAction: "Izbriši stranicu",
     npPagePluginsAction: "Prikaži pluginove",
+    npFilesystemAction: "Upravljanje dadotekama",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",
@@ -49,7 +52,27 @@ define({
     cpAcceptLabel:"Da",
     cpRejectLabel:"Ne",
     
-    utlConfirmDialogTitle:"Pitanje"
+    utlConfirmDialogTitle:"Pitanje",
+    
+    eepTabName:"Editor pluginova",
+    eepNameColumnLabel:"Naziv",
+    eepDescriptionColumnLabel:"Opis",
+    eepDisabledColumnLabel:"Ukljućen",
+    eepPlacementColumnLabel:"Pozicija",
+    eepRegion:"Dio stranice",
+    eepFormName:"Naziv",
+    eepFormDescription:"Opis",
+    eepFormType:"Vrsta",
+    eepFormRegion:"Dio stranice",
+    eepFormPlacement:"Pozicija",
+    eepFormDisabled:"Isključen",
+    eepFormSaveEnabled:"Spremi",
+    eepFormSave:"Spremi",
+    eepFormExtendedEdit:"Editiraj dodatne vrijednosti",
+    eepFormAdd:"Dodaj plugin",
+    eepFormDelete:"Izbriši plugin",
+    
+    eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani plugin?"
   },
 
   de: true,

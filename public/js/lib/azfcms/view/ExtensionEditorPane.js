@@ -6,13 +6,13 @@
 define(
     ['dojo/_base/declare','dojo/text!./templates/ExtendedEditorPane.html','dijit/_Widget',
     'dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dojo/dom-style',
-    'dojo/data/ObjectStore','dojo/_base/lang','azfcms/model/cms',
+    'dojo/data/ObjectStore','dojo/_base/lang','azfcms/model/cms','dojo/i18n!azfcms/resources/nls/view',
 
     'dijit/layout/TabContainer','dijit/layout/ContentPane','dojox/grid/DataGrid',
     'dijit/form/FilteringSelect','dijit/form/CheckBox','dijit/form/TextBox'],function
     (declare,templateString,_Widget,
         _TemplatedMixin, _WidgetsInTemplateMixin, domStyle,
-        ObjectStore,lang,cms)
+        ObjectStore,lang,cms,nls)
         {
         return declare([_Widget,_TemplatedMixin, _WidgetsInTemplateMixin],{
             templateString: templateString,
@@ -38,6 +38,13 @@ define(
                 this.formNode=null;
                 this.pluginId=0;
                 this.model = cms;
+                
+                for(var name in nls){
+                    if(name.indexOf("eep")==0){
+                        this[name] = nls[name];
+                    }
+                }
+                
             },
             postCreate: function(){
                 this.inherited(arguments);
@@ -124,6 +131,7 @@ define(
                 this.customEditButton.set("disabled",true);
                 this.removeButton.set("disabled",true);
                 this.addButton.set("disabled",true);
+                this.disabledCheckBox.set("disabled",true);
             },
             enable:function(){
                 this.tabContainer.set("disabled",false);
@@ -139,6 +147,7 @@ define(
                 this.customEditButton.set("disabled",false);
                 this.removeButton.set("disabled",false);
                 this.addButton.set("disabled",false);
+                this.disabledCheckBox.set("disabled",false);
             },
             addChild: function(pane){
                 this.tabContainer.addChild(pane);
@@ -152,6 +161,17 @@ define(
                 });
                 return callback;
             },
+            resetForm:function(){
+                this.set("form",{
+                    pluginId:"",
+                    name:"",
+                    description:"",
+                    type:"",
+                    region:"",
+                    weight:0,
+                    enabled:false
+                });
+            },
             _setFormAttr: function(plugin){
                 this.nameText.set("value",plugin.name);
                 this.descriptionText.set("value",plugin.description);
@@ -161,6 +181,10 @@ define(
                     region = plugin.region;
                 } else {
                     region = this.regionSelect.get("item").identifier;
+                }
+                
+                if(typeof plugin.enabled == "string"){
+                    plugin.enabled = parseInt(plugin.enabled);
                 }
                 
                 this.typeSelect.set("value",plugin.type);
@@ -182,7 +206,7 @@ define(
             },
             _onSave:function(){
                 var f = this.get('form');
-                this.onSave(f.pluginId,f.name,f.description,f.type,f.region,f.weight,f.enabled);
+                this.onSave(f.pluginId,f.name,f.description,f.region,f.weight,f.enabled);
             },
             _onExtendedEdit:function(){
                 var f= this.get('form');

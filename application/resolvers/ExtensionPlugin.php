@@ -119,12 +119,16 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
 
     /**
      * 
-     * @param string $type
      * @param int $pluginId
      */
-    public function removeExtensionPluginMethod($type, $pluginId) {
-        $this->getManager()->tearDown($type, $pluginId);
-        $this->getModel()->deleteById($pluginId);
+    public function removeExtensionPluginMethod($pluginId) {
+        $row =$this->getModel()->find($pluginId);
+        if($row->count()>0){
+            $type = $row[0]->type;
+            $this->getManager()->tearDown($type, $pluginId);
+            $this->getModel()->deleteById($pluginId);
+        }
+        
     }
 
     /**
@@ -134,6 +138,9 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @param int $weight
      */
     public function enableExtensionPluginMethod($nodeId, $pluginId, $weight) {
+        if($this->getNavigationPluginModel()->isBinded($nodeId, $pluginId))
+                return ;
+        
         $this->getNavigationPluginModel()->bind($nodeId, $pluginId, $weight);
     }
 
@@ -159,10 +166,15 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
     
     public function setExtensionPluginValuesMethod($navigationId, $pluginId, $name, $description, $type, $weight, $enable){
         if($enable){
-            $this->getNavigationPluginModel()->bind($navigationId, $pluginId,$weight);
+            if(!$this->getNavigationPluginModel()->isBinded($navigationId, $pluginId)){
+                $this->getNavigationPluginModel()->bind($navigationId, $pluginId,$weight);
+            }       
+            $this->getNavigationPluginModel()->updateWeightByNavigationAndPluginId($navigationId,$pluginId, $weight);
+            
         } else {
             $this->getNavigationPluginModel()->unbind($navigationId, $pluginId);
         }
+        
         
         return $this->getModel()->updatePluginValues($pluginId,$name,$description, $type);
     }
@@ -174,6 +186,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @return array
      */
     public function findPluginsByNavigationAndRegionMethod($navigationId, $region){
+        $navigationId = (int)$navigationId;
         return $this->getNavigationPluginModel()->findAllByNavigationAndRegion($navigationId, $region);
     }
 

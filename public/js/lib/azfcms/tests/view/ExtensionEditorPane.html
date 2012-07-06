@@ -111,6 +111,7 @@
                             doh.t(eep.customEditButton.get("disabled"));
                             doh.t(eep.removeButton.get("disabled"));
                             doh.t(eep.addButton.get("disabled"));
+                            doh.t(eep.disabledCheckBox.get("disabled"));
                             
                             
                             eep.destroy();
@@ -141,6 +142,7 @@
                             doh.f(eep.customEditButton.get("disabled"));
                             doh.f(eep.removeButton.get("disabled"));
                             doh.f(eep.addButton.get("disabled"));
+                            doh.f(eep.disabledCheckBox.get("disabled"));
                             
                             
                             eep.destroy();
@@ -232,12 +234,11 @@
                             var d = new doh.Deferred();
                             
                             
-                            eep.on("save",function(pluginId,name,description,type,region,weight,enabled){
+                            eep.on("save",function(pluginId,name,description,region,weight,enabled){
                                 
                                 doh.is(expected.pluginId,pluginId,"_getFormAttr.pluginId value is not expected");
                                 doh.is(expected.name,name,"_getFormAttr.name value is not expected");
                                 doh.is(expected.description,description,"_getFormAttr.description value is not expected");
-                                doh.is(expected.type,type,"_getFormAttr.type value is not expected");
                                 doh.is(expected.region,region,"_getFormAttr.region value is not expected");
                                 doh.is(expected.weight,weight,"_getFormAttr.weight value is not expected");
                                 doh.is(expected.enabled,enabled,"_getFormAttr.enabled value is not expected");
@@ -372,7 +373,7 @@
                                 type:'type1',
                                 region:'region1',
                                 weight:'100',
-                                enabled:true
+                                enabled:"1" // as returned by DB
                             };
                             eep.set("form",expected);
                             

@@ -14,7 +14,8 @@ define(
             postCreate: function(){
                 this.inherited(arguments);
                 
-                this.init();
+                if(this.init)
+                    this.init();
             }
         });
     

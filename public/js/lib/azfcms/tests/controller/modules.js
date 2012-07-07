@@ -9,6 +9,7 @@ define([
         './content/modules'
     ])
     doh.registerUrl("azfcms.tests.controller.ExtensionEditorController", require.toUrl('')+'/azfcms/tests/controller/ExtensionEditorController.html')
+    doh.registerUrl("azfcms.tests.controller.AbstractEditorController", require.toUrl('')+'/azfcms/tests/controller/AbstractEditorController.html')
 });
 
 

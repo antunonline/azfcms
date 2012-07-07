@@ -116,6 +116,16 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
                 var method = "cms.filesystem.createDirectory";
                 var call = this.createCall(method,[name]);
                 return this.model.invoke(call);
+            },
+            
+            
+            /**
+             * @param {Number} nodeId
+             * @return {dojo.Deferred}
+             */
+            setHomePage:function(nodeId){
+                var call = this.model.createCall("cms.navigation.setHomePage",[nodeId]);
+                return this.model.invoke(call);
             }
         });
     

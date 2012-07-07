@@ -1,11 +1,11 @@
 define(
     ['dojo/_base/declare','azfcms/view/AbstractEditPane',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/DijitEditor.html',
+    'dojo/text!./templates/DijitEditor.html','dojo/dom-geometry',
     'dijit/Editor','dijit/form/Button'],function
     (declare, AbstractEditPane,
         _Widget, _TemplatedMixin, _WidgetsInTemplate,
-        templateString)
+        templateString,domGeometry)
         {
         var _class = declare([AbstractEditPane,_Widget,_TemplatedMixin,_WidgetsInTemplate],{
             templateString: templateString,
@@ -40,6 +40,13 @@ define(
             
             onSave: function(content){
                 
+            },
+            resize:function(){
+                this.inherited(arguments);
+                var parentBoxModel= domGeometry.getContentBox(this.domNode.parentNode);
+                if(parentBoxModel.h<60)
+                    return;
+                this.editor.set("style","height:"+(parentBoxModel.h-60)+"px");
             }
         });
     

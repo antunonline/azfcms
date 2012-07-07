@@ -713,9 +713,15 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals("a",$naviMock->getDynamicParam(6,"param_a"));
         $this->assertEquals("b",$naviMock->getDynamicParam(6,"param_b"));
         $this->assertEquals(array("pa:0","pa:1"),$naviMock->getPluginNames(6));
-        
-        
-        
+    }
+    
+    
+    public function testFindByHome(){
+        $this->markTestIncomplete();
+    }
+    
+    public function testSetHome(){
+        $this->markTestIncomplete();
     }
 
 }

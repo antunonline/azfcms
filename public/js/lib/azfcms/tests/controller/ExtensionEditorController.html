@@ -204,7 +204,7 @@
                         name:"Test .onDelete event listener",
                         runTest: function(){
                             var isDisabled,isPluginIdOk,isReloadGridOk,
-                                isRegionSelecteSetOk = false;
+                                isRegionSelecteSetOk, isUtilConfirmOk = false;
                             
                             
                             var d = new doh.Deferred();
@@ -212,6 +212,7 @@
                                 doh.t(isDisabled,"Is disabled function call");
                                 doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues");
                                 doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                doh.t(isUtilConfirmOk,"Is util.confirm called?");
                                 d.callback(true);
                             }
                             
@@ -238,6 +239,12 @@
                             var eec = new EEC({
                                 editorPane:eep,
                                 navigationId:1,
+                                util:{
+                                    confirm:function(callback){
+                                        isUtilConfirmOk = true;
+                                        callback(true);
+                                    }
+                                },
                                 model:{
                                     removeExtensionPlugin: function(pluginId){
                                         isPluginIdOk = pluginId==33; 

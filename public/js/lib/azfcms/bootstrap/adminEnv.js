@@ -90,6 +90,31 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
             _getNavigationActionDefinitions: function(){
                 return [
                 {
+                    i18nButtonLabelPointer: 'npCreatePageAction',
+                    iconClass:'dijitIconNewTask',
+                    init: function(initCallback,adminDialog){
+                        var context = this;
+                        require(
+                            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
+                            'azfcms/model'],function
+                            (CPD,CPC,
+                                model){
+                                context.cpd = new CPD({
+                                    store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
+                                });
+                                context.cpc = new CPC(context.cpd);
+                            
+                                initCallback();
+                            })
+                    },
+                    callback: function(item){
+                        if(item){
+                            this.cpc.show(item);
+                        }
+                        
+                    }
+                },
+                {
                     i18nButtonLabelPointer: 'npEditPageAction',
                     iconClass:'dijitIconEdit',
                     init: function(initCallback, adminDialog){
@@ -114,30 +139,22 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     }
                 },
                 {
-                    i18nButtonLabelPointer: 'npCreatePageAction',
-                    iconClass:'dijitIconDocuments',
-                    init: function(initCallback,adminDialog){
-                        var context = this;
+                    i18nButtonLabelPointer: 'npHomeChange',
+                    iconClass:'dijitIconBookmark',
+                    init: function(initCallback,adminDialog, item){
+                        var self = this;
                         require(
-                            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
-                            'azfcms/model'],function
-                            (CPD,CPC,
-                                model){
-                                context.cpd = new CPD({
-                                    store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
-                                });
-                                context.cpc = new CPC(context.cpd);
-                            
-                                initCallback();
+                            ['azfcms/controller/navigation/HomePage'],function
+                            (HPC){
+                                self.hpc = new HPC();
+                                initCallback()
                             })
                     },
                     callback: function(item){
-                        if(item){
-                            this.cpc.show(item);
-                        }
-                        
+                        this.hpc.onHomeChange(item);
                     }
                 },
+                
                 {
                     i18nButtonLabelPointer: 'npDeletePageAction',
                     iconClass:'dijitIconDelete',
@@ -192,17 +209,17 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         if(item){
                             var cms = this.cms;
                             var view = new this.EEP({
-                                    regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
-                                    gridStore:cms.getRegionPluginsStore(item.id, ""),
-                                    typeStore:this.typeStore,
-                                    closable:true
-                                });
-                                this.adminDialog.addChild(view);
-                                new this.EEC({
-                                    editorPane:view,
-                                    navigationId:item.id,
-                                    model:cms
-                                });
+                                regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
+                                gridStore:cms.getRegionPluginsStore(item.id, ""),
+                                typeStore:this.typeStore,
+                                closable:true
+                            });
+                            this.adminDialog.addChild(view);
+                            new this.EEC({
+                                editorPane:view,
+                                navigationId:item.id,
+                                model:cms
+                            });
                         }
                         
                     }
@@ -221,9 +238,11 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 self.FPC = FPC;
                                 self.gridStore = new FSStore({
                                     
-                                })
+                                    })
                                 self.treeStore = new FSStore({
-                                    getOptions:{file:false}
+                                    getOptions:{
+                                        file:false
+                                    }
                                 })
                                 initCallback()
                             })

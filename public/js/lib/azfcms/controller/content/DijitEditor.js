@@ -18,7 +18,7 @@ define(
                 
                 // Load content
                 this.model.getContent(this.nodeId).then(function(content){
-                    self.editorPane.set("content",content['default']);
+                    self.editorPane.set("content",content);
                     self.editorPane.enable();
                 })
                 

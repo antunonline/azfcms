@@ -25,8 +25,10 @@ define(
                 
                 this._attachEventListeners();
                 
-                if(!this.util) {
+                if(!args.util) {
                     this.util = util;
+                }else{
+                    this.util = args.util;
                 }
             },
             

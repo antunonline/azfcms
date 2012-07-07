@@ -25,6 +25,7 @@ define({
     npDeletePageAction: "Izbriši stranicu",
     npPagePluginsAction: "Prikaži pluginove",
     npFilesystemAction: "Upravljanje dadotekama",
+    npHomeChange: "Postava naslovne stranice",
     
     cepContentType: "Vrsta sadr\u017eaja",
     cepPageTitle: "Naziv stranice",
@@ -72,7 +73,13 @@ define({
     eepFormAdd:"Dodaj plugin",
     eepFormDelete:"Izbriši plugin",
     
-    eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani plugin?"
+    eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani plugin?",
+    
+    redirUrlLabel:"URL:",
+    redirSaveLabel:"Spremi",
+    
+    
+    hompHomePageMessage:"Želite li postaviti izabranu stranicu kao naslovnu stranicu?"
   },
 
   de: true,

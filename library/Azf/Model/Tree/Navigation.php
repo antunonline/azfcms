@@ -850,8 +850,7 @@ SQL;
     public function setTitle($nodeId, $title) {
         $this->getAdapter()->update($this->_name, array(
             'title' => $title
-                ), 
-                array("id=?" => $nodeId, "tid=?"=> $this->tid));
+                ), array("id=?" => $nodeId, "tid=?" => $this->tid));
     }
 
     /**
@@ -862,7 +861,36 @@ SQL;
     public function setUrl($nodeId, $url) {
         $this->getAdapter()->update($this->_name, array(
             'url' => $url
-                ), array("id=?" => $nodeId, "tid=?"=> $this->tid));
+                ), array("id=?" => $nodeId, "tid=?" => $this->tid));
+    }
+
+    
+    /**
+     * @return null|array
+     */
+    public function findByHome() {
+        $SQL = "SELECT * FROM $this->_name WHERE home = 1";
+        return $this->getAdapter()->fetchRow($SQL);
+    }
+
+    
+    /**
+     *
+     * @param int $nodeId 
+     */
+    public function setHome($nodeId) {
+        $this->_startTransaction();
+
+        // Unset old home page
+        $this->update(array('home' => 0),array());
+
+        // Select new home page
+        $updatedRows = $this->update(array('home' => 1), array("id=?" => $nodeId));
+        if ($updatedRows == 0 || $updatedRows > 1) {
+            $this->_rollBackTransaction();
+        } else {
+            $this->_endTransaction();
+        }
     }
 
 }

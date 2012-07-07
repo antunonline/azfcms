@@ -76,7 +76,8 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @return {String} 
          */
         getLabel: function(item){
-            return item.title;
+            
+            return parseInt(item.home)?item.title+" [Home Page]":item.title;
         },
         
         /**
@@ -407,8 +408,12 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
         
         
         getContent: function(id){
-            var call = ["cms.navigation.getContent(",id,")"].join("");
-            return this.model.invoke(call);
+            var call = this.model.createCall('cms.navigation.getContent',[id]);
+            var d = new Deferred();
+            this.model.invoke(call).then(function(response){
+                d.callback(response['default'])
+            });
+            return d;
         },
         
         

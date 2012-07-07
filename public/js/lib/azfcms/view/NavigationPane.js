@@ -56,7 +56,10 @@ function
                 dndController: dndSource,
                 persist: false,
                 autoExpand: false,
-                betweenThreshold: 5
+                betweenThreshold: 5,
+                getIconClass:function(item){
+                    return " dijitLeaf";
+                }
             });
             
             var controller = this.contextController;

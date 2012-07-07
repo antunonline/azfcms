@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<plugin
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://it-branch.com/xml/ns/plugin/content'
+    xsi:schemaLocation='http://it-branch.com/xml/ns/plugin/content file:/var/www/azfcms/library/Azf/Plugin/Descriptor/Parser/Content.xsd'>
+    <pluginIdentifier>redirector</pluginIdentifier>
+    <displayName>URL Redirector</displayName>
+    <description>Redirect the user to specified URL</description>
+    <version>1.0</version>
+    <module>default</module>
+    <controller>redirector</controller>
+    <action>render</action>
+
+</plugin>

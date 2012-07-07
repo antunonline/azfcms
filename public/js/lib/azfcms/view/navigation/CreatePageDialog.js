@@ -50,7 +50,6 @@ define(
             
             reset: function(){
                 this.pageName.set("value","");
-                this.pageType.set("value","");
             }
         })    
             

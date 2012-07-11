@@ -72,6 +72,7 @@ define({
     eepFormExtendedEdit:"Editiraj dodatne vrijednosti",
     eepFormAdd:"Dodaj plugin",
     eepFormDelete:"Izbriši plugin",
+    eepReloadGrid:"Osvježi listu",
     
     eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani plugin?",
     

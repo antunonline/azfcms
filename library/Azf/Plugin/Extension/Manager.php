@@ -14,7 +14,7 @@ class Azf_Plugin_Extension_Manager {
     protected $_model;
 
     /**
-     * 
+     *
      * @param string $type
      * @param int $pluginId
      */
@@ -25,11 +25,7 @@ class Azf_Plugin_Extension_Manager {
             $instance->setId($pluginId);
             try {
                 $instance->setUp();
-                if($instance->isParamsDirty()){
-                    $params = $instance->getParams();
-                    $this->getModel()->setPluginParams($pluginId, $params);
-                    $instance->clearParamsDirty();
-                }
+                $this->_saveParams($instance);
             } catch (Exception $e) {
                 
             }
@@ -105,28 +101,49 @@ class Azf_Plugin_Extension_Manager {
         return $rendered;
     }
 
+    
     /**
-     * 
-     * @param string $type
-     * @param int|null $pluginId
-     * @param array $pluginParams
-     * @return Azf_Plugin_Extended_Abstract|null
-     * 
+     *
+     * @param Azf_Plugin_Extension_Abstract $instance 
      */
-    protected function _getPluginInstance($type, $pluginId, $pluginParams = null) {
-        if (is_array($pluginParams) == false) {
-            $pluginParams = $this->getModel()->getPluginParams($pluginId);
+    protected function _saveParams(Azf_Plugin_Extension_Abstract $instance) {
+        if ($instance->isParamsDirty()) {
+            $params = $instance->getParams();
+            $this->getModel()->setPluginParams($instance->getId(), $params);
+            $instance->clearParamsDirty();
         }
-        if (!is_array($pluginParams)) {
-            return null;
-        }
-
-        $instance = $this->_constructPlugin($type, $pluginParams);
-        return $instance;
     }
 
     /**
      * 
+     * @param string|null $type
+     * @param int|null $pluginId
+     * @param array $pluginParams
+     * @return null|Azf_Plugin_Extended_Abstract
+     * 
+     */
+    protected function _getPluginInstance($type, $pluginId, $pluginParams = null) {
+        if (!$type || !is_array($pluginParams)) {
+            $pluginRecord = $this->getModel()->findById($pluginId);
+        }
+
+        if (is_array($pluginParams) == false) {
+            $pluginParams = $pluginRecord['params'];
+        }
+        if (!$type) {
+            $type = $pluginRecord['type'];
+        }
+
+        $instance = $this->_constructPlugin($type, $pluginParams);
+        /* @var $instance Azf_Plugin_Extension_Abstract */
+        if($pluginId){
+            $instance->setId($pluginId);
+        }
+        return $instance;
+    }
+
+    /**
+     *
      * @param int $navigationId
      * @return array
      */
@@ -142,6 +159,25 @@ class Azf_Plugin_Extension_Manager {
             $this->_initModel();
         }
         return $this->_model;
+    }
+
+    /**
+     *
+     * @return Azf_Model_DbTable_NavigationPlugin
+     */
+    public function getNavigationModel() {
+        if (!$this->_navigationModel) {
+            $this->_navigationModel = new Azf_Model_DbTable_NavigationPlugin();
+        }
+        return $this->_navigationModel;
+    }
+
+    /**
+     *
+     * @param Azf_Model_DbTable_NavigationPlugin $navigationModel 
+     */
+    public function setNavigationModel(Azf_Model_DbTable_NavigationPlugin $navigationModel) {
+        $this->_navigationModel = $navigationModel;
     }
 
     /**
@@ -175,6 +211,69 @@ class Azf_Plugin_Extension_Manager {
     public function _constructPlugin($type, $pluginParams) {
         $className = $this->getClassName($type);
         return new $className($pluginParams);
+    }
+
+    /**
+     *
+     * @param int $pluginId
+     * @param string|int $key
+     * @param mixed $value
+     * @return boolean
+     */
+    public function setValue($pluginId, $key, $value) {
+        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+            return false;
+
+        $return = $plugin->setValue($key, $value);
+        $this->_saveParams($plugin);
+        return $return;
+    }
+
+    /**
+     *
+     * @param int|string $pluginId
+     * @param mixed $values
+     * @return boolean
+     */
+    public function setValues($pluginId, $values) {
+        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+            return false;
+
+        /* @var $plugin Azf_Plugin_Extension_Abstract */
+        $return = $plugin->setValues($values);
+        $this->_saveParams($plugin);
+        return $return;
+    }
+
+    /**
+     *
+     * @param string|int $pluginId
+     * @param string|int $key
+     * @return mixed
+     */
+    public function getValue($pluginId, $key) {
+        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+            return false;
+
+        /* @var $plugin Azf_Plugin_Extension_Abstract */
+        $return =  $plugin->getValue($key);
+        $this->_saveParams($plugin);
+        return $return;
+    }
+
+    /**
+     *
+     * @param int|string $pluginId
+     * @return mixed
+     */
+    public function getValues($pluginId) {
+        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+            return false;
+
+        /* @var $plugin Azf_Plugin_Extension_Abstract */
+        $return = $plugin->getValues();
+        $this->_saveParams($plugin);
+        return $return;
     }
 
 }

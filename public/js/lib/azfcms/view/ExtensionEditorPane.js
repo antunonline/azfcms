@@ -9,7 +9,7 @@ define(
     'dojo/data/ObjectStore','dojo/_base/lang','azfcms/model/cms','dojo/i18n!azfcms/resources/nls/view',
 
     'dijit/layout/TabContainer','dijit/layout/ContentPane','dojox/grid/DataGrid',
-    'dijit/form/FilteringSelect','dijit/form/CheckBox','dijit/form/TextBox'],function
+    'dijit/form/FilteringSelect','dijit/form/CheckBox','dijit/form/TextBox','dijit/form/NumberSpinner'],function
     (declare,templateString,_Widget,
         _TemplatedMixin, _WidgetsInTemplateMixin, domStyle,
         ObjectStore,lang,cms,nls)
@@ -132,6 +132,8 @@ define(
                 this.removeButton.set("disabled",true);
                 this.addButton.set("disabled",true);
                 this.disabledCheckBox.set("disabled",true);
+                this.reloadGridButton.set("disabled",true);
+                this.stateButton.set("disabled",true);
             },
             enable:function(){
                 this.tabContainer.set("disabled",false);
@@ -148,6 +150,8 @@ define(
                 this.removeButton.set("disabled",false);
                 this.addButton.set("disabled",false);
                 this.disabledCheckBox.set("disabled",false);
+                this.reloadGridButton.set("disabled",false);
+                this.stateButton.set("disabled",false);
             },
             addChild: function(pane){
                 this.tabContainer.addChild(pane);
@@ -226,6 +230,11 @@ define(
                     this.onEnable(f.pluginId,f.weight);
                 } else {
                     this.onDisable(f.pluginId);
+                }
+            },
+            _onReloadGrid:function(){
+                if(this.regionSelect.get("item")){
+                    this._onRegionSelect();
                 }
             },
             _onRegionSelect:function(){

@@ -397,23 +397,15 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             return response;
         },
         
-        setContent: function(id, content){
-            if(typeof content == 'object' || typeof content == 'array'){
-                content = json.toJson(content);
-            } 
-            
-            var call = ['cms.navigation.setContent(',id,",'",_s(content),"')"].join("");
+        setContent: function(id, key, content){
+            var call = this.model.createCall('cms.navigation.setContent',[id,key,content]);
             return this.model.invoke(call);
         },
         
         
-        getContent: function(id){
-            var call = this.model.createCall('cms.navigation.getContent',[id]);
-            var d = new Deferred();
-            this.model.invoke(call).then(function(response){
-                d.callback(response['default'])
-            });
-            return d;
+        getContent: function(id,key){
+            var call = this.model.createCall('cms.navigation.getContent',[id,key]);
+            return this.model.invoke(call);
         },
         
         

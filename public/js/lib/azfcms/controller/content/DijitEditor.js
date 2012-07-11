@@ -17,7 +17,7 @@ define(
                 this.editorPane.disable();
                 
                 // Load content
-                this.model.getContent(this.nodeId).then(function(content){
+                this.getValue('content').then(function(content){
                     self.editorPane.set("content",content);
                     self.editorPane.enable();
                 })
@@ -33,7 +33,7 @@ define(
             setContent: function(content){
                 var self = this;
                 this.editorPane.disable();
-                self.model.setContent(self.nodeId,content).then(function(){
+                this.setValue('content',content).then(function(){
                     self.editorPane.enable();
                 })
             }

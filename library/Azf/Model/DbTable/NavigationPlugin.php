@@ -104,5 +104,11 @@ WHERE n.id=? AND p.region=?)
     public function updateWeightByNavigationAndPluginId($navigationId, $pluginId, $weight) {
         return $this->update(array('weight' => new Zend_Db_Expr((int) $weight)), array("navigationId=?" => $navigationId,'pluginId=?'=>$pluginId));
     }
+    
+    public function findById($id) {
+        $sql = "SELECT * FROM $this->_name WHERE id = ?;";
+        $row = $this->getAdapter()->fetchRow($sql,array('id'=>$id));
+        return $row;
+    }
 
 }

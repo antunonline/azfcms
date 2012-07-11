@@ -126,6 +126,46 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
             setHomePage:function(nodeId){
                 var call = this.model.createCall("cms.navigation.setHomePage",[nodeId]);
                 return this.model.invoke(call);
+            },
+            
+            /**
+             * @param {Number} pluginId
+             * @param {Number|String} key
+             * @param {mixed} value
+             * @return {dojo.Deferred} (boolean)
+             */
+            setExtensionValue:function(pluginId,key,value){
+                var call = this.model.createCall("cms.extensionPlugin.setExtensionValue",[pluginId, key, value]);
+                return this.model.invoke(call);
+            },
+            
+            /**
+             * @param {Number} pluginId
+             * @param {Object} values
+             * @return {dojo.Deferred} (boolean)
+             */
+            setExtensionValues:function(pluginId,values){
+                var call = this.model.createCall("cms.extensionPlugin.setExtensionValues",[pluginId, values]);
+                return this.model.invoke(call);
+            },
+
+            /**
+             * @param {Number} pluginId
+             * @param {Number|String} key
+             * @return {Dojo.deferred} (mixed)
+             */
+            getExtensionValue:function(pluginId,key){
+                var call = this.model.createCall("cms.extensionPlugin.getExtensionValue",[pluginId, key]);
+                return this.model.invoke(call);
+            },
+            
+            /**
+             * @param {Number} pluginId
+             * @return {Dojo.deferred} (Object)
+             */
+            getExtensionValues:function(pluginId){
+                var call = this.model.createCall("cms.extensionPlugin.getExtensionValues",[pluginId]);
+                return this.model.invoke(call);
             }
         });
     

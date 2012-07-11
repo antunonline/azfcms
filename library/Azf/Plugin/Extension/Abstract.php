@@ -37,6 +37,21 @@ abstract class Azf_Plugin_Extension_Abstract {
     public function getParams() {
         return $this->_params;
     }
+    
+    
+    /**
+     *
+     * @param int|string $key
+     * @param mixed $default
+     * @return mixed 
+     */
+    public function getParam($key, $default = null){
+        if(isset($this->_params[$key])){
+            return $this->_params[$key];
+        } else {
+            return $default;
+        }
+    }
 
     /**
      * 
@@ -91,6 +106,43 @@ abstract class Azf_Plugin_Extension_Abstract {
         $this->_params = $params;
     }
     
+    
+    /**
+     *
+     * @param int|string $key
+     * @param mixed $value 
+     */
+    public function setValue($key,$value){
+        $this->setParam($key, $value);
+    }
+    
+    
+    /**
+     *
+     * @param array|object $values 
+     */
+    public function setValues($values){
+        $this->setParams((array) $values);
+    }
+    
+    /**
+     *
+     * @param int|string$key
+     * @return mixed
+     */
+    public function getValue($key) {
+        return $this->getParam($key);
+    }
+    
+    /**
+     *
+     * @return array
+     */
+    public function getValues(){
+        return $this->getParams();
+    }
+
+
     abstract public function setUp();
     abstract public function tearDown();
     abstract public function render();

@@ -587,7 +587,7 @@ SQL;
     public function setStaticParam($id, $name, $value) {
         $this->_setFieldParam($id, "final", $name, $value);
     }
-
+    
     /**
      *
      * @param int $id

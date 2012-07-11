@@ -217,9 +217,10 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
 
     /**
      *  @param int $id
+     * @param string|null $key
      *  @param mixed $content
      */
-    public function overrideSetContent($id, $content) {
+    public function overrideSetContent($id, $key, $content) {
         $pluginIdentifier = $this->navigation->getStaticParam($id, "pluginIdentifier");
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
 
@@ -227,6 +228,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
             'module' => $plugin['module'],
             'controller' => $plugin['controller'],
             'action' => 'set',
+            'key'=>$key,
             'content' => $content
         );
         return $this->_callMvc($id, $mvc, 'production');
@@ -234,9 +236,10 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
 
     /**
      * @param int $id
+     * @param string|int $key
      * @param mixed $content
      */
-    public function overrideGetContent($id) {
+    public function overrideGetContent($id, $key) {
         $pluginIdentifier = $this->navigation->getStaticParam($id, "pluginIdentifier");
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
 
@@ -244,9 +247,13 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
             'module' => $plugin['module'],
             'controller' => $plugin['controller'],
             'action' => 'get',
+            'key'=>$key,
+            'response'=>new stdClass()
         );
 
-        return $this->_callMvc($id, $mvc, 'production');
+        $this->_callMvc($id, $mvc, 'production');
+        $response = $mvc['response']->response;
+        return $response;
     }
 
     /**

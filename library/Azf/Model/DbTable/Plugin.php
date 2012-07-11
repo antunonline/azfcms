@@ -141,6 +141,23 @@ ORDER BY p.region, np.weight";
         
         return $this->update($data, $where);
     }
+
+    
+    /**
+     *
+     * @param int $pid
+     * @return null|array
+     */
+    public function findById($pid) {
+        $sql = "SELECT * FROM $this->_name WHERE id = ?";
+        $row = $this->getAdapter()->fetchRow($sql,array($pid));
+        if(!$row)
+            return null;
+        
+        
+        $row['params'] = $this->_decode($row['params']);
+        return $row;
+    }
     
     
 

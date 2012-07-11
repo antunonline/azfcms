@@ -131,7 +131,8 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     },
                     callback: function(item){
                         var cep = new this.CEP({
-                            typeStore:this.model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
+                            typeStore:this.model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()'),
+                            title:"Editor za \""+item.title+"\""
                         });
                         var cec = new this.CEC();
                         cec.init(item,cep);
@@ -212,7 +213,8 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
                                 gridStore:cms.getRegionPluginsStore(item.id, ""),
                                 typeStore:this.typeStore,
-                                closable:true
+                                closable:true,
+                                title:"Pluginovi za \""+item.title+"\""
                             });
                             this.adminDialog.addChild(view);
                             new this.EEC({

@@ -50,19 +50,26 @@ define(
                 }
                 var name = _ucFirst(type);
                 return [
-                'azfcms/controller/extension/'+name,
-                'azfcms/view/extension/'+name
+                'azfcms/controller/extensionPlugin/'+name,
+                'azfcms/view/extensionPlugin/'+name
                 ];
             },
             _buildEditorPane:function(AbstractExtensionPane){
+                if(AbstractExtensionPane==false)
+                    return false;
                 var aep = new AbstractExtensionPane();
+                aep.closable=true;
                 this.editorPane.addChild(aep);
+                var title = this.editorPane.get("form").name;
+                aep.set("title",title);
+                
                 return aep;
             },
-            _buildController: function(Controller, pluginId, extendedEditorPane){
+            _buildController: function(Controller, pluginId, navigationId, extendedEditorPane){
                 return new Controller({
                     pluginId:pluginId,
-                    editorPane:extendedEditorPane
+                    navigationId: navigationId,
+                    view:extendedEditorPane
                 });
                 
             },
@@ -129,7 +136,8 @@ define(
                 var requires = this._buildRequire(type);
                 require(requires,function(Controller,View){
                     var view = self._buildEditorPane(View);
-                    var controller = self._buildController(Controller,pluginId,view);
+                    var controller = self._buildController(Controller,pluginId,self.navigationId,view);
+                    controller.init();
                 })
             },
             onItemSelect: function(item){

@@ -205,6 +205,50 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
         }
     }
     
+    
+    /**
+     *
+     * @param int|string $pluginId
+     * @param int|string  $key
+     * @param mixed $value
+     * @return boolean
+     */
+    protected function setExtensionValueMethod($pluginId,$key,$value){
+        return $this->getManager()->setValue($pluginId, $key, $value);
+    }
+    
+    
+    /**
+     *
+     * @param int|string $pluginId
+     * @param mixed $values
+     * @return boolean
+     */
+    protected function setExtensionValuesMethod($pluginId,$values){
+        return $this->getManager()->setValues($pluginId, $values);
+    }
+    
+    
+    /**
+     *
+     * @param int|string $pluginId
+     * @param int|string  $key
+     * @return mixed
+     */
+    protected function getExtensionValueMethod($pluginId,$key){
+        return $this->getManager()->getValue($pluginId, $key);
+    }
+    
+    
+    /**
+     *
+     * @param int|string $pluginId
+     * @return mixed
+     */
+    protected function getExtensionValuesMethod($pluginId){
+        return $this->getManager()->getValues($pluginId);
+    }
+    
     protected function isAllowed($namespaces, $parameters) {
         return true;
     }

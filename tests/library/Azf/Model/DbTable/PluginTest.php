@@ -195,7 +195,11 @@ class Azf_Model_DbTable_PluginTest extends PHPUnit_Extensions_Database_TestCase{
         $expected = $expectedDataSet->getTable("Plugin");
         
         $this->assertTablesEqual($expected, $actual);
-        
+    }
+    
+    
+    public function testFindById(){
+        $this->markTestIncomplete();
     }
 }
 

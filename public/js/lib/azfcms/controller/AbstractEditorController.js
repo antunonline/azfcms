@@ -50,14 +50,8 @@ define(
          * @param {mixed} value
          * @return {dojo.Deferred}
          */
-            storeValue:function(key,value){
-                if(!this.jsonModelContentType){
-                    throw new "json communication is prohibited by jsonModelContentType=false property, to enable json API set jsonModelContentType to true";
-                }
-                var objJson = lang.toJson({
-                    key:value
-                });
-                return this.navigationModel.setContent(this.nodeId,objJson);
+            setValue:function(key,value){
+                return this.navigationModel.setContent(this.nodeId,key,value);
             },
             
             
@@ -67,12 +61,8 @@ define(
          * @param {Object} values
          * @return {dojo.Deferred}
          */
-            storeValues:function(values){
-                if(!this.jsonModelContentType){
-                    throw new "json communication is prohibited by jsonModelContentType=false property, to enable json API set jsonModelContentType to true";
-                }
-                var objJson = lang.toJson(values);
-                return this.navigationModel.setContent(this.nodeId,objJson);
+            setValues:function(values){
+                return this.navigationModel.setContent(this.nodeId,null,values);
             },
             
             
@@ -83,17 +73,11 @@ define(
          * @param {string} key
          * @return {dojo.Deferred} value
          */
-            loadValue:function(key){
-                if(!this.jsonModelContentType){
-                    throw new "json communication is prohibited by jsonModelContentType=false property, to enable json API set jsonModelContentType to true";
+            getValue:function(key){
+                if(!key){
+                    key = "";
                 }
-                
-                var d = new Deferred();
-                this.navigationModel.getContent(this.nodeId).then(function(result){
-                    var response = lang.fromJson(result);
-                    d.callback(key in response?response[key]:null);
-                });
-                return d;
+                return this.navigationModel.getContent(this.nodeId,key);
             },
         
             
@@ -103,35 +87,8 @@ define(
              * 
              * @return {dojo.Deferred}
              */
-            loadValues:function(){
-                if(!this.jsonModelContentType){
-                    throw new "json communication is prohibited by jsonModelContentType=false property, to enable json API set jsonModelContentType to true";
-                }
-                
-                var d = new Deferred();
-                this.navigationModel.getContent(this.nodeId).then(function(result){
-                    var response = lang.fromJson(result);
-                    d.callback(response);
-                });
-                return d;
-            },
-            
-            /**
-             * This method will load a value from content controller and pass it to the
-             * deferred listener.
-             * @return {dojo.Deferred}
-             */
-            getContent:function(){
-                return this.navigationModel.getContent(this.nodeId);  
-            },
-                
-            /**
-                 * This method will submit provided values to the content controller put method.
-                 * @param {string} content
-                 * @return {dojo.Deferred}
-                 */
-            setContent:function(content){
-                return this.navigationModel.setContent(this.nodeId,content);
+            getValues:function(){
+                return this.navigationModel.getContent(this.nodeId,null);
             }
             
         });

@@ -110,6 +110,11 @@ class Azf_Model_Tree_NavigationTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals("MyName", $newNavigation->getStaticParam(1, "firstName"));
         $this->assertFalse($newNavigation->hasStaticParam(2, "firstName"));
     }
+    
+    
+    public function testSetStaticParams() {
+        $this->markTestIncomplete();
+    }
 
     /**
      * @test 

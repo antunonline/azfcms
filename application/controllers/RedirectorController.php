@@ -2,13 +2,6 @@
 
 class RedirectorController extends Azf_Controller_Action {
 
-    public function get() {
-        echo  $this->getContextHelper()->getStaticParam("url");
-    }
-    
-    public function set($content) {
-        $this->_setUrl($content);
-    }
 
     public function installpageAction() {
         $navigation = $this->getNavigation();
@@ -24,7 +17,7 @@ class RedirectorController extends Azf_Controller_Action {
     }
 
     public function renderAction() {
-        $url = $this->getContextHelper()->getStaticParam("url");
+        $url = $this->getValue("url");
         $redirector = $this->_helper->redirector;
         /* @var $redirector Zend_Controller_Action_Helper_Redirector */
         $redirector->gotoUrlAndExit($url);

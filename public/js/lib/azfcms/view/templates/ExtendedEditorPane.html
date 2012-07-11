@@ -7,13 +7,14 @@
             data-dojo-props="title:'${eepTabName}'">
 
             <div data-dojo-attach-point="regionSelectionNode" style="position:relative">
-                <div style="position: absolute;left:20px;top:5px;">
+                <div style="position: absolute;left:20px;top:5px">
                 <span>${eepRegion}:</span>
                 <input 
                     data-dojo-type="dijit.form.FilteringSelect" 
                     data-dojo-attach-point="regionSelect" 
                     data-dojo-attach-event="onChange:_onRegionSelect"
                     data-dojo-props="labelAttr:'name',searchAttr:'name',selectOnClick:true,autoComplete:false" />
+                <input type="button" data-dojo-type="dijit.form.Button" data-dojo-attach-point="reloadGridButton" label="${eepReloadGrid}" data-dojo-attach-event="onClick:_onReloadGrid" />
                 </div>
                 
             </div>
@@ -72,7 +73,7 @@
                             <tr>
                                 <td>${eepFormPlacement}:</td>
                                 <td>
-                                    <input data-dojo-type="dijit.form.TextBox"
+                                    <input data-dojo-type="dijit.form.NumberSpinner"
                                            data-dojo-attach-point="weightText" />
                                 </td>
                             </tr>

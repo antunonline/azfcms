@@ -4,7 +4,7 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
-        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
                 height:100%;
@@ -16,7 +16,7 @@
             require(
             ['dojo/domReady!','doh',
                 'dojo/_base/declare','dojo/_base/Deferred',
-                'azfcms/controller/AbstractEditorController',
+                'azfcms/controller/extensionPlugin/Abstract',
                 'azfcms/tests/CallChain'
             ],function
             (ready,doh, 
@@ -26,52 +26,62 @@
         ){
                 
                 
-                doh.register('azfcms.tests.controller.AbstractEditorController',[
+                doh.register('azfcms.tests.controller.extensionPlugin.Abstract',[
                     {
-                        name:"Test .initDependencies"  ,
-                        runTest:function(){
-                            var chain = new Chain({
-                                doh:doh,
-                                testCount:1
+                        name:" Test constructor",
+                        runTest: function(){
+                            new Controller({
+                                pluginId:1,
+                                navigationId:1,
+                                view:{}
                             });
                             
-                            var controller = new Controller({
-                                nodeId:1,
-                                navigationModel:{
-                                    setContent:function(nodeId, key, value){
-                                        return chain.test0({
-                                            is:[
-                                                1,nodeId,
-                                                "key",key,
-                                                "value",value
-                                            ]
-                                        }).deferred(true);
-                                    }
-                                }
-                            });
-                            controller.initDependencies(1,{}).then(function(value){
-                                chain.test0({
-                                    is:[controller,value]
+                            try{
+                                new Controller({
+                                    navigationId:1,
+                                    view:{}
                                 });
-                            })
-                            
-                            return chain.async;
+                                doh.t(false);
+                            } catch(e){
+                                
+                            }
+                            try{
+                                new Controller({
+                                    pluginId:1,
+                                    view:{}
+                                });
+                                doh.t(false);
+                            } catch(e){
+                                
+                            }
+                            try{
+                                new Controller({
+                                    pluginId:1,
+                                    navigationId:1
+                                });
+                                doh.t(false);
+                            } catch(e){
+                                
+                            }
                         }
                     },
+                    
                     {
-                        name:"Test .setValue",
+                        name: "Test .setValue",
                         runTest:function(){
                             var chain = new Chain({
                                 doh:doh,
                                 testCount:2
                             });
                             var controller = new Controller({
-                                nodeId:1,
-                                navigationModel:{
-                                    setContent:function(nodeId, key, value){
+                                pluginId:1,
+                                navigationId:1,
+                                view:{},
+                                cmsModel:{
+                                    setExtensionValue:function(pluginId, key, value){
                                         return chain.test0({
                                             is:[
-                                                1,nodeId,
+                                                1,pluginId,
                                                 "key",key,
                                                 "value",value
                                             ]
@@ -79,105 +89,108 @@
                                     }
                                 }
                             });
-                            controller.initDependencies(1,{});
                             
                             controller.setValue("key","value").then(function(response){
                                 chain.test1({
-                                    t:response
+                                    is:[true,response]
                                 })
                             })
-                            
                             
                             return chain.async;
                         }
                     },
                     
                     {
-                        name:"Test .setValues",
+                        name: "Test .setValues",
                         runTest:function(){
                             var chain = new Chain({
                                 doh:doh,
                                 testCount:2
                             });
                             var controller = new Controller({
-                                navigationModel:{
-                                    setContent:function(id,key,value){
+                                pluginId:1,
+                                navigationId:1,
+                                view:{},
+                                cmsModel:{
+                                    setExtensionValues:function(pluginId, values){
                                         return chain.test0({
                                             is:[
-                                                2,id,
-                                                null,key,
-                                                "value",value
+                                                1,pluginId,
+                                                "values",values
                                             ]
                                         }).deferred(true);
                                     }
                                 }
                             });
-                            controller.initDependencies(2,{});
                             
-                            controller.setValues("value").then(function(response){
-                                chain.test1({t:response});
-                            });
+                            controller.setValues("values").then(function(response){
+                                chain.test1({
+                                    is:[true,response]
+                                })
+                            })
                             
                             return chain.async;
                         }
                     },
-                    
                     {
-                        name:"Test .getValue",
+                        name: "Test .getValue",
                         runTest:function(){
                             var chain = new Chain({
                                 doh:doh,
                                 testCount:2
                             });
                             var controller = new Controller({
-                                navigationModel:{
-                                    getContent:function(id,key){
+                                pluginId:1,
+                                navigationId:1,
+                                view:{},
+                                cmsModel:{
+                                    getExtensionValue:function(pluginId, key){
                                         return chain.test0({
                                             is:[
-                                                2,id,
+                                                1,pluginId,
                                                 "key",key
                                             ]
                                         }).deferred("value");
                                     }
                                 }
                             });
-                            controller.initDependencies(2,{});
                             
                             controller.getValue("key").then(function(value){
-                                chain.test1({is:[
-                                        "value",value
-                                    ]});
-                            });
+                                chain.test1({
+                                    is:["value",value]
+                                })
+                            })
                             
                             return chain.async;
                         }
                     },
                     {
-                        name:"Test .getValues",
+                        name: "Test .getValues",
                         runTest:function(){
                             var chain = new Chain({
                                 doh:doh,
                                 testCount:2
                             });
                             var controller = new Controller({
-                                navigationModel:{
-                                    getContent:function(id,key){
+                                pluginId:1,
+                                navigationId:1,
+                                view:{},
+                                cmsModel:{
+                                    getExtensionValues:function(pluginId){
                                         return chain.test0({
                                             is:[
-                                                2,id,
-                                                null,key
+                                                1,pluginId
                                             ]
-                                        }).deferred("value");
+                                        }).deferred("values");
                                     }
                                 }
                             });
-                            controller.initDependencies(2,{});
                             
-                            controller.getValues().then(function(value){
-                                chain.test1({is:[
-                                        "value",value
-                                    ]});
-                            });
+                            controller.getValues().then(function(values){
+                                chain.test1({
+                                    is:["values",values]
+                                })
+                            })
                             
                             return chain.async;
                         }

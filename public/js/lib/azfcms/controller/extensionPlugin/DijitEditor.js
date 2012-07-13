@@ -45,6 +45,9 @@ define(  ['dojo/_base/declare','azfcms/controller/extensionPlugin/Abstract'],
             */
 //            getValues:function(){
 //            }
+            constructor:function(){
+                this.init();
+            },
             init:function(){
                 var self = this;
                 

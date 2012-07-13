@@ -5,7 +5,8 @@ define(['doh','dojo','require'],function(doh,dojo,require){
     
     require([
         './navigation/modules',
-        './content/modules'
+        './content/modules',
+        './extensionPlugin/modules'
         ],function(){
             doh.registerUrl("azfcms.tests.view.ExtensionEditorPane", require.toUrl('')+'/azfcms/tests/view/ExtensionEditorPane.html')
         })

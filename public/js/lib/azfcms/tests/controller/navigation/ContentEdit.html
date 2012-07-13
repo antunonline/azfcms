@@ -1,0 +1,164 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script>
+            require(
+            ['dojo/domReady!',
+                'dijit','doh','azfcms/tests/CallChain',
+                'azfcms/controller/navigation/ContentEdit'],function
+            (ready,
+            dijit,doh,Chain ,
+            Controller){
+                //              
+                
+                doh.register('azfcms.tests.controller.navigation.ContentEdit',[
+                    {
+                        name:"Test .constructor",
+                        runTest:function(){
+                            
+                            var nv = {};
+                            var controller = new Controller({
+                                navigationModel:nv
+                            });
+                            
+                            doh.is(nv,controller.navigationModel)
+                        }
+                    },
+                    
+                    {
+                        name:"Test .init",
+                        runTest:function(){
+                            var chain = new Chain({
+                                testCount:10,
+                                doh:doh
+                            })
+                            
+                            var params = [
+                                {
+                                    pluginIdentifier:"test"
+                                },
+                                {
+                                    metaDescription:"desc",
+                                    metaKeywords:"keyword"
+                                }
+                            ];
+                            
+                            var node = {
+                                id:11,
+                                title:"title"
+                            }
+                            
+                            define('azfcms/controller/content/Test',[],function(){
+                                return function(){
+                                    chain.test6()
+                                    this.name = "controller";
+                                    this.initDependencies = function(nodeId, view){
+                                        return chain.test7({
+                                            is:[node.id,nodeId,
+                                                "view",view.name]
+                                        }).deferred()
+                                    }
+                                }
+                            })
+                            
+                            define('azfcms/view/content/Test',[],function(){
+                                return function(){
+                                    chain.test4()
+                                    this.name = "view";
+                                }
+                            })
+                            
+                            var c = new Controller({});
+                            c.navigationModel = {
+                                getNodeParams:function(nodeId){
+                                    return chain.test0({
+                                        is:[node.id,nodeId]
+                                    }).deferred(params);
+                                }
+                            }
+                            
+                            var view = {
+                                set:function(name,value){
+                                    switch(name){
+                                        case "title":
+                                            chain.test1({
+                                                is:["title",node.title]
+                                            })
+                                            break;
+                                        case "description":
+                                            chain.test2({
+                                                is:[params[1].metaDescription,value]
+                                            })
+                                            break;
+                                        case "keywords":
+                                            chain.test3({
+                                                is:[params[1].metaKeywords,value]
+                                            })
+                                            break;
+                                    }
+                                },
+                                on:function(name,callback){
+                                    chain.test9({
+                                        is:["metadataSave",name]
+                                    })
+                                },
+                                addChild:function(view){
+                                    chain.test5({
+                                        is:["view",view.name]
+                                    })
+                                }
+                            }
+                            
+                            
+                            c.init(node, view).then(function(){
+                                chain.test8();
+                            })
+                            return chain.async;
+                        }
+                    },
+                    {
+                        name:"Test .onMetadataSave",
+                        runTest:function(){
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:1
+                            });
+                            
+                            var controller = new Controller();
+                            controller.nodeId = 11;
+                            
+                            controller.navigationModel = {
+                                setMetaValues:function(nid,title,description,keywords){
+                                    chain.test0({
+                                        is:[
+                                            11,nid,
+                                            "title",title,
+                                            "description",description,
+                                            "keywords", keywords
+                                        ]
+                                    })
+                                }
+                            };
+                            
+                            controller.onMetadataSave("title","description","keywords");
+                            return chain.async;
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

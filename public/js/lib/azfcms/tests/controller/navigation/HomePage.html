@@ -1,0 +1,100 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script>
+            require(
+            ['dojo/domReady!',
+                'dijit','doh','azfcms/tests/CallChain',
+                'azfcms/controller/navigation/HomePage'],function
+            (ready,
+            dijit,doh,Chain ,
+            HomePage){
+                //              
+                
+                doh.register('azfcms.tests.controller.navigation.HomePage',[
+                    {
+                        name:"Test .constructor",
+                        runTest:function(){
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:1
+                            })
+                            
+                            new HomePage({});
+                        }
+                    },
+                    {
+                        name:"Test .onHomeChange",
+                        runTest:function(){
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:4
+                            })
+                            
+                            var controller = new HomePage({
+                                util:{
+                                    confirm:function(callback,msg){
+                                        chain.test0({
+                                            is:["string",typeof msg]
+                                        })
+                                        callback(true)
+                                    }
+                                },
+                                model:{
+                                    setHomePage:function(id){
+                                        return chain.test1({
+                                            is:[id,11]
+                                        })
+                                        .deferred([
+                                            {title:"oldNode"},
+                                            {title:'newNode'}
+                                        ])
+                                    }
+                                },
+                                navigationModel:{
+                                    onChange:function(item){
+                                        switch(false){
+                                            case chain.isFin(2):
+                                                chain.test2({
+                                                    is:[
+                                                        "oldNode",item.title
+                                                    ]
+                                                })
+                                                break;
+                                            case chain.isFin(3):
+                                                chain.test3({
+                                                    is:[
+                                                        "newNode",item.title
+                                                    ]
+                                                })
+                                                break;
+                                        }
+                                    }
+                                }
+                            });
+                            
+                            controller.onHomeChange({
+                                id:11
+                            })
+                            
+                            return chain.async;
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

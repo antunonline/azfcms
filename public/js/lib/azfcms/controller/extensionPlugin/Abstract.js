@@ -3,11 +3,11 @@
  */
 
 
-define(  ['dojo/_base/declare','azfcms/model/cms'],
-    function (declare,cmsModel){
+define(  ['dojo/_base/declare','azfcms/model/cms','dojo/_base/lang'],
+    function (declare,cmsModel,lang){
         return declare([],{
             constructor:function(args){
-                if(!this.cmsModel){
+                if(!args.cmsModel){
                     this.cmsModel = cmsModel;
                 } else {
                     this.cmsModel  = args.cmsModel;
@@ -16,17 +16,16 @@ define(  ['dojo/_base/declare','azfcms/model/cms'],
                 if(!args.pluginId){
                     throw "azfcms/controller/extensionPlugin/Abstract: pluginId is not specified"
                 }
-                this.pluginId = args.pluginId;
                 
                 if(!args.navigationId){
                     throw "azfcms/controller/extensionPlugin/Abstract: navigationId is not specified"
                 }
-                this.navigationId = args.navigationId;
                 
                 if(!args.view){
                     throw "azfcms/controller/extensionPlugin/Abstract: view is not specified"
                 }
-                this.view = args.view;
+                
+                lang.mixin(this,args);
             },
             
             init:function(){},

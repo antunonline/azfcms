@@ -20,13 +20,14 @@ define(
                 self.form.disable();
                 cpc.insertNode(title,type)
             });
+            
+            this.navigation = navigation;
         },
         
         insertNode: function(title,type){
             this.cpd.set("disabled",true);
             var form = this.form;
-            form.disable();
-            navigation.insertInto(this.node.id,title,type).
+            this.navigation.insertInto(this.node.id,title,type).
                 then(function(){
                 form.reset();
                 form.enable();

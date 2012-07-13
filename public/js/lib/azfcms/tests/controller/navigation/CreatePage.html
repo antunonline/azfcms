@@ -1,0 +1,142 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script>
+            require(
+            ['azfcms/view/navigation/CreatePageDialog','dojo/domReady!',
+                'dijit','doh','azfcms/tests/CallChain',
+                'azfcms/controller/navigation/CreatePage'],function
+            (CreatePageDialog,ready,
+            dijit,doh,Chain ,
+            CreatePage){
+                //              
+                
+                doh.register('azfcms.tests.controller.navigation.CreatePage',[
+                    {
+                        name:"Test constructor",
+                        runTest:function(){
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:1
+                            })
+                            
+                            var controller = new CreatePage({
+                                form:{
+                                    on:function(eventName,callback){
+                                        chain.test0({
+                                            is:["action",eventName]
+                                        })
+                                    }
+                                }
+                            });
+                            
+                            return chain.async;
+                        }
+                    },
+                    {
+                        name:"Test .insertNode",
+                        runTest:function(){
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:6
+                            })
+                            
+                            var controller = new CreatePage({
+                                form:{
+                                    on:function(eventName,callback){
+                                        chain.test0({
+                                            is:["action",eventName]
+                                        })
+                                        this.onAction = callback;
+                                    },
+                                    disable:function(){
+                                        chain.test1()
+                                    },
+                                    reset:function(){
+                                        chain.test4()
+                                    },
+                                    enable:function(){
+                                        chain.test5()
+                                    }
+                                },
+                                set:function(disabled,state){
+                                    chain.test2({
+                                        is:[
+                                            "disabled",disabled,
+                                            true,state
+                                        ]
+                                    })
+                                }
+                            });
+                            
+                            controller.navigation = {
+                                insertInto:function(id, title,type){
+                                    return chain.test3({
+                                        is:[
+                                            11,id,
+                                            "title",title,
+                                            "type",type
+                                        ]
+                                    }).deferred();
+                                }
+                            }
+                            
+                            controller.node = {
+                                id:11
+                            }
+                            controller.form.onAction("title","type");
+                            
+                            return chain.async;
+                        }
+                    },
+                    
+                    {
+                        name:"Test .show",
+                        runTest:function(){
+                        
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:3
+                            })
+                            
+                            var controller = new CreatePage({
+                                form:{
+                                    on:function(eventName,callback){
+                                        chain.test0({
+                                            is:["action",eventName]
+                                        })
+                                    },
+                                    reset:function(){
+                                        chain.test1()
+                                    }
+                                },
+                                show:function(){
+                                    chain.test2()
+                                }
+                            });
+                            
+                            
+                            controller.show({id:12});
+                            
+                            return chain.async;
+                        
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

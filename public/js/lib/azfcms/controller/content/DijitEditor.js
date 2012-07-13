@@ -1,6 +1,6 @@
 define(
-    ['dojo/_base/declare','azfcms/controller/AbstractEditorController','azfcms/model/navigation'],function
-    (declare, AbstractEditorController,navigationModel)
+    ['dojo/_base/declare','azfcms/controller/AbstractEditorController'],function
+    (declare, AbstractEditorController)
     {
         var _class = declare([AbstractEditorController],{
             
@@ -8,10 +8,6 @@ define(
              * Initialize controller
              */
             initialize: function(callback){
-                if("model" in this == false){
-                    this.model = navigationModel;
-                }
-                
                 var self = this;
                 
                 this.editorPane.disable();

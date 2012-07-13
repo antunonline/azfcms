@@ -18,8 +18,8 @@ define(
              */
                 this.nodeId = null;
                 
-                if(!this.navigationModel || !args.navigationModel){
-                    this.navigationModel = navigationModel;
+                if(args&&args.navigationModel){
+                    this.navigationModel = args.navigationModel;
                 } else {
                     this.navigationModel = navigationModel;
                 }
@@ -74,9 +74,6 @@ define(
          * @return {dojo.Deferred} value
          */
             getValue:function(key){
-                if(!key){
-                    key = "";
-                }
                 return this.navigationModel.getContent(this.nodeId,key);
             },
         

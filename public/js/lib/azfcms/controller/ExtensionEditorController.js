@@ -137,7 +137,6 @@ define(
                 require(requires,function(Controller,View){
                     var view = self._buildEditorPane(View);
                     var controller = self._buildController(Controller,pluginId,self.navigationId,view);
-                    controller.init();
                 })
             },
             onItemSelect: function(item){

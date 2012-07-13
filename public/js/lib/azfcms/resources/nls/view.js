@@ -12,6 +12,7 @@
  * utl = azfcms/view/Util
  * eep = azfcms/view/ExtensionEditorPane
  * eec = azfcms/controller/ExtensionEditorController
+ * extDijit = azfcms/view/extensionPlugin/DijitEditor
  * 
  */
 
@@ -80,7 +81,9 @@ define({
     redirSaveLabel:"Spremi",
     
     
-    hompHomePageMessage:"Želite li postaviti izabranu stranicu kao naslovnu stranicu?"
+    hompHomePageMessage:"Želite li postaviti izabranu stranicu kao naslovnu stranicu?",
+    
+    extDijitSave:"Spremi"
   },
 
   de: true,

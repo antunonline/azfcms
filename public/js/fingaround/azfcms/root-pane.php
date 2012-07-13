@@ -15,8 +15,8 @@
         <script>
             var env;
             require(
-            ['azfcms/bootstrap/adminEnv'],function
-            (adminEnv){
+            ['azfcms/bootstrap/adminEnv','dojo/domReady!'],function
+            (adminEnv,ready){
                 adminEnv.adminDialog.show();
                 env = adminEnv;
                 

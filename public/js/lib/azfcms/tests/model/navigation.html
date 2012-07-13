@@ -848,7 +848,7 @@ and open the template in the editor.
                         name: "Test .setContent()",
                         runTest: function(){
                          var a = new doh.Deferred();
-                            var expected = "cms.navigation.setContent(33,'{\"name\":\"value\"}')";
+                            var expected = 'cms.navigation.setContent(33,null,{"name":"value"})';
                             var n = new navigation._class({
                                 model:{
                                     invoke: function(actual){
@@ -861,11 +861,14 @@ and open the template in the editor.
                                     },
                                     prepareRestStore: function(){
                                         return {};
+                                    },
+                                    createCall:function(){
+                                        return navigation.model.createCall.apply(this,arguments);
                                     }
                                 }
                             })
                             
-                            n.setContent(33,{name:"value"});
+                            n.setContent(33,null,{name:"value"});
                             return a;
                         }
                     },
@@ -874,7 +877,7 @@ and open the template in the editor.
                         name: "Test .getContent()",
                         runTest: function(){
                          var a = new doh.Deferred();
-                            var expected = "cms.navigation.getContent(33)";
+                            var expected = "cms.navigation.getContent(33,null)";
                             var n = new navigation._class({
                                 model:{
                                     invoke: function(actual){
@@ -887,11 +890,14 @@ and open the template in the editor.
                                     },
                                     prepareRestStore: function(){
                                         return {};
+                                    },
+                                    createCall:function(){
+                                        return navigation.model.createCall.apply(this,arguments);
                                     }
                                 }
                             })
                             
-                            n.getContent(33);
+                            n.getContent(33,null);
                             return a;
                         }
                     }

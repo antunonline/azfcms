@@ -65,14 +65,16 @@ Released   : 20110306
 					</div>
 					<div style="clear: both;">&nbsp;</div>
 				</li>
+                            <?php if($this->layout()->left): ?>
 				<li>
 					<h2>Left Region</h2>
-					<?php if($this->layout()->left): ?>
+					
                                         <?= $this->layout()->left;?>
-					<?php endif?>
+					
 				</li>
+                            <?php endif?>
 				<li>
-					<h2>Categories</h2>
+					<h2>Contextual menu</h2>
 					<ul>
                                             <?php  $menu = $this->navigation->getContext(); foreach($menu['childNodes'] as $node): ?>
 						<li><a href="<?= $node['url'] ?>"><?= $node['title'] ?></a></li>
@@ -80,24 +82,14 @@ Released   : 20110306
 					</ul>
 				</li>
 				<li>
-					<h2>Blogroll</h2>
+					<h2>Breadcrumbs</h2>
 					<ul>
 						<?php  $menu = $this->navigation->getBreadCrumbs(); foreach($menu as $node): ?>
 						<li><a href="<?= $node['url'] ?>"><?= $node['title'] ?></a></li>
                                                 <?php endforeach; ?>
 					</ul>
 				</li>
-				<li>
-					<h2>Archives</h2>
-					<ul>
-						<li><a href="#">Aliquam libero</a></li>
-						<li><a href="#">Consectetuer adipiscing elit</a></li>
-						<li><a href="#">Metus aliquam pellentesque</a></li>
-						<li><a href="#">Suspendisse iaculis mauris</a></li>
-						<li><a href="#">Urnanet non molestie semper</a></li>
-						<li><a href="#">Proin gravida orci porttitor</a></li>
-					</ul>
-				</li>
+				
 			</ul>
 		</div>
 		<!-- end #sidebar -->

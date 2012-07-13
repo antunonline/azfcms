@@ -12,20 +12,21 @@ and open the template in the editor.
         <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true" ></script>
         <script type="text/javascript">
             require(['doh','dojo/domReady!','azfcms/view/content/DijitEditor',
-                'dojo/aspect','azfcms/controller/content/DijitEditor','dojo/_base/Deferred'],function(doh,domReady,DijitEditor,
-            aspect, Controller, Deferred){
+                'dojo/aspect','azfcms/controller/content/DijitEditor','dojo/_base/Deferred','azfcms/tests/CallChain'],function(doh,domReady,DijitEditor,
+            aspect, Controller, Deferred,Chain){
                 var e = new DijitEditor();
                 e.placeAt(document.body);
                 doh.register("azfcms.tests.controller.content.DijitEditor",[
                     {
                         name: "Test .initialize(callback) callback call",
                         runTest: function(){
-                            var c = new Controller();
-                            c.model = {
-                                getContent: function(){
-                                    return new Deferred();
-                                }
-                            };
+                            var c = new Controller({});
+                            
+                            c.getValue=function(){
+                                var d = new Deferred();
+                                d.callback("expected");
+                                return d;
+                            }
                             c.editorPane = {
                                 onSave: function(){
                                     
@@ -38,6 +39,9 @@ and open the template in the editor.
                                 },
                                 on: function(){
                                     
+                                },
+                                set:function(){
+                                    
                                 }
                             };
                             
@@ -49,17 +53,17 @@ and open the template in the editor.
                         }
                     },
                     {
-                        name: "Test .model.getContent call" ,
+                        name: "Test .getValue call" ,
                         runTest: function(){
-                            var expected = "test";
-                            var c = new Controller();
-                            c.model = {
-                                getContent: function(){
-                                    var d = new Deferred();
-                                    d.callback({"default":expected});
-                                    return d;
-                                }
-                            };
+                            var a = new doh.Deferred();
+                            var expected = "Body";
+                            var c = new Controller({});
+                            c.getValue = function(key){
+                                doh.t(key == "content","Key does not equal to content");
+                                var d = new Deferred();
+                                d.callback(expected);
+                                return d;
+                            }
                             c.editorPane = {
                                 onSave: function(){
                                     
@@ -78,7 +82,7 @@ and open the template in the editor.
                                 }
                             };
                             
-                            var a = new doh.Deferred();
+                            
                             c.initialize(function(){
                                 
                             });
@@ -86,21 +90,25 @@ and open the template in the editor.
                         }
                     },
                     {
-                        name: "Test .model.setContent call" ,
+                        name: "Test .setValue() call" ,
                         runTest: function(){
+                            
                             var expected = "test";
-                            var c = new Controller();
-                            c.model = {
-                                getContent: function(){
-                                    var d = new Deferred();
-                                    
-                                    return d;
-                                },
-                                setContent: function(id,actual){
-                                    a.callback(actual==expected, "Model did not receive expected value");
-                                    return new Deferred();
-                                }
-                            };
+                            var c = new Controller({});
+                            
+                            c.getValue = function(){
+                                var d = new Deferred();
+                                d.callback("text");
+                                return d;
+                            }
+                            c.setValue = function(key, value){
+                                doh.t(key=="content");
+                                doh.t(value==expected);
+                                var d = new Deferred();
+                                d.callback(true);
+                                return d;
+                            }
+                            
                             c.editorPane = {
                                 onSave: function(){
                                     
@@ -109,7 +117,7 @@ and open the template in the editor.
                                     
                                 }, 
                                 enable: function(){
-                                    
+                                    a.callback(true);
                                 },
                                 on: function(){
                                     

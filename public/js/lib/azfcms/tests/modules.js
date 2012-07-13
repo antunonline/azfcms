@@ -1,7 +1,7 @@
 /* 
  * @author Antun Horvat
  */
-define(['require'],function(require){
+define(['require','doh'],function(require,doh){
     
     require([
         './_Model',
@@ -10,6 +10,9 @@ define(['require'],function(require){
         './model/modules',
         './store/modules'
         ])
+        
+        doh.registerUrl("azfcms.tests.CallChain", require.toUrl('')+'/azfcms/tests/CallChain.html')
+        
 })
 
 

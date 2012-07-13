@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['dojo/domReady!','doh',
+                'dojo/_base/declare','dojo/_base/Deferred',
+                'azfcms/controller/extensionPlugin/DijitEditor',
+                'azfcms/tests/CallChain'
+            ],function
+            (ready,doh, 
+            declare,Deferred,
+            Controller,
+            Chain
+        ){
+                
+                
+                doh.register('azfcms.tests.controller.extensionPlugin.Abstract',[
+                    {
+                        name:"Test .constructor",
+                        runTest:function(){
+                            var chain = new Chain({
+                                doh:doh,
+                                testCount:4
+                            });
+                            
+                            
+                            var view = {
+                                saveButton:{
+                                    on:function(event,callback){
+                                        chain.test2({
+                                            is:[
+                                                "click",event
+                                            ]
+                                        });
+                                        
+                                        callback();
+                                    }
+                                }
+                            }
+                            
+                            view.editor = {
+                                set:function(key,value){
+                                    chain.test1({
+                                        is:[
+                                            "value",key,
+                                            "body",value
+                                        ]
+                                    })
+                                },
+                                get:function(key){
+                                    chain.test2({
+                                        is:[
+                                            "value",key                                        ]
+                                    });
+                                    return "body"
+                                }
+                                
+                            }
+                            
+                            
+                            var controller= new Controller({
+                                view:view,
+                                pluginId:1,
+                                navigationId:1,
+                                getValue:function(key){
+                                    return chain.test0({
+                                        is:["body",key]
+                                    }).deferred("body");
+                                },
+                                setValue:function(key,value){
+                                    chain.test3({
+                                        is:[
+                                            "body",key,
+                                            "body",value
+                                        ]
+                                    });
+                                }
+                            });
+                            
+                            
+                            return chain.async;
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+        <div style="width:100%;height:100%" id="inputContainer">
+
+        </div>
+    </body>
+</html>
+

@@ -7,7 +7,7 @@ define(
         {
         var _class = declare([],{
         
-            constructor: function(){
+            constructor: function(args){
                 // Reference of navigation node id
                 this.nodeId = null;
                 /**
@@ -20,6 +20,12 @@ define(
                 this.dynamicParams = null;
                 
                 this.node = null;
+                
+                if(args&&args.navigationModel){
+                    this.navigationModel = args.navigationModel;
+                } else {
+                    this.navigationModel = navigationModel;
+                }
             },
         
             init: function(node, cep){
@@ -32,18 +38,18 @@ define(
                 // Store cep ref.
                 this.cep = cep;
                 // Create closure referencable this
-                var cec = this; 
+                var self = this; 
                 // Load static and dynamic plugin params
-                navigationModel.getNodeParams(nodeId).then(function
+                this.navigationModel.getNodeParams(nodeId).then(function
                     (params){
                         var staticParams = params[0];
                         var dynamicParams = params[1];
                
-                        cec.staticParams = staticParams;
-                        cec.dynamicParams = dynamicParams;
-                        cec._onParamsLoad();
+                        self.staticParams = staticParams;
+                        self.dynamicParams = dynamicParams;
+                        self._onParamsLoad();
                
-                        cec._build(staticParams,dynamicParams).then(function(controller){
+                        self._build(staticParams,dynamicParams).then(function(controller){
                             d.callback(controller)
                         });
                     });
@@ -69,7 +75,7 @@ define(
                 var cep = this.cep;
                 // Get plugin identifier
                 var pluginIdentifier = staticParams.pluginIdentifier;
-                pluginIdentifier = pluginIdentifier[0].toUpperCase()+pluginIdentifier.substring(1);
+                pluginIdentifier = pluginIdentifier.substring(0,1).toUpperCase()+pluginIdentifier.substring(1);
            
                 require(['azfcms/controller/content/'+pluginIdentifier, 'azfcms/view/content/'+pluginIdentifier],
                     function(EC, EP){
@@ -114,7 +120,7 @@ define(
        
             onMetadataSave: function(title, description, keywords){
                 var nid = this.nodeId;
-                navigationModel.setMetaValues(nid,title,description,keywords);
+                this.navigationModel.setMetaValues(nid,title,description,keywords);
             }
         });
     

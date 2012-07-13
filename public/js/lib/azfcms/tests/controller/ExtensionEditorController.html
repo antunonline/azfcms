@@ -395,6 +395,9 @@
                             var eep = new ExtensionEditorPane({
                                 addChild:function(){
                                     isAddChildOk = true;
+                                },
+                                get:function(){
+                                    return "Name";
                                 }
                             });
                             var eec = new EEC({
@@ -403,10 +406,10 @@
                                 model:{}
                             });
                             
-                            define('azfcms/controller/extension/Test',[],function(){
+                            define('azfcms/controller/extensionPlugin/Test',[],function(){
                                 return Controller;
                             })
-                            define('azfcms/view/extension/Test',[],function(){
+                            define('azfcms/view/extensionPlugin/Test',[],function(){
                                 return View;
                             })
                             

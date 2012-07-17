@@ -11,7 +11,7 @@ require_once '../application/resolvers/ExtensionPlugin.php';
  *
  * @author antun
  */
-class Application_Resolver_ExtensionPluginTest extends PHPUnit_Framework_TestCase{
+class Application_Resolver_Navigation extends PHPUnit_Framework_TestCase{
     
     public function todoTest(){
         $this->markTestIncomplete();

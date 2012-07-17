@@ -14,6 +14,7 @@ define(
         var _class = declare([_Widget,_TemplatedMixin,_WidgetsInTemplate],{
             templateString:templateString,
             closable:true,
+            editorPlugin:null,
             constructor: function(args){
                 // Set template substitution values
                 this.cepContentType = nls.cepContentType;
@@ -48,8 +49,28 @@ define(
            
                 this.onMetadataSave(title,description,keywords);
             },
+            
+            _onChangeType:function(){
+                var type = this.pageType.get("value");
+                this.onTypeChange(type);
+            },
        
             addChild: function(child){
+                if(this.editorPlugin){
+                    this.borderContainer.removeChild(this.editorPlugin);
+                    
+                    if(this.editorPlugin.destroyRecursive){
+                        try{
+                            this.editorPlugin.destroyRecursive();
+                        }catch(e){
+                            this.editorPlugin.destroy()
+                        }
+                    }else {
+                        this.editorPlugin.destroy();
+                    }
+                    
+                }
+                this.editorPlugin = child;
                 this.borderContainer.addChild(child);
             },
        
@@ -69,6 +90,10 @@ define(
        
             onMetadataSave: function(title, description, keywords){
            
+            },
+            
+            onTypeChange:function(type){
+                
             }
         }) ;
    

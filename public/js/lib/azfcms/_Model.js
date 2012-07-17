@@ -257,6 +257,11 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
                 this.load(expr,null,d.callback, d.errback)
                 return d;
             },
+            
+            singleInvoke:function(method,args){
+                var call = this.createCall(method,args);
+                return this.invoke(call);
+            },
             invokeWithForm:function(expr,form){
                 var d = new Deferred();
                 iframe.send({

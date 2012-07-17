@@ -96,7 +96,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         // Get local bootstrap method names
         $localResourceNames = $this->getClassResourceNames();
         // Remove local resource names from run list
-        $this->_run = array_diff($this->_run,$localResourceNames);
+        $this->_run = array_diff($localResourceNames,$this->_run);
         // Run
         $this->bootstrap();
     }
@@ -105,12 +105,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     
     public function _initSaveEnv(){
         // Registered this env as bootstraped
-        $this->_initEnvs[] = $this->getEnvironment();
+        if(!in_array($this->getEnvironment(),$this->_initEnvs)){
+            $this->_initEnvs[] = $this->getEnvironment();
+        }
+        
     }
     
     public function _initLayout(){
         if($this->isMvcEnvironment()==false)
             return;
+        
+        static $isInit;
+        if(isset($isInit)){
+            return;
+        } else {
+            $isInit = true;
+        }
         
         Zend_Layout::startMvc(array(
             'layoutPath'=>APPLICATION_PATH."/views/layouts",
@@ -122,7 +132,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      * Initialize Azf classpath 
      */
     public function _initAzfClassPath() {
+        static $isInit;
+        if(isset($isInit)){
+            return;
+        } else {
+            $isInit = true;
+        }
+        
         Zend_Loader_Autoloader::getInstance()->registerNamespace("Azf");
+        
     }
     
     
@@ -134,6 +152,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isRpcEnv()){
             return;
         }
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
+        
         $module = (string) $_GET['module'];
         if(!ctype_alnum($module)){
             throw new HttpRequestException("Invalid module name specified");
@@ -149,6 +169,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
     
     public function _initGlobalLoader(){
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
+        
         $this->getResourceLoader()
                 ->addResourceType("plugins", "plugins","Plugin");
     }
@@ -160,6 +182,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isRpcEnv()){
             return;
         }
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
+        
         $this->getResourceLoader()
                 ->addResourceType("rpcs", "rpcs", "Rpc");
     }
@@ -170,6 +194,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isRestEnv()){
             return false;
         } 
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         $this->getResourceLoader()
                 ->addResourceType("rests", "rests", "Rest");
     }
@@ -179,6 +204,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isLangEnv()){
             return false;
         }
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         $this->getResourceLoader()
                 ->addResourceType("resolvers", "resolvers", "Resolver");
     }
@@ -186,6 +212,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     /**
      * Initialize log obj.      */
     public function _initLog() {
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         $logWriter = new Zend_Log_Writer_Null();
         $log = new Zend_Log($logWriter);
         Zend_Registry::set("log",$log);
@@ -197,6 +224,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      * @return \Azf_Model_Tree_Navigation 
      */
     public function _initNavigationModel(){
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         $dbAdapter = $this->getPluginResource("db")->getDbAdapter();
         
         $navigation = new Azf_Model_Tree_Navigation($dbAdapter);
@@ -213,6 +241,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isMvcEnvironment())
             return ;
         
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         Zend_Controller_Action_HelperBroker::addPrefix("Azf_Controller_Action_Helper");
     }
     
@@ -225,6 +254,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isMvcEnvironment())
             return;
         
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         $navigation = $this->getResource("navigationModel");
         $route = new Azf_Controller_Router_Route_Default($navigation);
         $this->getPluginResource("frontcontroller")->getFrontController()->getRouter()->addRoute('default',$route);
@@ -234,6 +264,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if(!$this->isMvcEnvironment())
             return;
         
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         Zend_Controller_Front::getInstance()->registerPlugin(new Azf_Controller_Plugin_Bootstrap());
     }
     
@@ -241,6 +272,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      * INitialize session env 
      */
     public function _initSession(){
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         Zend_Session::start();
     }
     
@@ -249,6 +281,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      * 
      */
     public function _initAuth(){
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         if(!Zend_Auth::getInstance()->hasIdentity()){
             $dbAdapter = $this->getPluginResource("db")->getDbAdapter();
             
@@ -274,19 +307,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
      * Initialize ACL
      */
     public function _initAcl(){
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
+        
         $this->bootstrap("session");
         if(Zend_Session::namespaceIsset("acl")){
-            $acl = Zend_Session::namespaceGet("acl");
+            $session = new Zend_Session_Namespace("acl", true);
+            $acl = $session->acl;
         } else {
             $acl = new Zend_Acl();
             $uid = $this->bootstrap("auth")->id;
-            $role = "user";
+            
             $dbAdapter= $this->getPluginResource("db")->getDbAdapter();
             $userModel = new Azf_Model_User(array("db"=>$dbAdapter));
             
             $aclRules = $userModel->getUserAclRules($uid);
             foreach($aclRules as $rule){
-                $acl->allow($role, $rule['resource'], $rule['privilege']);
+                $acl->allow(null, $rule['resource'], $rule['privilege']);
             }
             
             $namespace = new Zend_Session_Namespace("acl");
@@ -299,6 +335,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     
     
     public function _initDefaulTemplateIdentifier(){
+        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         $defaultTemplate = $this->getOption("defaultTemplate");
         Zend_Registry::set("defaultTemplate",$defaultTemplate);
     }

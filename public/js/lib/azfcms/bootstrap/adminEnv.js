@@ -125,13 +125,19 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 self.model = model;
                                 self.CEP = cep;
                                 self.CEC = cec;
-                                initCallback();
+                                
+                                self.typeStore = model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()');
+                                self.typeStore.idProperty = "pluginIdentifier";
+                                self.typeStore.query().then(function(){
+                                    initCallback();
+                                })
+                                
                             })
                         
                     },
                     callback: function(item){
                         var cep = new this.CEP({
-                            typeStore:this.model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()'),
+                            typeStore:this.typeStore,
                             title:"Editor za \""+item.title+"\""
                         });
                         var cec = new this.CEC();

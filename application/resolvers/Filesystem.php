@@ -6,7 +6,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         parent::initialize();
     }
     protected function isAllowed($namespaces, $parameters) {
-        return true;
+         return true;
     }
 
     /**
@@ -23,7 +23,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         if ($this->_baseDir)
             return $this->_baseDir;
 
-        return APPLICATION_PATH . "/../public/files";
+        return realpath(APPLICATION_PATH . "/../public/files");
     }
 
     public function constructRealPath($path) {
@@ -169,7 +169,22 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         if(!$realPath || !$isPathSecure)
             return false;
         
-        unlink($realPath);
+        if(is_file($realPath)){
+            unlink($realPath);
+        }
+        else{
+            $recursiveDirIterator = new RecursiveDirectoryIterator($file);
+            $dirIterator = new RecursiveIteratorIterator($recursiveDirIterator);
+            foreach($dirIterator as $file){
+                /* @var $dirIterator RecursiveDirectoryIterator */
+                if($file->isDir()){
+                    continue;
+                } else {
+                    unlink($file->getPath());
+                }
+            }
+        }
+        
     }
 
     protected function _isUploadedFile($file) {

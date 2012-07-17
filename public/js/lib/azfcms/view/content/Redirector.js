@@ -24,10 +24,10 @@ define(
             ,
             
             _setUrlAttr:function(url){
-                this.url.set("value",url);
+                this.inputText.set("value",url);
             },
             _getUrlAttr:function(){
-                return this.url.get("value");
+                return this.inputText.get("value");
             },
             
             _onSave:function(){

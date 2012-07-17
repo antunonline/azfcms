@@ -897,7 +897,7 @@ azfcms.model.cms.setExtensionValue(function(id, key, value){
     return Application_Resolver_ExtensionPlugin.setExtensionValueMethod(function(id, key, value){
         return Azf_Plugin_Extension_Manager.setValue(function(id, key, value){
             var plugin = Azf_Plugin_Extension_Abstract = 
-                Azf_Plugin_Extension_Manager._getPluginInstance(function(_null,id){});
+            Azf_Plugin_Extension_Manager._getPluginInstance(function(_null,id){});
             
             Azf_Plugin_Extension_Abstract.setValue(function(key,value){
                 Azf_Plugin_Extension_Abstract.setParam(key, value);
@@ -911,7 +911,7 @@ azfcms.model.setExtensionValues(function(id, values){
     return Application_Resolver_ExtensionPlugin.setExtensionValuesMethod(function(id, values){
         return Azf_Plugin_Extension_Manager.setValues(function(id, values){
             var plugin = Azf_Plugin_Extension_Abstract = 
-                Azf_Plugin_Extension_Manager._getPluginInstance(_null,id);
+            Azf_Plugin_Extension_Manager._getPluginInstance(_null,id);
             if(!plugin)
                 return;
             
@@ -927,8 +927,8 @@ azfcms.model.setExtensionValues(function(id, values){
 azfcms.model.getExtensionValue(function(id, key){
     return Application_Resolver_ExtensionPlugin.getExtensionValueMethod(function(id, key){
         return Azf_Plugin_Extension_Manager.getValue(function(id, key){
-             var plugin = Azf_Plugin_Extension_Abstract = 
-                Azf_Plugin_Extension_Manager._getPluginInstance(_null,id);
+            var plugin = Azf_Plugin_Extension_Abstract = 
+            Azf_Plugin_Extension_Manager._getPluginInstance(_null,id);
             if(!plugin)
                 return;
             
@@ -942,8 +942,8 @@ azfcms.model.getExtensionValue(function(id, key){
 azfcms.model.getExtensionValues(function(id){
     return Application_Resolver_ExtensionPlugin.getExtensionValuesMethod(function(id){
         return Azf_Plugin_Extension_Manager.getValues(function(id){
-             var plugin = Azf_Plugin_Extension_Abstract = 
-                Azf_Plugin_Extension_Manager._getPluginInstance(_null,id);
+            var plugin = Azf_Plugin_Extension_Abstract = 
+            Azf_Plugin_Extension_Manager._getPluginInstance(_null,id);
             if(!plugin)
                 return;
             
@@ -957,11 +957,11 @@ azfcms.model.getExtensionValues(function(id){
 
 
 
-azfcms.controller.navigation.ContentEdit.onTypeChange(function(newType){
+azfcms.controller.navigation.ContentEdit.onTypeChange = function(newType){
     
     var nodeId = azfcms.controller.navigation.ContentEdit.node.id;
-    azfcms.model.navigation.changePageType(function(nodeId,newType){
-        Application_Resolver_Navigation.changePageTypeMethod = function(nodeId, newType){
+    azfcms.model.navigation.changePageType = function(nodeId,newType){
+        var changed = Application_Resolver_Navigation.changePageTypeMethod = function(nodeId, newType){
             var node = Azf_Model_Tree_Navigation.find(nodeId)
             if(!node){
                 return false;
@@ -969,15 +969,45 @@ azfcms.controller.navigation.ContentEdit.onTypeChange(function(newType){
             
             Application_Resolver_Navigation.$_uninstallContentPlugin = function(nodeId){
                 var staticParams  = Azf_Model_Tree_Navigation.getStaticParams(nodeId);
-                Application_Resolver_Navigation.$_callMvc(nodeId, {action:"uninstallpage"}+staticParams, "production");
+                Application_Resolver_Navigation.$_callMvc(nodeId, {
+                    action:"uninstallpage"
+                }+staticParams, "production");
             };
             
+            Application_Resolver_Navigation.$_installContentPlugin = function(nodeId, newType){
+                Azf_Plugin_Descriptor = Application_Resolver_Navigation.getPluginDescriptor();
+                var newPluginDescriptor = Azf_Plugin_Descriptor.getContentPlugin(newType);
+                var mvcParams = {
+                    action:"installpage"
+                }+newPluginDescriptor;
+                Application_Resolver_Navigation.$_callMvc(nodeId, mvcParams, "production");
+            }
             
+            return true;
         }
-    }).then(function(){
         
-    })
-})
+        changed.then(function(result){
+            if(result){
+                var promise = azfcms.model.navigation.getNodeParams(nodeId);
+                promise.then(function(params){
+                    var staticParams = params[0];
+                    var dynamicParams = params[1];
+
+                    azfcms.controller.navigation.ContentEdit.$_build(staticParams, dynamicParams);
+                })
+                    
+            }
+        })
+        
+        
+        
+        
+        
+    };
+    
+    
+    
+}
 
 
 Azf_Php2Js_Converter.convertFile = function(fileName){
@@ -1069,4 +1099,11 @@ Azf_Php2Js_Converter.convertFile = function(fileName){
 
 
 
+Azf_Service_Lang_Resolver_Auto.isAllowed = function(namespaces, parameters){
+    if(Zend_Acl.system.rootResolverAccess){
+        return true;
+    } else {
+        return false;
+    }
+}
 

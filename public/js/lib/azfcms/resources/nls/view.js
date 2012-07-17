@@ -13,6 +13,7 @@
  * eep = azfcms/view/ExtensionEditorPane
  * eec = azfcms/controller/ExtensionEditorController
  * extDijit = azfcms/view/extensionPlugin/DijitEditor
+ * nce = azfcms/controller/navigation/ContentEdit
  * 
  */
 
@@ -83,7 +84,9 @@ define({
     
     hompHomePageMessage:"Želite li postaviti izabranu stranicu kao naslovnu stranicu?",
     
-    extDijitSave:"Spremi"
+    extDijitSave:"Spremi",
+    
+    nceTypeChangeMsg:"Promjenom vrste sadržaja izgubit ćete sve vrijednosti navedene u lijevom editoru. Želite li doista promjeniti vrstu sadržaja?"
   },
 
   de: true,

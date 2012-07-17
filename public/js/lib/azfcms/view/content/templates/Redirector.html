@@ -1,6 +1,19 @@
-<div style="border-radius: 6px; -moz-border-radius: 6px; margin: 5px; position: relative; width: 477px; height: 91px;" class="dijitDialog">
-    <label style="position: absolute; z-index: 900; left: 14px; top: 28px;">
-      ${redirUrlLabel}</label>
-    <input type="text" data-dojo-attach-point="url" data-dojo-type="dijit.form.TextBox" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="position: absolute; z-index: 900; width: 292px; left: 163px; top: 25px;"></input>
-    <input data-dojo-attach-event="onClick:_onSave" type="button" data-dojo-type="dijit.form.Button" intermediateChanges="false" label="${redirSaveLabel}" iconClass="dijitNoIcon" style="position: absolute; z-index: 900; left: 14px; top: 56px;"></input>
-  </div>
+<div>
+    <table>
+        <tbody>
+            <tr>
+                <td style="padding: 0px 10px;">
+                    ${redirUrlLabel}</td>
+                <td>
+                    <input data-dojo-attach-point="inputText" type="text" data-dojo-type="dijit.form.TextBox" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 248px; height: 24px;"></input>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input data-dojo-attach-event="onClick:_onSave" type="button" data-dojo-type="dijit.form.Button" intermediateChanges="false" label="${redirSaveLabel}" iconClass="dijitNoIcon"></input>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

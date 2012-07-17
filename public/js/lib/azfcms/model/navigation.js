@@ -408,6 +408,11 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             return this.model.invoke(call);
         },
         
+        changePageType : function(nodeId,newType){
+            return this.model.singleInvoke("cms.navigation.changePageType",[nodeId,newType]);
+        },
+        
+        
         
         // =======================================================================
         // Callbacks

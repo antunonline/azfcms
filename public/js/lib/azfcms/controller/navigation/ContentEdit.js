@@ -1,13 +1,22 @@
 define(
     ['dojo/_base/declare','dojo/_base/Deferred','azfcms/model',
         
-    'dojo/_base/lang','azfcms/model/navigation'],function
+    'dojo/_base/lang','azfcms/model/navigation','azfcms/view/util',
+    'dojo/i18n!azfcms/resources/nls/view'],function
     (declare, Deferred, model,
-        lang, navigationModel)
+        lang, navigationModel,util,
+        nls)
         {
         var _class = declare([],{
         
             constructor: function(args){
+                
+                for(var name in nls){
+                    if(name.indexOf("nce")==0){
+                        this[name] = nls[name];
+                    }
+                }
+                
                 // Reference of navigation node id
                 this.nodeId = null;
                 /**
@@ -25,6 +34,11 @@ define(
                     this.navigationModel = args.navigationModel;
                 } else {
                     this.navigationModel = navigationModel;
+                }
+                if(args&&args.util){
+                    this.util = args.util;
+                } else {
+                    this.util = util;
                 }
             },
         
@@ -63,6 +77,7 @@ define(
        
             _initListeners: function(){
                 this.cep.on("metadataSave",lang.hitch(this,this.onMetadataSave));
+                this.cep.on("typeChange",lang.hitch(this,this.onTypeChange));
             },
        
             _build: function(staticParams, dynamicParams){
@@ -115,12 +130,46 @@ define(
                 this.cep.set("title",this.node.title);
                 this.cep.set("description",this.dynamicParams.metaDescription);
                 this.cep.set("keywords",this.dynamicParams.metaKeywords);
+                this.cep.pageType.set('value',this.staticParams.pluginIdentifier);
             },
        
        
             onMetadataSave: function(title, description, keywords){
                 var nid = this.nodeId;
                 this.navigationModel.setMetaValues(nid,title,description,keywords);
+            },
+            
+            onTypeChange:function(newType){
+                var self = this;
+                if(newType == this.staticParams.pluginIdentifier){
+                    return;
+                }
+                
+                this.util.confirm(function(confirmed){
+                    if(!confirmed){
+                        return false;
+                    }
+                    
+                    self.navigationModel.changePageType(self.node.id,newType).
+                    then(function(result){
+                        if(!result){
+                            return;
+                        }
+                        self.navigationModel.getNodeParams(self.node.id).
+                        then(function(params){
+                            var staticParams = params[0];
+                            var dynamicParams = params[1];
+                            self.staticParams = staticParams;
+                            self.dynamicParams = dynamicParams;
+                            self._onParamsLoad();
+                            
+                            self._build(staticParams, dynamicParams)
+                        })
+                        
+                    })
+                },self.nceTypeChangeMsg)
+                
+                
             }
         });
     

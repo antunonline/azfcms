@@ -48,6 +48,7 @@ foreach($iterator as $dicDir){
 }
 
 $jsSource.="\n\n".$jsConverter->convertClass("Azf_Model_Tree_Navigation");
+$jsSource.="\n\n".$jsConverter->convertClass("Bootstrap");
 
 file_put_contents("phpSkeleton.js", $jsSource);
         

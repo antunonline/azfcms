@@ -1,6 +1,8 @@
 <?php
 
 class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
+    
+    const PARAM_CONTENT_PLUGIN_IDENTIFIER = "pluginIdentifier";
 
     /**
      *
@@ -112,50 +114,117 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         parent::initialize();
         $this->setNavigation(Zend_Registry::get("navigationModel"));
     }
-
+    
+    
     /**
      *
-     * @param array $namespaces
-     * @param array $parameters
-     * @return mixed 
+     * @param int $nodeId
+     * @return array
      */
-    protected function _execute(array $namespaces, array $parameters) {
-        if (sizeof($namespaces) != 1) {
-            return null;
-        }
-
-        /**
-         * Pop method name 
-         */
-        $method = array_shift($namespaces);
-        // Build override method name
-        $overrideMethod = 'override' . ucfirst($method);
-
-
-        /**
-         * If override method exists 
-         */
-        if (method_exists($this, $overrideMethod)) {
-            return call_user_method_array($overrideMethod, $this, $parameters);
-        }
-        // If Model method exists
-        else if (method_exists($this->getNavigation(), $method)) {
-            return call_user_method_array($method, $this->getNavigation(), $parameters);
-            // Otherwise return null
-        } else {
-            return null;
-        }
+    public function getStaticParamsMethod($nodeId){
+        return $this->getNavigation()->getStaticParams($nodeId);
+    }
+    
+    /**
+     *
+     * @param int $nodeId
+     * @return array
+     */
+    public function getDynamicParamsMethod($nodeId) {
+        return $this->getNavigation()->getDynamicParams($nodeId);
     }
 
+    
     /**
-     * Start override method declarations 
+     *
+     * @param int $nodeId
+     * @param string $key
+     * @param mixed $value
+     * @return bool 
      */
+    public function setStaticParamMethod($nodeId,$key,$value) {
+        return $this->getNavigation()->setStaticParam($nodeId, $key, $value);
+    }
 
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param string $key
+     * @param mixed $value
+     * @return bool 
+     */
+    public function setDynamicParamMethod($nodeId,$key,$value) {
+        return $this->getNavigation()->setDynamicParam($nodeId, $key, $value);
+    }
+    
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param int $beforeId 
+     * @return bool
+     */
+    public function moveBeforeMethod($nodeId, $beforeId) {
+        return $this->getNavigation()->moveBefore($nodeId, $beforeId);
+    }
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param int $afterId 
+     * @return bool
+     */
+    public function moveAfterMethod($nodeId, $afterId) {
+        return $this->getNavigation()->moveAfter($nodeId, $afterId);
+    }
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param int $intoId 
+     * @return bool
+     */
+    public function moveIntoMethod($nodeId, $intoId) {
+        return $this->getNavigation()->moveInto($nodeId, $intoId);
+    }
+    
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param string $title 
+     * @return bool
+     */
+    public function setTitle($nodeId, $title) {
+        return $this->getNavigation()->setTitle($nodeId, $title);
+    }
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param string $url 
+     * @return bool
+     */
+    public function setUrl($nodeId, $url) {
+        return $this->getNavigation()->setUrl($nodeId, $url);
+    }
+    
+    
+    /**
+     *
+     * @param int $nodeId
+     * @return array
+     */
+    public function getBranchMethod($nodeId) {
+        return $this->getNavigation()->getBranch($nodeId);
+    }
+    
     /**
      *
      * @return array
      */
-    public function overrideGetContentPlugins() {
+    public function getContentPluginsMethod() {
         $pd = $this->getPluginDescriptor();
         return $pd->getContentPlugins();
     }
@@ -164,7 +233,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      *
      * @return array
      */
-    public function overrideGetExtensionPlugins() {
+    public function getExtensionPluginsMethod() {
         $pd = $this->getPluginDescriptor();
         return $pd->getExtensionPlugins();
     }
@@ -176,7 +245,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param string $pluginIdentifier
      * @return id 
      */
-    public function overrideInsertInto($intoId, $value, $pluginIdentifier) {
+    public function insertIntoMethod($intoId, $value, $pluginIdentifier) {
         $navigation = $this->getNavigation();
         $newId = $navigation->insertInto($intoId, array(
             'title' => $value['title'],
@@ -184,23 +253,12 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
                 ));
 
         // Prepare page
-        $this->_prepareInseredPage($newId, $pluginIdentifier);
+        $this->_installContentPlugin($newId, $pluginIdentifier);
 
-        $navigation->setStaticParam($newId, 'pluginIdentifier', $pluginIdentifier);
         return $newId;
     }
 
-    /**
-     * This method will prepare newly insered by 
-     */
-    public function _prepareInseredPage($id, $pluginIdentifier) {
-        $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
-
-        // Call MVC
-        $this->_callMvc($id, array('action' => 'installpage') + $plugin, "production");
-    }
-
-    public function overrideDeleteNode($nodeId) {
+    public function deleteNodeMethod($nodeId) {
         // Find node
         // Get node branch
         $navigation = $this->getNavigation();
@@ -220,8 +278,8 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param string|null $key
      *  @param mixed $content
      */
-    public function overrideSetContent($id, $key, $content) {
-        $pluginIdentifier = $this->navigation->getStaticParam($id, "pluginIdentifier");
+    public function setContentMethod($id, $key, $content) {
+        $pluginIdentifier = $this->navigation->getStaticParam($id, self::PARAM_CONTENT_PLUGIN_IDENTIFIER);
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
 
         $mvc = array(
@@ -239,8 +297,8 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param string|int $key
      * @param mixed $content
      */
-    public function overrideGetContent($id, $key) {
-        $pluginIdentifier = $this->navigation->getStaticParam($id, "pluginIdentifier");
+    public function getContentMethod($id, $key) {
+        $pluginIdentifier = $this->navigation->getStaticParam($id, self::PARAM_CONTENT_PLUGIN_IDENTIFIER);
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
 
         $mvc = array(
@@ -261,7 +319,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param int $navigationId
      * @return array
      */
-    public function overrideSetHomePage($navigationId) {
+    public function setHomePageMethod($navigationId) {
         $navigation = $this->getNavigation();
         $oldHomePage = $this->getHomeNode();
         $oldHomePage['home']=0;
@@ -294,7 +352,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      */
     protected function _deleteBranch($node) {
         $id = $node['id'];
-        $pluginIdentifier = $this->getNavigation()->getStaticParam($id, 'pluginIdentifier');
+        $pluginIdentifier = $this->getNavigation()->getStaticParam($id, self::PARAM_CONTENT_PLUGIN_IDENTIFIER);
         $p = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
 
 
@@ -373,10 +431,53 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         ob_get_clean();
         return $response->getBody(true);
     }
+    
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param string $newType
+     * @return boolean 
+     */
+    public function changePageTypeMethod($nodeId,$newType) {
+        $pluginIdentifier = $this->getNavigation()->getStaticParam($nodeId, self::PARAM_CONTENT_PLUGIN_IDENTIFIER);
+        if(!$pluginIdentifier){
+            return false;
+        }
+        
+        $this->_uninstallContentPlugin($nodeId);
+        $this->_installContentPlugin($nodeId, $newType);
+        return true;
+    }
 
     protected function isAllowed($namespaces, $parameters) {
         // TODO fix me
         return true;
+    }
+
+    
+    /**
+     *
+     * @param int $nodeId 
+     */
+    protected  function _uninstallContentPlugin($nodeId) {
+        $staticParams = $this->getNavigation()->getStaticParams($nodeId);
+        $mvcParams = array('action'=>'uninstallpage')+$staticParams;
+        $this->_callMvc($nodeId, $mvcParams, 'production');
+        $this->getNavigation()->deleteStaticParam($nodeId, "values");
+    }
+
+    
+    /**
+     *
+     * @param int $nodeId
+     * @param string $pluginIdentifier 
+     */
+    public function _installContentPlugin($nodeId,$pluginIdentifier) {
+        $pluginDescriptor = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
+        $mvcParams = array('action'=>'installpage')+$pluginDescriptor;
+        $this->_callMvc($nodeId, $mvcParams, 'production');
+        $this->getNavigation()->setStaticParam($nodeId, self::PARAM_CONTENT_PLUGIN_IDENTIFIER, $pluginIdentifier);
     }
 
 }

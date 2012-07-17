@@ -23,7 +23,7 @@ Azf_Model_DbTable_Plugin = {
     getPluginParams:function(pluginId){},
     setPluginParams:function(pluginId,params){},
     findAllByNavigationId: function(navigationId){},
-    _decode: function(params){},
+    $_decode: function(params){},
     deleteById:function(id){},
     find:function(id){}
 }
@@ -47,9 +47,9 @@ Template = {
 
 
 Azf_Template_Descriptor = {
-    _templates: null,
-    _templateDirectoryPath: null,
-    _classPath:null,
+    $_templates: null,
+    $_templateDirectoryPath: null,
+    $_classPath:null,
     setTemplates: function(templates){},
     getTemplates: function(){},
     getTemplate:function(templateIdentifier){},
@@ -60,10 +60,10 @@ Azf_Template_Descriptor = {
     setClassPath:function(path){},
     getSchemaSource: function(){},
     templateToArray: function(DomDocument){},
-    _initTemplateDirectoryPath: function(){},
-    _initTemplates: function(){},
-    _buildPotentialTemplateFilePaths: function(){},
-    _parseTemplateFiles:function(templateFilePaths){}
+    $_initTemplateDirectoryPath: function(){},
+    $_initTemplates: function(){},
+    $_buildPotentialTemplateFilePaths: function(){},
+    $_parseTemplateFiles:function(templateFilePaths){}
 }
 
 Azf_Model_Tree_Navigation = {
@@ -87,14 +87,14 @@ azfcms.model.navigation = {
     getIdentity: function(item){},
     getLabel: function(item){},
     pasteItem: function(childItem, oldParentItem, newParentItem, bCopy, index){},
-    _removeChildFromParentItem: function(childItem, parentItem){},
-    _getBeforeChildId: function(newParentItem,index){},
-    _getAfterChildId: function(newParentItem, index){},
+    $_removeChildFromParentItem: function(childItem, parentItem){},
+    $_getBeforeChildId: function(newParentItem,index){},
+    $_getAfterChildId: function(newParentItem, index){},
     getNodeParams: function(nodeId){},
     setStaticParams: function(nodeId, params){},
     setDynamicParams: function(nodeId, params){},
-    _constructSetStatic: function(nodeId,params){},
-    _constructSetDynamic: function(nodeId,params){},
+    $_constructSetStatic: function(nodeId,params){},
+    $_constructSetDynamic: function(nodeId,params){},
     setParams: function(nodeId, staticParams, dynamicParams){},
     moveBefore:function(node, before){},
     moveAfter: function(node, after){},
@@ -111,17 +111,17 @@ azfcms.model.navigation = {
 }
 
 Azf_Plugin_Extension_Manager = {
-    _navigationModel:null,
+    $_navigationModel:null,
     setUp:function(type,pluginId){},
     tearDown:function(type,pluginId){},
     render:function(navigationId){},
-    _getPluginInstance: function(type, pluginId, pluginParams/*optional*/){},
+    $_getPluginInstance: function(type, pluginId, pluginParams/*optional*/){},
     getPluginParams: function(pluginId){},
     getPluginDefinitions: function(navigationId){},
     getModel: function(){},
     getNavigationModel:function(){},
     getClassName: function(type){},
-    _constructPlugin: function(type,pluginParams){},
+    $_constructPlugin: function(type,pluginParams){},
     setValue:function(pluginId,key,value){},
     setValues:function(pluginId,values){},
     getValue:function(pluginId,key){},
@@ -130,12 +130,12 @@ Azf_Plugin_Extension_Manager = {
 }
 
 Azf_Plugin_Extension_Abstract = {
-    _id:null,
-    _params:{},
-    _isParamsDirty:false,
+    $_id:null,
+    $_params:{},
+    $_isParamsDirty:false,
     setup: function(){},
     teardown: function(){},
-    __construct: function(params){},
+    $__construct: function(params){},
     setId:function(id){},
     getId:function(){},
     setParams: function(params){},
@@ -199,8 +199,8 @@ azfcms.controller.ExtendedEditorController = {
      */
     navigationId:null,
     
-    _buildRequire: function(type){},
-    _buildController: function(pluginId, extendedEditorPane){},
+    $_buildRequire: function(type){},
+    $_buildController: function(pluginId, extendedEditorPane){},
     onNew: function(name,description,type,region,weight,enable){},
     onSave: function(pluginId, name,description,region,weight,enable){},
     onDelete:function(item){},
@@ -240,7 +240,7 @@ azfcms.view.ExtensionEditorPane = {
     enable:function(){},
     addChild: function(pane){},
     reloadGrid: function(){},
-    _setFormAttr: function(plugin){},
+    $_setFormAttr: function(plugin){},
     onNew: function(name,description,type,region,weight,enable){},
     onSave: function(id, name,description,region,weight,enable){},
     onDelete: function(pluginId){},
@@ -298,6 +298,10 @@ Zend_Registry = {
      * @type {Azf_Model_Tree_Navigation}
      */
     navigationModel:"",
+    /**
+     * @type {Zend_Acl}
+     */
+    acl:null,
     get:function(key){}
 }
 
@@ -319,7 +323,7 @@ azfcms.view.FilesystemPane = {
     grid:null,
     postCreate:function(){},
     addAction:function(name,callback, dijitIconClass){},
-    _createButton:function(name,callback,dijitIconClass){},
+    $_createButton:function(name,callback,dijitIconClass){},
     enable:function(){},
     disable:function(){},
     reloadGrid:function(item){},//TODO
@@ -358,7 +362,7 @@ azfcms.controller.FilesystemPaneController = {
 
 // IMPLEMENT
 Application_Resolver_Filesystem = {
-    _baseDir:null,
+    $_baseDir:null,
     setBaseDir:function(path){},
     getBaseDir:function(){},
     constructRealPath:function(path){
@@ -383,8 +387,8 @@ Application_Resolver_Filesystem = {
         return Boolean;
     },
     uploadFiles:function(dirname){},
-    _isUploadedFile:function(file){},
-    _moveUploadedFile:function(source,destination){},
+    $_isUploadedFile:function(file){},
+    $_moveUploadedFile:function(source,destination){},
     deleteFilesMethod:function(files){
         files==[JsFile]
     },
@@ -492,8 +496,8 @@ azfcms.view.UploadPanel = {
     form:null,
     enable:function(){},
     disable:function(){},
-    _onUpload:function(){},
-    _onCancel:function(){},
+    $_onUpload:function(){},
+    $_onCancel:function(){},
     onUpload:function(form){},
     onCancel:function(){},
     reset:function(){},
@@ -509,14 +513,14 @@ azfcms.view.ConfirmPane = {
     callback:null,
     constructor:function(args){},
     confirm:function(callback,message,acceptLabel/*optional*/,rejectLabel/*optional*/){},
-    _onReject:function(){},
-    _onAccept:function(){}
+    $_onReject:function(){},
+    $_onAccept:function(){}
 }
 
 
 azfcms.view.Util = {
-    _confirmDialog:null,
-    _confirmPane:null,
+    $_confirmDialog:null,
+    $_confirmPane:null,
     alert:function(message){},
     getConfirmPane:function(){},
     getConfirmDialog:function(){},
@@ -539,11 +543,11 @@ azfcms.controller.navigation.ContentEdit = {
     navigationModel:null,
     constructor: function(args){},
     init: function(node, cep){},
-    _initListeners: function(){},
-    _build: function(staticParams, dynamicParams){},
-    _buildEditorPane: function(EditorPane,cep){},
-    _buildController: function(EditorController, nodeId, ep){},
-    _onParamsLoad: function(){},
+    $_initListeners: function(){},
+    $_build: function(staticParams, dynamicParams){},
+    $_buildEditorPane: function(EditorPane,cep){},
+    $_buildController: function(EditorController, nodeId, ep){},
+    $_onParamsLoad: function(){},
     onMetadataSave: function(title, description, keywords){},
     onTypeChange:function(newType){}
 }
@@ -560,13 +564,32 @@ azfcms.view.navigation.ContentEdit = {
     constructor: function(args){},
     postCreate: function(){},   
     resize:function(){},
-    _save: function(){},
-    _onChangeType:function(){},
+    $_save: function(){},
+    $_onChangeType:function(){},
     addChild: function(child){},
-    _setTitleAttr: function(title){},
-    _setDescriptionAttr: function(description){},
-    _setKeywordsAttr: function(keywords){},
+    $_setTitleAttr: function(title){},
+    $_setDescriptionAttr: function(description){},
+    $_setKeywordsAttr: function(keywords){},
     onMetadataSave: function(title, description, keywords){},
     onTypeChange:function(type){}
 }
 
+
+identity = {
+    id:0,
+    loginName:"",
+    firstName:"",
+    lastName:"",
+    email:null,
+    cTime:null,
+    rTime:null,
+    verified:null
+}
+
+Zend_Acl = {
+    
+}
+
+Zend_Acl.system = {
+    rootAccess:true
+}

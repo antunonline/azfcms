@@ -683,6 +683,23 @@ SQL;
     public function getDynamicParams($id) {
         return $this->_getFieldParams($id, self::FIELD_DYNAMIC);
     }
+    
+    
+    /**
+     * 
+     * @param int $nodeId
+     */
+    public function clearParams($nodeId){
+        $clearParams = $this->_encodeConfig(array());
+        $data = array(
+            self::FIELD_DYNAMIC=>$clearParams,
+            self::FIELD_STATIC=>$clearParams
+        );
+        $where = array("id=?"=>$nodeId,"tid=?"=>$this->tid);
+        
+        $this->update($data, $where);
+    }
+
 
     /**
      * This method will return names of all available plugins associated 
@@ -892,6 +909,6 @@ SQL;
             $this->_endTransaction();
         }
     }
-
+    
 }
 

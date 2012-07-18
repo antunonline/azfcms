@@ -121,7 +121,8 @@ class Azf_Plugin_Descriptor {
         $plugins = array();
         foreach ($pdi as $file) {
             /* @var $file DirectoryIterator */
-            if ($file->getFileInfo()->getExtension() == "xml") {
+            $ext = pathinfo($file->getPath(), PATHINFO_EXTENSION);
+            if ($ext == "xml") {
                 // Parse file
                 try {
                     $plugins[] = $pp->parseFile($file->getRealPath());

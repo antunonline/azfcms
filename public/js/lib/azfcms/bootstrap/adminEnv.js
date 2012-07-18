@@ -250,6 +250,9 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 self.treeStore = new FSStore({
                                     getOptions:{
                                         file:false
+                                    },
+                                    queryOptions:{
+                                        file:false
                                     }
                                 })
                                 initCallback()

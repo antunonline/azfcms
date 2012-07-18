@@ -408,7 +408,8 @@ JsFile = {
     date:"",
     type:"",
     size:"",
-    permissions:""
+    permissions:"", 
+    inode:""
 }
 
 JsFileFilter = {

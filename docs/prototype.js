@@ -1107,3 +1107,32 @@ Azf_Service_Lang_Resolver_Auto.isAllowed = function(namespaces, parameters){
     }
 }
 
+
+
+azfcms.store = {}
+
+azfcms.store.Filesystem.constructor = function(args){
+    var self = this;
+    this._connects.push(require.on("azfcms/store/Filesystem/change",function(item){
+        self.get(item).then(function(item){
+            self.update(item);
+        })
+    }));
+    this._connects.push(require.on("azfcms/store/Filesystem/childrenChange",function(item){
+        self.get(item).then(function(children){
+            self.updateChildren(item,children);
+        })
+    }));
+}
+
+azfcms.store.Filesystem.getRoot = function(callback){
+    var promise = Application_Resolver_Filesystem.getRootMethod = function(){
+        var baseDir = Application_Resolver_Filesystem.getBaseDir();
+        
+        return JsFile;
+    }
+    
+    promise.then(function(JsFile){
+        callback(JsFile);
+    })
+}

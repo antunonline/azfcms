@@ -298,9 +298,9 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param mixed $content
      */
     public function getContentMethod($id, $key) {
-        $pluginIdentifier = $this->navigation->getStaticParam($id, self::PARAM_CONTENT_PLUGIN_IDENTIFIER);
+        $pluginIdentifier = $this->getnavigation()->getStaticParam($id, self::PARAM_CONTENT_PLUGIN_IDENTIFIER);
         $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
-
+        
         $mvc = array(
             'module' => $plugin['module'],
             'controller' => $plugin['controller'],

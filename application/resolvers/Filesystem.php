@@ -100,7 +100,8 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
                 'date' => $file->getCTime(),
                 'type' => pathinfo($file->getFilename(), PATHINFO_EXTENSION),
                 'size' => $file->getSize(),
-                'permissions' => substr(sprintf('%o', $file->getPerms()), -4)
+                'permissions' => substr(sprintf('%o', $file->getPerms()), -4),
+                'inode'=>$file->getInode()
             );
         }
 
@@ -224,6 +225,22 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         
         mkdir($realPath,"0777",true);
         return true;
+    }
+    
+    
+    public function getRootMethod() {
+        $baseDir = $this->getBaseDir();
+        
+        $root = array(
+            "name"=>"",
+            "dirname"=>"/",
+            "size"=>  filesize($baseDir),
+            "date"=>  filectime($baseDir),
+            "type"=>"",
+            "permissions"=>  fileperms($baseDir),
+            "inode"=> fileinode($baseDir)
+        );
+        return $root;
     }
 
 }

@@ -100,7 +100,11 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
                 var method = "cms.filesystem.uploadFiles";
                 var call = this.createCall(method,[directory]);
                 
-                return this.model.invokeWithForm(call,form);
+                var promise =  this.model.invokeWithForm(call,form);
+                promise.then(function(){
+                    require.signal("azfcms/store/Filesystem/childrenChange",[directory]); 
+                })
+                return promise;
             },
             
             /**
@@ -109,13 +113,26 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
             deleteFiles:function(files){
                 var method = "cms.filesystem.deleteFiles";
                 var call = this.createCall(method,[files]);
-                return this.model.invoke(call);
+                var promise =  this.model.invoke(call);
+                promise.then(function(){
+                    if(files.length >0){
+                        var file = files[0];
+                        file.name = "";
+                        require.signal("azfcms/store/Filesystem/childrenChange",file);
+                    }
+                })
+                return promise;
             },
             
             createDirectory:function(name){
                 var method = "cms.filesystem.createDirectory";
                 var call = this.createCall(method,[name]);
-                return this.model.invoke(call);
+                var promise =  this.model.invoke(call);
+                promise.then(function(){
+                    name.name  ="";
+                    require.signal("azfcms/store/Filesystem/childrenChange",name);
+                })
+                return promise;
             },
             
             

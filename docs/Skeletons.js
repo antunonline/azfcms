@@ -415,7 +415,8 @@ JsFile = {
 JsFileFilter = {
     directory:true,
     file:true,
-    hidden:true
+    hidden:true,
+    extensions:[]
 }
 
 

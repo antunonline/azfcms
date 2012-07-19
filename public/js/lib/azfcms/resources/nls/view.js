@@ -13,7 +13,8 @@
  * eep = azfcms/view/ExtensionEditorPane
  * eec = azfcms/controller/ExtensionEditorController
  * extDijit = azfcms/view/extensionPlugin/DijitEditor
- * nce = azfcms/controller/navigation/ContentEdit
+ * nce = azfcms/controller/navigation/ContentEdit,
+ * fsp = azfcms/view/FilesystemPane
  * 
  */
 
@@ -86,7 +87,15 @@ define({
     
     extDijitSave:"Spremi",
     
-    nceTypeChangeMsg:"Promjenom vrste sadržaja izgubit ćete sve vrijednosti navedene u lijevom editoru. Želite li doista promjeniti vrstu sadržaja?"
+    nceTypeChangeMsg:"Promjenom vrste sadržaja izgubit ćete sve vrijednosti navedene u lijevom editoru. Želite li doista promjeniti vrstu sadržaja?",
+    
+    fspFileNameColumn:"Naziv",
+    fspFileDateColumn:"Datum",
+    fspFileTypeColumn:"Vrsta",
+    fspFileSizeColumn:"Veličina",
+    fspUploadLabel:"Učitaj dadoteke",
+    fspDeleteLabel:"Izbriši dadoteke",
+    fspCreateFolderLabel:"Stvori direktorij"
   },
 
   de: true,

@@ -7,7 +7,7 @@
 define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
     'dojo/_base/lang','dojo/_base/declare','dojo/text!./templates/FilesystemPane.html',
     'dojo/data/ObjectStore','dojo/query','dojox/grid/DataGrid','dojo/dom-style',
-    'dijit/form/Button','dojo/aspect',
+    'dijit/form/Button','dojo/aspect','dojo/i18n!azfcms/resources/nls/view',
 
     'dojo/NodeList-manipulate',
     'dijit/layout/ContentPane','dijit/layout/BorderContainer','dijit/Tree',
@@ -15,7 +15,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
     (_TemplatedMixin,_WidgetsInTemplateMixin,_Widget,
         lang,declare,templateString,
         ObjectStore,query,Grid,domStyle,
-        Button,aspect,
+        Button,aspect,nls,
 
         CP,BC,Tree)
         {
@@ -37,6 +37,12 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                     query("head").append("<link rel='stylesheet' type='text/css' href='"+url+"' />");
                     this.isFirstConstruct = true;
                 }
+                
+                for(var name in nls){
+                    if(name.indexOf('fsp')==0){
+                        this[name] = nls[name];
+                    }
+                }
             },
             destroy:function(){
                 this.grid.destroy();
@@ -45,6 +51,12 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 this.toolbar.destroy();
                 this.borderContainer.destroy();
                 this.domNode.parentNode.removeChild(this.domNode);
+                if("destroy" in this.gridStore){
+                    this.gridStore.destroy();
+                }
+                if("destroy" in this.treeStore){
+                    this.treeStore.destroy();
+                }
                 this.inherited(arguments);
             },
             postCreate:function(){

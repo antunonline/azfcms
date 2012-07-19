@@ -92,49 +92,6 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
                 return this.contentPluginStore;
             },
             
-            /**
-             * @param {Form} form
-             * @return {dojo.Deferred}
-             */
-            uploadFiles:function(directory,form){
-                var method = "cms.filesystem.uploadFiles";
-                var call = this.createCall(method,[directory]);
-                
-                var promise =  this.model.invokeWithForm(call,form);
-                promise.then(function(){
-                    require.signal("azfcms/store/Filesystem/childrenChange",[directory]); 
-                })
-                return promise;
-            },
-            
-            /**
-             * Delete provided JS files
-             */
-            deleteFiles:function(files){
-                var method = "cms.filesystem.deleteFiles";
-                var call = this.createCall(method,[files]);
-                var promise =  this.model.invoke(call);
-                promise.then(function(){
-                    if(files.length >0){
-                        var file = files[0];
-                        file.name = "";
-                        require.signal("azfcms/store/Filesystem/childrenChange",file);
-                    }
-                })
-                return promise;
-            },
-            
-            createDirectory:function(name){
-                var method = "cms.filesystem.createDirectory";
-                var call = this.createCall(method,[name]);
-                var promise =  this.model.invoke(call);
-                promise.then(function(){
-                    name.name  ="";
-                    require.signal("azfcms/store/Filesystem/childrenChange",name);
-                })
-                return promise;
-            },
-            
             
             /**
              * @param {Number} nodeId

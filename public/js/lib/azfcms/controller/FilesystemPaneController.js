@@ -4,22 +4,23 @@
  */
 
 define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
-    'dijit/Dialog','azfcms/model/cms','azfcms/view/util'],function
+    'dijit/Dialog','azfcms/store/Filesystem','azfcms/view/util','dojo/i18n!azfcms/resources/nls/view'],function
     (declare,lang,UploadPane,
-        Dialog,cmsModel,viewUtil){
+        Dialog,FilesystemStore,viewUtil, nls){
         return declare([],{
             view:null,
             uploadDialog:null,
             uploadPane:null,
             constructor:function(args){
                 lang.mixin(this,args);
+                this.filesystem = new FilesystemStore({});
                 this.attachEventHandlers();
             },
             attachEventHandlers:function(){
                 this.view.on("treeselect",lang.hitch(this,this.onTreeSelect));
-                this.view.addAction("Upload files",lang.hitch(this,this.onUpload));
-                this.view.addAction("Delete",lang.hitch(this,this.onDelete));
-                this.view.addAction("New folder",lang.hitch(this,this.onFolderCreate));
+                this.view.addAction(nls.fspUploadLabel,lang.hitch(this,this.onUpload));
+                this.view.addAction(nls.fspDeleteLabel,lang.hitch(this,this.onDelete));
+                this.view.addAction(nls.fspCreateFolderLabel,lang.hitch(this,this.onFolderCreate));
             },
             onUpload:function(selectedTreeItem,selectedGridItems){
                 if(!selectedTreeItem)
@@ -46,7 +47,7 @@ define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
             doUpload:function(form){
                 var self = this;
                 this.view.disable();
-                cmsModel.uploadFiles(this.view.getTreeSelection(), form).then(function(){
+                this.filesystem.uploadFiles(this.view.getTreeSelection(), form).then(function(){
                     self.view.enable();
                     self.view.reload();
                     form.reset();
@@ -59,13 +60,13 @@ define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
                 var self = this;
                 viewUtil.confirm(function(confirmed){
                     self.doDelete(gridSelection)
-                    }, "Do you want to delete selected files?")
+                }, "Do you want to delete selected files?")
                 
             },
             doDelete:function(files){
                 var self = this;
                 self.view.disable();
-                cmsModel.deleteFiles(files).then(function(){
+                this.filesystem.deleteFiles(files).then(function(){
                     self.view.reload();
                     self.view.enable();
                 })
@@ -74,15 +75,20 @@ define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
                 this.view.reloadGrid(item);
             },
             onFolderCreate:function(){
+                var treeSelection = this.view.getTreeSelection();
+                if(!treeSelection){
+                    return ;
+                }
+                
                 var name = window.prompt("Unesite naziv novog direktorija");
                 if(name){
-                    this.doFolderCreate(name);
+                    this.doFolderCreate(treeSelection, name);
                 }
             },
-            doFolderCreate:function(name){
+            doFolderCreate:function(inDirectory, name){
                 var self = this;
                 self.view.disable();
-                cmsModel.createDirectory(name).then(function(){
+                this.filesystem.createDirectory(inDirectory,name).then(function(){
                     self.view.reload();
                     self.view.enable();
                 })

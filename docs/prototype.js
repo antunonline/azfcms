@@ -525,13 +525,15 @@ azfcms.view.FilesystemPane.constructor(function(args){
 })
 
 
-Application_Resolver_Filesystem.createDirectoryMethod(function(directory){
-    var realPath = Application_Resolver_Filesystem.constructRealPath(directory);
+Application_Resolver_Filesystem.createDirectoryMethod(function(inDirectory, name){
+    var realPath = Application_Resolver_Filesystem.constructRealPath(inDirectory);
     if(!Application_Resolver_Filesystem.isPathSecure(realPath)){
         return false;
     }
     
-    mkdir(realpath,"0777",true);
+    var makePath = realPath+trim(name,"/\\");
+    
+    mkdir(makePath,"0777",true);
 })
         
 azfcms.view.FilesystemPane.postCreate(function(args){
@@ -615,8 +617,8 @@ azfcms.controller.FilesystemPaneController.onUpload(function(selectedTreeItem,se
     var form = dialog.get('content').getForm() == azfcms.view.UploadPanel.getForm();
     azfcms.view.UploadPanel.on("upload",azfcms.controller.FilesystemPaneController.doUpload(function(form){
         azfcms.view.UploadPanel.disable();
-        azfcms.model.cms.uploadFiles(function(dirname){ 
-            azfcms.model.invokeWithForm(function(call,form){
+        var promise = azfcms.store.Filesystem.uploadFiles(function(JsFile){ 
+            var promise = azfcms.model.invokeWithForm(function(call,form){
                 Application_Resolver_Filesystem.uploadFilesMethod(function(dirname){
                     var path = Application_Resolver_Filesystem.constructRealPath(dirname);
                     if(!Application_Resolver_Filesystem.isPathSecure(path)){
@@ -636,7 +638,10 @@ azfcms.controller.FilesystemPaneController.onUpload(function(selectedTreeItem,se
                     }
                     return true;
                 })
-            })(function(){
+            })
+            return promise;
+        })
+        promise.then((function(){
                 
                 azfcms.view.UploadPanel.reset(function(){
                     azfcms.view.UploadPanel.file1Input.reset();
@@ -645,8 +650,7 @@ azfcms.controller.FilesystemPaneController.onUpload(function(selectedTreeItem,se
                     azfcms.view.FilesystemPane.reload();
                 });
                 azfcms.view.UploadPanel.enable();
-            })
-        })
+            }))
     }))
 })
 
@@ -692,8 +696,8 @@ azfcms.controller.FilesystemPaneController.onDelete(function(selectedTreeItem, s
             return false;
         }
         
-        azfcms.model.cms.deleteFiles(function(files){
-            azfcms.model.invoke(function(files){
+        azfcms.store.Filesystem.deleteFiles(function(files){
+            var promise = azfcms.model.invoke(function(files){
                 Application_Resolver_Filesystem.deleteFilesMethod(function(files){
                     var file;
                     for(file in files){
@@ -715,6 +719,14 @@ azfcms.controller.FilesystemPaneController.onDelete(function(selectedTreeItem, s
                     }
                 })
             })
+            promise.then(function(){
+                if(files.length<1){
+                    return false;
+                }
+                
+                require.signal("azfcms/store/Filesystem/deleteFiles",files[0]);
+            })
+            return promise;
         })
         // Callback initiated after server is finished
         (function(){
@@ -1113,16 +1125,39 @@ azfcms.store = {}
 
 azfcms.store.Filesystem.constructor = function(args){
     var self = this;
-    this._connects.push(require.on("azfcms/store/Filesystem/change",function(item){
-        self.get(item).then(function(item){
-            self.update(item);
+    this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(item){
+        azfcms.store.Filesystem.getParentDirectory(created)
+        .then(function(parent){
+            azfcms.store.Filesystem.get(parent)
+            .then(function(children){
+                self.onChildrenChange(parent,children);
+            })
         })
     }));
-    this._connects.push(require.on("azfcms/store/Filesystem/childrenChange",function(item){
-        self.get(item).then(function(children){
-            self.updateChildren(item,children);
+    
+    this._connects.push(require.on("azfcms/store/Filesystem/createDirectory",function(created){
+        azfcms.store.Filesystem.getParentDirectory(created)
+        .then(function(parent){
+            azfcms.store.Filesystem.get(parent)
+            .then(function(children){
+                self.onChildrenChange(parent,children);
+            })
         })
     }));
+}
+
+azfcms.store.Filesystem.createDirectory = function(inDirectory, name){
+    var promise = azfcms.model.invoke(function(inDirectory, name){
+        return Application_Resolver_Filesystem.createDirectoryMethod(inDirectory, name);
+    })
+    promise.then(function(response){
+        if(!response){
+            return ;
+        }
+        
+        require.signal("azfcms/store/Filesystem/createDirectory",directory);
+    })
+    return promise;
 }
 
 azfcms.store.Filesystem.getRoot = function(callback){
@@ -1135,4 +1170,72 @@ azfcms.store.Filesystem.getRoot = function(callback){
     promise.then(function(JsFile){
         callback(JsFile);
     })
+}
+
+
+azfcms.store.Filesystem.getParentDirectory = function(directory){
+    var promise = Application_Resolver_Filesystem.getParentDirectoryMethod = function(directory){}
+    
+    promise.then(function(file){
+        if(!file){
+            return;
+        }
+        
+        
+    })
+}
+
+
+
+
+
+
+azfcms.view.Util.FILE_FILTER_ALL = "all";
+azfcms.view.Util.FILE_FILTER_IMAGES = "image";
+azfcms.view.Util.FILE_FILTER_AUDIO = "audio";
+azfcms.view.Util.FILE_FILTER_VIDEO = "video";
+azfcms.view.Util = {
+    FILE_FILTER_ALL:"all",
+    FILE_FILTER_IMAGES:"images",
+    FILE_FILTER_AUDIO:"audio",
+    FILE_FILTER_VIDEO:"video",
+    
+    $_FILE_FILTER_ALL:[],
+    $_FILE_FILTER_IMAGES:[],
+    $_FILE_FILTER_AUDIO:[],
+    $_FILE_FILTER_VIDEO:[]
+}
+
+
+azfcms.view.Util.selectFiles = function(callback, fileType, message){
+    var fileFilter = {};
+    
+    if(isString(fileType)){
+        var filterPropName = "$_"+fileType;
+        if(this[filterPropName]){
+            fileFilter.extensions = this[filterPropName];
+        }
+    } else if(isArra(fileType)){
+        fileFilter.extensions = fileType;
+    }
+    
+    var fileBrowser = azfcms.view.Util.$_getFileSelectionPane = function(fileFilter){
+        if(azfcms.view.Util.$_fileSelectionPane){
+            return azfcms.view.Util.$_fileSelectionPane;
+        }
+        var model = new azfcms.store.Filesystem({
+            isTreeModel:true,
+            getOptions:fileFilter
+        });
+        
+        var view = new FileSelectionPane({
+            model:model
+        });
+        
+        this.$_fileSelectionPane = view;
+        return view;
+    }
+    
+    
+    
 }

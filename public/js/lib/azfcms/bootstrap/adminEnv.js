@@ -239,22 +239,23 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         var self = this;
                         require(
                             ['azfcms/view/FilesystemPane','azfcms/controller/FilesystemPaneController',
-                            'azfcms/store/Filesystem'],function
-                            (FP,FPC,FSStore){
+                            'azfcms/store/Filesystem','dojo/store/Observable'],function
+                            (FP,FPC,FSStore, Observable){
                                 self.adminDialog = adminDialog;
                                 self.FP = FP
                                 self.FPC = FPC;
                                 self.gridStore = new FSStore({
                                     
                                     })
-                                self.treeStore = new FSStore({
+                                self.treeStore =new Observable( new FSStore({
                                     getOptions:{
                                         file:false
                                     },
                                     queryOptions:{
                                         file:false
-                                    }
-                                })
+                                    },
+                                    isTreeModel:true
+                                }));
                                 initCallback()
                             })
                     },

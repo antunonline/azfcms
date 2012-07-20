@@ -643,14 +643,14 @@ azfcms.controller.FilesystemPaneController.onUpload(function(selectedTreeItem,se
         })
         promise.then((function(){
                 
-                azfcms.view.UploadPanel.reset(function(){
-                    azfcms.view.UploadPanel.file1Input.reset();
-                    azfcms.view.UploadPanel.file2Input.reset();
-                    azfcms.view.UploadPanel.file3Input.reset();
-                    azfcms.view.FilesystemPane.reload();
-                });
-                azfcms.view.UploadPanel.enable();
-            }))
+            azfcms.view.UploadPanel.reset(function(){
+                azfcms.view.UploadPanel.file1Input.reset();
+                azfcms.view.UploadPanel.file2Input.reset();
+                azfcms.view.UploadPanel.file3Input.reset();
+                azfcms.view.FilesystemPane.reload();
+            });
+            azfcms.view.UploadPanel.enable();
+        }))
     }))
 })
 
@@ -969,57 +969,57 @@ azfcms.model.getExtensionValues(function(id){
 
 
 
-azfcms.controller.navigation.ContentEdit.onTypeChange = function(newType){
+    azfcms.controller.navigation.ContentEdit.onTypeChange = function(newType){
     
-    var nodeId = azfcms.controller.navigation.ContentEdit.node.id;
-    azfcms.model.navigation.changePageType = function(nodeId,newType){
-        var changed = Application_Resolver_Navigation.changePageTypeMethod = function(nodeId, newType){
-            var node = Azf_Model_Tree_Navigation.find(nodeId)
-            if(!node){
-                return false;
+        var nodeId = azfcms.controller.navigation.ContentEdit.node.id;
+        azfcms.model.navigation.changePageType = function(nodeId,newType){
+            var changed = Application_Resolver_Navigation.changePageTypeMethod = function(nodeId, newType){
+                var node = Azf_Model_Tree_Navigation.find(nodeId)
+                if(!node){
+                    return false;
+                }
+            
+                Application_Resolver_Navigation.$_uninstallContentPlugin = function(nodeId){
+                    var staticParams  = Azf_Model_Tree_Navigation.getStaticParams(nodeId);
+                    Application_Resolver_Navigation.$_callMvc(nodeId, {
+                        action:"uninstallpage"
+                    }+staticParams, "production");
+                };
+            
+                Application_Resolver_Navigation.$_installContentPlugin = function(nodeId, newType){
+                    Azf_Plugin_Descriptor = Application_Resolver_Navigation.getPluginDescriptor();
+                    var newPluginDescriptor = Azf_Plugin_Descriptor.getContentPlugin(newType);
+                    var mvcParams = {
+                        action:"installpage"
+                    }+newPluginDescriptor;
+                    Application_Resolver_Navigation.$_callMvc(nodeId, mvcParams, "production");
+                }
+            
+                return true;
             }
-            
-            Application_Resolver_Navigation.$_uninstallContentPlugin = function(nodeId){
-                var staticParams  = Azf_Model_Tree_Navigation.getStaticParams(nodeId);
-                Application_Resolver_Navigation.$_callMvc(nodeId, {
-                    action:"uninstallpage"
-                }+staticParams, "production");
-            };
-            
-            Application_Resolver_Navigation.$_installContentPlugin = function(nodeId, newType){
-                Azf_Plugin_Descriptor = Application_Resolver_Navigation.getPluginDescriptor();
-                var newPluginDescriptor = Azf_Plugin_Descriptor.getContentPlugin(newType);
-                var mvcParams = {
-                    action:"installpage"
-                }+newPluginDescriptor;
-                Application_Resolver_Navigation.$_callMvc(nodeId, mvcParams, "production");
-            }
-            
-            return true;
-        }
         
-        changed.then(function(result){
-            if(result){
-                var promise = azfcms.model.navigation.getNodeParams(nodeId);
-                promise.then(function(params){
-                    var staticParams = params[0];
-                    var dynamicParams = params[1];
+            changed.then(function(result){
+                if(result){
+                    var promise = azfcms.model.navigation.getNodeParams(nodeId);
+                    promise.then(function(params){
+                        var staticParams = params[0];
+                        var dynamicParams = params[1];
 
-                    azfcms.controller.navigation.ContentEdit.$_build(staticParams, dynamicParams);
-                })
+                        azfcms.controller.navigation.ContentEdit.$_build(staticParams, dynamicParams);
+                    })
                     
-            }
-        })
+                }
+            })
         
         
         
         
         
-    };
+        };
     
     
     
-}
+    }
 
 
 Azf_Php2Js_Converter.convertFile = function(fileName){
@@ -1123,119 +1123,176 @@ Azf_Service_Lang_Resolver_Auto.isAllowed = function(namespaces, parameters){
 
 azfcms.store = {}
 
-azfcms.store.Filesystem.constructor = function(args){
-    var self = this;
-    this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(item){
-        azfcms.store.Filesystem.getParentDirectory(created)
-        .then(function(parent){
-            azfcms.store.Filesystem.get(parent)
-            .then(function(children){
-                self.onChildrenChange(parent,children);
+    azfcms.store.Filesystem.constructor = function(args){
+        var self = this;
+        this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(item){
+            azfcms.store.Filesystem.getParentDirectory(created)
+            .then(function(parent){
+                azfcms.store.Filesystem.get(parent)
+                .then(function(children){
+                    self.onChildrenChange(parent,children);
+                })
             })
-        })
-    }));
+        }));
     
-    this._connects.push(require.on("azfcms/store/Filesystem/createDirectory",function(created){
-        azfcms.store.Filesystem.getParentDirectory(created)
-        .then(function(parent){
-            azfcms.store.Filesystem.get(parent)
-            .then(function(children){
-                self.onChildrenChange(parent,children);
+        this._connects.push(require.on("azfcms/store/Filesystem/createDirectory",function(created){
+            azfcms.store.Filesystem.getParentDirectory(created)
+            .then(function(parent){
+                azfcms.store.Filesystem.get(parent)
+                .then(function(children){
+                    self.onChildrenChange(parent,children);
+                })
             })
+        }));
+    }
+
+    azfcms.store.Filesystem.createDirectory = function(inDirectory, name){
+        var promise = azfcms.model.invoke(function(inDirectory, name){
+            return Application_Resolver_Filesystem.createDirectoryMethod(inDirectory, name);
         })
-    }));
-}
-
-azfcms.store.Filesystem.createDirectory = function(inDirectory, name){
-    var promise = azfcms.model.invoke(function(inDirectory, name){
-        return Application_Resolver_Filesystem.createDirectoryMethod(inDirectory, name);
-    })
-    promise.then(function(response){
-        if(!response){
-            return ;
-        }
+        promise.then(function(response){
+            if(!response){
+                return ;
+            }
         
-        require.signal("azfcms/store/Filesystem/createDirectory",directory);
-    })
-    return promise;
-}
-
-azfcms.store.Filesystem.getRoot = function(callback){
-    var promise = Application_Resolver_Filesystem.getRootMethod = function(){
-        var baseDir = Application_Resolver_Filesystem.getBaseDir();
-        
-        return JsFile;
+            require.signal("azfcms/store/Filesystem/createDirectory",directory);
+        })
+        return promise;
     }
-    
-    promise.then(function(JsFile){
-        callback(JsFile);
-    })
-}
 
-
-azfcms.store.Filesystem.getParentDirectory = function(directory){
-    var promise = Application_Resolver_Filesystem.getParentDirectoryMethod = function(directory){}
-    
-    promise.then(function(file){
-        if(!file){
-            return;
-        }
+    azfcms.store.Filesystem.getRoot = function(callback){
+        var promise = Application_Resolver_Filesystem.getRootMethod = function(){
+            var baseDir = Application_Resolver_Filesystem.getBaseDir();
         
-        
-    })
-}
-
-
-
-
-
-
-azfcms.view.Util.FILE_FILTER_ALL = "all";
-azfcms.view.Util.FILE_FILTER_IMAGES = "image";
-azfcms.view.Util.FILE_FILTER_AUDIO = "audio";
-azfcms.view.Util.FILE_FILTER_VIDEO = "video";
-azfcms.view.Util = {
-    FILE_FILTER_ALL:"all",
-    FILE_FILTER_IMAGES:"images",
-    FILE_FILTER_AUDIO:"audio",
-    FILE_FILTER_VIDEO:"video",
-    
-    $_FILE_FILTER_ALL:[],
-    $_FILE_FILTER_IMAGES:[],
-    $_FILE_FILTER_AUDIO:[],
-    $_FILE_FILTER_VIDEO:[]
-}
-
-
-azfcms.view.Util.selectFiles = function(callback, fileType, message){
-    var fileFilter = {};
-    
-    if(isString(fileType)){
-        var filterPropName = "$_"+fileType;
-        if(this[filterPropName]){
-            fileFilter.extensions = this[filterPropName];
+            return JsFile;
         }
-    } else if(isArra(fileType)){
-        fileFilter.extensions = fileType;
+    
+        promise.then(function(JsFile){
+            callback(JsFile);
+        })
     }
+
+
+    azfcms.store.Filesystem.getParentDirectory = function(directory){
+        var promise = Application_Resolver_Filesystem.getParentDirectoryMethod = function(directory){}
     
-    var fileBrowser = azfcms.view.Util.$_getFileSelectionPane = function(fileFilter){
-        if(azfcms.view.Util.$_fileSelectionPane){
-            return azfcms.view.Util.$_fileSelectionPane;
+        promise.then(function(file){
+            if(!file){
+                return;
+            }
+        
+        
+        })
+    }
+
+
+
+
+
+    azfcms.view.Util = {
+        FILE_FILTER_ALL:"all",
+        FILE_FILTER_IMAGES:"images",
+        FILE_FILTER_AUDIO:"audio",
+        FILE_FILTER_VIDEO:"video",
+    
+        $_FILE_FILTER_ALL:[],
+        $_FILE_FILTER_IMAGES:[],
+        $_FILE_FILTER_AUDIO:[],
+        $_FILE_FILTER_VIDEO:[],
+    
+        $_fileSelectStore:null,
+        $_fileSelectDialog:null,
+        $_getFileSelectPane:null,
+        $_fileSelectConnects:null
+    }
+
+    azfcms.view.FileSelectPane = {
+    
+    }
+
+
+    azfcms.store.Filesystem = {
+        $_rootItem:null,
+        $_treeItems:[]
+    }
+
+    azfcms.view.Util.selectFiles = function(callback, fileType, message){
+        var fileFilter = {};
+    
+        if(isString(fileType)){
+            var filterPropName = "$_"+fileType;
+            if(this[filterPropName]){
+                fileFilter.extensions = this[filterPropName];
+            }
+        } else if(isArra(fileType)){
+            fileFilter.extensions = fileType;
         }
-        var model = new azfcms.store.Filesystem({
-            isTreeModel:true,
-            getOptions:fileFilter
+    
+        var fileBrowser = azfcms.view.Util.$_getFileSelectPane = function(){
+            if(azfcms.view.Util.$_fileSelectPane){
+                return azfcms.view.Util.$_fileSelectPane;
+            }
+            azfcms.view.Util.$_fileSelectStore = new azfcms.store.Filesystem({
+                isTreeModel:true
+            });
+        
+            var view = new FileSelectionPane({
+                treeStore:azfcms.view.Util.$_fileSelectStore
+            });
+        
+            this.$_fileSelectionPane = view;
+            return view;
+        }
+    
+        var dialog = azfcms.view.Util.$_getFileSelectDialog = function(){
+            if(!azfcms.view.Util.$_fileSelectDialog){
+                azfcms.view.Util.$_fileSelectDialog = new Dialog();
+                azfcms.view.Util.$_fileSelectDialog.set("content",azfcms.view.Util.$_getFileSelectionPane());
+            }
+            return azfcms.view.Util.$_fileSelectDialog
+        }
+    
+        azfcms.view.Util.$_fileSelectConnects.push = azfcms.view.FileSelectPane.on("select",function(selection){
+            callback(selection);
+            azfcms.view.Util.$_clearFileSelectConnections = function(){
+                while(connection = azfcms.view.Util.$_fileSelectConnects.pop()){
+                    connection.remove();
+                }
+            };
+        })
+    
+        azfcms.view.$_fileSelectConnects.push = azfcms.view.FileSelectPane.on("cancel",function(){
+            callback([]);
+            azfmcs.view.Util.$_clearFileSelectConnections();
         });
-        
-        var view = new FileSelectionPane({
-            model:model
-        });
-        
-        this.$_fileSelectionPane = view;
-        return view;
+    
+        azfcms.view.$_fileSelectConnects.push = dijit.Dialog.on("cancel",function(){
+            callback([]);
+            azfmcs.view.Util.$_clearFileSelectConnections();
+        })
+    
+    
+        azfcms.view.FileSelectPane.reloadTree = function(fileFilter){
+            azfcms.store.Filesystem.getOptions = fileFilter;
+            azfcms.store.Filesystem.updateRootChildren = function(){
+                if(azfcms.store.Filesystem.$_rootItem){
+                    azfcms.store.Filesystem.get(azfcms.store.Filesystem.$_rootItem).then(function(children){
+                        azfcms.store.Filesystem.onChildrenChange(azfcms.store.Filesystem.$_rootItem,children);
+                    })
+                } else {
+                    azfcms.store.Filesystem.getRoot(function(root){
+                        azfcms.store.Filesystem.get(azfcms.store.Filesystem.$_rootItem).then(function(children){
+                            azfcms.store.Filesystem.onChildrenChange(azfcms.store.Filesystem.$_rootItem,children);
+                        })
+                    })
+                }
+            
+            }
+        }
+    
+    
+        return fileBrowser;
     }
     
     
-    
-}
+

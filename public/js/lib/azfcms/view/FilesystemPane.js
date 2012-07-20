@@ -50,7 +50,6 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 this.tree.destroy();
                 this.toolbar.destroy();
                 this.borderContainer.destroy();
-                this.domNode.parentNode.removeChild(this.domNode);
                 if("destroy" in this.gridStore){
                     this.gridStore.destroy();
                 }
@@ -67,7 +66,7 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                     model:this.treeStore,
                     region:"left",
                     style:"width:300px;",
-                    persist:false
+                    persist:true
                 });
                 tree.on("click",function(item){
                     self.treeSelect=item;

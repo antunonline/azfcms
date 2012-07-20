@@ -16,20 +16,15 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
             constructor:function(){
                 var self = this;
                 this._connects = [];
+                this.$_treeItems={};
                 
                 if(this.isTreeModel){
                     this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(item){
-                        self.getParentDirectory(item).then(function(parentItem){
-                            self.get(parentItem).then(function(children){
-                                self.onChildrenChange(parentItem, children)
-                            });
-                        })
+                        self.updateModelRootChildren();
                     }));
                 
                     this._connects.push(require.on("azfcms/store/Filesystem/createDirectory",function(parentDirectory){
-                        self.get(parentDirectory).then(function(children){
-                            self.onChildrenChange(parentDirectory, children)
-                        })
+                        self.updateModelRootChildren();
                     }));
                 }
                 
@@ -42,12 +37,18 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
                 }
             },
             getRoot:function(callback){
+                var self = this;
                 this.model.singleInvoke("cms.filesystem.getRoot",[]).then(function(rootNode){
+                    self.$_rootItem = rootNode;
                     callback(rootNode)
                 })
             },
-            mayHaveChildren:function(){
-                return true;
+            mayHaveChildren:function(item){
+                if(item.type == "directory"){
+                    return true;
+                }else {
+                    return false;
+                }
             },
             getChildren:function(parentItem,callback){
                 this.get(parentItem).then(function(value){
@@ -61,9 +62,42 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
             getIdentity:function(item){
                 return item.inode;
             },
-            
-            remove:function(){
+            get:function(obj){
+                var promise = this.inherited(arguments);
                 
+                if(this.isTreeModel){
+                    var self = this;
+                    promise.then(function(children){
+                        for(var i = 0, len = children.length; i < len;i++){
+                            if(children[i].type == "directory"){
+                                self.$_treeItems[String(children[i].inode)] = children[i];
+                            }
+                        }
+                    })
+                }
+                
+                return promise;
+                
+            },
+            
+            
+            updateModelRootChildren:function(){
+                if(!this.isTreeModel){
+                    return false;
+                }
+                var self = this;
+                
+                if(this.$_rootItem){
+                    self.onChildrenChange(self.$_rootItem,[]);
+                    for(var name in this.$_treeItems){
+                        this.onChildrenChange(this.$_treeItems[name], []);
+                        this.onDelete(this.$_treeItems[name]);
+                        delete this.$_treeItems[name];
+                    }
+                    this.get(this.$_rootItem).then(function(children){
+                        self.onChildrenChange(self.$_rootItem,children);
+                    })
+                }
             },
             
             
@@ -114,7 +148,9 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
             
             onChange:function(item){}, 
             
-            onChildrenChange:function(parentIte, children){}
+            onChildrenChange:function(parentIte, children){},
+            onDelete:function(item){},
+            onDeleteItem:function(item){}
         })
     })
 

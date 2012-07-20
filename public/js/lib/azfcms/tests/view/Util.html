@@ -52,9 +52,10 @@
                         name:"Test confirm",
                         runTest:function(){
                             var util = new Util();
-                            util.confirm(function(value){
-                                alert(value?"YES":"NO");
-                            },"DO YOU AGREE?","YES I DO", "I DO NOT");
+                            util.selectFiles(function(selection){
+                                console.debug(selection);
+                            },null,"Select your files")
+                            window.util = util
                             
                         }
                     }
@@ -72,6 +73,6 @@
         </script>
     </head>
     <body class="soria">
-
+        <button onclick="util.selectFiles(function(){},null,'Select your files')">Show</button>
     </body>
 </html>

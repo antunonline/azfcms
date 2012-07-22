@@ -110,28 +110,10 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 
             },
             enable:function(){
-                this.toolbar.set("disabled",false);
-                if(this.disableLayer){
-                    this.disableLayer.parentNode.removeChild(this.disableLayer);
-                    this.disableLayer = null;
-                }
+                
             },
             disable:function(){
-                this.toolbar.set("disabled",false);
-                if(this.disableLayer){
-                    return;
-                } else {
-                    this.disableLayer = document.createElement("div");
-                    this.disableLayer.style.left="0px";
-                    this.disableLayer.style.right="0px";
-                    this.disableLayer.style.bottom="0px";
-                    this.disableLayer.style.top="0px";
-                    this.disableLayer.style.position="absolute";
-                    this.disableLayer.style.backgroundColor="#333";
-                    domStyle.set(this.disableLayer,"opacity",0.5);
-                    this.domNode.appendChild(this.disableLayer);
-                    
-                }
+                
             },
             resize:function(){
                 this.borderContainer.resize();

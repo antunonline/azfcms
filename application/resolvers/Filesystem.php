@@ -46,7 +46,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
                 if (strpos($path['dirname'], '..') > -1 || strpos($path['name'], '..') > -1)
                     return false;
                 // Construct real path
-                return rtrim($baseDir . "/" . rtrim($path['dirname'], "\\/."), "\\/.") . "/" . $path['name'];
+                return rtrim($baseDir . "/" . trim($path['dirname'], "\\/."), "\\/.") . "/" . $path['name'];
             } else {
                 // If array is invalid
                 return null;
@@ -232,7 +232,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         } else {
             $directories = array();
             $recursiveDirIterator = new RecursiveDirectoryIterator($realPath);
-            $iterator = new RecursiveIteratorIterator($recursiveDirIterator, RecursiveIteratorIterator::CHILD_FIRST);
+            $iterator = new RecursiveIteratorIterator($recursiveDirIterator, RecursiveIteratorIterator::SELF_FIRST);
             while ($iterator->valid()) {
                 /* @var $iterator RecursiveDirectoryIterator */
                 if ($iterator->getFilename() == "..")
@@ -504,7 +504,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
             $i++;
         }
 
-        $recDirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($srcRealPath), RecursiveIteratorIterator::LEAVES_ONLY);
+        $recDirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($srcRealPath), RecursiveIteratorIterator::SELF_FIRST);
         $srcFiles = $srcDirs = array();
         while ($recDirIterator->valid()) {
             /* @var $recDirIterator DirectoryIterator */

@@ -183,9 +183,7 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
                 var self = this;
                 var promise = this.model.singleInvoke('cms.filesystem.copyFiles',[srcFileList, destinationDirectory]);
                 promise.then(function(outcome){
-                    if(outcome){
-                        require.signal("azfcms/store/Filesystem/copyFiles");
-                    }
+                    require.signal("azfcms/store/Filesystem/copyFiles");
                     
                 })
                 return promise;

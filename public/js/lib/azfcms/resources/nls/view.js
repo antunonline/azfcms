@@ -95,7 +95,17 @@ define({
     fspFileSizeColumn:"Veličina",
     fspUploadLabel:"Učitaj dadoteke",
     fspDeleteLabel:"Izbriši dadoteke",
-    fspCreateFolderLabel:"Stvori direktorij"
+    fspCreateFolderLabel:"Stvori direktorij",
+    fspMoveFiles:"Premjesti dadoteke",
+    fspChangeName:"Izmjeni naziv",
+    fspCopyFiles:"Kopiraj dadoteke",
+    fspConfirmDeleteMessage:"Želite li stvarno izbrisati izabrane dadoteke?",
+    fspEnterDirectoryName:"Unesite naziv novog direktorija",
+    fspSelectDirectory:"Izaberi direktorij",
+    fspSelectRenameFile:"Izaberite jednu dadoteku kojoj želite promijeniti naziv",
+    fspEnterNewName:"Unesite novi naziv dadoteke",
+    fspSelectFilesToCopy:"Izaberite dadoteke koje želite kopirati",
+    fspSelectCopyDestination:"Izaberite direktorij u koji će se kopirati izabrane dadoteke"
   },
 
   de: true,

@@ -60,20 +60,20 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
 
     public function normalizeFilter($filter) {
         $normalizedExtensions = array();
-        if(isset($filter['extensions'])&&is_array($filter['extensions'])){
+        if (isset($filter['extensions']) && is_array($filter['extensions'])) {
             $extensions = $filter['extensions'];
-            
-            foreach($extensions as $extension){
-                if(is_string($extension)){
+
+            foreach ($extensions as $extension) {
+                if (is_string($extension)) {
                     $normalizedExtensions[] = $extension;
-                } 
+                }
             }
         }
         return array(
             'directory' => isset($filter['directory']) ? ($filter['directory'] ? true : false) : (true),
             'file' => isset($filter['file']) ? ($filter['file'] ? true : false) : (true),
             'hidden' => isset($filter['hidden']) ? ($filter['hidden'] ? true : false) : (true),
-            'extensions'=>$normalizedExtensions
+            'extensions' => $normalizedExtensions
         );
     }
 
@@ -92,17 +92,17 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         if ($this->isPathSecure($realPath) == false) {
             return array();
         }
-        if(is_file($realPath)){
+        if (is_file($realPath)) {
             return array();
         }
-        
-        
+
+
         $iterator = $this->getDirectoryIterator($realPath);
         $files = array();
 
         $baseDirStrLen = strlen($this->getBaseDir());
         foreach ($iterator as $file) {
-            $ext = pathinfo($file->getPathname(),PATHINFO_EXTENSION);
+            $ext = pathinfo($file->getPathname(), PATHINFO_EXTENSION);
             if ($file->isDot())
                 continue;
             if ($filter['directory'] == false && $file->isDir())
@@ -111,19 +111,35 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
                 continue;
             if ($filter['file'] == false && $file->isFile())
                 continue;
-            if($filter['extensions']){
+            if ($filter['extensions']) {
                 $extensions = $filter['extensions'];
-                if(!in_array($ext,$extensions)){
+                if (!in_array($ext, $extensions)) {
                     continue;
                 }
+            }
+
+            $size = $file->getSize();
+            switch (true) {
+                case ($size > pow(1024, 3)):
+                    $displaySize = round(($size / pow(1024, 3)), 2) . "GiB";
+                    break;
+                case ($size > pow(1024, 2)):
+                    $displaySize = round(($size / pow(1024, 2)), 2) . "MiB";
+                    break;
+                case ($size > pow(1024, 1)):
+                    $displaySize = round(($size / pow(1024, 1)), 2) . "KiB";
+                    break;
+                default:
+                    $displaySize = $size . "byte";
+                    break;
             }
 
             $files[] = array(
                 'dirname' => '/' . trim(substr($file->getPath(), $baseDirStrLen), "/\\."),
                 'name' => $file->getBasename(),
                 'date' => $file->getCTime(),
-                'type' => $file->isDir()?"directory":pathinfo($file->getFilename(), PATHINFO_EXTENSION),
-                'size' => $file->getSize(),
+                'type' => $file->isDir() ? "directory" : pathinfo($file->getFilename(), PATHINFO_EXTENSION),
+                'size' => $displaySize,
                 'permissions' => substr(sprintf('%o', $file->getPerms()), -4),
                 'inode' => $file->getInode()
             );
@@ -259,17 +275,17 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
     }
 
     protected function _moveUploadedFile($source, $destination) {
-        if(file_exists($destination)){
-            $path = pathinfo($destination,PATHINFO_DIRNAME);
-            $basename = pathinfo($destination,PATHINFO_FILENAME);
-            $ext = pathinfo($destination,PATHINFO_EXTENSION);
-            
-            
+        if (file_exists($destination)) {
+            $path = pathinfo($destination, PATHINFO_DIRNAME);
+            $basename = pathinfo($destination, PATHINFO_FILENAME);
+            $ext = pathinfo($destination, PATHINFO_EXTENSION);
+
+
             $i = 1;
             do {
-                $destination = $path."/".$basename."($i)".".".$ext;
+                $destination = $path . "/" . $basename . "($i)" . "." . $ext;
                 $i++;
-            }while(file_exists($destination));
+            } while (file_exists($destination));
         }
         move_uploaded_file($source, $destination);
     }
@@ -352,6 +368,189 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         }
 
         return $this->describeFile($parentPath);
+    }
+
+    /**
+     * 
+     * @param array $srcFiles
+     * @param array $dst
+     * @return boolean
+     */
+    public function moveFilesMethod($srcFiles, $dst) {
+        if (!is_array($srcFiles) || (!is_string($dst) && !is_array($dst))) {
+            return false;
+        }
+
+        foreach ($srcFiles as $srcFile) {
+            $this->moveFile($srcFile, $dst);
+        }
+
+        return true;
+    }
+
+    /**
+     * 
+     * @param string|array $src
+     * @param string|array $dst
+     * @return boolean
+     */
+    public function moveFile($src, $dst) {
+        $srcPath = $this->constructRealPath($src);
+        $dstPath = $this->constructRealPath($dst);
+
+        if (!$srcPath || !$dstPath) {
+            return false;
+        }
+
+        if ($srcPath == $dstPath) {
+            return true;
+        }
+
+        if (!is_dir($dstPath) || !is_writeable($srcPath) || !is_writeable($dstPath)) {
+            return false;
+        }
+
+        $newSrc = $dstPath . "/" . basename($srcPath);
+        $i = 0;
+        while(is_readable($newSrc)){
+            $newSrc = $dstPath . "/" . basename($srcPath)."($i)";
+            $i++;
+        }
+        
+        rename($srcPath, $newSrc);
+        return true;
+    }
+
+    public function renameFileMethod($file, $newName) {
+        if (!is_string($newName)) {
+            return false;
+        }
+
+        if (!$realPath = $this->constructRealPath($file)) {
+            return false;
+        }
+
+        $dirname = dirname($realPath);
+        $newPath = $dirname . "/" . $newName;
+
+        rename($realPath, $newPath);
+        return true;
+    }
+
+    /**
+     * 
+     * @param array $srcFileList
+     * @param array|string $dstFolder
+     * @return string
+     */
+    public function copyFilesMethod($srcFileList, $dstFolder) {
+        if (!is_array($srcFileList)) {
+            return false;
+        }
+        if (!$dstRealPath = $this->constructRealPath($dstFolder)) {
+            return false;
+        }
+        if (!is_dir($dstRealPath) || !is_writeable($dstRealPath)) {
+            return false;
+        }
+
+        foreach ($srcFileList as $srcFile) {
+            if (!$srcRealPath = $this->constructRealPath($srcFile)) {
+                continue;
+            }
+
+            if (is_file($srcRealPath)) {
+                $this->copyFile($srcRealPath, $dstRealPath);
+            } else {
+                $this->copyDirectory($srcRealPath, $dstRealPath);
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * 
+     * @param string $srcRealPath
+     * @param string $dstRealPath
+     */
+    public function copyFile($srcRealPath, $dstRealPath) {
+        $ext = pathinfo($srcRealPath, PATHINFO_EXTENSION);
+        $fileName = pathinfo($srcRealPath, PATHINFO_FILENAME);
+        $newSrcPath = $dstRealPath . "/" . $fileName . "." . $ext;
+
+
+        $i = 1;
+        while (file_exists($newSrcPath)) {
+            $newSrcPath = $dstRealPath . "/" . $fileName . "($i)." . $ext;
+            $i++;
+        }
+
+        copy($srcRealPath, $dstRealPath);
+    }
+
+    /**
+     * 
+     * @param string $srcRealPath
+     * @param string $dstRealPath
+     */
+    public function copyDirectory($srcRealPath, $dstRealPath) {
+        $srcBaseName = basename($srcRealPath);
+        $newDstPath = $dstRealPath . "/" . $srcBaseName;
+
+        $i = 0;
+        while (file_exists($newDstPath)) {
+            $newDstPath = $dstRealPath . "/" . $srcBaseName . "($i)";
+            $i++;
+        }
+
+        $recDirIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($srcRealPath), RecursiveIteratorIterator::LEAVES_ONLY);
+        $srcFiles = $srcDirs = array();
+        while ($recDirIterator->valid()) {
+            /* @var $recDirIterator DirectoryIterator */
+            if ($recDirIterator->isDot()) {
+                if($recDirIterator->getFilename()=="."){
+                    $srcDirs[] = $recDirIterator->getRealPath();
+                }
+                $recDirIterator->next();
+                continue;
+            }
+
+            if ($recDirIterator->isDir()) {
+                $srcDirs[] = $recDirIterator->getRealPath();
+            } else  {
+                $srcFiles[] = $recDirIterator->getRealPath();
+            }
+            $recDirIterator->next();
+        }
+
+        $srcDirs = array_unique($srcDirs);
+        usort($srcDirs, function($first, $last) {
+                    $firstCount = count_chars($first);
+                    $lastCount = count_chars($last);
+                    if ($firstCount[47] < $lastCount[47]) {
+                        return -1;
+                    } else if ($firstCount[47] > $lastCount[47]) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+            
+        
+        for($i = 0, $len = sizeof($srcDirs);$i<$len;$i++){
+            $srcDir = $srcDirs[$i];
+            $mkDir = str_replace($srcRealPath, $newDstPath, $srcDir);
+            mkdir($mkDir);
+        }
+                
+        for($i = 0, $len = sizeof($srcFiles);$i<$len;$i++){
+            $srcFile = $srcFiles[$i];
+            $cpFile = str_replace($srcRealPath, $newDstPath, $srcFile);
+            copy($srcFile,$cpFile);
+        }
+        
+        return true;
     }
 
 }

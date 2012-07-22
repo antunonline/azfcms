@@ -21,6 +21,9 @@ define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
                 this.view.addAction(nls.fspUploadLabel,lang.hitch(this,this.onUpload));
                 this.view.addAction(nls.fspDeleteLabel,lang.hitch(this,this.onDelete));
                 this.view.addAction(nls.fspCreateFolderLabel,lang.hitch(this,this.onFolderCreate));
+                this.view.addAction("Premjesti dadoteke",lang.hitch(this,this.onMove));
+                this.view.addAction("Izmjeni naziv",lang.hitch(this,this.onRename));
+                this.view.addAction("Kopiraj dadoteke",lang.hitch(this,this.onCopy));
             },
             onUpload:function(selectedTreeItem,selectedGridItems){
                 if(!selectedTreeItem)
@@ -59,7 +62,9 @@ define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
                     return;
                 var self = this;
                 viewUtil.confirm(function(confirmed){
-                    self.doDelete(gridSelection)
+                    if(confirmed){
+                        self.doDelete(gridSelection)   
+                    }
                 }, "Do you want to delete selected files?")
                 
             },
@@ -92,6 +97,63 @@ define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
                     self.view.reload();
                     self.view.enable();
                 })
+            },
+            onMove:function(){
+                var self = this;
+                var gridSelection = this.view.getGridSelection();
+                if(!gridSelection || gridSelection.length<1){
+                    return false;
+                }
+                
+                viewUtil.selectFiles(function(selection){
+                    if(selection.length<1){
+                        return false;
+                    }
+                    self.filesystem.moveFiles(gridSelection,selection[0]).then(function(outcome){
+                        if(!outcome){
+                            return;
+                        }
+                        self.view.reload();
+                    })
+                    
+                },viewUtil.FILE_TYPE_DIRECTORY,"Izaberi direktorij");
+            },
+            onRename:function(){
+                var gridSelection = this.view.getGridSelection();
+                if(!gridSelection || gridSelection.length!==1){
+                    viewUtil.alert("Izaberite jednu dadoteku kojoj želite promijeniti naziv")
+                    return false;
+                }
+                
+                var name = window.prompt("Unesite novi naziv dadoteke",gridSelection[0].name);
+                if(!name){
+                    return;
+                }
+                
+                var self = this;
+                this.filesystem.renameFile(gridSelection[0],name).then(function(outcome){
+                    if(!outcome){
+                        return false;
+                    }
+                    self.view.reload();
+                });
+            },
+            onCopy:function(){
+                var gridSelection = this.view.getGridSelection();
+                if(!gridSelection || gridSelection.length<1){
+                    viewUtil.alert("Izaberite dadoteke koje želite kopirati")
+                    return false;
+                }
+                
+                var self = this;
+                viewUtil.selectFiles(function(selection){
+                    if(selection.length<1){
+                        return 0;
+                    }
+                    
+                    self.filesystem.copyFiles(gridSelection,selection[0]);
+                    
+                },viewUtil.FILE_TYPE_DIRECTORY,"Izaberite direktorij u koji će se kopirati izabrane dadoteke");
             }
         })
     })

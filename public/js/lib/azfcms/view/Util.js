@@ -11,15 +11,16 @@ define(
         FileSelectPane)
         {
         return declare([],{
-            FILE_FILTER_ALL:"all",
-            FILE_FILTER_IMAGES:"images",
-            FILE_FILTER_AUDIO:"audio",
-            FILE_FILTER_VIDEO:"video",
+            FILE_TYPE_ALL:"all",
+            FILE_TYPE_IMAGES:"images",
+            FILE_TYPE_AUDIO:"audio",
+            FILE_TYPE_VIDEO:"video",
+            FILE_TYPE_DIRECTORY:"directory",
     
-            $_FILE_FILTER_ALL:[],
-            $_FILE_FILTER_IMAGES:['jpg','jpeg','gif','png'],
-            $_FILE_FILTER_AUDIO:['mp3','ogg','wav'],
-            $_FILE_FILTER_VIDEO:['avi','mpeg4','mpeg2','flv','mkv'],
+            $_FILE_TYPE_ALL:[],
+            $_FILE_TYPE_IMAGES:['jpg','jpeg','gif','png'],
+            $_FILE_TYPE_AUDIO:['mp3','ogg','wav'],
+            $_FILE_TYPE_VIDEO:['avi','mpeg4','mpeg2','flv','mkv'],
     
             $_fileSelectStore:null,
             $_fileSelectDialog:null,
@@ -94,9 +95,11 @@ define(
                 var fileFilter = {}
                 
                 if(lang.isString(fileType)){
-                    var filterPropName = "$_"+fileType;
-                    if(this[filterPropName]){
-                        fileFilter.extensions = this[filterPropName];
+                    var typePropName = "$_"+fileType;
+                    if(this[typePropName]){
+                        fileFilter.extensions = this[typePropName];
+                    } else if(fileType == this.FILE_TYPE_DIRECTORY){
+                        fileFilter.file = false;
                     }
                 } else if(lang.isArray(fileType)){
                     fileFilter.extensions = fileType;
@@ -105,10 +108,12 @@ define(
                 var fileBrowser = this.$_getFileSelectPane();
                 var fileDialog = this.$_getFileSelectDialog();
                 var self = this;
+                this.$_fileSelectStore.getOptions = fileFilter;
                 
-                fileDialog.set("message",message);
+                fileDialog.set("title",message);
                 
                 this.$_fileSelectConnects.push(fileBrowser.on("select",function(selection){
+                    fileDialog.hide();
                     callback(selection);
                     self.$_clearFileSelectConnections();
                 }))

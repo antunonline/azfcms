@@ -28,22 +28,18 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
             },
             
             postCreate:function(){
-                new Tree({
+                this.tree = new Tree({
                     model:this.treeStore,
                     style:"height:350px;",
                     autoExpand:false
                 },this.tree)
             },
             getTreeSelection:function(){
-                if("treeSelect"in this){
-                    return this.treeSelect;
-                } else {
-                    return null;
-                }
+                return this.tree.selectedItems;
             },
             _onSelect:function(){
                 var selection = this.getTreeSelection();
-                this.onSelect(selection?selection:[]);
+                this.onSelect(selection.length>0?selection:[]);
             },
             _onCancel:function(){
                 this.onCancel();

@@ -19,11 +19,23 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
                 this.$_treeItems={};
                 
                 if(this.isTreeModel){
-                    this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(item){
+                    this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(){
                         self.updateModelRootChildren();
                     }));
                 
-                    this._connects.push(require.on("azfcms/store/Filesystem/createDirectory",function(parentDirectory){
+                    this._connects.push(require.on("azfcms/store/Filesystem/createDirectory",function(){
+                        self.updateModelRootChildren();
+                    }));
+                    
+                    this._connects.push(require.on("azfcms/store/Filesystem/moveFiles",function(){
+                        self.updateModelRootChildren();
+                    }));
+                    
+                    this._connects.push(require.on("azfcms/store/Filesystem/renameFile",function(){
+                        self.updateModelRootChildren();
+                    }));
+                    
+                    this._connects.push(require.on("azfcms/store/Filesystem/copyFiles",function(){
                         self.updateModelRootChildren();
                     }));
                 }
@@ -137,13 +149,46 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
                     if(!response){
                         return;
                     }
-                    require.signal("azfcms/store/Filesystem/createDirectory",inDirectory);
+                    require.signal("azfcms/store/Filesystem/createDirectory");
                 })
                 return promise;
             },
             
             getParentDirectory:function(item){
                 return this.model.singleInvoke("cms.filesystem.getParentDirectory",[item])
+            },
+            
+            moveFiles:function(srcFiles,dst){
+                var self = this;
+                var promise = this.model.singleInvoke('cms.filesystem.moveFiles',[srcFiles,dst]);
+                promise.then(function(){
+                    require.signal("azfcms/store/Filesystem/moveFiles");
+                })
+                return promise;
+            },
+            
+            renameFile:function(file, newName){
+                var self = this;
+                var promise = this.model.singleInvoke('cms.filesystem.renameFile',[file, newName]);
+                promise.then(function(outcome){
+                    if(outcome){
+                        require.signal("azfcms/store/Filesystem/renameFile");
+                    }
+                    
+                })
+                return promise;
+            },
+            
+            copyFiles:function(srcFileList, destinationDirectory){
+                var self = this;
+                var promise = this.model.singleInvoke('cms.filesystem.copyFiles',[srcFileList, destinationDirectory]);
+                promise.then(function(outcome){
+                    if(outcome){
+                        require.signal("azfcms/store/Filesystem/copyFiles");
+                    }
+                    
+                })
+                return promise;
             },
             
             onChange:function(item){}, 

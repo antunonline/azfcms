@@ -26,7 +26,7 @@ define({
     npCreatePageAction: "Dodaj stranicu",
     npEditPageAction: "Uredi stranicu",
     npDeletePageAction: "Izbriši stranicu",
-    npPagePluginsAction: "Prikaži pluginove",
+    npPagePluginsAction: "Dodaci stranice",
     npFilesystemAction: "Upravljanje dadotekama",
     npHomeChange: "Postava naslovne stranice",
     
@@ -58,7 +58,7 @@ define({
     
     utlConfirmDialogTitle:"Pitanje",
     
-    eepTabName:"Editor pluginova",
+    eepTabName:"Editor dodataka",
     eepNameColumnLabel:"Naziv",
     eepDescriptionColumnLabel:"Opis",
     eepDisabledColumnLabel:"Ukljućen",
@@ -73,11 +73,11 @@ define({
     eepFormSaveEnabled:"Spremi",
     eepFormSave:"Spremi",
     eepFormExtendedEdit:"Editiraj dodatne vrijednosti",
-    eepFormAdd:"Dodaj plugin",
-    eepFormDelete:"Izbriši plugin",
+    eepFormAdd:"Novi dodatak",
+    eepFormDelete:"Izbriši dodatak",
     eepReloadGrid:"Osvježi listu",
     
-    eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani plugin?",
+    eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani dodatak?",
     
     redirUrlLabel:"URL:",
     redirSaveLabel:"Spremi",

@@ -3,14 +3,8 @@ define([
 	"./HorizontalRule"
 ], function(declare, HorizontalRule){
 
-/*=====
-	var HorizontalRule = dijit.form.HorizontalRule;
-=====*/
-
 	// module:
 	//		dijit/form/VerticalRule
-	// summary:
-	//		Hash marks for the `dijit.form.VerticalSlider`
 
 	return declare("dijit.form.VerticalRule", HorizontalRule, {
 		// summary:

@@ -1,18 +1,18 @@
-define(["./_base/kernel", "./_base/lang"], function(dojo, lang) {
-	// module:
-	//		dojo/string
+define([
+	"./_base/kernel",	// kernel.global
+	"./_base/lang"
+], function(kernel, lang){
+
+// module:
+//		dojo/string
+
+var string = {
 	// summary:
-	//		TODOC
-
-lang.getObject("string", true, dojo);
-
-/*=====
-dojo.string = {
-	// summary: String utilities for Dojo
+	//		String utilities for Dojo
 };
-=====*/
+lang.setObject("dojo.string", string);
 
-dojo.string.rep = function(/*String*/str, /*Integer*/num){
+string.rep = function(/*String*/str, /*Integer*/num){
 	// summary:
 	//		Efficiently replicate a string `n` times.
 	// str:
@@ -33,7 +33,7 @@ dojo.string.rep = function(/*String*/str, /*Integer*/num){
 	return buf.join("");	// String
 };
 
-dojo.string.pad = function(/*String*/text, /*Integer*/size, /*String?*/ch, /*Boolean?*/end){
+string.pad = function(/*String*/text, /*Integer*/size, /*String?*/ch, /*Boolean?*/end){
 	// summary:
 	//		Pad a string to guarantee that it is at least `size` length by
 	//		filling with the character `ch` at either the start or end of the
@@ -54,11 +54,11 @@ dojo.string.pad = function(/*String*/text, /*Integer*/size, /*String?*/ch, /*Boo
 		ch = '0';
 	}
 	var out = String(text),
-		pad = dojo.string.rep(ch, Math.ceil((size - out.length) / ch.length));
+		pad = string.rep(ch, Math.ceil((size - out.length) / ch.length));
 	return end ? out + pad : pad + out;	// String
 };
 
-dojo.string.substitute = function(	/*String*/		template,
+string.substitute = function(	/*String*/		template,
 									/*Object|Array*/map,
 									/*Function?*/	transform,
 									/*Object?*/		thisObject){
@@ -115,7 +115,7 @@ dojo.string.substitute = function(	/*String*/		template,
 	//	|		}
 	//	|	);
 
-	thisObject = thisObject || dojo.global;
+	thisObject = thisObject || kernel.global;
 	transform = transform ?
 		lang.hitch(thisObject, transform) : function(v){ return v; };
 
@@ -129,23 +129,7 @@ dojo.string.substitute = function(	/*String*/		template,
 		}); // String
 };
 
-/*=====
-dojo.string.trim = function(str){
-	// summary:
-	//		Trims whitespace from both sides of the string
-	// str: String
-	//		String to be trimmed
-	// returns: String
-	//		Returns the trimmed string
-	// description:
-	//		This version of trim() was taken from [Steven Levithan's blog](http://blog.stevenlevithan.com/archives/faster-trim-javascript).
-	//		The short yet performant version of this function is dojo.trim(),
-	//		which is part of Dojo base.  Uses String.prototype.trim instead, if available.
-	return "";	// String
-}
-=====*/
-
-dojo.string.trim = String.prototype.trim ?
+string.trim = String.prototype.trim ?
 	lang.trim : // aliasing to the native function
 	function(str){
 		str = str.replace(/^\s+/, '');
@@ -158,5 +142,21 @@ dojo.string.trim = String.prototype.trim ?
 		return str;
 	};
 
-return dojo.string;
+/*=====
+ string.trim = function(str){
+	 // summary:
+	 //		Trims whitespace from both sides of the string
+	 // str: String
+	 //		String to be trimmed
+	 // returns: String
+	 //		Returns the trimmed string
+	 // description:
+	 //		This version of trim() was taken from [Steven Levithan's blog](http://blog.stevenlevithan.com/archives/faster-trim-javascript).
+	 //		The short yet performant version of this function is dojo.trim(),
+	 //		which is part of Dojo base.  Uses String.prototype.trim instead, if available.
+	 return "";	// String
+ };
+ =====*/
+
+	return string;
 });

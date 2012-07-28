@@ -2,10 +2,11 @@ define([
 	"dojo",
 	"doh",
 	"require",
+	"dojo/sniff",
 	"./loader/core",
 	"dojo/has!dojo-amd-factory-scan?./loader/modules",
 	"./loader/moduleIds",
-	"./loader/bootstrap"], function(dojo, doh, require){
+	"./loader/bootstrap"], function(dojo, doh, require, has){
 	if(doh.isBrowser){
 		doh.register("tests._base.loader.asyncWithDojoRequire", require.toUrl("./loader/asyncWithDojoRequire.html"));
 
@@ -33,10 +34,10 @@ define([
 		doh.register("tests._base.loader.xdomin-async-2", require.toUrl("./loader/xdomain/xdomain.html"), {async:"legacyAsync", variation:2});
 		// the requirejs test suite. The following tests are not used:
 		//
-		//   * baseUrl: dojo's baseUrl is different--it defaults to the dojo tree. See TODO
-		//   * layers: dojo's build system does things differently
-		//   * afterload: is not constructed in a way that works with doh
-		//   * plugin/sync: this test seems like it will always fail in async mode; TODO check with James
+		//	 * baseUrl: dojo's baseUrl is different--it defaults to the dojo tree. See TODO
+		//	 * layers: dojo's build system does things differently
+		//	 * afterload: is not constructed in a way that works with doh
+		//	 * plugin/sync: this test seems like it will always fail in async mode; TODO check with James
         //
 		doh.register("tests._base.loader.requirejs-simple-sync", require.toUrl("./loader/requirejs/simple.html"), {async:0});
 		doh.register("tests._base.loader.requirejs-simple-async", require.toUrl("./loader/requirejs/simple.html"), {async:1});
@@ -70,7 +71,7 @@ define([
 		    root= qstart!=-1 ? location.href.substring(0, qstart) : location.href,
 			setup= compactPath(root + "/../" + require.toUrl("./loader/requirejs/requirejs-setup.js")),
 			baseUrl= setup.substring(0, setup.length - "/requirejs-setup.js".length);
-		if(dojo.isIE>6){
+		if(has("ie")>6){
 			doh.register("tests._base.loader.requirejs-simple-badbase-sync", require.toUrl("./loader/requirejs/simple-badbase.html"), {
 				async:0,
 				baseUrl:baseUrl,
@@ -131,5 +132,8 @@ define([
 
 		doh.register("tests._base.loader.requirejs-exports-sync", require.toUrl("./loader/requirejs/exports/exports.html"), {async:0});
 		doh.register("tests._base.loader.requirejs-exports-async", require.toUrl("./loader/requirejs/exports/exports.html"), {async:1});
+
+		doh.register("tests._base.loader.require-config", require.toUrl("./loader/config/test.html"), {async:1});
 	}
 });
+

@@ -1,4 +1,8 @@
-define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./process"], function(bc, fileUtils, fs, stringify, has, process){
+define([
+	"./buildControl",
+	"./fileUtils",
+	"./fs"
+], function(bc, fileUtils, fs){
 	// find all files as given by files, dirs, trees, and packages
 	var
 		dirsProcessed =
@@ -37,10 +41,10 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 						};
 				},
 				tag = {},
-				gotOne  = false;
+				gotOne	= false;
 			for(var p in resourceTags){
 				tag[p] = getFilterFunction(resourceTags[p]);
-				gotOne  = true;
+				gotOne	= true;
 			}
 			if(!gotOne){
 				return 0;
@@ -71,32 +75,45 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 			}
 		},
 
-		readSingleDir = function(srcPath, destPath, excludes, advise, traverse){
-			if(dirsProcessed[srcPath]){
-				return;
-			}
-			dirsProcessed[srcPath] = 1;
-			if(!fileUtils.dirExists(srcPath)){
-				bc.log("missingDirDuringDiscovery", ["directory", srcPath]);
-				return;
-			}
-			var
-				srcPathLength = srcPath.length,
+		readSingleDir = function(srcBase, destBase, current, excludes, advise, traverse){
+			// Read a directory and advise of each child contained therein if the child is
+			// not excluded.
+			//
+			// If traverse is truthy, then traverse the directory tree. When traversing,
+			// current gives the current position in the traversal relative to srcBase.
+			// The first call when traversing (or only call when not traversing) must
+			// have current set to falsy.
+			//
+			// Notice that only the complete child path relative to srcBase is submitted
+			// to excludes. This simplifies constructing exclude functions since srcBase
+			// will never be part of the input to those functions.
+
+			var dir = srcBase + (current ? "/" + current : ""),
+				fullPrefix = dir + "/",
+				currentPrefix = current ? current + "/" : "",
 				subdirs = [];
-			fs.readdirSync(srcPath).forEach(function(filename){
-				var fullFilename = srcPath + "/" + filename;
-				if(!excludes || !excludes(fullFilename)){
-					var stats = fs.statSync(fullFilename);
+
+			// inspect each directory once per build
+			if(dirsProcessed[dir]){
+				return;
+			}
+			dirsProcessed[dir] = 1;
+
+			fs.readdirSync(dir).forEach(function(filename){
+				var current = currentPrefix + filename;
+				if(!excludes || !excludes(current)){
+					var fullFilename = fullPrefix + filename,
+						stats = fs.statSync(fullFilename);
 					if(stats.isDirectory()){
-						subdirs.push(fullFilename);
+						subdirs.push(current);
 					}else{
-						advise(fullFilename, destPath + "/" + filename);
+						advise(fullFilename, destBase + "/" + current);
 					}
 				}
 			});
 			if(traverse && subdirs.length){
-				subdirs.forEach(function(path){
-					readSingleDir(path, destPath + path.substring(srcPathLength), excludes, advise, 1);
+				subdirs.forEach(function(current){
+					readSingleDir(srcBase, destBase, current, excludes, advise, 1);
 				});
 			}
 		},
@@ -105,12 +122,24 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 			advise(item[0], item[1]);
 		},
 
+		srcPathExists = function(srcPath){
+			if(!fileUtils.dirExists(srcPath)){
+				bc.log("missingDirDuringDiscovery", ["directory", srcPath]);
+				return 0;
+			}
+			return 1;
+		},
+
 		readDir = function(item, advise){
-			readSingleDir(item[0], item[1], getExcludes(item[2]), advise, 0, 0);
+			if(srcPathExists(item[0])){
+				readSingleDir(item[0], item[1], 0, getExcludes(item[2]), advise, 0, 0);
+			}
 		},
 
 		readTree = function(item, advise){
-			readSingleDir(item[0], item[1], getExcludes(item[2]), advise, 1);
+			if(srcPathExists(item[0])){
+				readSingleDir(item[0], item[1], 0, getExcludes(item[2]), advise, 1);
+			}
 		},
 
 		discover = {
@@ -130,7 +159,7 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 			}
 			if(!treeItem){
 				// create a tree item; don't traverse into hidden, backup, etc. files (e.g., .svn, .git, etc.)
-				treeItem = [pack.location, destPack.location, /(\/\.)|(~$)/];
+				treeItem = [pack.location, destPack.location, /(\/\.)|(^\.)|(~$)/];
 			}
 
 			var filenames = [];

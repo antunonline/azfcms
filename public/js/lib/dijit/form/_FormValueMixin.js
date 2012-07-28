@@ -2,24 +2,19 @@ define([
 	"dojo/_base/declare", // declare
 	"dojo/dom-attr", // domAttr.set
 	"dojo/keys", // keys.ESCAPE
-	"dojo/_base/sniff", // has("ie"), has("quirks")
+	"dojo/sniff", // has("ie"), has("quirks")
 	"./_FormWidgetMixin"
 ], function(declare, domAttr, keys, has, _FormWidgetMixin){
 
-/*=====
-	var _FormWidgetMixin = dijit.form._FormWidgetMixin;
-=====*/
-
 	// module:
 	//		dijit/form/_FormValueMixin
-	// summary:
-	//		Mixin for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
 
 	return declare("dijit.form._FormValueMixin", _FormWidgetMixin, {
 		// summary:
-		//		Mixin for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
+		//		Mixin for widgets corresponding to native HTML elements such as `<input>` or `<select>`
+		//		that have user changeable values.
 		// description:
-		//		Each _FormValueMixin represents a single input value, and has a (possibly hidden) <input> element,
+		//		Each _FormValueMixin represents a single input value, and has a (possibly hidden) `<input>` element,
 		//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
 		//		works as expected.
 

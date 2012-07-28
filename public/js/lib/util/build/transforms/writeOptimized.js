@@ -1,8 +1,26 @@
-define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "dojo"], function(bc, process, fs, fileUtils, has, dojo) {
+define([
+	"../buildControl",
+	"../process",
+	"../fs",
+	"../fileUtils",
+	"dojo/has",
+	"dojo/json"
+], function(bc, process, fs, fileUtils, has, json) {
 	var built = "//>>built" + bc.newline;
 
 	// default to a no-op
 	var compile = function(){};
+
+	var stripConsoleRe= 0;
+	if(bc.stripConsole){
+		var consoleMethods = "assert|count|debug|dir|dirxml|group|groupEnd|info|profile|profileEnd|time|timeEnd|trace|log";
+		if(bc.stripConsole == "warn"){
+			consoleMethods += "|warn";
+		}else if(bc.stripConsole == "all"){
+			consoleMethods += "|warn|error";
+		}
+		stripConsoleRe= new RegExp("console\\.(" + consoleMethods + ")\\s*\\(", "g");
+	}
 
 	if(has("host-rhino") && (bc.optimize || bc.layerOptimize)){
 		function sscompile(text, dest, optimizeSwitch, copyright){
@@ -45,7 +63,7 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 
 					//Replace the spaces with tabs.
 					//Ideally do this in the pretty printer rhino code.
-					text = text.replace(/    /g, "\t");
+					text = text.replace(/	 /g, "\t");
 				}else{
 					//Apply compression using custom compression call in Dojo-modified rhino.
 					text = new String(Packages.org.dojotoolkit.shrinksafe.Compressor.compressScript(text, 0, 1, strip));
@@ -56,7 +74,7 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 			}finally{
 				Packages.org.mozilla.javascript.Context.exit();
 			}
-			return copyright +  built + text;
+			return copyright +	built + text;
 		}
 
 		var JSSourceFilefromCode, closurefromCode, jscomp= 0;
@@ -77,12 +95,12 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 
 			//Set up options
 			var options = new jscomp.CompilerOptions();
-			options.prettyPrint = optimizeSwitch.indexOf(".keepLines") !== -1;
-
+			options.prettyPrint = optimizeSwitch.indexOf(".keeplines") !== -1;
 			var FLAG_compilation_level = jscomp.CompilationLevel.SIMPLE_OPTIMIZATIONS;
 			FLAG_compilation_level.setOptionsForCompilationLevel(options);
 			var FLAG_warning_level = jscomp.WarningLevel.DEFAULT;
 			FLAG_warning_level.setOptionsForWarningLevel(options);
+
 
 			//Run the compiler
 			var compiler = new Packages.com.google.javascript.jscomp.Compiler(Packages.java.lang.System.err);
@@ -93,18 +111,23 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 		compile= function(resource, text, copyright, optimizeSwitch, callback){
 			bc.log("optimize", ["module", resource.mid]);
 			copyright = copyright || "";
-			var result;
-			if(/closure/.test(optimizeSwitch)){
-				result= ccompile(stripConsoleRe ? text.replace(stripConsoleRe, "0 && $&") : text, resource.dest, optimizeSwitch, copyright);
-			}else{
-				result= sscompile(text, resource.dest, optimizeSwitch, copyright);
-			}
-			fs.writeFile(resource.dest, result, resource.encoding, function(err){
-				if(err){
-					bc.log("optimizeFailedWrite", ["filename", result.dest]);
+			var result = 0;
+			try{
+				if(/closure/.test(optimizeSwitch)){
+					result= ccompile(stripConsoleRe ? text.replace(stripConsoleRe, "0 && $&") : text, resource.dest, optimizeSwitch, copyright);
+				}else{
+					result= sscompile(text, resource.dest, optimizeSwitch, copyright);
 				}
-				callback(resource, err);
-			});
+				fs.writeFile(resource.dest, result, resource.encoding, function(err){
+					if(err){
+						bc.log("optimizeFailedWrite", ["filename", result.dest]);
+					}
+					callback(resource, err);
+				});
+			}catch(e){
+				bc.log("optimizeFailed", ["module identifier", resource.mid, "exception", e+""]);
+				callback(resource, 0);
+			}
 			return callback;
 		};
 	}
@@ -174,7 +197,7 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 				//no waiting necessary, pass through
 				runJava = function(cb) { cb(); };
 			}
-		runJava(function(cp) {
+		runJava(function() {
 			for(i = 0; i < bc.maxOptimizationProcesses; i++) {(function(){
 				var
 					runner = child_process.spawn("java", ["-cp", javaClasses, "org.mozilla.javascript.tools.shell.Main", optimizerRunner]),
@@ -185,14 +208,18 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 						sent:[],
 						write:function(src, dest, optimizeSwitch, copyright){
 							proc.sent.push(dest);
-							runner.stdin.write(src + "\n" + dest + "\n" + optimizeSwitch + "\n" + dojo.toJson(copyright) + "\n");
+							runner.stdin.write(src + "\n" + dest + "\n" + optimizeSwitch + "\n" + json.stringify(copyright) + "\n");
 						},
 						sink:function(output){
 							proc.tempResults += output;
 							var match, message, chunkLength;
 							while((match = proc.tempResults.match(doneRe))){
 								message = match[0];
-								bc.log("optimizeDone", [proc.sent.shift() + " " + message.substring(5)]);
+								if(/OPTIMIZER\sFAILED/.test(message)){
+									bc.log("optimizeFailed", ["module identifier", proc.sent.shift(), "exception", message.substring(5)]);
+								}else{
+									bc.log("optimizeDone", [proc.sent.shift() + " " + message.substring(5)]);
+								}
 								chunkLength = match.index + message.length;
 								proc.results += proc.tempResults.substring(0, chunkLength);
 								proc.tempResults = proc.tempResults.substring(chunkLength);
@@ -255,17 +282,6 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 				processes = [];
 			}
 		});
-
-		var stripConsoleRe= 0;
-		if(bc.stripConsole){
-			var consoleMethods = "assert|count|debug|dir|dirxml|group|groupEnd|info|profile|profileEnd|time|timeEnd|trace|log";
-			if(bc.stripConsole == "warn"){
-				consoleMethods += "|warn";
-			}else if(bc.stripConsole == "all"){
-				consoleMethods += "|warn|error";
-			}
-			stripConsoleRe= new RegExp("console\\.(" + consoleMethods + ")\\s*\\(", "g");
-		}
 
 		compile = function(resource, text, copyright, optimizeSwitch, callback){
 			copyright = copyright || "";

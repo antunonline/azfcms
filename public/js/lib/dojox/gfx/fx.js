@@ -1,7 +1,6 @@
 define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_base/array", "dojo/_base/fx", "dojo/_base/connect"], 
   function(lang, g, m, Color, arr, fx, Hub){
 	var fxg = g.fx = {};
-	/*===== g = dojox.gfx; fxg = dojox.gfx.fx; =====*/
 
 	// Generic interpolators. Should they be moved to dojox.fx?
 
@@ -63,6 +62,17 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 				ret.push(this.original);
 				return;
 			}
+ 			// Adding support for custom matrices
+ 			if(t.name == "matrix"){
+ 				if((t.start instanceof m.Matrix2D) && (t.end instanceof m.Matrix2D)){
+ 					var transfMatrix = new m.Matrix2D();
+ 					for(var p in t.start) {
+ 						transfMatrix[p] = (t.end[p] - t.start[p])*r + t.start[p];
+ 					}
+ 					ret.push(transfMatrix);
+ 				}
+ 				return;
+ 			}
 			if(!(t.name in m)){ return; }
 			var f = m[t.name];
 			if(typeof f != "function"){
@@ -127,7 +137,9 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 
 	fxg.animateStroke = function(/*Object*/ args){
 		// summary:
-		//	Returns an animation which will change stroke properties over time.
+		//		Returns an animation which will change stroke properties over time.
+		// args:
+		//		an object defining the animation setting.
 		// example:
 		//	|	dojox.gfx.fx.animateStroke{{
 		//	|		shape: shape,
@@ -176,8 +188,10 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 
 	fxg.animateFill = function(/*Object*/ args){
 		// summary:
-		//	Returns an animation which will change fill color over time.
-		//	Only solid fill color is supported at the moment
+		//		Returns an animation which will change fill color over time.
+		//		Only solid fill color is supported at the moment
+		// args:
+		//		an object defining the animation setting.
 		// example:
 		//	|	dojox.gfx.fx.animateFill{{
 		//	|		shape: shape,
@@ -199,7 +213,9 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 
 	fxg.animateFont = function(/*Object*/ args){
 		// summary:
-		//	Returns an animation which will change font properties over time.
+		//		Returns an animation which will change font properties over time.
+		// args:
+		//		an object defining the animation setting.
 		// example:
 		//	|	dojox.gfx.fx.animateFont{{
 		//	|		shape: shape,
@@ -241,7 +257,9 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 
 	fxg.animateTransform = function(/*Object*/ args){
 		// summary:
-		//	Returns an animation which will change transformation over time.
+		//		Returns an animation which will change transformation over time.
+		// args:
+		//		an object defining the animation setting.
 		// example:
 		//	|	dojox.gfx.fx.animateTransform{{
 		//	|		shape: shape,

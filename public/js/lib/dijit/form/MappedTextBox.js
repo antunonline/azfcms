@@ -4,16 +4,8 @@ define([
 	"./ValidationTextBox"
 ], function(declare, domConstruct, ValidationTextBox){
 
-/*=====
-	var ValidationTextBox = dijit.form.ValidationTextBox;
-=====*/
-
 	// module:
 	//		dijit/form/MappedTextBox
-	// summary:
-	//		A dijit.form.ValidationTextBox subclass which provides a base class for widgets that have
-	//		a visible formatted display value, and a serializable
-	//		value in a hidden input field which is actually sent to the server.
 
 	return declare("dijit.form.MappedTextBox", ValidationTextBox, {
 		// summary:
@@ -76,7 +68,7 @@ define([
 			// (as opposed to the displayed value).
 			// Passing in name as markup rather than calling domConstruct.create() with an attrs argument
 			// to make query(input[name=...]) work on IE. (see #8660)
-			this.valueNode = domConstruct.place("<input type='hidden'" + (this.name ? " name='" + this.name.replace(/'/g, "&quot;") + "'" : "") + "/>", this.textbox, "after");
+			this.valueNode = domConstruct.place("<input type='hidden'" + (this.name ? ' name="' + this.name.replace(/"/g, "&quot;") + '"' : "") + "/>", this.textbox, "after");
 		},
 
 		reset: function(){

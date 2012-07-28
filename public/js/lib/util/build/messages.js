@@ -46,8 +46,10 @@ define([], function(){
 		[1, 221, "assumeLayerIsDojoModule", "Assumed layer is referencing a dojo module."],
 		[1, 222, "assumeLayerDependencyIsDojoModule", "Assumed layer is referencing a dojo module."],
 		[1, 223, "possibleLegacyModuleId", "Name in internStringsSkipList looks like a legacy module identifier."],
-		[1, 224, "missingPluginResolver", "A plugin dependency was encountered but there was not build-time plugin resolver."],
+		[1, 224, "missingPluginResolver", "A plugin dependency was encountered but there was no build-time plugin resolver."],
 		[1, 225, "missingDirDuringDiscovery", "A directory that was scheduled to be read during discovery did not exist."],
+		[1, 226, "missingProfile", "A package without a profile could throw errors or warnings."],
+		[1, 227, "symbolsLeak", "Inserting symbols (by setting the profile variable 'symbol') causes leaks in IE."],
 
 		// error 300-399
 		[1, 300, "dojoHasMissingPlugin", "Missing dojo/has module."],
@@ -104,8 +106,15 @@ define([], function(){
 		[1, 351, "cannotDeduceModuleIdFrom16LayerDependency", "Cannot deduce module identifier from layer dependency"],
 		[1, 352, "optimizerReportedErrors", "Optimizer reported errors; consult build report for details."],
 		[1, 352, "failedToReadLayerCopyrightFile", "Failed to read copyright file given with layer."],
-
-
+		[1, 353, "i18nUnevaluableBundle", "I18n bundle was not evaluable in the build environment; therefore it will not be included in the flattening computations."],
+		[1, 354, "missingL10n", "Root bundle indicates localized bundles that don't exist."],
+		[1, 355, "declarativeRequireFailed", "Unable to convert declarative require."],
+		[1, 356, "optimizeFailed", "The optimizer threw an exception; the module probably contains syntax errors."],
+		[1, 357, "cssOptimizeUnableToResolveURL", "While optimizing a CSS file, it was impossible to compute the destination location of a relative URL."],
+		[1, 358, "cssOptimizeImproperComment", "While optimizing a CSS file, an improper comment was encountered."],
+		[1, 359, "cssOptimizeIgnored", "While optimizing a CSS file, an import directive was not expanded as instructed by the profile."],
+		[1, 360, "cssOptimizeIgnoredMultiMediaTypes", "While optimizing a CSS file, an import directive was not expanded because it indicated multiple media types."],
+		[1, 361, "cssOptimizeIgnoredNoResource", "While optimizing a CSS file, an import directive was not expanded because the source for the import was not available to the builder."],
 
 		// reports 400-499
 		[1, 400, "hasReport", "Has Features Detected"],

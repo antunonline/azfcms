@@ -52,7 +52,7 @@ dojo.declare("dojox.image.SlideShow",
 	hasNav: true,
 
 	// images: Array
-	// Contains the DOM nodes that individual images are stored in when loaded or loading.
+	//	Contains the DOM nodes that individual images are stored in when loaded or loading.
 	images: [],
 	
 	// pageSize: Number
@@ -69,7 +69,7 @@ dojo.declare("dojox.image.SlideShow",
 	autoStart: false,
 	
 	// fixedHeight: Boolean
-	// If true, the widget does not resize itself to fix the displayed image.
+	//	If true, the widget does not resize itself to fix the displayed image.
 	fixedHeight: false,
 
 	// imageStore: Object
@@ -93,7 +93,7 @@ dojo.declare("dojox.image.SlideShow",
 	titleAttr: "title",
 
 	// slideshowInterval: Number
-	// Time, in seconds, between image transitions during a slideshow.
+	//	Time, in seconds, between image transitions during a slideshow.
 	slideshowInterval: 3,
 	
 	templateString: dojo.cache("dojox.image", "resources/SlideShow.html"),
@@ -112,7 +112,8 @@ dojo.declare("dojox.image.SlideShow",
 	_request: null,
 
 	postCreate: function(){
-		// summary: Initilizes the widget, sets up listeners and shows the first image
+		// summary:
+		//		Initializes the widget, sets up listeners and shows the first image
 		this.inherited(arguments);
 		var img = document.createElement("img");
 
@@ -658,7 +659,7 @@ dojo.declare("dojox.image.SlideShow",
 	_overElement: function(/*DomNode*/element, /*Event*/e){
 		// summary:
 		//		Returns whether the mouse is over the passed element.
-		//		Element must be display:block (ie, not a <span>)
+		//		Element must be display:block (ie, not a `<span>`)
 		
 		//When the page is unloading, if this method runs it will throw an
 		//exception.

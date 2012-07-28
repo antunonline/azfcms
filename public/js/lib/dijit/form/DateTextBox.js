@@ -4,16 +4,8 @@ define([
 	"./_DateTimeTextBox"
 ], function(declare, Calendar, _DateTimeTextBox){
 
-/*=====
-	var Calendar = dijit.Calendar;
-	var _DateTimeTextBox = dijit.form._DateTimeTextBox;
-=====*/
-
 	// module:
 	//		dijit/form/DateTextBox
-	// summary:
-	//		A validating, serializable, range-bound date text box with a drop down calendar
-
 
 	return declare("dijit.form.DateTextBox", _DateTimeTextBox, {
 		// summary:

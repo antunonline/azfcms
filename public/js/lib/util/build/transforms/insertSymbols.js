@@ -1,4 +1,9 @@
-define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, fileUtils, fs, replace) {
+define([
+	"../buildControl",
+	"../fileUtils",
+	"../fs",
+	"../replace"
+], function(bc, fileUtils, fs, replace) {
 	var symctr = 1,
 		m = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
 		len = m.length,
@@ -74,7 +79,9 @@ define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, 
 				return p1+p2+p3+" "+convertSym(p2, symtbl)+p4;
 			});
 			return content;
-		};
+		},
+
+		warningIssued = 0;
 
 	return function(resource, callback) {
 		if(bc.symbol){
@@ -94,6 +101,10 @@ define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, 
 					});
 				}
 			}else{
+				if(!warningIssued){
+					warningIssued = 1;
+					bc.log("symbolsLeak", []);
+				}
 				fileUtils.ensureDirectoryByFilename(resource.dest);
 				resource.text = insertSymbols(resource, bc.symbolTable);
 			}

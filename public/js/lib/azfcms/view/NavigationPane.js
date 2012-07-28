@@ -1,11 +1,12 @@
 define(
 ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Tree',
 'dijit/layout/BorderContainer','dijit/Menu','dijit/MenuItem',
-'dijit/tree/dndSource','dojo/i18n!azfcms/resources/nls/view'],
+'dijit/tree/dndSource','dojo/i18n!azfcms/resources/nls/view',
+'dojo/aspect'],
 function
 (declare,ContentPane,Tree,
   BorderContainer,  Menu, MenuItem,
-  dndSource,nls)
+  dndSource,nls, aspect)
 {
     return declare([BorderContainer],{
         constructor: function(args){
@@ -101,6 +102,15 @@ function
          */
         onItemSelect: function(item){
             
+        },
+        
+        /**
+         * Prevent resizes if tree is not yet loaded
+         */
+        resize:function(){
+            if(this.tree.rootNode){
+                this.inherited(arguments);
+            }
         }
     });
 })

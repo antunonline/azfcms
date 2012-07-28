@@ -220,7 +220,7 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 gridStore:cms.getRegionPluginsStore(item.id, ""),
                                 typeStore:this.typeStore,
                                 closable:true,
-                                title:"Pluginovi za \""+item.title+"\""
+                                title:"Dodaci stranice \""+item.title+"\""
                             });
                             this.adminDialog.addChild(view);
                             new this.EEC({

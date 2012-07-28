@@ -5,6 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/soriaGrid.css" />
         <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
@@ -15,88 +16,53 @@
         <script type="text/javascript">
             var o = {}
             require(
-            ['doh','azfcms/view/FileSelectPane','dojo/store/Memory','dojo/query'],function
-            (doh,FileSelectPane, Memory,query){
-                var treeStore = new Memory({
+            ['doh','azfcms/view/ExtensionPluginStatusPane','dojo/store/Memory','dojo/query'],function
+            (doh,ExtensionPluginStatusPane, Memory,query){
+                var gridStore = new Memory({
                     data:[
                         {
-                            name:"Root",
-                            childNodes:[
-                                {
-                                    name:"Child1",
-                                    childNodes:[
-                                        {
-                                            name:"Child1.1"
-                                        },
-                                        {
-                                            name:"Child1.2"
-                                        }
-                                    ]
-                                },
-                                {
-                                    name:"Child2",
-                                    childNodes:[
-                                        {
-                                            name:"Child2.1"
-                                        },
-                                        {
-                                            name:"Child2.2"
-                                        }
-                                    ]
-                                },
-                                {
-                                    name:"Child3",
-                                    childNodes:[
-                                        {
-                                            name:"Child3.1"
-                                        },
-                                        {
-                                            name:"Child3.2"
-                                        }
-                                    ]
-                                },
-                                {
-                                    name:"Child4",
-                                    childNodes:[
-                                        {
-                                            name:"Child4.1"
-                                        },
-                                        {
-                                            name:"Child4.2"
-                                        }
-                                    ]
-                                }
-                            ]
+                            pageTitle:"Page",
+                            enabled:1,
+                            pluginName:"Plugin1",
+                            pluginRegion:"Left",
+                            weight:"0"
+                        },
+                        {
+                            pageTitle:"Page 1",
+                            enabled:1,
+                            pluginName:"Plugin2",
+                            pluginRegion:"Left",
+                            weight:"0"
+                        },
+                        {
+                            pageTitle:"Page 2",
+                            enabled:0,
+                            pluginName:"Plugin3",
+                            pluginRegion:"Left",
+                            weight:"0"
                         }
                     ],
-                    idProperty:"name",
-                    getRoot:function(callback){
-                        callback(this.get("Root"));
+                    idProperty:"navigationId",
+                    put:function(){
+                        
                     },
-                    mayHaveChildren:function(item){
-                        if("childNodes" in item){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    getChildren:function(parentItem, callback){
-                        callback(parentItem.childNodes);
-                    },
-                    getLabel:function(item){
-                        return item.name;
+                    add:function(){
+                        
                     }
                 });
                 
                 var isRobot = window.location.toString().indexOf("?robot")==-1;
                 if(isRobot){
-                    doh.register('azfcms.view.FileSelectPane',[
+                    doh.register('azfcms.view.ExtensionPluginStatusPane',[
                         {
                             name:"Test constructor",
                             runTest:function(){
-                                new FileSelectPane({
-                                    treeStore:treeStore
+                                var pane = new ExtensionPluginStatusPane({
+                                    gridStore:gridStore,
+                                    style:"width:100%;height:100%;"
                                 }).placeAt(document.body);
+                                pane.resize();
+                                
                             }
                         }
                     ]);

@@ -1,10 +1,10 @@
 
 define(
     ['dojo/_base/declare','dijit/Dialog','dijit/layout/ContentPane','dijit/layout/TabContainer',
-    'dojo/window','dojo/i18n!azfcms/resources/nls/view'],function
+    'dojo/dom-style','dojo/i18n!azfcms/resources/nls/view'],function
     (declare,Dialog,ContentPane,TabContainer,
-        dojoWindow,nls){
-        var _class = declare([Dialog],{
+        domStyle,nls){
+        var _class = declare([Dialog],{     
             constructor: function(){
                 // Define tab container reference
                 this.tabContainer = null;
@@ -13,6 +13,7 @@ define(
                 this.title = nls.adTitle;
                 
                 this.closable = false;
+                duration:0,
                 
                 /**
                  * Border container reference
@@ -26,13 +27,23 @@ define(
             postCreate: function(){
                 this.inherited(arguments);
                 
+                this.contentPane = new ContentPane();
+                this.set("content",this.contentPane);
                 
                 // Create tab container
-                this.tabContainer = new TabContainer({});
+                this.tabContainer = new TabContainer({
+                    style:"width:100%"
+                });
                 
                 // Insert tab container into Dialog
-                this.set("content",this.tabContainer);
-                this.resize();
+                this.contentPane.set("content",this.tabContainer);
+                
+                var self = this;
+                this.on("show",function(){
+                    window.setTimeout(function(){
+                        self.resize();
+                    },this.duration+100)
+                })
                 
                     
             },
@@ -53,25 +64,20 @@ define(
             
             // Override resize function
             resize: function(){
-                
-                // Calculate height
-                var height = dojoWindow.getBox().h*0.95 - 40;
 
-                var style = "width:100%;height:"+String(height)+"px";
+                // Calculate height
+                var cs = domStyle.getComputedStyle(this.domNode);
+                var height = parseInt(cs.height);
+                var width = parseInt(cs.width);
+
+                var style = "width:100%;height:"+String(height-40)+"px";
 
                 // Set tabContainer style
                 this.tabContainer.set("style",style);
                 // Resizetab container
                 
+                
                 this.inherited(arguments);
-            },
-            
-            /**
-             * Override show function so that it initiates resize event
-             */
-            show: function(){
-                this.inherited(arguments);
-                this.resize();
             }
         });
     

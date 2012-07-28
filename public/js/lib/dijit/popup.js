@@ -12,12 +12,11 @@ define([
 	"dojo/keys",
 	"dojo/_base/lang", // lang.hitch
 	"dojo/on",
-	"dojo/_base/sniff", // has("ie") has("mozilla")
-	"dojo/_base/window", // win.body
+	"dojo/sniff", // has("ie") has("mozilla")
 	"./place",
 	"./BackgroundIframe",
-	"."	// dijit (defining dijit.popup to match API doc)
-], function(array, aspect, connect, declare, dom, domAttr, domConstruct, domGeometry, domStyle, event, keys, lang, on, has, win,
+	"./main"	// dijit (defining dijit.popup to match API doc)
+], function(array, aspect, connect, declare, dom, domAttr, domConstruct, domGeometry, domStyle, event, keys, lang, on, has,
 			place, BackgroundIframe, dijit){
 
 	// module:
@@ -28,7 +27,7 @@ define([
 
 
 	/*=====
-	dijit.popup.__OpenArgs = function(){
+	var __OpenArgs = function(){
 		// popup: Widget
 		//		widget to display
 		// parent: Widget
@@ -59,14 +58,15 @@ define([
 		//		and the top-right corner.
 		// onCancel: Function
 		//		callback when user has canceled the popup by
-		//			1. hitting ESC or
-		//			2. by using the popup widget's proprietary cancel mechanism (like a cancel button in a dialog);
-		//			   i.e. whenever popupWidget.onCancel() is called, args.onCancel is called
+		//
+		//		1. hitting ESC or
+		//		2. by using the popup widget's proprietary cancel mechanism (like a cancel button in a dialog);
+		//		   i.e. whenever popupWidget.onCancel() is called, args.onCancel is called
 		// onClose: Function
 		//		callback whenever this popup is closed
 		// onExecute: Function
 		//		callback when user "executed" on the popup/sub-popup by selecting a menu choice, etc. (top menu only)
-		// padding: dijit.__Position
+		// padding: place.__Position
 		//		adding a buffer around the opening position. This is only useful when around is not set.
 		this.popup = popup;
 		this.parent = parent;
@@ -78,69 +78,26 @@ define([
 		this.onClose = onClose;
 		this.onExecute = onExecute;
 		this.padding = padding;
-	}
+	};
+
 	=====*/
 
-	/*=====
-	dijit.popup = {
+	function destroyWrapper(){
+		// summary:
+		//		Function to destroy wrapper when popup widget is destroyed.
+		//		Left in this scope to avoid memory leak on IE8 on refresh page, see #15206.
+		if(this._popupWrapper){
+			domConstruct.destroy(this._popupWrapper);
+			delete this._popupWrapper;
+		}
+	}
+
+	var PopupManager = declare(null, {
 		// summary:
 		//		Used to show drop downs (ex: the select list of a ComboBox)
 		//		or popups (ex: right-click context menus).
-		//
-		//		Access via require(["dijit/popup"], function(popup){ ... }).
 
-		moveOffScreen: function(widget){
-			// summary:
-			//		Moves the popup widget off-screen.
-			//		Do not use this method to hide popups when not in use, because
-			//		that will create an accessibility issue: the offscreen popup is
-			//		still in the tabbing order.
-			// widget: dijit._WidgetBase
-			//		The widget
-		},
-
-		hide: function(widget){
-			// summary:
-			//		Hide this popup widget (until it is ready to be shown).
-			//		Initialization for widgets that will be used as popups
-			//
-			// 		Also puts widget inside a wrapper DIV (if not already in one)
-			//
-			//		If popup widget needs to layout it should
-			//		do so when it is made visible, and popup._onShow() is called.
-			// widget: dijit._WidgetBase
-			//		The widget
-		},
-
-		open: function(args){
-			// summary:
-			//		Popup the widget at the specified position
-			// example:
-			//		opening at the mouse position
-			//		|		popup.open({popup: menuWidget, x: evt.pageX, y: evt.pageY});
-			// example:
-			//		opening the widget as a dropdown
-			//		|		popup.open({parent: this, popup: menuWidget, around: this.domNode, onClose: function(){...}});
-			//
-			//		Note that whatever widget called dijit.popup.open() should also listen to its own _onBlur callback
-			//		(fired from _base/focus.js) to know that focus has moved somewhere else and thus the popup should be closed.
-			// args: dijit.popup.__OpenArgs
-			//		Parameters
-			return {};	// Object specifying which position was chosen
-		},
-
-		close: function(popup){
-			// summary:
-			//		Close specified popup and any popups that it parented.
-			//		If no popup is specified, closes all popups.
-			// widget: dijit._WidgetBase?
-			//		The widget, optional
-		}
-	};
-	=====*/
-
-	var PopupManager = declare(null, {
-		// _stack: dijit._Widget[]
+		// _stack: dijit/_WidgetBase[]
 		//		Stack of currently popped up widgets.
 		//		(someone opened _stack[0], and then it opened _stack[1], etc.)
 		_stack: [],
@@ -165,11 +122,11 @@ define([
 				// Create wrapper <div> for when this widget [in the future] will be used as a popup.
 				// This is done early because of IE bugs where creating/moving DOM nodes causes focus
 				// to go wonky, see tests/robot/Toolbar.html to reproduce
-				wrapper = domConstruct.create("div",{
+				wrapper = domConstruct.create("div", {
 					"class":"dijitPopup",
 					style:{ display: "none"},
 					role: "presentation"
-				}, win.body());
+				}, widget.ownerDocumentBody);
 				wrapper.appendChild(node);
 
 				var s = node.style;
@@ -179,10 +136,7 @@ define([
 				s.top = "0px";
 
 				widget._popupWrapper = wrapper;
-				aspect.after(widget, "destroy", function(){
-					domConstruct.destroy(wrapper);
-					delete widget._popupWrapper;
-				});
+				aspect.after(widget, "destroy", destroyWrapper, true);
 			}
 
 			return wrapper;
@@ -210,7 +164,7 @@ define([
 			//		Hide this popup widget (until it is ready to be shown).
 			//		Initialization for widgets that will be used as popups
 			//
-			// 		Also puts widget inside a wrapper DIV (if not already in one)
+			//		Also puts widget inside a wrapper DIV (if not already in one)
 			//
 			//		If popup widget needs to layout it should
 			//		do so when it is made visible, and popup._onShow() is called.
@@ -232,7 +186,7 @@ define([
 			return stack[pi];
 		},
 
-		open: function(/*dijit.popup.__OpenArgs*/ args){
+		open: function(/*__OpenArgs*/ args){
 			// summary:
 			//		Popup the widget at the specified position
 			//
@@ -250,7 +204,7 @@ define([
 			var stack = this._stack,
 				widget = args.popup,
 				orient = args.orient || ["below", "below-alt", "above", "above-alt"],
-				ltr = args.parent ? args.parent.isLeftToRight() : domGeometry.isBodyLtr(),
+				ltr = args.parent ? args.parent.isLeftToRight() : domGeometry.isBodyLtr(widget.ownerDocument),
 				around = args.around,
 				id = (args.around && args.around.id) ? (args.around.id+"_dropdown") : ("popup_"+this._idGen++);
 

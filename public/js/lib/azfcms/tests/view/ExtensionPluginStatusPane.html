@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+
+            }
+        </style>
+        <script type="text/javascript">
+            var o = {}
+            require(
+            ['doh','azfcms/view/FileSelectPane','dojo/store/Memory','dojo/query'],function
+            (doh,FileSelectPane, Memory,query){
+                var treeStore = new Memory({
+                    data:[
+                        {
+                            name:"Root",
+                            childNodes:[
+                                {
+                                    name:"Child1",
+                                    childNodes:[
+                                        {
+                                            name:"Child1.1"
+                                        },
+                                        {
+                                            name:"Child1.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:"Child2",
+                                    childNodes:[
+                                        {
+                                            name:"Child2.1"
+                                        },
+                                        {
+                                            name:"Child2.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:"Child3",
+                                    childNodes:[
+                                        {
+                                            name:"Child3.1"
+                                        },
+                                        {
+                                            name:"Child3.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:"Child4",
+                                    childNodes:[
+                                        {
+                                            name:"Child4.1"
+                                        },
+                                        {
+                                            name:"Child4.2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    idProperty:"name",
+                    getRoot:function(callback){
+                        callback(this.get("Root"));
+                    },
+                    mayHaveChildren:function(item){
+                        if("childNodes" in item){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    getChildren:function(parentItem, callback){
+                        callback(parentItem.childNodes);
+                    },
+                    getLabel:function(item){
+                        return item.name;
+                    }
+                });
+                
+                var isRobot = window.location.toString().indexOf("?robot")==-1;
+                if(isRobot){
+                    doh.register('azfcms.view.FileSelectPane',[
+                        {
+                            name:"Test constructor",
+                            runTest:function(){
+                                new FileSelectPane({
+                                    treeStore:treeStore
+                                }).placeAt(document.body);
+                            }
+                        }
+                    ]);
+                
+                    doh.run();
+                }
+                // If this request is initiated by dojo robot
+                else{
+                    
+                }
+                
+                
+            })
+        </script>
+    </head>
+    <body class="soria">
+        
+    </body>
+</html>

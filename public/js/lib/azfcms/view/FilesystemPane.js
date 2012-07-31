@@ -32,11 +32,6 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
          * gridStore
          */
             constructor:function(args){
-                if(!this.isFirstConstruct){
-                    var url = require.toUrl("")+"/dojox/grid/resources/claroGrid.css";
-                    query("head").append("<link rel='stylesheet' type='text/css' href='"+url+"' />");
-                    this.isFirstConstruct = true;
-                }
                 
                 for(var name in nls){
                     if(name.indexOf('fsp')==0){
@@ -78,15 +73,6 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 // If gridStore does not inherit dojo.data.api.Read interface
                 var gridStore;
                 if("getFeatures" in this.gridStore ==false){
-                    // Alter grid store so that it will work with ObjectStore 
-                    // strange transformation of query object
-                    aspect.before(this.gridStore,"query",function(query){
-                        var modifiedQuery={};
-                        for(var name in query){
-                            modifiedQuery[name] = query[name].toString();
-                        }
-                        return [modifiedQuery];
-                    });
                     gridStore = new ObjectStore({
                         objectStore:this.gridStore
                     });
@@ -139,9 +125,6 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
             reloadGrid:function(query){
                 this.grid.setQuery(query);
             },
-            reloadTree:function(){
-                this.tree.set("model",this.treeStore);
-            },
             reload:function(){
                 var query ;
                 if(arguments.length == 1){
@@ -151,7 +134,6 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
                 }
                 
                 this.reloadGrid(query);
-                this.reloadTree();
             },
             getGridSelection:function(){
                 return this.grid.selection.getSelected();

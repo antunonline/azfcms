@@ -12,21 +12,18 @@ class Azf_Model_DbTable_Plugin extends Zend_Db_Table_Abstract {
 
     /**
      * 
-     * @param string $name
-     * @param string $description
-     * @param string $type
-     * @param string $region
-     * @param array $params
+     * @param array $ep
      * @return int Description
      */
-    public function insertPlugin($name, $description, $type, $region, array $params=array()) {
-        $serializedParams = $this->_encode($params);
+    public function insertPlugin($ep) {
+        $serializedParams = $this->_encode(isset($ep['params'])?$ep['params']:array());
 
         return $this->insert(array(
-                    'name' => $name,
-                    'description' => $description,
-                    'type' => $type,
-                    'region' => $region,
+                    'name' => $ep['name'],
+                    'description' => $ep['description'],
+                    'type' => $ep['type'],
+                    'region' => $ep['region'],
+                    'weight'=>$ep['weight'],
                     'params' => $serializedParams
                 ));
     }
@@ -123,20 +120,18 @@ ORDER BY p.region, np.weight";
     
     /**
      * 
-     * @param string $pluginId
-     * @param string $name
-     * @param string $description
-     * @param string $region
+     * @param array $plugin
      * @return boolean
      */
-    public function updatePluginValues($pluginId, $name, $description,  $region) {
+    public function updatePluginValues($plugin) {
         $data = array(
-            'name'=>$name,
-            'description'=>$description,
-            'region'=>$region
+            'name'=>$plugin['name'],
+            'description'=>$plugin['description'],
+            'region'=>$plugin['region'],
+            'weight'=>$plugin['weight']
         );
         $where = array(
-            'id=?'=>$pluginId
+            'id=?'=>$plugin['id']
         );
         
         return $this->update($data, $where);
@@ -158,6 +153,77 @@ ORDER BY p.region, np.weight";
         $row['params'] = $this->_decode($row['params']);
         return $row;
     }
+    
+    public function fetchStatusMatrix(){
+        $SQL  = "(SELECT DISTINCT
+    n.id as navigationId,
+    n.title as pageTitle,
+    n.l as l,
+    n.r as r,
+    1 as enabled,
+    np.id as navigationPluginId,
+    np.weight as weight,
+    p.id as pluginId,
+    p.`name` as `pluginName`,
+    p.region as pluginRegion,
+    p.weight as pluginWeight
+FROM
+    Navigation n
+JOIN
+    NavigationPlugin np
+ON
+    n.id = np.navigationId
+JOIN
+    Plugin p
+ON 
+    np.pluginId = p.id)
+UNION
+(SELECT DISTINCT
+    n.id as navigationId,
+    n.title as pageTitle,
+    n.l as l,
+    n.r as r,
+    0 as enabled,
+    0 as navigationPluginId,
+    0 as weight,
+    p.id as pluginId,
+    p.`name` as `pluginName`,
+    p.region as pluginRegion,
+    p.weight as pluginWeight
+FROM
+    Navigation n
+JOIN
+    Plugin p
+ON
+    p.id NOT IN (SELECT np.pluginId FROM NavigationPlugin np WHERE np.navigationId = n.id)
+) ORDER BY l,r, pluginRegion, enabled desc, weight ,pluginWeight;
+";
+        return $this->getAdapter()->fetchAll($SQL);
+    }
+    
+    
+    /**
+     * Fetches all rows.
+     *
+     * Honors the Zend_Db_Adapter fetch mode.
+     *
+     * @param string|array|Zend_Db_Table_Select $where  OPTIONAL An SQL WHERE clause or Zend_Db_Table_Select object.
+     * @param string|array                      $order  OPTIONAL An SQL ORDER clause.
+     * @param int                               $count  OPTIONAL An SQL LIMIT count.
+     * @param int                               $offset OPTIONAL An SQL LIMIT offset.
+     * @return Zend_Db_Table_Rowset_Abstract The row results per the Zend_Db_Adapter fetch mode.
+     */
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null) {
+        $result = parent::fetchAll($where, $order, $count, $offset);
+        /* @var $result Zend_Db_Table_Rowset_Abstract */
+        foreach($result as $row){
+            $row->params = $this->_decode($row->params);
+        }
+        
+        return $result;
+    }
+    
+    
     
     
 

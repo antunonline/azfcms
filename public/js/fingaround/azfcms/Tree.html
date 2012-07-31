@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../lib/dijit/themes/claro/claro.css" />
+        <script type="text/javascript" src="../../lib/dojo/dojo.js" data-dojo-config="async:true"></script>
+        
+        <script type="text/javascript" >
+            require(['dijit/Tree','dijit/Toolbar','dijit/form/Button'],function(Tree,Toolbar, Button){
+                var tree = null;
+                function destroyTree(){
+                    if(tree){
+                        tree.destroyRecursive();
+                    }
+                }
+                
+                function createTree(){
+                    tree = new Tree({
+                        model:model
+                    });
+                    tree.startup();
+                    tree.placeAt(document.body);
+                    tree.resize();
+                }
+                
+                var model = {
+                    getRootDelay:0,
+                    getRoot:function(onItem){
+                        var item = {
+                            id:"1",
+                            name:"Root"
+                        }
+                        if(this.getRootDelay==0){
+                            onItem(item)
+                        } else {
+                            window.setTimeout(function(){
+                                onItem(item)
+                            },this.getRootDelay)
+                        }
+                    },
+                    getLabel:function(item){
+                        return item.name;
+                    },
+                    getIdentity:function(item){
+                        return item.id;
+                    },
+                    mayHaveChildren:function(){
+                        return false;
+                    },
+                    getChildren:function(parent, onComplete){
+                        onComplete([])
+                    }
+                }
+                
+                
+                var toolbar = new Toolbar({},"toolbar");
+                toolbar.addChild(new Button({
+                    label:"Tree resize with rootNode loaded",
+                    onClick:function(){
+                        destroyTree();
+                        createTree();
+                    }
+                }))
+                
+                toolbar.addChild(new Button({
+                    label:"Tree resize with rootNode not loaded",
+                    onClick:function(){
+                        model.getRootDelay = 500;
+                        destroyTree();
+                        createTree();
+                    }
+                }))
+                
+                
+            })
+        </script>
+    </head>
+    <body class="claro">
+        <div id="toolbar">
+
+        </div>
+
+    </body>
+</html>

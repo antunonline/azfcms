@@ -4,6 +4,9 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/Grid.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/soriaGrid.css" />
         <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
@@ -16,442 +19,474 @@
             require(
             ['dojo/domReady!','doh','azfcms/controller/ExtensionEditorController',
                 'dojo/_base/declare','dijit/_Widget','dojo/_base/array','dojo/_base/Deferred',
-                'azfcms/controller/AbstractExtensionController'
+                'azfcms/controller/AbstractExtensionController','dojo/dom-construct'
             ],function
             (ready,doh, EEC,
             declare,_Widget,array,Deferred,
-            AbstractExtensionController
+            AbstractExtensionController,domCreate
         ){
-                var ExtensionEditorPane = declare([_Widget],{
-                    onNew: function(){},
-                    onSave: function(){},
-                    onDelete: function(){},
-                    onDisable: function(){},
-                    onEnable: function(){},
-                    onExtendedEdit: function(){},
-                    onItemSelect: function(){}
-                })
+            
+                var location = window.location.toString()
+                var matches = /useCase=(.*)$/.exec(location);
+                var useCase = matches&&matches[1]?matches[1]:null;
                 
-                doh.register('ExtendedEditorController',[
-                    {
-                        name:"Test constructor",
-                        runTest: function(){
-                            var eep = new ExtensionEditorPane();
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{}
-                            });
+                
+                if(useCase=="dohTests"){
+                    var ExtensionEditorPane = declare([_Widget],{
+                        onNew: function(){},
+                        onSave: function(){},
+                        onDelete: function(){},
+                        onDisable: function(){},
+                        onEnable: function(){},
+                        onExtendedEdit: function(){},
+                        onItemSelect: function(){}
+                    })
+                
+                    doh.register('ExtendedEditorController',[
+                        {
+                            name:"Test constructor",
+                            runTest: function(){
+                                var eep = new ExtensionEditorPane();
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{}
+                                });
                             
-                        }
-                    },
-                    {
-                        name:"Test eventListeners attachments",
-                        runTest: function(){
-                            var attachments = [];
-                            var eep = new ExtensionEditorPane({
-                                on:function(name){
-                                    attachments.push(name);
-                                },
-                                model:{}
-                            });
+                            }
+                        },
+                        {
+                            name:"Test eventListeners attachments",
+                            runTest: function(){
+                                var attachments = [];
+                                var eep = new ExtensionEditorPane({
+                                    on:function(name){
+                                        attachments.push(name);
+                                    },
+                                    model:{}
+                                });
                             
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1
-                            });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1
+                                });
                             
-                            var expected = [
-                                'new','save','delete','disable','enable',
-                                'extendedEdit','itemSelect','regionSelect'
-                            ];
+                                var expected = [
+                                    'new','save','delete','disable','enable',
+                                    'extendedEdit','itemSelect','regionSelect'
+                                ];
                             
-                            var outcome = array.filter(expected,function(item){
-                                if(array.indexOf(attachments,item)>=0){
-                                    return false;
-                                } else {
-                                    return true;
-                                }
-                            });
-                            console.debug(outcome);
-                            doh.is(outcome.length,0);
-                        }
-                    },
-                    {
-                        name:"Test .onNew event listener",
-                        runTest: function(){
-                            var isDisabled,isNavigationIdOk,isNameOk,isDescriptionOk,
-                            isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk,
+                                var outcome = array.filter(expected,function(item){
+                                    if(array.indexOf(attachments,item)>=0){
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                });
+                                console.debug(outcome);
+                                doh.is(outcome.length,0);
+                            }
+                        },
+                        {
+                            name:"Test .onNew event listener",
+                            runTest: function(){
+                                var isDisabled,isNavigationIdOk,isNameOk,isDescriptionOk,
+                                isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk,
                                 isRegionSelecteSetOk= false;
                             
                             
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isDisabled,"Is disabled function call");
-                                doh.t(isNavigationIdOk,"Is navigation id passed to addExtensionPlugin ok");
-                                doh.t(isNameOk,"Is name passed to addExtensionPlugin ok");
-                                doh.t(isDescriptionOk,"Is description passed to addExtensionPlugin ok");
-                                doh.t(isRegionOk,"Is region passed to addExtensionPlugin ok");
-                                doh.t(isTypeOk,"Is type passed to addExtensionPlugin ok");
-                                doh.t(isWeightOk,"Is weight passed to addExtensionPlugin ok");
-                                doh.t(isEnableOk, "Is enable passed to addExtensionPlugin ok");
-                                doh.t(isReloadGridOk,"Is reloadGrid function call");
-                                doh.t(isRegionSelecteSetOk,"Is proper value passed to eep.regionSelect.set() function call");
-                                d.callback(true);
-                            }
-                            
-                            var eep = new ExtensionEditorPane({
-                                enable:function(){isOk()},
-                                disable:function(){isDisabled=true;},
-                                reloadGrid:function(){
-                                    isReloadGridOk = true;
-                                    var a = new Deferred();
-                                    a.callback(true);
-                                    return a;
-                                },
-                                regionSelect:{
-                                    set:function(key,region){
-                                        isRegionSelecteSetOk = region=="region";
-                                    }
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isDisabled,"Is disabled function call");
+                                    doh.t(isNavigationIdOk,"Is navigation id passed to addExtensionPlugin ok");
+                                    doh.t(isNameOk,"Is name passed to addExtensionPlugin ok");
+                                    doh.t(isDescriptionOk,"Is description passed to addExtensionPlugin ok");
+                                    doh.t(isRegionOk,"Is region passed to addExtensionPlugin ok");
+                                    doh.t(isTypeOk,"Is type passed to addExtensionPlugin ok");
+                                    doh.t(isWeightOk,"Is weight passed to addExtensionPlugin ok");
+                                    doh.t(isEnableOk, "Is enable passed to addExtensionPlugin ok");
+                                    doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                    doh.t(isRegionSelecteSetOk,"Is proper value passed to eep.regionSelect.set() function call");
+                                    d.callback(true);
                                 }
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{
-                                    addExtensionPlugin: function(navigationId, name,description,type,region,weight,enable){
-                                        isNavigationIdOk = navigationId==1;
-                                        isNameOk = name=="name";
-                                        isDescriptionOk = description == "description";
-                                        isTypeOk = type == "type";
-                                        isRegionOk = region=="region";
-                                        isWeightOk = weight == 200;
-                                        isEnableOk = enable == true;
+                            
+                                var eep = new ExtensionEditorPane({
+                                    enable:function(){isOk()},
+                                    disable:function(){isDisabled=true;},
+                                    reloadGrid:function(){
+                                        isReloadGridOk = true;
                                         var a = new Deferred();
                                         a.callback(true);
                                         return a;
+                                    },
+                                    regionSelect:{
+                                        set:function(key,region){
+                                            isRegionSelecteSetOk = region=="region";
+                                        }
                                     }
-                                }
-                            });
-                            eec.onNew("name", "description", "type", "region", 200, true)
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{
+                                        addExtensionPlugin: function(navigationId, name,description,type,region,weight,enable){
+                                            isNavigationIdOk = navigationId==1;
+                                            isNameOk = name=="name";
+                                            isDescriptionOk = description == "description";
+                                            isTypeOk = type == "type";
+                                            isRegionOk = region=="region";
+                                            isWeightOk = weight == 200;
+                                            isEnableOk = enable == true;
+                                            var a = new Deferred();
+                                            a.callback(true);
+                                            return a;
+                                        }
+                                    }
+                                });
+                                eec.onNew("name", "description", "type", "region", 200, true)
                             
-                            return d;
-                        }
-                    },
-                    {
-                        name:"Test .onSave event listener",
-                        runTest: function(){
-                            var isDisabled,isNavigationIdOk, isPluginIdOk,isNameOk,isDescriptionOk,
-                            isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk,
+                                return d;
+                            }
+                        },
+                        {
+                            name:"Test .onSave event listener",
+                            runTest: function(){
+                                var isDisabled,isNavigationIdOk, isPluginIdOk,isNameOk,isDescriptionOk,
+                                isRegionOk,isTypeOk,isWeightOk,isEnableOk,isReloadGridOk,
                                 isRegionSelecteSetOk= false;
                             
                             
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isDisabled,"Is disabled function call");
-                                doh.t(isNavigationIdOk,"Is navigation id passed to setExtensionPluginValues ok");
-                                doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues")
-                                doh.t(isNameOk,"Is name passed to setExtensionPluginValues ok");
-                                doh.t(isDescriptionOk,"Is description passed to setExtensionPluginValues ok");
-                                doh.t(isRegionOk,"Is region passed to setExtensionPluginValues ok");
-                                doh.t(isWeightOk,"Is weight passed to setExtensionPluginValues ok");
-                                doh.t(isEnableOk, "Is enable passed to setExtensionPluginValues ok");
-                                doh.t(isReloadGridOk,"Is reloadGrid function call");
-                                doh.t(isRegionSelecteSetOk,"Is proper value passed to eep.regionSelect.set() function call");
-                                d.callback(true);
-                            }
-                            
-                            var eep = new ExtensionEditorPane({
-                                enable:function(){isOk()},
-                                disable:function(){isDisabled=true;},
-                                reloadGrid:function(){
-                                    isReloadGridOk = true;
-                                    var a = new Deferred();
-                                    a.callback(true);
-                                    return a;
-                                },
-                                regionSelect:{
-                                    set:function(key,region){
-                                        isRegionSelecteSetOk = region=="region";
-                                    }
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isDisabled,"Is disabled function call");
+                                    doh.t(isNavigationIdOk,"Is navigation id passed to setExtensionPluginValues ok");
+                                    doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues")
+                                    doh.t(isNameOk,"Is name passed to setExtensionPluginValues ok");
+                                    doh.t(isDescriptionOk,"Is description passed to setExtensionPluginValues ok");
+                                    doh.t(isRegionOk,"Is region passed to setExtensionPluginValues ok");
+                                    doh.t(isWeightOk,"Is weight passed to setExtensionPluginValues ok");
+                                    doh.t(isEnableOk, "Is enable passed to setExtensionPluginValues ok");
+                                    doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                    doh.t(isRegionSelecteSetOk,"Is proper value passed to eep.regionSelect.set() function call");
+                                    d.callback(true);
                                 }
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{
-                                    setExtensionPluginValues: function(navigationId ,pluginId, name,description,region,weight,enable){
-                                        isNavigationIdOk = navigationId==1;
-                                        isPluginIdOk = pluginId==33;
-                                        isNameOk = name=="name";
-                                        isDescriptionOk = description == "description";
-                                        isRegionOk = region=="region";
-                                        isWeightOk = weight == 200;
-                                        isEnableOk = enable == true;
+                            
+                                var eep = new ExtensionEditorPane({
+                                    enable:function(){isOk()},
+                                    disable:function(){isDisabled=true;},
+                                    reloadGrid:function(){
+                                        isReloadGridOk = true;
                                         var a = new Deferred();
                                         a.callback(true);
                                         return a;
+                                    },
+                                    regionSelect:{
+                                        set:function(key,region){
+                                            isRegionSelecteSetOk = region=="region";
+                                        }
                                     }
-                                }
-                            });
-                            eec.onSave(33,"name", "description", "region", 200, true)
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{
+                                        setExtensionPluginValues: function(navigationId ,pluginId, name,description,region,weight,enable){
+                                            isNavigationIdOk = navigationId==1;
+                                            isPluginIdOk = pluginId==33;
+                                            isNameOk = name=="name";
+                                            isDescriptionOk = description == "description";
+                                            isRegionOk = region=="region";
+                                            isWeightOk = weight == 200;
+                                            isEnableOk = enable == true;
+                                            var a = new Deferred();
+                                            a.callback(true);
+                                            return a;
+                                        }
+                                    }
+                                });
+                                eec.onSave(33,"name", "description", "region", 200, true)
                             
-                            return d;
+                                return d;
                             
-                        }
-                    },
-                    {
-                        name:"Test .onDelete event listener",
-                        runTest: function(){
-                            var isDisabled,isPluginIdOk,isReloadGridOk,
+                            }
+                        },
+                        {
+                            name:"Test .onDelete event listener",
+                            runTest: function(){
+                                var isDisabled,isPluginIdOk,isReloadGridOk,
                                 isRegionSelecteSetOk, isUtilConfirmOk = false;
                             
                             
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isDisabled,"Is disabled function call");
-                                doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues");
-                                doh.t(isReloadGridOk,"Is reloadGrid function call");
-                                doh.t(isUtilConfirmOk,"Is util.confirm called?");
-                                d.callback(true);
-                            }
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isDisabled,"Is disabled function call");
+                                    doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues");
+                                    doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                    doh.t(isUtilConfirmOk,"Is util.confirm called?");
+                                    d.callback(true);
+                                }
                             
-                            var eep = new ExtensionEditorPane({
-                                enable:function(){isOk()},
-                                disable:function(){isDisabled=true;},
-                                reloadGrid:function(){
-                                    isReloadGridOk = true;
-                                    var a = new Deferred();
-                                    a.callback(true);
-                                    return a;
-                                },
-                                regionSelect:{
-                                    set:function(key,region){
-                                        isRegionSelecteSetOk = region=="region";
+                                var eep = new ExtensionEditorPane({
+                                    enable:function(){isOk()},
+                                    disable:function(){isDisabled=true;},
+                                    reloadGrid:function(){
+                                        isReloadGridOk = true;
+                                        var a = new Deferred();
+                                        a.callback(true);
+                                        return a;
+                                    },
+                                    regionSelect:{
+                                        set:function(key,region){
+                                            isRegionSelecteSetOk = region=="region";
+                                        },
+                                        get:function(){
+                                            return {
+                                                'identifier':'region'
+                                            }
+                                        }
+                                    }
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    util:{
+                                        confirm:function(callback){
+                                            isUtilConfirmOk = true;
+                                            callback(true);
+                                        }
+                                    },
+                                    model:{
+                                        removeExtensionPlugin: function(pluginId){
+                                            isPluginIdOk = pluginId==33; 
+                                            var a = new Deferred();
+                                            a.callback(true);
+                                            return a;
+                                        } 
+                                    }
+                                });
+                                eec.onDelete(33);
+                            
+                                return d;
+                            
+                            }
+                        },
+                        {
+                            name:"Test .onDisable event listener",
+                            runTest: function(){
+                                var isDisabled,isNavigationIdOk,isPluginIdOk,isReloadGridOk = false;
+                            
+                            
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isDisabled,"Is disabled function call");
+                                    doh.t(isNavigationIdOk,"Is navigation id passed to disableExtensionPlugin")
+                                    doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues");
+                                    doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                    d.callback(true);
+                                }
+                            
+                                var eep = new ExtensionEditorPane({
+                                    enable:function(){isOk()},
+                                    disable:function(){isDisabled=true;},
+                                    reloadGrid:function(){
+                                        isReloadGridOk = true;
+                                        var a = new Deferred();
+                                        a.callback(true);
+                                        return a;
+                                    },
+                                    regionSelect:{
+                                        get:function(){
+                                            return {
+                                                'identifier':'region'
+                                            }
+                                        }
+                                    }
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{
+                                        disableExtensionPlugin: function(navigationId,pluginId){
+                                            isNavigationIdOk = navigationId==1;
+                                            isPluginIdOk = pluginId==33; 
+                                            var a = new Deferred();
+                                            a.callback(true);
+                                            return a;
+                                        } 
+                                    }
+                                });
+                                eec.onDisable(33);
+                            
+                                return d;
+                            
+                            }
+                        },
+                        {
+                            name:"Test .onEnable event listener",
+                            runTest: function(){
+                                var isDisabled,isNavigationIdOk,isPluginIdOk,isReloadGridOk, isWeightOk = false;
+                            
+                            
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isDisabled,"Is disabled function call");
+                                    doh.t(isNavigationIdOk,"Is navigation id passed to enableExtensionPlugin")
+                                    doh.t(isPluginIdOk, "Is plugin id passed to enableExtensionPlugin");
+                                    doh.t(isReloadGridOk,"Is reloadGrid function call");
+                                    doh.t(isWeightOk,"Is weight passed to enableExtensionPlugin ok function call");
+                                    d.callback(true);
+                                }
+                            
+                                var eep = new ExtensionEditorPane({
+                                    enable:function(){isOk()},
+                                    disable:function(){isDisabled=true;},
+                                    reloadGrid:function(){
+                                        isReloadGridOk = true;
+                                        var a = new Deferred();
+                                        a.callback(true);
+                                        return a;
+                                    },
+                                    regionSelect:{
+                                        get:function(){
+                                            return {
+                                                'identifier':'region'
+                                            }
+                                        }
+                                    }
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{
+                                        enableExtensionPlugin: function(navigationId,pluginId,weight){
+                                            isNavigationIdOk = navigationId==1;
+                                            isPluginIdOk = pluginId==33; 
+                                            isWeightOk = weight == 100;
+                                            var a = new Deferred();
+                                            a.callback(true);
+                                            return a;
+                                        } 
+                                    }
+                                });
+                                eec.onEnable(33,100);
+                            
+                                return d;
+                            
+                            }
+                        },
+                        {
+                            name:"Test .onExtendedEdit event listener",
+                            runTest: function(){
+                                var isPluginIdOk, isViewConstructorOk,isControllerInitOk,
+                                isAddChildOk = false;
+                            
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isViewConstructorOk,"Is AbstractExtensionView constructor called")
+                                    doh.t(isPluginIdOk, "Is plugin id passed to AbstractExtensionController");
+                                    doh.t(isControllerInitOk, "Is AbstractExtensinController init method called");
+                                    doh.t(isAddChildOk, "Is addChild method called on AbstractExtensionView");
+                                    d.callback(true);
+                                }
+                            
+                                var Controller = declare([AbstractExtensionController],{
+                                    init:function(){
+                                        isControllerInitOk=true;
+                                        isPluginIdOk = this.pluginId == 33;
+                                        isOk();
+                                    }
+                                })
+                                var View = declare([_Widget],{
+                                    constructor:function(){
+                                        isViewConstructorOk=true;
+                                    }
+                                });
+                            
+                                var eep = new ExtensionEditorPane({
+                                    addChild:function(){
+                                        isAddChildOk = true;
                                     },
                                     get:function(){
-                                        return {
-                                            'identifier':'region'
-                                        }
+                                        return "Name";
                                     }
-                                }
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                util:{
-                                    confirm:function(callback){
-                                        isUtilConfirmOk = true;
-                                        callback(true);
-                                    }
-                                },
-                                model:{
-                                    removeExtensionPlugin: function(pluginId){
-                                        isPluginIdOk = pluginId==33; 
-                                        var a = new Deferred();
-                                        a.callback(true);
-                                        return a;
-                                    } 
-                                }
-                            });
-                            eec.onDelete(33);
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{}
+                                });
                             
-                            return d;
+                                define('azfcms/controller/extensionPlugin/Test',[],function(){
+                                    return Controller;
+                                })
+                                define('azfcms/view/extensionPlugin/Test',[],function(){
+                                    return View;
+                                })
                             
-                        }
-                    },
-                    {
-                        name:"Test .onDisable event listener",
-                        runTest: function(){
-                            var isDisabled,isNavigationIdOk,isPluginIdOk,isReloadGridOk = false;
+                                eec.onExtendedEdit(33,'test');//
                             
                             
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isDisabled,"Is disabled function call");
-                                doh.t(isNavigationIdOk,"Is navigation id passed to disableExtensionPlugin")
-                                doh.t(isPluginIdOk, "Is plugin id passed to saveExtensionPluginValues");
-                                doh.t(isReloadGridOk,"Is reloadGrid function call");
-                                d.callback(true);
+                                return d;
+                            
                             }
+                        },
+                        {
+                            name:"Test .onItemSelect event listener",
+                            runTest: function(){
+                                var isDisabled,isFormSet= false;
                             
-                            var eep = new ExtensionEditorPane({
-                                enable:function(){isOk()},
-                                disable:function(){isDisabled=true;},
-                                reloadGrid:function(){
-                                    isReloadGridOk = true;
-                                    var a = new Deferred();
-                                    a.callback(true);
-                                    return a;
-                                },
-                                regionSelect:{
-                                    get:function(){
-                                        return {
-                                            'identifier':'region'
-                                        }
-                                    }
+                            
+                                var d = new doh.Deferred();
+                                function isOk(){
+                                    doh.t(isDisabled,"Is AbstractExtensinPane disabled");
+                                    doh.t(isFormSet,"Is item injected into view")
+                                    d.callback(true);
                                 }
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{
-                                    disableExtensionPlugin: function(navigationId,pluginId){
-                                        isNavigationIdOk = navigationId==1;
-                                        isPluginIdOk = pluginId==33; 
-                                        var a = new Deferred();
-                                        a.callback(true);
-                                        return a;
-                                    } 
-                                }
-                            });
-                            eec.onDisable(33);
                             
-                            return d;
+                                var eep = new ExtensionEditorPane({
+                                    enable:function(){isOk()},
+                                    disable:function(){isDisabled=true;},
+                                    set: function(){isFormSet=true}
+                                });
+                                var eec = new EEC({
+                                    editorPane:eep,
+                                    navigationId:1,
+                                    model:{} 
+                                }); 
+                                var item = {};
+                                eec.onItemSelect(item);
                             
-                        }
-                    },
-                    {
-                        name:"Test .onEnable event listener",
-                        runTest: function(){
-                            var isDisabled,isNavigationIdOk,isPluginIdOk,isReloadGridOk, isWeightOk = false;
+                                return d;
                             
-                            
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isDisabled,"Is disabled function call");
-                                doh.t(isNavigationIdOk,"Is navigation id passed to enableExtensionPlugin")
-                                doh.t(isPluginIdOk, "Is plugin id passed to enableExtensionPlugin");
-                                doh.t(isReloadGridOk,"Is reloadGrid function call");
-                                doh.t(isWeightOk,"Is weight passed to enableExtensionPlugin ok function call");
-                                d.callback(true);
                             }
-                            
-                            var eep = new ExtensionEditorPane({
-                                enable:function(){isOk()},
-                                disable:function(){isDisabled=true;},
-                                reloadGrid:function(){
-                                    isReloadGridOk = true;
-                                    var a = new Deferred();
-                                    a.callback(true);
-                                    return a;
-                                },
-                                regionSelect:{
-                                    get:function(){
-                                        return {
-                                            'identifier':'region'
-                                        }
-                                    }
-                                }
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{
-                                    enableExtensionPlugin: function(navigationId,pluginId,weight){
-                                        isNavigationIdOk = navigationId==1;
-                                        isPluginIdOk = pluginId==33; 
-                                        isWeightOk = weight == 100;
-                                        var a = new Deferred();
-                                        a.callback(true);
-                                        return a;
-                                    } 
-                                }
-                            });
-                            eec.onEnable(33,100);
-                            
-                            return d;
-                            
-                        }
-                    },
-                    {
-                        name:"Test .onExtendedEdit event listener",
-                        runTest: function(){
-                            var isPluginIdOk, isViewConstructorOk,isControllerInitOk,
-                            isAddChildOk = false;
-                            
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isViewConstructorOk,"Is AbstractExtensionView constructor called")
-                                doh.t(isPluginIdOk, "Is plugin id passed to AbstractExtensionController");
-                                doh.t(isControllerInitOk, "Is AbstractExtensinController init method called");
-                                doh.t(isAddChildOk, "Is addChild method called on AbstractExtensionView");
-                                d.callback(true);
-                            }
-                            
-                            var Controller = declare([AbstractExtensionController],{
-                                init:function(){
-                                    isControllerInitOk=true;
-                                    isPluginIdOk = this.pluginId == 33;
-                                    isOk();
-                                }
-                            })
-                            var View = declare([_Widget],{
-                                constructor:function(){
-                                    isViewConstructorOk=true;
-                                }
-                            });
-                            
-                            var eep = new ExtensionEditorPane({
-                                addChild:function(){
-                                    isAddChildOk = true;
-                                },
-                                get:function(){
-                                    return "Name";
-                                }
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{}
-                            });
-                            
-                            define('azfcms/controller/extensionPlugin/Test',[],function(){
-                                return Controller;
-                            })
-                            define('azfcms/view/extensionPlugin/Test',[],function(){
-                                return View;
-                            })
-                            
-                            eec.onExtendedEdit(33,'test');//
-                            
-                            
-                            return d;
-                            
-                        }
-                    },
-                    {
-                        name:"Test .onItemSelect event listener",
-                        runTest: function(){
-                            var isDisabled,isFormSet= false;
-                            
-                            
-                            var d = new doh.Deferred();
-                            function isOk(){
-                                doh.t(isDisabled,"Is AbstractExtensinPane disabled");
-                                doh.t(isFormSet,"Is item injected into view")
-                                d.callback(true);
-                            }
-                            
-                            var eep = new ExtensionEditorPane({
-                                enable:function(){isOk()},
-                                disable:function(){isDisabled=true;},
-                                set: function(){isFormSet=true}
-                            });
-                            var eec = new EEC({
-                                editorPane:eep,
-                                navigationId:1,
-                                model:{} 
-                            }); 
-                            var item = {};
-                            eec.onItemSelect(item);
-                            
-                            return d;
-                            
-                        }
-                    }
-                ]);
-                doh.run();
+                        } 
+                    ]);
+                    doh.run();
+                } else if(useCase == "humanTest"){
+                    require(['azfcms/store/registry!ExtensionPluginTypeStore','azfcms/store/registry!TemplateRegionsStore','azfcms/store/registry!ExtensionPluginStore',
+                    'azfcms/view/ExtensionEditorPane'],
+                    function(extensionPluginTypeStore,regionStore,extensionPluginStore,
+                    ExtendedEditorPane){
+                        var eep = new ExtendedEditorPane({
+                            typeStore: extensionPluginTypeStore,
+                            regionStore: regionStore,
+                            gridStore:extensionPluginStore
+                        });
+                        eep.placeAt("inputContainer");
+                        eep.resize();
+                        
+                        var controller = new EEC({
+                            editorPane:eep,
+                            model:regionStore
+                        });
+                        
+                    })
+                } else{
+                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
+                    domCreate.place("<a href='?useCase=humanTest' >Human Tests</a><br />","inputContainer");
+                }
+                
+                
             })
         </script>
     </head>

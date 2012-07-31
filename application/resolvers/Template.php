@@ -101,7 +101,13 @@ class Application_Resolver_Template extends Azf_Service_Lang_Resolver{
         if(!is_string($templateIdentifier)) {
             return null;
         }
-        return $this->getTemplate()->getRegions($templateIdentifier);
+        
+        // TODO implement pagination
+        $regions = $this->getTemplate()->getRegions($templateIdentifier);
+        return array(
+            'data'=>$regions,
+            'total'=>sizeof($regions)
+        );
     }
     
     
@@ -119,6 +125,23 @@ class Application_Resolver_Template extends Azf_Service_Lang_Resolver{
         }
         
         return $this->getTemplate()->getRegions($templateIdentifier);
+    }
+    
+    
+    /**
+     * 
+     * @return array|null
+     */
+    public function getDefaultTemplateRegionsMethod(){
+        $navigationModel = $this->getNavigationModel();
+        
+        $templateIdentifier=  Zend_Registry::get("defaultTemplate");
+        
+        $regions = $this->getTemplate()->getRegions($templateIdentifier);
+        return array(
+            'data'=>$regions,
+            'total'=>$regions
+        );
     }
     
     

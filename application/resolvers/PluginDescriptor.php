@@ -9,20 +9,6 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
         parent::initialize();
     }
 
-    protected function _execute(array $namespaces, array $parameters) {
-        if(sizeof($namespaces)!=1){
-            return null;
-        }
-        
-        $method = array_pop($namespaces);
-        
-        if(method_exists($this, $method)){
-            return call_user_method_array($method, $this, $parameters);
-        } else {
-            return null;
-        }
-    }
-    
     protected function isAllowed($namespaces, $parameters) {
         return true;
     }
@@ -32,9 +18,15 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
      *
      * @return array
      */
-    public function getContentPlugins(){
+    public function getContentPluginsMethod(){
         $pd = new Azf_Plugin_Descriptor();
-        return $pd->getContentPlugins();
+        
+        $plugins = $pd->getContentPlugins();
+        
+        return array(
+            'data'=>$plugins,
+            'total'=>  sizeof($plugins)
+        );
     }
     
     
@@ -42,9 +34,14 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
      *
      * @return array
      */
-    public function getExtensionPlugins(){
+    public function getExtensionPluginsMethod(){
         $pd = new Azf_Plugin_Descriptor();
-        return $pd->getExtensionPlugins();
+        $plugins = $pd->getExtensionPlugins();
+        
+        return array(
+            'data'=>$plugins,
+            'total'=>sizeof($plugins)
+        );
     }
     
 

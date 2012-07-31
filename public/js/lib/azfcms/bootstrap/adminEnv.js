@@ -96,11 +96,11 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         var context = this;
                         require(
                             ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
-                            'azfcms/model'],function
+                            'azfcms/store/registry!ContentPluginTypeStore'],function
                             (CPD,CPC,
-                                model){
+                                contentPluginTypeStore){
                                 context.cpd = new CPD({
-                                    store:model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()')
+                                    store:contentPluginTypeStore
                                 });
                                 context.cpc = new CPC(context.cpd);
                             
@@ -120,13 +120,12 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     init: function(initCallback, adminDialog){
                         this.ad = adminDialog;
                         var self = this;
-                        require(['azfcms/view/navigation/ContentEdit','azfcms/controller/navigation/ContentEdit','azfcms/model'],function
-                            (cep,cec,model){
-                                self.model = model;
+                        require(['azfcms/view/navigation/ContentEdit','azfcms/controller/navigation/ContentEdit','azfcms/store/registry!ContentPluginTypeStore'],function
+                            (cep,cec,contentPluginTypeStore){
                                 self.CEP = cep;
                                 self.CEC = cec;
                                 
-                                self.typeStore = model.prepareLangStore('cms.pluginDescriptor.getContentPlugins()');
+                                self.typeStore = contentPluginTypeStore
                                 self.typeStore.idProperty = "pluginIdentifier";
                                 self.typeStore.query().then(function(){
                                     initCallback();
@@ -194,42 +193,54 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         var self = this;
                         require(
                             ['azfcms/view/ExtensionEditorPane','azfcms/controller/ExtensionEditorController',
-                            'azfcms/model','azfcms/model/cms','dojo/query'],function
+                            'azfcms/store/registry!ExtensionPluginTypeStore','azfcms/store/registry!TemplateRegionsStore','azfcms/store/registry!ExtensionPluginStore'],function
                             (EEP,EEC,
-                                model,cms,query){
-                                var requireLink = "<link rel='stylesheet' type='text/css' href='"+require.toUrl('')+'/dojox/grid/resources/claroGrid.css'+"' />";
-                                requireLink += "<link rel='stylesheet' type='text/css' href='"+require.toUrl('')+'/dojox/grid/resources/Grid.css'+"' />";
-                                query("head").addContent(requireLink);
+                                extensionPluginTypeStore,regionStore,extensionPluginStore){
                                 self.EEP = EEP;
                                 self.EEC = EEC;
-                                self.cms = cms;
+                                self.extensionPluginTypeStore = extensionPluginTypeStore;
+                                self.regionStore = regionStore;
+                                self.extensionPluginStore = extensionPluginStore;
                                 self.adminDialog = adminDialog;
-                                self.typeStore = cms.getExtensionPluginStore();
-                                self.typeStore.query({}).then(function(){
-                                    initCallback();
-                                    
-                                })
-                                
+                                initCallback();
                             })
                     },
                     callback: function(item){
-                        if(item){
-                            var cms = this.cms;
-                            var view = new this.EEP({
-                                regionStore:cms.getTemplateRegionsForNavigationStore(item.id),
-                                gridStore:cms.getRegionPluginsStore(item.id, ""),
-                                typeStore:this.typeStore,
-                                closable:true,
-                                title:"Dodaci stranice \""+item.title+"\""
-                            });
-                            this.adminDialog.addChild(view);
-                            new this.EEC({
-                                editorPane:view,
-                                navigationId:item.id,
-                                model:cms
-                            });
-                        }
+                        var view = new this.EEP({
+                            regionStore:this.regionStore,
+                            gridStore:this.extensionPluginStore,
+                            typeStore:this.extensionPluginTypeStore,
+                            closable:true,
+                            title:"Dodaci stranice"
+                        });
+                        this.adminDialog.addChild(view);
+                        new this.EEC({
+                            editorPane:view,
+                            model:this.extensionPluginStore
+                        });
                         
+                    }
+                },
+                {
+                    i18nButtonLabelPointer: 'npPagePluginsAction',
+                    iconClass:'dijitIconDocument',
+                    init: function(initCallback,adminDialog, item){
+                        var self = this;
+                        require(
+                            ['azfcms/view/ExtensionPluginStatusPane','azfcms/store/registry!ExtensionPluginStatusStore'],function
+                            (ExtensionPluginStatusPane, extensionPluginStatusStore){
+                                self.extensionPluginStatusStore = extensionPluginStatusStore
+                                self.ExtensionPluginStatusPane = ExtensionPluginStatusPane;
+                                self.adminDialog = adminDialog;
+                                initCallback();
+                            })
+                    },
+                    callback: function(item){
+                        var pane = new this.ExtensionPluginStatusPane({
+                            gridStore:this.extensionPluginStatusStore,
+                            style:"width:100%;height:100%;"
+                        });
+                        this.adminDialog.addChild(pane);
                     }
                 },
                 {

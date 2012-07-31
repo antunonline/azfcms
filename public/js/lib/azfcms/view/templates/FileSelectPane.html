@@ -1,17 +1,10 @@
 <div style="width:450px;height:450px;">
-    <div data-dojo-type="dijit.layout.BorderContainer" data-dojo-attach-point="borderContainer"
-         style="width:100%;height:100%">
-        <div data-dojo-type="dijit.Toolbar" region="top">
-            <input type="button" data-dojo-type="dijit.form.Button" label="Izaberi" data-dojo-attach-event="onClick:_onSelect" />
-            <input type="button" data-dojo-type="dijit.form.Button" label="Zatvori" data-dojo-attach-event="onClick: _onCancel" />
-            <input type="button" data-dojo-type="dijit.form.Button" label="Osvježi listu" data-dojo-attach-event="onClick:onReload" />
-        </div>
-        <div region="center" data-dojo-type="dijit.layout.ContentPane">
-            <div style="width:100%;height:100%" data-dojo-attach-point="tree">
-
-            </div>
-        </div>
-
-
+    <div style="width:100%;height:100%" data-dojo-attach-point="tree">
+        
+    </div>
+    <div>
+        <input type="button" data-dojo-type="dijit.form.Button" label="Izaberi" data-dojo-attach-event="onClick:_onSelect" />
+        <input type="button" data-dojo-type="dijit.form.Button" label="Zatvori" data-dojo-attach-event="onClick: _onCancel" />
+        <input type="button" data-dojo-type="dijit.form.Button" label="Osvježi listu" data-dojo-attach-event="onClick:onReload" />
     </div>
 </div>

@@ -6,23 +6,18 @@
         <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
         <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/soriaGrid.css" />
-        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
                 height:100%;
-                margin:0px;
 
             }
         </style>
         <script type="text/javascript">
             var o = {}
             require(
-            ['doh','azfcms/view/ExtensionPluginStatusPane','dojo/store/Memory','dojo/query',
-                'azfcms/store/QueryLangStore','dojo/_base/declare','dojo/store/Cache',
-                'dojo/dom-construct','azfcms/store/registry!ExtensionPluginStatusStore'],function
-            (doh,ExtensionPluginStatusPane, Memory,query,
-            QueryLangStore,declare, Cache,
-            domCreate,extensionPluginStatusStore){
+            ['doh','azfcms/view/ExtensionPluginStatusPane','dojo/store/Memory','dojo/query'],function
+            (doh,ExtensionPluginStatusPane, Memory,query){
                 var gridStore = new Memory({
                     data:[
                         {
@@ -56,49 +51,27 @@
                     }
                 });
                 
-                var realStore= QueryLangStore({
-                    queryMethod:"cms.extensionPlugin.getExtensionPluginStatusMatrix",
-                    putMethod:"cms.extensionPlugin.setExtensionPluginStatus",
-                    idProperty:"rowId",
-                    useQueryAsGetCache:true,
-                    enablePluginGlobally:function(item){
-                        return this.model.singleInvoke("cms.extensionPlugin.bindPluginGlobally",[item]);
-                    },
-                    disablePluginGlobally:function(item){
-                        return this.model.singleInvoke("cms.extensionPlugin.unbindPluginGlobally",[item]);
-                    }
-                });
-                
-                
-                
-                var location = window.location.toString()
-                var matches = /useCase=(.*)$/.exec(location);
-                var useCase = matches&&matches[1]?matches[1]:null;
-                if(useCase=="dohTests"){
+                var isRobot = window.location.toString().indexOf("?robot")==-1;
+                if(isRobot){
                     doh.register('azfcms.view.ExtensionPluginStatusPane',[
                         {
                             name:"Test constructor",
                             runTest:function(){
                                 var pane = new ExtensionPluginStatusPane({
-                                    gridStore:realStore,
+                                    gridStore:gridStore,
                                     style:"width:100%;height:100%;"
                                 }).placeAt(document.body);
+                                pane.resize();
+                                
                             }
                         }
                     ]);
                 
                     doh.run();
                 }
-                else if(useCase=="humanTest"){
-                    var pane = new ExtensionPluginStatusPane({
-                        gridStore:extensionPluginStatusStore,
-                        style:"width:100%;height:100%;"
-                    }).placeAt(document.body);
-                    pane.resize();
-                } else {
-                
-                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />",document.body);
-                    domCreate.place("<a href='?useCase=humanTest' >Human Tests</a><br />",document.body);
+                // If this request is initiated by dojo robot
+                else{
+                    
                 }
                 
                 
@@ -106,6 +79,6 @@
         </script>
     </head>
     <body class="soria">
-
+        
     </body>
 </html>

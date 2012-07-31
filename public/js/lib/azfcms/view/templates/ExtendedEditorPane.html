@@ -3,95 +3,117 @@
          data-dojo-type="dijit.layout.TabContainer"
          data-dojo-attach-point="tabContainer">
         <div
-            data-dojo-type="dijit.layout.BorderContainer"
-            data-dojo-attach-point='borderContainer'
-            data-dojo-props="title:'${eepTabName}'"
-            style="width:100%;height:100%">
+            data-dojo-type="dijit.layout.ContentPane"
+            data-dojo-props="title:'${eepTabName}'">
 
-            <div data-dojo-type="dijit.layout.ContentPane" region="center" style='height:100%;width:100%'>
-                <table  data-dojo-type="dojox.grid.DataGrid"
-                       style="height:100%"
-                       data-dojo-attach-point="pluginGrid"
-                       data-dojo-props="selectionMode:'single',canSort:function(){return false;}">
-                    <thead>
-                        <tr>
-                            <th width="200px;" field="region" >${eepRegion}</th>
-                            <th width="200px;" field="name" >${eepNameColumnLabel}</th>
-                            <th width="200px;" field="description" >${eepDescriptionColumnLabel}</th>
-                            <th width="200px;" field="weight">${eepPlacementColumnLabel}</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div data-dojo-attach-point="regionSelectionNode" style="position:relative">
+                <div style="position: absolute;left:20px;top:5px">
+                <span>${eepRegion}:</span>
+                <input 
+                    data-dojo-type="dijit.form.FilteringSelect" 
+                    data-dojo-attach-point="regionSelect" 
+                    data-dojo-attach-event="onChange:_onRegionSelect"
+                    data-dojo-props="labelAttr:'name',searchAttr:'name',selectOnClick:true,autoComplete:false" />
+                <input type="button" data-dojo-type="dijit.form.Button" data-dojo-attach-point="reloadGridButton" label="${eepReloadGrid}" data-dojo-attach-event="onClick:_onReloadGrid" />
+                </div>
+                
             </div>
 
-            <div
-                data-dojo-type="dijit.layout.ContentPane"
-                data-dojo-attach-point="formNode"
-                region="bottom"
-                style="height:160px;">
+            <table data-dojo-type="dojox.grid.DataGrid"
+                   style="height:200px"
+                   data-dojo-attach-point="pluginGrid"
+                   data-dojo-props="selectionMode:'single',canSort:function(){return false;}">
+                <thead>
+                    <tr>
+                        <th width="200px;" field="name" >${eepNameColumnLabel}</th>
+                        <th width="200px;" field="description">${eepDescriptionColumnLabel}</th>
+                        <th width="200px;" field="enabled" >${eepDisabledColumnLabel}</th>
+                        <th width="200px;" field="weight">${eepPlacementColumnLabel}</th>
+                    </tr>
+                </thead>
+            </table>
 
-                <table style="width:100%;height:100px">
-                    <tbody>
-                        <tr>
-                            <td >${eepFormName}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.TextBox"
-                                       data-dojo-attach-point="nameText" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormDescription}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.TextBox"
-                                       data-dojo-attach-point="descriptionText" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormType}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.FilteringSelect"
-                                       data-dojo-attach-point="typeSelect"
-                                       data-dojo-props="searchAttr:'displayName'"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormRegion}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.FilteringSelect"
-                                       data-dojo-attach-point="formRegionSelect" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormPlacement}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.NumberSpinner"
-                                       data-dojo-attach-point="weightText" />
-                            </td>
-                        </tr>
-                        <tr >
-                            <td colspan="2">
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="saveButton"
-                                    data-dojo-attach-event="onClick:_onSave">${eepFormSave}</button>
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="customEditButton"
-                                    data-dojo-attach-event="onClick:_onExtendedEdit">${eepFormExtendedEdit}</button>
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="addButton"
-                                    data-dojo-attach-event="onClick:_onCreate">${eepFormAdd}</button>
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="removeButton"
-                                    data-dojo-attach-event="onClick:_onDelete">${eepFormDelete}</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div
+                data-dojo-attach-point="formNode"
+                style="position: relative;width:100%;">
+                <div>&nbsp;</div>
+                <div style="position:absolute; left:20px;right:20px;padding:5px;"
+                     class="dijitColorPalette">
+                    <table style="width:100%;height:100px">
+                        <tbody>
+                            <tr>
+                                <td >${eepFormName}:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.TextBox"
+                                           data-dojo-attach-point="nameText" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${eepFormDescription}:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.TextBox"
+                                           data-dojo-attach-point="descriptionText" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${eepFormType}:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.FilteringSelect"
+                                           data-dojo-attach-point="typeSelect"
+                                           data-dojo-props="searchAttr:'displayName'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${eepFormRegion}:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.FilteringSelect"
+                                           data-dojo-attach-point="formRegionSelect" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${eepFormPlacement}:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.NumberSpinner"
+                                           data-dojo-attach-point="weightText" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${eepFormDisabled}:</td>
+                                <td>
+                                    <input data-dojo-type="dijit.form.CheckBox"
+                                           data-dojo-attach-point="disabledCheckBox" />
+                                    <button data-dojo-type="dijit.form.Button"
+                                            data-dojo-attach-point="stateButton"
+                                            data-dojo-attach-event="onClick:_onStateChange"
+                                            >${eepFormSaveEnabled}</button>
+                                </td>
+                            </tr>
+                            <tr >
+                                <td colspan="2">
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="saveButton"
+                                        data-dojo-attach-event="onClick:_onSave">${eepFormSave}</button>
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="customEditButton"
+                                        data-dojo-attach-event="onClick:_onExtendedEdit">${eepFormExtendedEdit}</button>
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="addButton"
+                                        data-dojo-attach-event="onClick:_onCreate">${eepFormAdd}</button>
+                                    <button 
+                                        data-dojo-type="dijit.form.Button"
+                                        data-dojo-attach-point="removeButton"
+                                        data-dojo-attach-event="onClick:_onDelete">${eepFormDelete}</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
     </div>
+
 </div>

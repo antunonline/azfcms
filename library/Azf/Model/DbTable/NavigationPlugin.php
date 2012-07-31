@@ -110,48 +110,5 @@ WHERE n.id=? AND p.region=?)
         $row = $this->getAdapter()->fetchRow($sql,array('id'=>$id));
         return $row;
     }
-    
-    
-    
-    /**
-     * 
-     * @param int $pluginId
-     * @return int Number of rows altered
-     */
-    public function bindPluginGlobally($pluginId){
-        $SQL = "INSERT INTO
-    NavigationPlugin
-    (navigationId, pluginId)
-SELECT distinct
-    n.id, 
-    ?
-FROM
-    Navigation n
-WHERE 
-    NOT EXISTS 
-(SELECT 
-    np.id
-FROM NavigationPlugin np
-WHERE
-    np.navigationId = n.id
-AND
-    np.pluginId = ?);
-select * from NavigationPlugin
-    
-";
-        
-        return $this->getAdapter()->query($SQL,array($pluginId,$pluginId));
-    }
-    
-    
-    
-    /**
-     * 
-     * @param int $pluginId
-     * @return int Number of rows altered
-     */
-    public function unbindPluginGlobally($pluginId){
-        $this->delete(array('pluginId=?'=>$pluginId));
-    }
 
 }

@@ -17,6 +17,9 @@ define(  ['dojo/_base/declare','azfcms/model/cms','dojo/_base/lang'],
                     throw "azfcms/controller/extensionPlugin/Abstract: pluginId is not specified"
                 }
                 
+                if(!args.navigationId){
+                    throw "azfcms/controller/extensionPlugin/Abstract: navigationId is not specified"
+                }
                 
                 if(!args.view){
                     throw "azfcms/controller/extensionPlugin/Abstract: view is not specified"

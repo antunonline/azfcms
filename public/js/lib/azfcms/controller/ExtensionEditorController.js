@@ -21,6 +21,8 @@ define(
                 /**
              * @property {Number}
              */
+                this.navigationId = args.navigationId;
+                
                 this._attachEventListeners();
                 
                 if(!args.util) {
@@ -34,8 +36,11 @@ define(
                 this.editorPane.on("new",lang.hitch(this,"onNew"));
                 this.editorPane.on("save",lang.hitch(this,"onSave"));
                 this.editorPane.on("delete",lang.hitch(this,"onDelete"));
+                this.editorPane.on("enable",lang.hitch(this,"onEnable"));
+                this.editorPane.on("disable",lang.hitch(this,"onDisable"));
                 this.editorPane.on("extendedEdit",lang.hitch(this,"onExtendedEdit"));
                 this.editorPane.on("itemSelect",lang.hitch(this,"onItemSelect"));
+                this.editorPane.on("regionSelect",lang.hitch(this,"onRegionSelect"));
             },
     
             _buildRequire: function(type){
@@ -60,27 +65,34 @@ define(
                 
                 return aep;
             },
-            _buildController: function(Controller, pluginId, extendedEditorPane){
+            _buildController: function(Controller, pluginId, navigationId, extendedEditorPane){
                 return new Controller({
                     pluginId:pluginId,
+                    navigationId: navigationId,
                     view:extendedEditorPane
                 });
                 
             },
-            onNew: function(item){
+            onNew: function(name,description,type,region,weight,enable){
                 var self = this;
                 this.editorPane.disable();
-                this.model.add(item).then(function(){
-                    self.editorPane.reloadGrid();
-                    self.editorPane.enable();
+                this.model.addExtensionPlugin(this.navigationId,name,description,type,region,weight,enable).then(function(){
+                    self.editorPane.reloadGrid(self.navigationId,region).
+                    then(function(){
+                        self.editorPane.regionSelect.set('value',region);
+                        self.editorPane.enable();
+                    })
                 })
             },
-            onSave: function(item){
+            onSave: function(pluginId, name,description, region,weight,enable){
                 var self = this;
                 this.editorPane.disable();
-                this.model.put(item).then(function(){
-                    self.editorPane.reloadGrid();
-                    self.editorPane.enable();
+                this.model.setExtensionPluginValues(this.navigationId, pluginId,name,description, region,weight,enable).then(function(){
+                    self.editorPane.reloadGrid(self.navigationId,region).
+                    then(function(){
+                        self.editorPane.regionSelect.set('value',region);
+                        self.editorPane.enable();
+                    })
                 })
             },
             onDelete:function(pluginId){
@@ -90,19 +102,41 @@ define(
                         return; 
                     
                     self.editorPane.disable();
-                    self.model.remove(pluginId).then(function(){
+                    self.model.removeExtensionPlugin(pluginId).then(function(){
+                        var region = self.editorPane.regionSelect.get('item').identifier;
+                        self.editorPane.reloadGrid(self.navigationId,region).
                         then(function(){
                             self.editorPane.enable();
                         })
                     })
                 },nls.eecDeleteConfirmation);
             },
+            onDisable: function(pluginId){
+                var self = this;
+                this.editorPane.disable();
+                this.model.disableExtensionPlugin(this.navigationId,pluginId).then(function(){
+                    self.editorPane.reloadGrid(self.navigationId,self.editorPane.regionSelect.get('item').identifier).
+                    then(function(){
+                        self.editorPane.enable();
+                    })
+                })
+            },
+            onEnable: function(pluginId, weight){
+                var self = this;
+                this.editorPane.disable();
+                this.model.enableExtensionPlugin(this.navigationId, pluginId,weight).then(function(){
+                    self.editorPane.reloadGrid(self.navigationId,self.editorPane.regionSelect.get('item').identifier).
+                    then(function(){
+                        self.editorPane.enable();
+                    })
+                })
+            },
             onExtendedEdit: function(pluginId,type){
                 var self = this;
                 var requires = this._buildRequire(type);
                 require(requires,function(Controller,View){
                     var view = self._buildEditorPane(View);
-                    var controller = self._buildController(Controller,pluginId,view);
+                    var controller = self._buildController(Controller,pluginId,self.navigationId,view);
                 })
             },
             onItemSelect: function(item){
@@ -110,6 +144,16 @@ define(
                 this.pluginItem = item;
                 this.editorPane.set("form",item);
                 this.editorPane.enable();
+            },
+            onRegionSelect:function(region){
+                var self = this;
+                this.editorPane.disable();
+                this.editorPane.reloadGrid(this.navigationId,region).
+                then(function(){
+                    self.editorPane.resetForm();
+                    self.editorPane.enable();
+                })
+                
             }
         })
     

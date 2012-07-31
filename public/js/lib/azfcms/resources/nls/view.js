@@ -26,7 +26,7 @@ define({
     npCreatePageAction: "Dodaj stranicu",
     npEditPageAction: "Uredi stranicu",
     npDeletePageAction: "Izbriši stranicu",
-    npPagePluginsAction: "Upravljanje dodacima",
+    npPagePluginsAction: "Dodaci stranice",
     npFilesystemAction: "Upravljanje dadotekama",
     npHomeChange: "Postava naslovne stranice",
     

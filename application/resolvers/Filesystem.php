@@ -148,12 +148,9 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         return $files;
     }
 
-    public function getFileListMethod($directory,$queryArgs=array(), $filter = array()) {
+    public function getFileListMethod($directory, $filter = array()) {
         $normalizedFilter = $this->normalizeFilter($filter);
-        $fileList = $this->getDirectoryFileList($directory, $normalizedFilter);
-        
-        $dojoHelper = $this->getHelper("dojo");  /* @var $dojoHelper Azf_Service_Lang_ResolverHelper_Dojo */
-        return $dojoHelper->sliceStoreResponse($fileList, $queryArgs);
+        return $this->getDirectoryFileList($directory, $normalizedFilter);
     }
 
     public function isPathSecure($path) {

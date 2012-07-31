@@ -6,7 +6,6 @@
         <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
         <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/soriaGrid.css" />
-        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/Grid.css" />
         <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
@@ -19,10 +18,10 @@
             require(
             ['azfcms/view/ExtensionEditorPane','dojo/domReady!',
                 'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
-                'dojo/store/Memory','dojo/dom','dijit/layout/ContentPane','dojo/dom-construct'],function
+                'dojo/store/Memory','dojo/dom','dijit/layout/ContentPane'],function
             (ExtendedEditorPane,ready,
             dijit,doh, nls,
-            Memory,dom, ContentPane,domCreate){
+            Memory,dom, ContentPane){
                 //              
                 
                 var typeStore = new Memory({
@@ -73,387 +72,360 @@
                         }
                     ]})
                 
-                
-                var location = window.location.toString()
-                var matches = /useCase=(.*)$/.exec(location);
-                var useCase = matches&&matches[1]?matches[1]:null;
-                
-                if(useCase=="dohTests"){
-                    doh.register('ExtendedEditorPane',[
-                        {
-                            name:"Test Constructor",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                                doh.t(true);
-                                eep.destroy();
-                            }
-                        },
-                        {
-                            name:"Test .disable method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                                eep.disable();
-                            
-                                doh.t(eep.tabContainer.get("disabled"));
-                                doh.t(eep.regionSelect.get("disabled"));
-                                doh.t(eep.nameText.get("disabled"));
-                                doh.t(eep.descriptionText.get("disabled"));
-                                doh.t(eep.typeSelect.get("disabled"));
-                                doh.t(eep.formRegionSelect.get("disabled"));
-                                doh.t(eep.weightText.get("disabled"));
-                                doh.t(eep.disabledCheckBox.get("disabled"));
-                                doh.t(eep.saveButton.get("disabled"));
-                                doh.t(eep.customEditButton.get("disabled"));
-                                doh.t(eep.removeButton.get("disabled"));
-                                doh.t(eep.addButton.get("disabled"));
-                                doh.t(eep.disabledCheckBox.get("disabled"));
-                            
-                            
-                                eep.destroy();
-                            }
-                        },
-                        {
-                            name:"Test .enabled method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                                eep.disable();
-                                eep.enable();
-                            
-                                doh.f(eep.tabContainer.get("disabled"));
-                                doh.f(eep.regionSelect.get("disabled"));
-                                doh.f(eep.nameText.get("disabled"));
-                                doh.f(eep.descriptionText.get("disabled"));
-                                doh.f(eep.typeSelect.get("disabled"));
-                                doh.f(eep.formRegionSelect.get("disabled"));
-                                doh.f(eep.weightText.get("disabled"));
-                                doh.f(eep.disabledCheckBox.get("disabled"));
-                                doh.f(eep.saveButton.get("disabled"));
-                                doh.f(eep.customEditButton.get("disabled"));
-                                doh.f(eep.removeButton.get("disabled"));
-                                doh.f(eep.addButton.get("disabled"));
-                                doh.f(eep.disabledCheckBox.get("disabled"));
-                            
-                            
-                                eep.destroy();
-                            }
-                        },
-                        {
-                            name:"Test .addChild method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var cp = ContentPane = new ContentPane({title:"TEST"});
-                                eep.addChild(cp);
-                            
-                                var nodes = eep.tabContainer.containerNode.childNodes;
-                                var found = false;
-                                for(var i = 0 ; i < nodes.length; i++){
-                                    if(nodes[i]==cp.domNode)
-                                        found=true;
-                                }
-                            
-                                doh.t(found);
-                            
-                                eep.destroy();
-                            }
-                        },
-                        {
-                            name:"Test ._setFormAttr, ._getFormAttr method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:false
-                                };
-                            
-                                eep.set("form",expected);
-                                var actual = eep.get("form");
-                            
-                                doh.is(expected.pluginId,actual.pluginId,"_getFormAttr.pluginId value is not expected");
-                                doh.is(expected.name,actual.name,"_getFormAttr.name value is not expected");
-                                doh.is(expected.description,actual.description,"_getFormAttr.description value is not expected");
-                                doh.is(expected.type,actual.type,"_getFormAttr.type value is not expected");
-                                doh.is(expected.region,actual.region,"_getFormAttr.region value is not expected");
-                                doh.is(expected.weight,actual.weight,"_getFormAttr.weight value is not expected");
-                                doh.is(expected.enabled,actual.enabled,"_getFormAttr.enabled value is not expected");
-                            
-                                eep.destroy();
-                            }
-                        },
-                        {
-                            name:"Test .onSave method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:false
-                                };
-                                eep.set("form",expected);
-                            
-                                var d = new doh.Deferred();
-                            
-                            
-                                eep.on("save",function(pluginId,name,description,region,weight,enabled){
-                                
-                                    doh.is(expected.pluginId,pluginId,"_getFormAttr.pluginId value is not expected");
-                                    doh.is(expected.name,name,"_getFormAttr.name value is not expected");
-                                    doh.is(expected.description,description,"_getFormAttr.description value is not expected");
-                                    doh.is(expected.region,region,"_getFormAttr.region value is not expected");
-                                    doh.is(expected.weight,weight,"_getFormAttr.weight value is not expected");
-                                    doh.is(expected.enabled,enabled,"_getFormAttr.enabled value is not expected");
-                                    d.callback(true);
-                                }); 
-                                eep._onSave();
-                                eep.destroy();
-                                return d;
-                            }
-                        },
-                        {
-                            name:"Test .onNew method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:false
-                                };
-                                eep.set("form",expected);
-                            
-                                var d = new doh.Deferred();
-                            
-                                eep.on("new",function(name,description,type,region,weight,enabled){
-                                
-                                    doh.is(expected.name,name);
-                                    doh.is(expected.description,description);
-                                    doh.is(expected.type,type);
-                                    doh.is(expected.region,region);
-                                    doh.is(expected.weight,weight);
-                                    doh.is(expected.enabled,enabled);
-                                    d.callback(true);
-                                });
-                                eep._onCreate();
-                                eep.destroy();
-                                return d;
-                            }
-                        },
-                        {
-                            name:"Test .onExtendedEdit method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:false
-                                };
-                                eep.set("form",expected);
-                            
-                                var d = new doh.Deferred();
-                            
-                                eep.on("extendedEdit",function(pluginId,type){
-                                    doh.is(expected.pluginId,pluginId);
-                                    doh.is(expected.type,type);
-                                    d.callback(true);
-                                });
-                                eep._onExtendedEdit();
-                                eep.destroy();
-                                return d;
-                            }
-                        },
-                        {
-                            name:"Test .onDelete method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:false
-                                };
-                                eep.set("form",expected);
-                            
-                                var d = new doh.Deferred();
-                            
-                                eep.on("delete",function(pluginId){
-                                    doh.is(expected.pluginId,pluginId);
-                                    d.callback(true);
-                                });
-                                eep._onDelete();
-                                eep.destroy();
-                                return d;
-                            }
-                        },
-                        {
-                            name:"Test .onEnable method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:"1" // as returned by DB
-                                };
-                                eep.set("form",expected);
-                            
-                                var d = new doh.Deferred();
-                            
-                                eep.on("enable",function(pluginId,weight){
-                                    doh.is(expected.pluginId,pluginId);
-                                    doh.is(expected.weight,weight);
-                                    d.callback(true);
-                                });
-                            
-                                eep._onStateChange();
-                                eep.destroy();
-                                return d;
-                            }
-                        },
-                        {
-                            name:"Test .onDisable method",
-                            runTest: function(){
-                                var eep = new ExtendedEditorPane({
-                                    typeStore: typeStore,
-                                    regionStore: regionStore,
-                                    gridStore:gridStore
-                                });
-                                eep.placeAt("inputContainer");
-                                
-                            
-                                var expected = {
-                                    pluginId:1,
-                                    name:'name',
-                                    description:'description',
-                                    type:'type1',
-                                    region:'region1',
-                                    weight:'100',
-                                    enabled:false
-                                };
-                                eep.set("form",expected);
-                            
-                                var d = new doh.Deferred();
-                            
-                                eep.on("disable",function(pluginId){
-                                    doh.is(expected.pluginId,pluginId);
-                                    d.callback(true);
-                                });
-                            
-                                eep._onStateChange();
-                                eep.destroy();
-                                return d;
-                            }
+                doh.register('ExtendedEditorPane',[
+                    {
+                        name:"Test Constructor",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            doh.t(true);
+                            eep.destroy();
                         }
-                    
-                    ])
-                    doh.run();
-                }
-                else if(useCase == "humanTest"){
-                    require(['azfcms/store/registry!ExtensionPluginTypeStore','azfcms/store/registry!TemplateRegionsStore','azfcms/store/registry!ExtensionPluginStore'],
-                    function(extensionPluginTypeStore,regionStore,extensionPluginStore){
-                        var eep = new ExtendedEditorPane({
-                            typeStore: extensionPluginTypeStore,
-                            regionStore: regionStore,
-                            gridStore:extensionPluginStore
-                        });
-                        eep.placeAt("inputContainer");
-                        eep.resize();
-                    })
-                    
-                }
-                else {
-                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
-                    domCreate.place("<a href='?useCase=humanTest' >Human Tests</a><br />","inputContainer");
-                }
-                
-                
+                    },
+                    {
+                        name:"Test .disable method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            eep.disable();
+                            
+                            doh.t(eep.tabContainer.get("disabled"));
+                            doh.t(eep.regionSelect.get("disabled"));
+                            doh.t(eep.nameText.get("disabled"));
+                            doh.t(eep.descriptionText.get("disabled"));
+                            doh.t(eep.typeSelect.get("disabled"));
+                            doh.t(eep.formRegionSelect.get("disabled"));
+                            doh.t(eep.weightText.get("disabled"));
+                            doh.t(eep.disabledCheckBox.get("disabled"));
+                            doh.t(eep.saveButton.get("disabled"));
+                            doh.t(eep.customEditButton.get("disabled"));
+                            doh.t(eep.removeButton.get("disabled"));
+                            doh.t(eep.addButton.get("disabled"));
+                            doh.t(eep.disabledCheckBox.get("disabled"));
+                            
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .enabled method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            eep.disable();
+                            eep.enable();
+                            
+                            doh.f(eep.tabContainer.get("disabled"));
+                            doh.f(eep.regionSelect.get("disabled"));
+                            doh.f(eep.nameText.get("disabled"));
+                            doh.f(eep.descriptionText.get("disabled"));
+                            doh.f(eep.typeSelect.get("disabled"));
+                            doh.f(eep.formRegionSelect.get("disabled"));
+                            doh.f(eep.weightText.get("disabled"));
+                            doh.f(eep.disabledCheckBox.get("disabled"));
+                            doh.f(eep.saveButton.get("disabled"));
+                            doh.f(eep.customEditButton.get("disabled"));
+                            doh.f(eep.removeButton.get("disabled"));
+                            doh.f(eep.addButton.get("disabled"));
+                            doh.f(eep.disabledCheckBox.get("disabled"));
+                            
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .addChild method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var cp = ContentPane = new ContentPane({title:"TEST"});
+                            eep.addChild(cp);
+                            
+                            var nodes = eep.tabContainer.containerNode.childNodes;
+                            var found = false;
+                            for(var i = 0 ; i < nodes.length; i++){
+                                if(nodes[i]==cp.domNode)
+                                    found=true;
+                            }
+                            
+                            doh.t(found);
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test ._setFormAttr, ._getFormAttr method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            
+                            eep.set("form",expected);
+                            var actual = eep.get("form");
+                            
+                            doh.is(expected.pluginId,actual.pluginId,"_getFormAttr.pluginId value is not expected");
+                            doh.is(expected.name,actual.name,"_getFormAttr.name value is not expected");
+                            doh.is(expected.description,actual.description,"_getFormAttr.description value is not expected");
+                            doh.is(expected.type,actual.type,"_getFormAttr.type value is not expected");
+                            doh.is(expected.region,actual.region,"_getFormAttr.region value is not expected");
+                            doh.is(expected.weight,actual.weight,"_getFormAttr.weight value is not expected");
+                            doh.is(expected.enabled,actual.enabled,"_getFormAttr.enabled value is not expected");
+                            
+                            eep.destroy();
+                        }
+                    },
+                    {
+                        name:"Test .onSave method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            
+                            eep.on("save",function(pluginId,name,description,region,weight,enabled){
+                                
+                                doh.is(expected.pluginId,pluginId,"_getFormAttr.pluginId value is not expected");
+                                doh.is(expected.name,name,"_getFormAttr.name value is not expected");
+                                doh.is(expected.description,description,"_getFormAttr.description value is not expected");
+                                doh.is(expected.region,region,"_getFormAttr.region value is not expected");
+                                doh.is(expected.weight,weight,"_getFormAttr.weight value is not expected");
+                                doh.is(expected.enabled,enabled,"_getFormAttr.enabled value is not expected");
+                                d.callback(true);
+                            }); 
+                            eep._onSave();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onNew method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("new",function(name,description,type,region,weight,enabled){
+                                
+                                doh.is(expected.name,name);
+                                doh.is(expected.description,description);
+                                doh.is(expected.type,type);
+                                doh.is(expected.region,region);
+                                doh.is(expected.weight,weight);
+                                doh.is(expected.enabled,enabled);
+                                d.callback(true);
+                            });
+                            eep._onCreate();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onExtendedEdit method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("extendedEdit",function(pluginId,type){
+                                doh.is(expected.pluginId,pluginId);
+                                doh.is(expected.type,type);
+                                d.callback(true);
+                            });
+                            eep._onExtendedEdit();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onDelete method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("delete",function(pluginId){
+                                doh.is(expected.pluginId,pluginId);
+                                d.callback(true);
+                            });
+                            eep._onDelete();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onEnable method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:"1" // as returned by DB
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("enable",function(pluginId,weight){
+                                doh.is(expected.pluginId,pluginId);
+                                doh.is(expected.weight,weight);
+                                d.callback(true);
+                            });
+                            
+                            eep._onStateChange();
+                            eep.destroy();
+                            return d;
+                        }
+                    },
+                    {
+                        name:"Test .onDisable method",
+                        runTest: function(){
+                            var eep = new ExtendedEditorPane({
+                                typeStore: typeStore,
+                                regionStore: regionStore,
+                                gridStore:gridStore
+                            });
+                            eep.placeAt("inputContainer");
+                            eep.resize();
+                            
+                            var expected = {
+                                pluginId:1,
+                                name:'name',
+                                description:'description',
+                                type:'type1',
+                                region:'region1',
+                                weight:'100',
+                                enabled:false
+                            };
+                            eep.set("form",expected);
+                            
+                            var d = new doh.Deferred();
+                            
+                            eep.on("disable",function(pluginId){
+                                doh.is(expected.pluginId,pluginId);
+                                d.callback(true);
+                            });
+                            
+                            eep._onStateChange();
+                            eep.destroy();
+                            return d;
+                        }
+                    }
+                ]);
+                doh.run();
             })
         </script>
     </head>

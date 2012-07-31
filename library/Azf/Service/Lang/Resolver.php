@@ -1,12 +1,6 @@
 <?php
 
 abstract class Azf_Service_Lang_Resolver {
-    
-    /**
-     *
-     * @var array
-     */
-    protected $_helpers = array();
 
     protected $registeredNamespace = "";
     protected $namespaces = array();
@@ -108,34 +102,6 @@ abstract class Azf_Service_Lang_Resolver {
 
     protected function isAllowed($namespaces, $parameters) {
         return false;
-    }
-    
-    
-    /**
-     * 
-     * @param object $helper
-     */
-    protected function _loadHelper($helper){
-        $className = "Azf_Service_Lang_ResolverHelper_".ucfirst($helper);
-        if(Zend_Loader_Autoloader::getInstance()->autoload($className)){
-            return new $className;
-        } else {
-            throw new Zend_Loader_Exception("Could not load class $className");
-        }
-    }
-    
-    
-    /**
-     * 
-     * @param string $helper
-     * @return object
-     */
-    public function getHelper($helper){
-        if(isset($this->_helpers[$helper])){
-            return $this->_helpers[$helper];
-        } else {
-            return $this->_helpers[$helper] = $this->_loadHelper($helper);
-        }
     }
 
 }

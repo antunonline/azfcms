@@ -6,8 +6,7 @@
 
 define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
     'dojo/_base/lang','dojo/_base/declare','dojo/text!./templates/FileSelectPane.html',
-    'dijit/Tree','dijit/form/Button','dijit/layout/BorderContainer','dijit/Toolbar',
-    'dijit/layout/ContentPane'],function
+    'dijit/Tree','dijit/form/Button'],function
     (_TemplatedMixin,_WidgetsInTemplateMixin,_Widget,
         lang,declare,templateString,
         Tree)
@@ -31,13 +30,9 @@ define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
             postCreate:function(){
                 this.tree = new Tree({
                     model:this.treeStore,
+                    style:"height:350px;",
                     autoExpand:false
-                },this.tree);
-                this.tree.startup();
-            },
-            resize:function(){
-                this.inherited(arguments);
-                this.borderContainer.resize();
+                },this.tree)
             },
             getTreeSelection:function(){
                 return this.tree.selectedItems;

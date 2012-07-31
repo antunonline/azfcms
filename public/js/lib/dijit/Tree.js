@@ -556,7 +556,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	query: null,
 
 	// label: [deprecated] String
-	//		Deprecated.  Use dijit/tree/ForestStoreModel directly instead.
+	//		Deprecated.  Use dijit.tree.ForestStoreModel directly instead.
 	//		Used in conjunction with query parameter.
 	//		If a query is specified (rather than a root node id), and a label is also specified,
 	//		then a fake root node is created and displayed, with this label.
@@ -612,8 +612,8 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 	// dndController: [protected] Function|String
 	//		Class to use as as the dnd controller.  Specifying this class enables DnD.
-	//		Generally you should specify this as dijit/tree/dndSource.
-	//		Setting of dijit/tree/_dndSelector handles selection only (no actual DnD).
+	//		Generally you should specify this as dijit.tree.dndSource.
+	//		Setting of dijit.tree._dndSelector handles selection only (no actual DnD).
 	dndController: _dndSelector,
 
 	// parameters to pull off of the tree and pass on to the dndController as its params
@@ -622,7 +622,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	//declare the above items so they can be pulled from the tree's markup
 
 	// onDndDrop: [protected] Function
-	//		Parameter to dndController, see `dijit/tree/dndSource.onDndDrop()`.
+	//		Parameter to dndController, see `dijit.tree.dndSource.onDndDrop`.
 	//		Generally this doesn't need to be set.
 	onDndDrop: null,
 
@@ -642,7 +642,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		// target: DomNode
 		//		The target TreeNode.rowNode
 		// source: dojo/dnd/Source
-		//		The source container the nodes were dragged from, perhaps another Tree or a plain dojo/dnd/Source
+		//		The source container the nodes were dragged from, perhaps another Tree or a plain dojo.dnd.Source
 		// returns: Object[]
 		//		Array of name/value hashes for each new item to be added to the Tree, like:
 		// |	[
@@ -656,7 +656,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	=====*/
 
 	// onDndCancel: [protected] Function
-	//		Parameter to dndController, see `dijit/tree/dndSource.onDndCancel()`.
+	//		Parameter to dndController, see `dijit.tree.dndSource.onDndCancel`.
 	//		Generally this doesn't need to be set.
 	onDndCancel: null,
 
@@ -947,7 +947,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		}));
 	},
 
-	_setPathAttr: function(/*Item[]|String[]*/ path){
+	_setPathAttr: function(/*Item[] || String[]*/ path){
 		// summary:
 		//		Singular variant of _setPathsAttr
 		if(path.length){
@@ -958,7 +958,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		}
 	},
 
-	_setPathsAttr: function(/*Item[][]|String[][]*/ paths){
+	_setPathsAttr: function(/*Item[][] || String[][]*/ paths){
 		// summary:
 		//		Select the tree nodes identified by passed paths.
 		// paths:
@@ -1815,14 +1815,13 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		// keep the default value.
 		this._nodePixelIndent = domGeometry.position(this.tree.indentDetector).w || this._nodePixelIndent;
 
-		// resize() may be called before this.rootNode is created, so wait until it's available
-		this.expandChildrenDeferred.then(lang.hitch(this, function(){
+		if(this.tree.rootNode){
 			// If tree has already loaded, then reset indent for all the nodes
-			this.rootNode.set('indent', this.showRoot ? 0 : -1);
+			this.tree.rootNode.set('indent', this.showRoot ? 0 : -1);
+		}
 
-			// Also, adjust widths of all rows to match width of Tree
-			this._adjustWidths();
-		}));
+		// Also, adjust widths of all rows to match width of Tree
+		this._adjustWidths();
 	},
 
 	_outstandingPaintOperations: 0,

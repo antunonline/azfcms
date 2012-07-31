@@ -7,642 +7,601 @@ and open the template in the editor.
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/claro/claro.css" />
-        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/claro/claro.css" />
         <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true">
             
         </script>
         <script type="text/javascript">
             require(['doh','dojo/domReady!','dojo/_base/Deferred',
                 'dojo/aspect','dojo/_base/lang','azfcms/model',
-                'azfcms/store/QueryLangStore','dojo/dom-construct'],function
+                'azfcms/store/QueryLangStore'],function
             (doh,ready, Deferred,
             aspect, lang, model,
-            QueryLangStore,domCreate){
+            QueryLangStore){
             
-            
-                var location = window.location.toString()
-                var matches = /useCase=(.*)$/.exec(location);
-                var useCase = matches&&matches[1]?matches[1]:null;
-                
-                
-                if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.store.QueryLangStore',[
-                        {
-                            name:"Test .constructor",
-                            runTest:function(){
+                doh.register('azfcms.tests.store.QueryLangStore',[
+                    {
+                        name:"Test .constructor",
+                        runTest:function(){
+                            new QueryLangStore({
+                                idProperty:"id"
+                            });
+                        }
+                    },
+                    {
+                        name:"Test .constructor without requred fields",
+                        runTest:function(){
+                            try{
                                 new QueryLangStore({
-                                    idProperty:"id"
                                 });
-                            }
-                        },
-                        {
-                            name:"Test .constructor without requred fields",
-                            runTest:function(){
-                                try{
-                                    new QueryLangStore({
-                                    });
-                                    doh.t(false,"Constructor did not throw an exception");
-                                }catch(e){
-                                    doh.t(true);
-                                }
-                            }
-                        },
-                        {
-                            name:"Test .getIdentity",
-                            runTest:function(){
-                                var store = new QueryLangStore({
-                                    idProperty:"id"
-                                });
-                                doh.is("id",store.getIdentity(),"Method getIdentity() did not return expected value");
-                            }
-                        },
-                        {
-                            name:"Test .query requirements",
-                            runTest:function(){
-                                var store = new QueryLangStore({
-                                    idProperty:"id"
-                                });
-                            
-                                try{
-                                    store.query({});
-                                    doh.t(false,"Method .query did not throw an exception for missing queryMethod ");
-                                }catch(e){
-                                
-                                }
-                            }
-                        },
-                        {
-                            name:"Test .query",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    queryMethod:"methodA",
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].id==33;
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.query({
-                                    id:"33"
-                                }).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .query with number scalar value as query argument",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    queryMethod:"methodA",
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0]==33;
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.query(33).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .query with string scalar value as query argument",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    queryMethod:"methodA",
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0]=="33";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.query("33").then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .query queryOptions argument defined in constructor and passed to server side",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    queryMethod:"methodA",
-                                    queryOptions:{
-                                        exclude:true
-                                    },
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0] =="33";
-                                            isCreateCallOk = isCreateCallOk && args[1].exclude ==true;
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.query("33").then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .add called without specified addMethod value",
-                            runTest:function(){
-                                var store = new QueryLangStore({
-                                    idProperty:"id"
-                                });
-                            
-                                try{
-                                    store.add({
-                                        name:"SOme"
-                                    });
-                                    doh.t(false,"Add did not throw an exception for missing addMethod value")
-                                }catch(e){
-                                
-                                }
-                            }
-                        },
-                        {
-                            name:"Test .add ",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    addMethod:"methodA",
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].name=="first";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.add({name:"first"}).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .add with specified addOptions object",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    addMethod:"methodA",
-                                    addOptions:{extended:"ok"},
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].name=="first";
-                                            isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.add({name:"first"}).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .get with specified addOptions object",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    getMethod:"methodA",
-                                    getOptions:{extended:"ok"},
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0]==33;
-                                            isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.get(33).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .get without required getMethod value",
-                            runTest:function(){
-                                var store = new QueryLangStore({
-                                    idProperty:"id"
-                                });
-                           
-                                try{
-                                    store.get(33);
-                                    doh.t(false,"QueryLangStore.get: Exception is not thrown for undefined QueryLangStore.getMethod property")
-                                }catch(e){
-                                
-                                }
-                            
-                            }
-                        },
-                        {
-                            name:"Test .get with specified addOptions object",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    getMethod:"methodA",
-                                    getOptions:{extended:"ok"},
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0]==33;
-                                            isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.get(33).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .put without requred putMethod property",
-                            runTest:function(){
-                                var store = new QueryLangStore({
-                                    idProperty:"id"
-                                });
-                            
-                                try{
-                                    store.put({});
-                                    doh.t(false,"Method .put did not throw an exception for missing putMethod ");
-                                }catch(e){
-                                }
-                            }
-                        },
-                        {
-                            name:"Test .put",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    putMethod:"methodA",
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].name=="PUT";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.put({name:"PUT"}).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .put with specified addOptions object",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    putMethod:"methodA",
-                                    putOptions:{extended:"ok"},
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].name=="PUT";
-                                            isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.put({name:"PUT"}).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .remove without requred putMethod property",
-                            runTest:function(){
-                                var store = new QueryLangStore({
-                                    idProperty:"id"
-                                });
-                            
-                                try{
-                                    store.remove({});
-                                    doh.t(false,"Method .remove did not throw an exception for missing removeMethod ");
-                                }catch(e){
-                                }
-                            }
-                        },
-                        {
-                            name:"Test .remove",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    removeMethod:"methodA",
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].name=="REMOVE";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.remove({name:"REMOVE"}).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
-                            }
-                        },
-                        {
-                            name:"Test .remove with specified addOptions object",
-                            runTest:function(){
-                                var a = new doh.Deferred();
-                                var isCreateCallOk, isInvokeOk = false;
-                                function isOk(){
-                                    doh.t(isCreateCallOk,"Method createCall was not called with expected values")
-                                    doh.t(isInvokeOk,"Method invoke was not called with expected values");
-                                
-                                    a.callback(true);
-                                }
-                            
-                                var store = new QueryLangStore({
-                                    idProperty:"id",
-                                    removeMethod:"methodA",
-                                    removeOptions:{extended:"ok"},
-                                    model:{
-                                        createCall:function(methodName, args){
-                                            isCreateCallOk = methodName=="methodA";
-                                            isCreateCallOk = isCreateCallOk && args.length==2;
-                                            isCreateCallOk = isCreateCallOk && args[0].name=="REMOVE";
-                                            isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
-                                            return "call";
-                                        },
-                                        invoke:function(call){
-                                            isInvokeOk = call == "call";
-                                            var a =new Deferred();
-                                            a.callback();
-                                            return a;
-                                        }
-                                    }
-                                });
-                           
-                                store.remove({name:"REMOVE"}).then(function(){
-                                    isOk();
-                                });
-                            
-                                return a;
+                                doh.t(false,"Constructor did not throw an exception");
+                            }catch(e){
+                                doh.t(true);
                             }
                         }
-                    ]);
-                    doh.run();
-                }
-                else if(useCase=="testUseQueryForGetRetreival"){
-                    var store = QueryLangStore({
-                        queryMethod:"cms.doh.getQueryLangStoreQueryRange",
-                        useQueryForGetRetrieval:true,
-                        idProperty:"id"
-                    });
-                    
-                    
-                    require(["dijit/form/Button",'dijit/form/TextBox'],function(Button,TextBox){
-                        var textBox = new TextBox({
+                    },
+                    {
+                        name:"Test .getIdentity",
+                        runTest:function(){
+                            var store = new QueryLangStore({
+                                idProperty:"id"
+                            });
+                            doh.is("id",store.getIdentity(),"Method getIdentity() did not return expected value");
+                        }
+                    },
+                    {
+                        name:"Test .query requirements",
+                        runTest:function(){
+                            var store = new QueryLangStore({
+                                idProperty:"id"
+                            });
                             
-                        });
-                        textBox.placeAt("inputContainer");
-                        
-                        var resultBox = new TextBox();
-                        resultBox.placeAt("inputContainer");
-                        
-                        new Button({
-                            onClick:function(){
-                                store.get(textBox.get("value")).then(function(item){
-                                    resultBox.set("value",item.name);
-                                })
-                            },
-                            label:"do get"
-                        }).placeAt("inputContainer");
-                    })
-                } else {
-                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
-                    domCreate.place("<a href='?useCase=testUseQueryForGetRetreival' >Test testUseQueryForGetRetreival flag</a><br />","inputContainer");
-                }
-                
+                            try{
+                                store.query({});
+                                doh.t(false,"Method .query did not throw an exception for missing queryMethod ");
+                            }catch(e){
+                                
+                            }
+                        }
+                    },
+                    {
+                        name:"Test .query",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                queryMethod:"methodA",
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].id==33;
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.query({
+                                id:"33"
+                            }).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .query with number scalar value as query argument",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                queryMethod:"methodA",
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0]==33;
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.query(33).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .query with string scalar value as query argument",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                queryMethod:"methodA",
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0]=="33";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.query("33").then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .query queryOptions argument defined in constructor and passed to server side",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                queryMethod:"methodA",
+                                queryOptions:{
+                                    exclude:true
+                                },
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0] =="33";
+                                        isCreateCallOk = isCreateCallOk && args[1].exclude ==true;
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.query("33").then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .add called without specified addMethod value",
+                        runTest:function(){
+                            var store = new QueryLangStore({
+                                idProperty:"id"
+                            });
+                            
+                            try{
+                                store.add({
+                                    name:"SOme"
+                                });
+                                doh.t(false,"Add did not throw an exception for missing addMethod value")
+                            }catch(e){
+                                
+                            }
+                        }
+                    },
+                    {
+                        name:"Test .add ",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                addMethod:"methodA",
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].name=="first";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.add({name:"first"}).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .add with specified addOptions object",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                addMethod:"methodA",
+                                addOptions:{extended:"ok"},
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].name=="first";
+                                        isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.add({name:"first"}).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .get with specified addOptions object",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                getMethod:"methodA",
+                                getOptions:{extended:"ok"},
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0]==33;
+                                        isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.get(33).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .get without required getMethod value",
+                        runTest:function(){
+                            var store = new QueryLangStore({
+                                idProperty:"id"
+                            });
+                           
+                            try{
+                                store.get(33);
+                                doh.t(false,"QueryLangStore.get: Exception is not thrown for undefined QueryLangStore.getMethod property")
+                            }catch(e){
+                                
+                            }
+                            
+                        }
+                    },
+                    {
+                        name:"Test .get with specified addOptions object",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                getMethod:"methodA",
+                                getOptions:{extended:"ok"},
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0]==33;
+                                        isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.get(33).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .put without requred putMethod property",
+                        runTest:function(){
+                            var store = new QueryLangStore({
+                                idProperty:"id"
+                            });
+                            
+                            try{
+                                store.put({});
+                                doh.t(false,"Method .put did not throw an exception for missing putMethod ");
+                            }catch(e){
+                            }
+                        }
+                    },
+                    {
+                        name:"Test .put",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                putMethod:"methodA",
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].name=="PUT";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.put({name:"PUT"}).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .put with specified addOptions object",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                putMethod:"methodA",
+                                putOptions:{extended:"ok"},
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].name=="PUT";
+                                        isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.put({name:"PUT"}).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .remove without requred putMethod property",
+                        runTest:function(){
+                            var store = new QueryLangStore({
+                                idProperty:"id"
+                            });
+                            
+                            try{
+                                store.remove({});
+                                doh.t(false,"Method .remove did not throw an exception for missing removeMethod ");
+                            }catch(e){
+                            }
+                        }
+                    },
+                    {
+                        name:"Test .remove",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                removeMethod:"methodA",
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].name=="REMOVE";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.remove({name:"REMOVE"}).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    },
+                    {
+                        name:"Test .remove with specified addOptions object",
+                        runTest:function(){
+                            var a = new doh.Deferred();
+                            var isCreateCallOk, isInvokeOk = false;
+                            function isOk(){
+                                doh.t(isCreateCallOk,"Method createCall was not called with expected values")
+                                doh.t(isInvokeOk,"Method invoke was not called with expected values");
+                                
+                                a.callback(true);
+                            }
+                            
+                            var store = new QueryLangStore({
+                                idProperty:"id",
+                                removeMethod:"methodA",
+                                removeOptions:{extended:"ok"},
+                                model:{
+                                    createCall:function(methodName, args){
+                                        isCreateCallOk = methodName=="methodA";
+                                        isCreateCallOk = isCreateCallOk && args.length==2;
+                                        isCreateCallOk = isCreateCallOk && args[0].name=="REMOVE";
+                                        isCreateCallOk = isCreateCallOk && args[1].extended == "ok";
+                                        return "call";
+                                    },
+                                    invoke:function(call){
+                                        isInvokeOk = call == "call";
+                                        var a =new Deferred();
+                                        a.callback();
+                                        return a;
+                                    }
+                                }
+                            });
+                           
+                            store.remove({name:"REMOVE"}).then(function(){
+                            isOk();
+                            });
+                            
+                            return a;
+                        }
+                    }
+                ]);
+                doh.run();
             });
         </script>
     </head>
-    <body class="claro">
-        <div id="inputContainer" style="width:100%;height:100%"></div>
+    <body>
+        <div>DOH tests</div>
     </body>
 </html>

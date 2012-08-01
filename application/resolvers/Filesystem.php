@@ -148,12 +148,18 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         return $files;
     }
 
-    public function getFileListMethod($directory,$queryArgs=array(), $filter = array()) {
+    public function queryFileListMethod($directory,$queryArgs=array(), $filter = array()) {
         $normalizedFilter = $this->normalizeFilter($filter);
         $fileList = $this->getDirectoryFileList($directory, $normalizedFilter);
         
         $dojoHelper = $this->getHelper("dojo");  /* @var $dojoHelper Azf_Service_Lang_ResolverHelper_Dojo */
         return $dojoHelper->sliceStoreResponse($fileList, $queryArgs);
+    }
+
+    public function getFileListMethod($directory,$filter = array()) {
+        $normalizedFilter = $this->normalizeFilter($filter);
+        $fileList = $this->getDirectoryFileList($directory, $normalizedFilter);
+        return $fileList;
     }
 
     public function isPathSecure($path) {
@@ -335,12 +341,17 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
     }
 
     public function describeFile($path) {
+        if(is_dir($path)){
+            $type = "directory";
+        } else {
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+        }
         return array(
             "name" => "",
             "dirname" => "/",
             "size" => filesize($path),
             "date" => filectime($path),
-            "type" => "",
+            "type" => $type,
             "permissions" => fileperms($path),
             "inode" => fileinode($path)
         );

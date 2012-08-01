@@ -2,7 +2,8 @@ define(
     ['dojo/_base/declare','azfcms/view/AbstractEditPane',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/DijitEditor.html','dojo/dom-geometry',
-    'dijit/Editor','dijit/form/Button'],function
+    'dijit/Editor','dijit/form/Button','dijit/layout/BorderContainer',
+    'dijit/layout/ContentPane'],function
     (declare, AbstractEditPane,
         _Widget, _TemplatedMixin, _WidgetsInTemplate,
         templateString,domGeometry)

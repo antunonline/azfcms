@@ -17,62 +17,77 @@
             require(
             ['azfcms/view/Util','dojo/domReady!','azfcms/view/ConfirmPane',
                 'dijit','doh','dojo/i18n!azfcms/resources/nls/view',
-                'dojo/dom','dijit/Dialog'],function
-        (Util,ready,ConfirmPane,
-        dijit,doh, nls,
-        dom,Dialog){
-            //              
+                'dojo/dom','dijit/Dialog','dojo/dom-construct'],function
+            (Util,ready,ConfirmPane,
+            dijit,doh, nls,
+            dom,Dialog,domCreate){
+                //              
                 window.util = new Util();
                
-            var isRobot = window.location.toString().indexOf("?robot")>-1;
+            
+                var location = window.location.toString()
+                var matches = /useCase=(.*)$/.exec(location);
+                var useCase = matches&&matches[1]?matches[1]:null;
                 
-            if(!isRobot){
-                    
                 
-                doh.register('azfcms.tests.view.Util',[
-                    {
-                        name:"Test getConfirmDialog",
-                        runTest:function(){
-                            var util = new Util();
-                            doh.t(util.getConfirmDialog() instanceof Dialog);
-                            doh.is(util.getConfirmDialog(),util.getConfirmDialog());
+                if(useCase=="dohTests"){
+                    doh.register('azfcms.tests.view.Util',[
+                        {
+                            name:"Test getConfirmDialog",
+                            runTest:function(){
+                                var util = new Util();
+                                doh.t(util.getConfirmDialog() instanceof Dialog);
+                                doh.is(util.getConfirmDialog(),util.getConfirmDialog());
                             
-                        }
-                    },
-                    {
-                        name:"Test getConfirmPane",
-                        runTest:function(){
-                            var util = new Util();
-                            doh.t(util.getConfirmPane() instanceof ConfirmPane);
-                            doh.is(util.getConfirmPane(),util.getConfirmPane());
+                            }
+                        },
+                        {
+                            name:"Test getConfirmPane",
+                            runTest:function(){
+                                var util = new Util();
+                                doh.t(util.getConfirmPane() instanceof ConfirmPane);
+                                doh.is(util.getConfirmPane(),util.getConfirmPane());
                             
-                        }
-                    },
-                    {
-                        name:"Test confirm",
-                        runTest:function(){
-                            var util = new Util();
-                            util.selectFiles(function(selection){
-                                console.debug(selection);
-                            },null,"Select your files")
-                            window.util = util
+                            }
+                        },
+                        {
+                            name:"Test confirm",
+                            runTest:function(){
+                                var util = new Util();
+                                util.selectFiles(function(selection){
+                                    console.debug(selection);
+                                },null,"Select your files")
+                                window.util = util
                             
+                            }
                         }
-                    }
                     ]);
-                doh.run();
-            }
-                
-            if(isRobot){
                     
-                if(window.location.toString().indexOf("robot-recorder")>-1){
-                    require(["dojox/robot/recorder"],new Function())
+                    doh.run();
+                }  else if(useCase=="fileSelectPane"){
+                    var util = new Util();
+                    window.selectFile = function selectFile(){
+                        window.util.selectFiles(function(selection){
+                            console.debug(selection);
+                        },null,"Select your files")
+                    }
+                    
+                    selectFile()    
+                    window.util = util
+                    
+                    domCreate.place("<input type='button' onClick='selectFile()' value='Show dialog'></input>","inputContainer");
+                }                
+                else{
+                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
+                    domCreate.place("<a href='?useCase=fileSelectPane' >Show fileSelectPane</a><br />","inputContainer");
                 }
-            }
-        })
+            
+            })
         </script>
     </head>
     <body class="soria">
-        <button onclick="util.selectFiles(function(){},null,'Select your files')">Show</button>
+        <div style="width:100%;height:100%" id="inputContainer">
+
+        </div>
     </body>
 </html>

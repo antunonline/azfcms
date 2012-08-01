@@ -8,8 +8,14 @@
         <link rel="stylesheet" href="/js/lib/dojox/grid/resources/claroGrid.css" media="screen" />
         <link rel="stylesheet" href="/js/lib/dojox/grid/resources/Grid.css" media="screen" />
     </script>
+    <style type="text/css" >
+        root,html,body {
+            width:100%;height:100%;
+            margin:0px;
+        }
+    </style>
     <script src="/js/lib/dojo/dojo.js"
-            data-dojo-config="isDebug: false, async: true">
+            data-dojo-config="async: true">
     </script>
     <script>
         var env;
@@ -17,8 +23,7 @@
         ['azfcms/bootstrap/adminEnv','dojo/domReady'],function
         (adminEnv,ready){
             ready(function(){
-                adminEnv.adminDialog.show();
-                env = adminEnv;
+                adminEnv.startup("adminPane")
             })
                 
         }
@@ -29,9 +34,8 @@
     </script>
 </head>
 <body class="claro">
-
-    <div id="rootPane"></div>
-
-
+    <div style="width:100%;height:100%;" id="adminPane">
+        
+    </div>
 </body>
 </html>

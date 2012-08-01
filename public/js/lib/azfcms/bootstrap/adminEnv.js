@@ -1,16 +1,18 @@
 define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPane',
     'azfcms/model/navigation','azfcms/controller/Context','dojo/i18n!azfcms/resources/nls/view',
-    'dojo/_base/Deferred'],function
+    'dojo/_base/Deferred','dojo/on'],function
     (declare, AdminDialog, NavigationPane,
         navigationModel, ContextController, nls,
-        Deferred)
+        Deferred,on)
         {
         var _class = declare([],{
-            constructor: function(){
+            startup: function(dstNode){
             
                 // Admin dialog
-                this.adminDialog = new AdminDialog();
-            
+                this.adminDialog = new AdminDialog({
+                    style:"width:100%;height:100%"
+                },dstNode);
+                this.adminDialog.startup();
             
                 /**
              * Initialize navigation pane
@@ -31,6 +33,17 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
              * 
              */
                 this._constructNavigationActions();
+                var d = new Deferred();
+                // Delay adminDialog resize call until the rootNode is loaded
+                var self = this;
+                navigationModel.getRoot(function(){
+                    self.adminDialog.resize();
+                });
+                return d;
+            },
+            
+            resize:function(){
+                this.adminDialog.resize();
             },
         
             /**
@@ -258,15 +271,15 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                                 self.gridStore = new FSStore({
                                     
                                     })
-                                self.treeStore =new Observable( new FSStore({
-                                    getOptions:{
-                                        file:false
-                                    },
+                                self.treeStore =new FSStore({
                                     queryOptions:{
                                         file:false
                                     },
+                                    getOptions:{
+                                        file:false
+                                    },
                                     isTreeModel:true
-                                }));
+                                });
                                 initCallback()
                             })
                     },

@@ -3,20 +3,29 @@
  * and open the template in the editor.
  */
 
-define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
-    function(declare,QueryLangStore){
+define(['dojo/_base/declare','azfcms/store/QueryLangStore','dojo/_base/lang'],
+    function(declare,QueryLangStore,lang){
         return declare([QueryLangStore],{
             idProperty:"inode",
-            queryMethod:"cms.filesystem.getFileList",
+            queryMethod:"cms.filesystem.queryFileList",
             addMethod:"cms.filesystem.uploadFiles",
             getMethod:"cms.filesystem.getFileList",
             putMethod:"cms.filesystem.uploadFiles",
             removeMethod:"cms.filesystem.deleteFiles",
-            isTreeModel:false,
-            constructor:function(){
+            constructor:function(args){
+                /**
+                 * Set to true if this store will be used as tree model
+                 */
+                this.isTreeModel=false;
+                
+                lang.mixin(this,args||{});
+                
                 var self = this;
                 this._connects = [];
                 this.$_treeItems={};
+                this.$_rootItem=null;
+                
+                
                 
                 if(this.isTreeModel){
                     this._connects.push(require.on("azfcms/store/Filesystem/deleteFiles",function(){
@@ -90,6 +99,9 @@ define(['dojo/_base/declare','azfcms/store/QueryLangStore'],
                 
                 return promise;
                 
+            },
+            isItem:function(){
+                return true;
             },
             
             

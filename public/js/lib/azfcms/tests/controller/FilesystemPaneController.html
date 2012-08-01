@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/Grid.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dojox/grid/resources/soriaGrid.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['dojo/domReady!','doh','azfcms/controller/FilesystemPaneController',
+                'azfcms/view/FilesystemPane','dojo/dom-construct'
+            ],function
+            (ready,doh, FilesystemPaneController,
+            FilesystemPane,domCreate
+        ){
+            
+                var location = window.location.toString()
+                var matches = /useCase=(.*)$/.exec(location);
+                var useCase = matches&&matches[1]?matches[1]:null;
+                
+                
+                if(useCase=="dohTests"){                
+                    doh.register('FilesystemPaneController',[
+                        
+                    ]);
+                    doh.run();
+                    
+                } else if(useCase == "humanTest"){
+                    require(['azfcms/store/Filesystem'],function(Filesystem){
+                        var treeStore = new Filesystem({
+                            isTreeModel:true,
+                            queryOptions:{
+                                file:false
+                            },
+                            getOptions:{
+                                file:false
+                            }
+                        });
+                        var gridStore = new Filesystem({
+                        });
+                        var widget = new FilesystemPane({
+                            treeStore:treeStore,
+                            gridStore:gridStore,
+                            style:"width:100%;height:100%"
+                        });
+                        
+                        var controller = new FilesystemPaneController({
+                            view:widget
+                        });
+                        widget.placeAt("inputContainer");
+                        widget.resize();
+                    })
+                    
+                    
+                } else{
+                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
+                    domCreate.place("<a href='?useCase=humanTest' >Human Tests</a><br />","inputContainer");
+                }
+                
+                
+            })
+        </script>
+    </head>
+    <body class="soria">
+        <div style="width:100%;height:100%" id="inputContainer">
+
+        </div>
+    </body>
+</html>
+

@@ -124,7 +124,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         
         Zend_Layout::startMvc(array(
             'layoutPath'=>APPLICATION_PATH."/views/layouts",
-            'layout'=>'greenforest'
+            'layout'=>$this->getOption("defaultTemplate")
         ));
     }
 

@@ -6,14 +6,16 @@
 define(
     ['dojo/_base/declare','dijit/layout/ContentPane','dojox/grid/DataGrid',
     'dojo/data/ObjectStore','dijit/form/Button','dojo/dom-geometry',
-    'dijit/Toolbar', 'dojo/_base/lang','dijit/layout/BorderContainer'],function
+    'dijit/Toolbar', 'dojo/_base/lang','dijit/layout/BorderContainer',
+    'dojo/i18n!azfcms/resources/nls/view'],function
     (declare,ContentPane,DataGrid,
         ObjectStore, Button,domGeometry,
-        Toolbar, lang, BorderContainer)
+        Toolbar, lang, BorderContainer,
+        nls)
         {
         return declare([ContentPane],{
             closable:true,
-            title:"Plugin configuration",
+            title:nls.epspTitle,
             postCreate:function(){
                 this.inherited(arguments);
                 this._createBorderContainer();
@@ -48,25 +50,25 @@ define(
                     defaultHeight:"200px;",
                     structure:[
                     {
-                        name:"Page title",
+                        name:nls.epspGridLabelName,
                         field:'pageTitle',
                         width:'100px'
                     },
                     
                     {
-                        name:"Page region",
+                        name:nls.epspGridLabelRegion,
                         field:'pluginRegion',
                         width:'100px'
                     },
 
                     {
-                        name:"Plugin name",
+                        name:nls.epspGridLabelPluginName,
                         field:'pluginName',
                         width:'100px'
                     },
 
                     {
-                        name:"Enabled",
+                        name:nls.epspGridLabelEnabled,
                         field:'enabled',
                         width:'100px',
                         editable:true,
@@ -74,14 +76,14 @@ define(
                     },
 
                     {
-                        name:"Default weight",
+                        name:nls.epspGridLabelWeight,
                         field:'pluginWeight',
                         width:'100px',
                         editable:true
                     },
 
                     {
-                        name:"Custom weight",
+                        name:nls.epspGridLabelCustomWeight,
                         field:'weight',
                         width:'100px;',
                         editable:true
@@ -95,15 +97,15 @@ define(
             },
             _createButtons:function(){
                 this.toolbar.addChild(new Button({
-                    label:"Save",
+                    label:nls.epspSaveAction,
                     onClick:lang.hitch(this,"doSave")
                 }));
                 this.toolbar.addChild(new Button({
-                    label:"Enable plugin globally",
+                    label:nls.epspEnablePluginGlobally,
                     onClick:lang.hitch(this,"doEnablePluginGlobaly")
                 }));
                 this.toolbar.addChild(new Button({
-                    label:"Disable plugin globally",
+                    label:nls.epspDisablePluginGlobally,
                     onClick:lang.hitch(this,"doDisablePluginGlobaly")
                 }));
             },

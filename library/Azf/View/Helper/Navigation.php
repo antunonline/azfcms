@@ -23,20 +23,25 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
      * @var array
      */
     protected $_menuTree;
-    
-    
+
     /**
      *
      * @var array 
      */
-    protected $_contextMenus;
-    
+    protected $_contextMenu;
+
     /**
      *
      * @var int 
      */
     protected $_contextId;
-    
+
+    /**
+     *
+     * @var array
+     */
+    protected $_levelMenuCache = array();
+
     /**
      *
      * @var array 
@@ -74,7 +79,7 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
     public function _setMenuTree(array $menuTree) {
         $this->_menuTree = $menuTree;
     }
-    
+
     /**
      *
      * @param array $menuTree 
@@ -90,14 +95,14 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
     public function setContextMenus(array $contextMenus) {
         $this->_contextMenus = $contextMenus;
     }
-    
+
     /**
      *
      * @return int 
      */
     public function getContextId() {
-            return $this->_contextId;
-        }
+        return $this->_contextId;
+    }
 
     /**
      *
@@ -106,10 +111,6 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
     public function setContextId($contextId) {
         $this->_contextId = $contextId;
     }
-    
-
-    
-        
 
     /**
      *
@@ -120,9 +121,9 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
     }
 
     protected function _parseNodes(&$node) {
-        $node['url'] = "/".  trim($node['url'],'/')."/".$node['id'].".html";
-        
-        foreach($node['childNodes'] as &$cnode) {
+        $node['url'] = "/" . trim($node['url'], '/') . "/" . $node['id'] . ".html";
+
+        foreach ($node['childNodes'] as &$cnode) {
             $this->_parseNodes($cnode);
         }
     }
@@ -132,81 +133,43 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
      * @return array
      */
     public function getTree() {
-        
+
         if ($this->_getMenuTree() === null) {
             $menuNodes = $this->getNavigation()->getTree(array(
-                'id', 'url','title'
+                'id', 'url', 'title'
                     ));
-            
+
             $this->_parseNodes($menuNodes);
             $this->_setMenuTree($menuNodes);
         }
         return $this->_getMenuTree();
     }
-    
-    
-    public function getContext(){
-        if($this->_contextMenus!== null){
-            return $this->_contextMenus;
-        }
-        else {
-            $this->_initContextMenus();
-            return $this->_contextMenus;
-            
-        }
-    }
-    
-    /**
-     * Initialize context menu 
-     */
-    protected function _initContextMenus(){
-        $contextId = $this->getContextId();
-        $menuTree = $this->getTree();
-        
-        $contextMenus = $this->_searchContextMenu($menuTree, $contextId);
-        $this->setContextMenus($contextMenus);
-    }
-    
+
     /**
      *
      * @param array $menuTree
      * @param int $contextId 
      * @return array
      */
-    protected function _searchContextMenu(array &$menuTree,$contextId){
-        if($menuTree['id']==$contextId){
+    protected function _searchContextMenu(array &$menuTree, $contextId) {
+        if ($menuTree['id'] == $contextId) {
             return $menuTree;
         } else {
-            foreach($menuTree['childNodes'] as $node){
+            foreach ($menuTree['childNodes'] as $node) {
                 $checkNode = $this->_searchContextMenu($node, $contextId);
-                if($checkNode){
+                if ($checkNode) {
                     return $checkNode;
                 }
             }
         }
     }
-    
+
     /**
      *
      * @param array $_breadCrumbs 
      */
     public function setBreadCrumbs(array$_breadCrumbs) {
         $this->_breadCrumbs = $_breadCrumbs;
-    }
-
-        
-    /**
-     * 
-     */
-    public function getBreadCrumbs(){
-        if(empty($this->_breadCrumbs)){
-            $tree = $this->getTree();
-            $breadCrumbs = array();
-            $this->_constructBreadCrumbs($tree,$this->getContextId(),$breadCrumbs);
-            $breadCrumbs = array_reverse($breadCrumbs);
-            $this->setBreadCrumbs($breadCrumbs);
-        }
-        return $this->_breadCrumbs;
     }
 
     /**
@@ -216,19 +179,111 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
      * @param array $breadcrumbs
      * @return array 
      */
-    protected function _constructBreadCrumbs(array $menuTree, $contextId,array &$breadcrumbs){
-        if($menuTree['id']==$contextId){
+    protected function _constructBreadCrumbs(array $menuTree, $contextId, array &$breadcrumbs) {
+        if ($menuTree['id'] == $contextId) {
             return true;
         } else {
-            foreach($menuTree['childNodes'] as $node){
+            foreach ($menuTree['childNodes'] as $node) {
                 $outcome = $this->_constructBreadCrumbs($node, $contextId, $breadcrumbs);
-                if($outcome){
+                if ($outcome) {
                     unset($node['childNodes']);
                     $breadcrumbs[] = $node;
                     return true;
                 }
             }
         }
+    }
+
+    protected function _findContextMenu($tree, $contextId) {
+        if ($tree['id'] == $contextId) {
+            return $tree['childNodes'];
+        }
+
+        for ($i = 0, $len = sizeof($tree['childNodes']); $i < $len; $i++) {
+            $return = $this->_findContextMenu($tree['childNodes'][$i], $contextId);
+            if ($return) {
+                return $return;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param int $level
+     * @return array
+     */
+    protected function _findNLevelMenu($level) {
+        if(isset($this->_levelMenuCache[$level])){
+            return $this->_levelMenuCache[$level];
+        }
+        $breadCrumbs = $this->getBreadCrumbs();
+        $len = sizeof($breadCrumbs);
+        $tree = $this->getTree();
+        $nodes = $tree['childNodes'];
+
+
+
+
+        for ($i =0, $cachedLevels; $i < $len && $i < $level; $i++) {
+            $searchId = $breadCrumbs[$i]['id'];
+
+            for ($i1 = 0, $len1 = sizeof($nodes); $i1 < $len1; $i1++) {
+                if ($nodes[$i1]['id'] == $searchId) {
+                    $nodes = $nodes[$i1]['childNodes'];
+                    break;
+                }
+            }
+        }
+
+        if ($i < $level) {
+            $nodes = array();
+        }
+
+
+
+        return $this->_levelMenuCache[$level] = $nodes;
+    }
+
+    /**
+     * 
+     * @return Array
+     */
+    public function getRootMenu() {
+        $tree = $this->getTree();
+        return $tree['childNodes'];
+    }
+
+    /**
+     * 
+     */
+    public function getBreadCrumbs() {
+        if (empty($this->_breadCrumbs)) {
+            $tree = $this->getTree();
+            $breadCrumbs = array();
+            $this->_constructBreadCrumbs($tree, $this->getContextId(), $breadCrumbs);
+            $breadCrumbs = array_reverse($breadCrumbs);
+            $this->setBreadCrumbs($breadCrumbs);
+        }
+        return $this->_breadCrumbs;
+    }
+
+    public function getFirstLevelMenu() {
+        return $this->_findNLevelMenu(0);
+    }
+
+    public function getSecondLevelMenu() {
+        return $this->_findNLevelMenu(1);
+    }
+    
+    public function getNLevelMenu($level){
+        return $this->_findNLevelMenu($level);
+    }
+
+    public function getContextMenu() {
+        if ($this->_contextMenu !== null) {
+            return $this->_contextMenu;
+        }
+        return $this->_contextMenu = $this->_findContextMenu($this->getTree(), $this->getContextId());
     }
 
 }

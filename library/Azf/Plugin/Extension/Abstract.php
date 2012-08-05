@@ -10,7 +10,13 @@
  *
  * @author antun
  */
-abstract class Azf_Plugin_Extension_Abstract {
+abstract class Azf_Plugin_Extension_Abstract{
+    
+    /**
+     *
+     * @var string
+     */
+    protected $_identifier;
     
     /**
      *
@@ -29,6 +35,14 @@ abstract class Azf_Plugin_Extension_Abstract {
      * @var int
      */
     protected $_id;
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getIdentifier(){
+        return $this->_identifier;
+    }
     
     /**
      * 
@@ -102,7 +116,8 @@ abstract class Azf_Plugin_Extension_Abstract {
      * 
      * @param array $params
      */
-    function __construct(array $params=array()) {
+    function __construct($identifier, array $params=array()) {
+        $this->_identifier = $identifier;
         $this->_params = $params;
     }
     
@@ -140,6 +155,17 @@ abstract class Azf_Plugin_Extension_Abstract {
      */
     public function getValues(){
         return $this->getParams();
+    }
+    
+    
+    /**
+     * 
+     * @param string $template
+     * @return string
+     */
+    protected function renderTemplate($template){
+        $templatePath = APPLICATION_PATH."/views/pluginScripts/".$this->getIdentifier()."/".$template.".phtml";
+        return include $templatePath;
     }
 
 

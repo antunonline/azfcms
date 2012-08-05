@@ -27,6 +27,7 @@ define({
     npEditPageAction: "Uredi stranicu",
     npDeletePageAction: "Izbriši stranicu",
     npPagePluginsAction: "Upravljanje dodacima",
+    npPagePluginsStatusAction: "Status dodataka",
     npFilesystemAction: "Upravljanje dadotekama",
     npHomeChange: "Postava naslovne stranice",
     
@@ -105,7 +106,18 @@ define({
     fspSelectRenameFile:"Izaberite jednu dadoteku kojoj želite promijeniti naziv",
     fspEnterNewName:"Unesite novi naziv dadoteke",
     fspSelectFilesToCopy:"Izaberite dadoteke koje želite kopirati",
-    fspSelectCopyDestination:"Izaberite direktorij u koji će se kopirati izabrane dadoteke"
+    fspSelectCopyDestination:"Izaberite direktorij u koji će se kopirati izabrane dadoteke",
+    
+    epspTitle:"Status dodataka",
+    epspSaveAction:"Spremi promjene",
+    epspEnablePluginGlobally:"Upali dodatak kod svih stranica",
+    epspDisablePluginGlobally:"Iskljući dodatak kod svih stranica",
+    epspGridLabelName:"Naziv",
+    epspGridLabelRegion:"Regija",
+    epspGridLabelPluginName:"Naziv dodatka",
+    epspGridLabelEnabled:"Uključeno",
+    epspGridLabelWeight:"Standardna težina",
+    epspGridLabelCustomWeight:"Modificirana težina"
   },
 
   de: true,

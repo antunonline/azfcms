@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<template
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://it-branch.com/xml/ns/template.xsd'
+    xsi:schemaLocation='http://it-branch.com/xml/ns/template.xsd file:/var/www/azfcms/library/Azf/Template/template.xsd'>
+    <name></name>
+    <description>Template8</description>
+    <identifier>tmpl8</identifier>
+    <regions>
+        <region>
+            <name>Left Above Menu</name>
+            <identifier>leftAboveMenu</identifier>
+        </region>
+        <region>
+            <name>Left Below Menu</name>
+            <identifier>leftBelowMenu</identifier>
+        </region>
+        <region>
+            <name>Before Body</name>
+            <identifier>beforeBody</identifier>
+        </region>
+        <region>
+            <name>Below Body</name>
+            <identifier>belowBody</identifier>
+        </region>
+    </regions>
+
+</template>

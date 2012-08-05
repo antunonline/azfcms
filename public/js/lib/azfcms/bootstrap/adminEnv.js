@@ -148,6 +148,9 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                         
                     },
                     callback: function(item){
+                        if(!item){
+                            return;
+                        }
                         var cep = new this.CEP({
                             typeStore:this.typeStore,
                             title:"Editor za \""+item.title+"\""
@@ -235,7 +238,7 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     }
                 },
                 {
-                    i18nButtonLabelPointer: 'npPagePluginsAction',
+                    i18nButtonLabelPointer: 'npPagePluginsStatusAction',
                     iconClass:'dijitIconDocument',
                     init: function(initCallback,adminDialog, item){
                         var self = this;

@@ -210,7 +210,7 @@ class Azf_Plugin_Extension_Manager {
      */
     public function _constructPlugin($type, $pluginParams) {
         $className = $this->getClassName($type);
-        return new $className($pluginParams);
+        return new $className($type,$pluginParams);
     }
 
     /**

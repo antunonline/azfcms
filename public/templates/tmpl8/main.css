@@ -1,0 +1,304 @@
+/* 
+    Document   : main
+    Created on : Aug 1, 2012, 10:33:28 PM
+    Author     : antun
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    background-color: #24405d;
+}
+
+@font-face {
+ font-family: "Droid Sans";
+ src: url("DroidSerif.eot") /* EOT file for IE */
+}
+@font-face {
+ font-family: "Droid Sans";
+ src: local("Droid Sans"),url("DroidSerif.ttf") /* TTF file for CSS3 browsers */
+}
+
+@font-face {
+ font-family: "Nevis";
+ src: url("nevis.eot") /* EOT file for IE */
+}
+@font-face {
+ font-family: "Nevis";
+ src: local("Nevis"), url("nevis.ttf") /* TTF file for CSS3 browsers */
+}
+
+
+.background1 {
+    height:200px;
+}
+
+.background2 {
+    background-image: url(images/background2.jpg) ;
+    height:60px;
+}
+
+.background3 {
+    
+}
+
+.insetBox {
+    position: relative;
+    background-color: #bfd0e5;
+    margin-top:5px;
+}
+
+.insetBoxT {
+    position: absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    width:100%;
+    height:6px;
+    font-size: 1px;
+    background: url(images/tb.jpg) repeat-x top;
+}
+
+.insetBoxB {
+    margin:0 0;
+    position: absolute;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    width:100%;
+    height:6px;
+    font-size: 1px;
+    background: url(images/tb.jpg) repeat-x 6px -6px;
+}
+
+.insetBoxL {
+    margin:0 0;
+    position: absolute;
+    width:6px;
+    height:100%;
+    margin:0 auto;
+    font-size: 1px;
+    background: url(images/lr.jpg) repeat-y left top;
+}
+
+.insetBoxR {
+    position: absolute;
+    right:0px;
+    width:6px;
+    height:100%;
+    margin:0 0;
+    font-size: 1px;
+    background: url(images/lr.jpg)  repeat-y -6px -0px;
+}
+
+.insetBoxTL {
+    position: absolute;
+    left:0px;
+    top:0px;
+    width:6px;
+    height:6px;
+    
+    background-attachment:  fixed;
+    font-size: 1px;
+    zoom:1;
+    background: url(images/tltrbrbl.jpg) no-repeat 0px 0px;
+}
+
+.insetBoxTR {
+    position: absolute;
+    right:0px;
+    top:0px;
+    width:6px;
+    height:6px;
+    background-attachment:  fixed;
+    font-size: 1px;
+    background: url(images/tltrbrbl.jpg) no-repeat -6px 0px;
+}
+
+.insetBoxBL {
+    position: absolute;
+    right:0px;
+    bottom:0px;
+    width:6px;
+    height:6px;
+    background-attachment:  fixed;
+    font-size: 1px;
+    background: url(images/tltrbrbl.jpg) no-repeat -6px -6px;
+}
+
+.insetBoxBR {
+    position: absolute;
+    left:0px;
+    bottom:0px;
+    width:6px;
+    height:6px;
+    background-attachment:  fixed;
+    font-size: 1px;
+    background: url(images/tltrbrbl.jpg) no-repeat 0px -6px;
+}
+
+.insetBoxBody {
+    padding:6px;    
+}
+
+.siteName {
+    margin-top:10px;
+    height:40px;
+    background:url(images/siteName.jpg);
+}
+
+.toolboxHeading {
+    height: 30px;
+    background-color: #eaeff6;
+    line-height: 30px;
+    width:100%;
+    font-family: Droid Sans,Arial;
+    text-align: center;
+    font-weight: bold;
+    font-size:18px;
+    color:#14212f;
+    text-align: center;
+    margin-bottom: 3px;
+}
+
+
+.toolbox {
+    height: 120px;
+}
+.toolboxList {
+    text-align: center;
+    margin-top:1px;
+    font-size:0px;
+    
+}
+
+.toolboxList> a {
+    font-family: Monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color:#14212f;
+    padding:0px 4px;
+    text-decoration: none;
+    margin:1px 1px 0px 0px;
+    background-color: #eaeff6;
+    display:inline-block;
+    
+}
+
+.toolboxList> a:hover {
+    background: #9ab5d6;
+}
+
+.newsHeadBox {
+    margin-top:15px;
+    height: 160px;
+}
+
+.newsHeadBoxLinks {
+    margin: 0px 4px;
+    background-color: #eaeff6;
+    padding: 1px;
+    line-height: 23px;
+}
+
+.newsHeadBoxLinks > a {
+    text-decoration: none;
+    background-color: #bfd0e5;
+    font-family: "Droid Sans", Arial;
+    font-weight: bold;
+    font-size: 14px;
+    padding:0px 4px;
+    line-height: 23px;
+    margin:0px;
+    display:block;
+    float:left;
+    color:#14212f;
+    margin-right: 1px;
+}
+
+.newsHeadBoxLinks > a:hover {
+    background: #9ab5d6;
+}    
+
+.newsHeadBoxBody {
+    margin:5px 4px 5px 4px;
+    height: 130px;
+    background-color:#eaeff6; 
+    padding: 1px 1px 0px 1px;
+    
+}
+
+.newsHeadBoxBodyTitle {
+    height: 24px;
+    line-height: 24px;
+    font-family: "Droid Sans", Arial;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    padding-left:10px;
+    background: #9ab5d6;
+    color:#14212f;
+    
+}
+    
+.newsHeadBoxBodyContent {
+    height:95px;
+    text-align: left;
+    font-family: Droid Sans, Arial;
+    font-size: 12px;
+}
+
+.mainMenuBlock {
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+
+.mainMenuBlock > a {
+    font-size: 24px;
+    line-height: 60px;
+    display: inline-block;
+    font-family: Nevis;
+    text-decoration: none;
+    color:#cbd9ea;
+    padding-left: 30px;
+}
+
+.mainMenuBlock > a:hover {
+    color:#82a5ca;
+}
+
+.linkBox {
+    margin-top:5px;
+}
+.linkBox > a{
+    font-size: 13px;
+    font-family: "Droid Sans","Helvetica Neue", Arial, "Liberation Sans", FreeSans, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    color:#14212f;
+    padding-left: 15px;
+    margin:5px 0px 0px 0px;
+    display:block;
+}
+
+.contentBox {
+    font-family: "Droid Sans", "Helvetica Neue", Arial, "Liberation Sans", FreeSans, sans-serif;
+    position: relative;
+}
+
+.contentBox > h3{
+    text-align: center;
+    color:#14212f;
+}
+
+
+.breadcrumbs >div> a {
+    font-size: 13px;
+    font-family: "Droid Sans","Helvetica Neue", Arial, "Liberation Sans", FreeSans, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    color:#14212f;
+    padding-left: 10px;
+    margin:5px 0px 0px 0px;
+}

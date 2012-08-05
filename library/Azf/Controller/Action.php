@@ -20,6 +20,14 @@ abstract class Azf_Controller_Action extends Zend_Controller_Action {
             Zend_Layout::getMvcInstance()->disableLayout();
         }
     }
+    
+    public function postDispatch() {
+        parent::postDispatch();
+        
+        if(!isset($this->view->pageTitle)){
+            $this->view->pageTitle = $this->_getParam("title");
+        }
+    }
 
     /**
      *
@@ -78,7 +86,7 @@ abstract class Azf_Controller_Action extends Zend_Controller_Action {
      * @return mixed
      */
     public function getValue($key) {
-        $values =  (array)$this->getContextHelper()->getStaticParam("values");
+        $values = (array)($this->_getParam('values',null)!==null?$this->_getParam('values'):$this->getValues());
         if(isset($values[$key])){
             return $values[$key];
         } else {
@@ -92,7 +100,8 @@ abstract class Azf_Controller_Action extends Zend_Controller_Action {
      * @return array
      */
     public function getValues() {
-        return (array) $this->getContextHelper()->getStaticParam('values',array());
+        return (array)($this->_getParam('values',null)!==null?$this->_getParam('values',null):
+            $this->getContextHelper()->getStaticParam("values", array()));
     }
 
     /**

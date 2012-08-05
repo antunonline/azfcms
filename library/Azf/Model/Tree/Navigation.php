@@ -803,8 +803,9 @@ SQL;
         $stmt = $this->_prepareStmt("call fetchConfiguration (?);");
         $stmt->execute(array($id));
 
-        $row = $stmt->fetch();
+        $lastRow = $row = $stmt->fetch();
         if ($row) {
+            $lastRow = $row;
             $id = $row['id'];
             $cacheKey = $this->_getCacheKey($id);
             $staticParams = $this->_fetchStaticConfig($row);
@@ -821,7 +822,12 @@ SQL;
         $this->_staticParams[$cacheKey] = $staticParams;
         $this->_dynamicParams[$cacheKey] = $dynamicParams;
         $this->_pluginsParams[$cacheKey] = $pluginParams;
-        return $id;
+        
+        unset($lastRow['final']);
+        unset($lastRow['abstract']);
+        unset($lastRow['plugins']);
+        
+        return $lastRow;
     }
 
     /**

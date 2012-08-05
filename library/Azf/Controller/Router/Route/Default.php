@@ -139,8 +139,10 @@ class Azf_Controller_Router_Route_Default extends Zend_Controller_Router_Route_A
         $queryParams = array();
         parse_str($urlQuery, $queryParams);
 
-        $id = $this->model->match($id);
-        $staticParams = array("id"=>$id) + (array) $this->model->getStaticParams($id);
+        $row = $this->model->match($id);
+        $id = $row['id'];
+        $staticParams = $row + (array) $this->model->getStaticParams($id);
+        
         
         
 

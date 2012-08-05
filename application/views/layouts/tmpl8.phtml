@@ -1,0 +1,131 @@
+<?php
+$navigation = $this->navigation; /* @var $navigation Azf_View_Helper_Navigation */
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title><?= $this->pageTitle ?></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <link rel="stylesheet" href="/templates/tmpl8/css/reset.css" />
+            <link rel="stylesheet" href="/templates/tmpl8/css/text.css" />
+            <link rel="stylesheet" href="/templates/tmpl8/css/960.css" />
+            <link rel="stylesheet" href="/templates/tmpl8/main.css" />
+            <!--[if IE 7]>
+                    <style type="text/css">
+                        .insetBoxL {height:expression(this.parentElement.offsetHeight+'px');
+                        .insetBoxR {height:expression(this.parentElement.offsetHeight+'px');
+                    </style>
+                    <![endif]-->
+    </head>
+    <body>
+        <div class="background1">
+            <div class="container_12">
+                <div class="grid_4">
+                    <div class="siteName">
+
+                    </div>
+                    <div class="insetBox">
+                        <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
+                        <div class="insetBoxBody toolbox">
+                            <div class="toolboxHeading">
+                                Razvojne Tehnologije
+                            </div>
+                            <div class="toolboxList">
+                                <a href="#">PHP</a>
+                                <a href="#">HTML</a>
+                                <a href="#">CSS</a>
+                                <a href="#">JS</a>
+                                <a href="#">SQL</a>
+                                <a href="#">ZF</a>
+                                <a href="#">DOJO</a>
+                                <a href="#">Java</a>
+                                <a href="#">Primefaces</a>
+                                <a href="#">Java EE</a>
+                                <a href="#">Debian</a>
+                                <a href="#">Apache</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="push_1 grid_6">
+                    <div class="insetBox">
+                        <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
+                        <div class="insetBoxBody newsHeadBox">
+                            <div class="newsHeadBoxLinks">
+                                <a href="#" >PHP News</a>
+                                <a href="#" >Dojo News</a>
+                                <a href="#" >Java News</a>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="newsHeadBoxBody">
+                                <div class="newsHeadBoxBodyTitle">
+                                    New News
+                                </div>
+                                <div class="newsHeadBoxBodyContent">
+                                    Simply a piece of content
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="background2">
+            <div class="mainMenuBlock">
+                <?php $this->navigation->getSecondLevelMenu(); ?>
+                <?php foreach ($this->navigation->getFirstLevelMenu() as $menu): ?>
+                    <a href="<?= $menu['url'] ?>"><?php echo $menu['title'] ?></a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="background3">
+            <div class="container_12">
+                <div class="grid_4">
+                    <?php echo $this->layout()->leftAboveMenu;?>
+                    <div class="insetBox">
+                        <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
+                        <div class="insetBoxBody linkBox">
+                            <?php foreach ($this->navigation->getSecondLevelMenu() as $menu): ?>
+                                <a href="<?= $menu['url'] ?>"><?php echo $menu['title'] ?></a>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid_8">
+                    <div class="insetBox">
+                        <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
+                        <div class="insetBoxBody breadcrumbs">
+                            <div>
+                                <?php
+                                $breadCrumbs = $navigation->getBreadCrumbs();
+                                for ($hasNext = false, $i = 0, $len = sizeof($breadCrumbs); $i < $len; $i++, $hasNext = ($len == ($i + 1))) {
+                                    $menu = $breadCrumbs[$i];
+
+                                    if ($hasNext) {
+                                        ?>
+                                        &gt;
+                                        <?php
+                                    }
+                                    ?>
+                                    <a href="<?= $menu['url'] ?>" ><?= $menu['title'] ?></a>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insetBox">
+                        <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
+                        <div class="insetBoxBody contentBox">
+                            <h3><?= $this->pageTitle ?></h3>
+                            <div>
+                                <?php echo $this->layout()->content; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

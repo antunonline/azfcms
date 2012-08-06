@@ -99,7 +99,7 @@ and open the template in the editor.
             file="public/js/lib/azfcms/controller/extensionPlugin/Skeleton.js"
             tofile="public/js/lib/azfcms/controller/extensionPlugin/${ucName}.js" />
         <copy file="public/js/lib/azfcms/tests/view/extensionPlugin/Skeleton.html"
-                tofile="public/js/lib/azfcms/tests/view/extensionPlugin/${ucName}.html">
+              tofile="public/js/lib/azfcms/tests/view/extensionPlugin/${ucName}.html">
             <filterchain >
                 <replacetokens begintoken="{" endtoken="}">
                     <token key="ucName" value="${ucName}" />
@@ -108,7 +108,7 @@ and open the template in the editor.
             </filterchain>
         </copy>
         <copy file="public/js/lib/azfcms/tests/controller/extensionPlugin/Skeleton.html"
-                tofile="public/js/lib/azfcms/tests/controller/extensionPlugin/${ucName}.html">
+              tofile="public/js/lib/azfcms/tests/controller/extensionPlugin/${ucName}.html">
             <filterchain >
                 <replacetokens begintoken="{" endtoken="}">
                     <token key="ucName" value="${ucName}" />
@@ -156,6 +156,25 @@ class Application_Plugin_Extension_${ucName} extends Azf_Plugin_Extension_Abstra
 }
             ]]>
         </echo>
+    </target>
+    
+    
+    
+    <condition property="canRemoveExtensionPlugin">
+        <isset property="name" />
+    </condition>
+    <target name="removeExtensionPlugin" if="canRemoveExtensionPlugin">
+        <ucfirst string="${name}" to="ucName" />
+        
+        <delete file="public/js/lib/azfcms/view/extensionPlugin/${ucName}.js" />
+        <delete file="public/js/lib/azfcms/view/extensionPlugin/templates/${ucName}.html" />
+        <delete file="public/js/lib/azfcms/controller/extensionPlugin/${ucName}.js" />
+        <delete file="public/js/lib/azfcms/tests/view/extensionPlugin/${ucName}.html" />
+        <delete file="public/js/lib/azfcms/tests/controller/extensionPlugin/${ucName}.html" />
+        <delete file="application/configs/descriptor/plugin/extension/${ucName}.xml" />
+        <delete file="application/views/pluginScripts/${name}/${name}.phtml" />
+        <delete file="application/plugins/Extension/${ucName}.php" />
+        <delete dir="application/views/pluginScripts/${name}" />
     </target>
     
     <target name="doExtensionPluginHelp"  unless="canCreateExtensionPlugin">

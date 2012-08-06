@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<plugin
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://it-branch.com/xml/ns/plugin/extension'
+    xsi:schemaLocation='http://it-branch.com/xml/ns/plugin/extension file:/var/www/azfcms/library/Azf/Plugin/Descriptor/Parser/Extension.xsd'>
+    <name>linkList</name>
+    <displayName>Lista adresa</displayName>
+    <description>Pomoću ovog dodatka u stranicu možete dodati nezavisnu listu adresa prema drugim stranicama.</description>
+    <version>1.0</version>
+
+</plugin>

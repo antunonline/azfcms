@@ -142,7 +142,7 @@ and open the template in the editor.
 class Application_Plugin_Extension_${ucName} extends Azf_Plugin_Extension_Abstract {
 
     public function render() {
-        $this->renderTemplate("${name}");
+        echo $this->renderTemplate("${name}");
     }
 
     public function setUp() {
@@ -175,6 +175,11 @@ class Application_Plugin_Extension_${ucName} extends Azf_Plugin_Extension_Abstra
         <delete file="application/views/pluginScripts/${name}/${name}.phtml" />
         <delete file="application/plugins/Extension/${ucName}.php" />
         <delete dir="application/views/pluginScripts/${name}" />
+        <sql classpath="/usr/share/java/mysql-connector-java-5.0.8-bin.jar" driver="com.mysql.jdbc.Driver"  
+        userid="azfcms" password="azfcms" url="jdbc:mysql://localhost/azfcms"
+        >
+delete from Plugin where type = "${name}";
+        </sql>
     </target>
     
     <target name="doExtensionPluginHelp"  unless="canCreateExtensionPlugin">

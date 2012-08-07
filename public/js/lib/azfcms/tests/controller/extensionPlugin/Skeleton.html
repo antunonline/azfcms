@@ -32,15 +32,22 @@
                     doh.register('azfcms.tests.controller.extensionPlugin.{ucName}',[]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new View({
+                    require(["azfcms/model!cms.doh.initializeExtensionPlugin('{name}')"],function(pluginProps){
+                        var pluginId = pluginProps.pluginId;
+                        var navigationId = pluginProps.navigationId;
                         
-                    },'inputContainer');
-                    view.startup();
+                        var view = new View({
+                        
+                        },'inputContainer');
+                        view.startup();
                     
-                    var controller = new Controller({
-                        view:view,
-                        pluginId:1
-                    })
+                        var controller = new Controller({
+                            view:view,
+                            pluginId:pluginId
+                        });
+                    
+                    });
+                    
                     
                 } else {
                     domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");

@@ -1,0 +1,19 @@
+<?php
+$this;  /* @var $this Application_Plugin_Extension_LinkList */
+?><div class="insetBox">
+    <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
+    <div class="insetBoxBody toolbox">
+        <div class="toolboxHeading">
+            <?=$this->getParam("title","")?>
+        </div>
+        <div class="toolboxList">
+            <?php
+            foreach ($this->getParam("linkList",array()) as $link):
+                ?>
+            <a href="<?=$link->url ?>"><?=$link->name?></a>
+                <?php
+            endforeach;
+            ?>
+        </div>
+    </div>
+</div>

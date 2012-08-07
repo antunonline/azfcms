@@ -3,8 +3,8 @@
  */
 
 
-define(  ['dojo/_base/declare','azfcms/controller/extensionPlugin/Abstract'],
-    function (declare,Abstract){
+define(  ['dojo/_base/declare','azfcms/controller/extensionPlugin/Abstract','dojo/_base/lang'],
+    function (declare,Abstract,lang){
         return declare([Abstract],{
             cmsModel:null,
             pluginId:null,
@@ -47,8 +47,22 @@ define(  ['dojo/_base/declare','azfcms/controller/extensionPlugin/Abstract'],
             */
 //            getValues:function(){
 //            }
+            constructor:function(){
+                this.init();
+            },
             init:function(){
                 var self = this;
+                
+                this.view.on("save",lang.hitch(this,"doSave"));
+                
+                var self = this;
+                this.getValues().then(function(values){
+                   self.view.set("value",values);
+                });
+            },
+            
+            doSave:function(values){
+                this.setValues(values);
             }
         })
     })

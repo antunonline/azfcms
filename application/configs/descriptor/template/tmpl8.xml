@@ -14,6 +14,10 @@ and open the template in the editor.
     <identifier>tmpl8</identifier>
     <regions>
         <region>
+            <name>Izbornik alata</name>
+            <identifier>toolboxMenu</identifier>
+        </region>
+        <region>
             <name>Left Above Menu</name>
             <identifier>leftAboveMenu</identifier>
         </region>

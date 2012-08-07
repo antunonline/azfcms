@@ -34,20 +34,8 @@
                     var linkList = new LinkList({},"inputContainer");
                     linkList.startup();
                     
-                    linkList.on("save",function(links){
-                        console.debug(links)
-                    })
                     
-                    linkList.toolbar.addChild(new Button({
-                        label:"Set links",
-                        onClick:function(){
-                            var links = [
-                                {name:"ABC",url:"WDF"},
-                                {name:"ABC1",url:"WDF1"}
-                            ];
-                            linkList.set("value",links)
-                        }
-                    }));
+                    
                     
                 } else {
                     domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");

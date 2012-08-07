@@ -24,28 +24,7 @@ $navigation = $this->navigation; /* @var $navigation Azf_View_Helper_Navigation 
                     <div class="siteName">
 
                     </div>
-                    <div class="insetBox">
-                        <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
-                        <div class="insetBoxBody toolbox">
-                            <div class="toolboxHeading">
-                                Razvojne Tehnologije
-                            </div>
-                            <div class="toolboxList">
-                                <a href="#">PHP</a>
-                                <a href="#">HTML</a>
-                                <a href="#">CSS</a>
-                                <a href="#">JS</a>
-                                <a href="#">SQL</a>
-                                <a href="#">ZF</a>
-                                <a href="#">DOJO</a>
-                                <a href="#">Java</a>
-                                <a href="#">Primefaces</a>
-                                <a href="#">Java EE</a>
-                                <a href="#">Debian</a>
-                                <a href="#">Apache</a>
-                            </div>
-                        </div>
-                    </div>
+                    <?=$this->layout()->toolboxMenu ?>
                 </div>
                 <div class="push_1 grid_6">
                     <div class="insetBox">
@@ -82,7 +61,8 @@ $navigation = $this->navigation; /* @var $navigation Azf_View_Helper_Navigation 
         <div class="background3">
             <div class="container_12">
                 <div class="grid_4">
-                    <?php echo $this->layout()->leftAboveMenu;?>
+                    <?=$this->layout()->coolGallery;?>
+                    <?=$this->layout()->leftAboveMenu;?>
                     <div class="insetBox">
                         <div class="insetBoxT"></div><div class="insetBoxR"></div><div class="insetBoxB"></div><div class="insetBoxL"></div><div class="insetBoxTL"></div><div class="insetBoxTR"></div><div class="insetBoxBL"></div><div class="insetBoxBR"></div>
                         <div class="insetBoxBody linkBox">
@@ -91,6 +71,7 @@ $navigation = $this->navigation; /* @var $navigation Azf_View_Helper_Navigation 
                             <?php endforeach; ?>
                         </div>
                     </div>
+                    <?=$this->layout()->leftBelowMenu;?>
                 </div>
                 <div class="grid_8">
                     <div class="insetBox">

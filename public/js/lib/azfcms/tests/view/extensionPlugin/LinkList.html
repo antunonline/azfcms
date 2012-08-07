@@ -34,18 +34,20 @@
                     var linkList = new LinkList({},"inputContainer");
                     linkList.startup();
                     
-                    linkList.on("save",function(links){
-                        console.debug(links)
+                    linkList.on("save",function(values){
+                        console.debug(values)
                     })
                     
                     linkList.toolbar.addChild(new Button({
                         label:"Set links",
                         onClick:function(){
-                            var links = [
-                                {name:"ABC",url:"WDF"},
-                                {name:"ABC1",url:"WDF1"}
-                            ];
-                            linkList.set("value",links)
+                            linkList.set("value",{
+                                title:"New Title",
+                                linkList:[
+                                    {name:"Hello",url:"http://url.com"},
+                                    {name:"Hello1",url:"http://url1.com"}
+                                ]
+                            })
                         }
                     }));
                     

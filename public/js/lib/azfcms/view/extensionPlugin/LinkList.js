@@ -4,11 +4,11 @@
 
 
 define(  ['dojo/_base/declare','dojo/text!./templates/LinkList.html','dijit/_Widget','dijit/_WidgetsInTemplateMixin','dijit/_TemplatedMixin',
-        'dojo/_base/lang',
+    'dojo/_base/lang',
     
     
     'dijit/layout/BorderContainer','dijit/layout/ContentPane','dijit/Toolbar','dijit/form/Button',
-    'dijit/form/SimpleTextarea'],
+    'dijit/form/Textarea','dijit/form/TextBox'],
     function (declare,templateString,_Widget,_WidgetsInTemplate,_Templated,
         lang){
         return declare([_Widget,_Templated,_WidgetsInTemplate],{
@@ -24,6 +24,11 @@ define(  ['dojo/_base/declare','dojo/text!./templates/LinkList.html','dijit/_Wid
                  */
                 this.toolbar;
                 
+                /**
+                 * Title textbox
+                 */
+                this.linkGroupName;
+                
             },
         
             postCreate:function(){
@@ -31,18 +36,23 @@ define(  ['dojo/_base/declare','dojo/text!./templates/LinkList.html','dijit/_Wid
             },
         
             _save:function(){
-            this.onSave(this.get("value"));
+                this.onSave(this.get('value'));
             },
             
-            _setValueAttr:function(links){
-                var csvLinks = this._linksToCsv(links);
+            _setValueAttr:function(object){
+                var csvLinks = this._linksToCsv(object.linkList);
                 this.textarea.set("value",csvLinks);
+                this.linkListName.set("value",object.title);
             },
             
             _getValueAttr:function(){
                 var csvLinks = this.textarea.get("value");
                 var linkList = this._csvToLinks(csvLinks);
-                return linkList;
+                var title = this.linkListName.get("value");
+                return {
+                    title:title,
+                    linkList:linkList
+                };
             },
             
             _csvToLinks:function(csvList){
@@ -77,7 +87,7 @@ define(  ['dojo/_base/declare','dojo/text!./templates/LinkList.html','dijit/_Wid
              * onSave event that is activated when the user selects the save button.
              * The First argument is an array of links where link is {name:"",url:""} object.
              */
-            onSave:function(linkList){
+            onSave:function(values){
                 
             }
         })

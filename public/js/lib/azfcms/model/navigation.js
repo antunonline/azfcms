@@ -95,7 +95,13 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          */
         pasteItem: function(childItem, oldParentItem, newParentItem, bCopy, index){
             this.getChildNodes([oldParentItem.id,newParentItem.id]).then(lang.hitch(this,function(results){
-                this._pasteItem(childItem,results[0],results[1],bCopy,index);
+                var oldParentItem = results[0];
+                var newParentItem = results[1];
+                
+                if(oldParentItem.id==newParentItem.id){
+                    newParentItem = oldParentItem;
+                }
+                this._pasteItem(childItem,oldParentItem,newParentItem,bCopy,index);
             }))
         },
         
@@ -348,10 +354,14 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          */
         insertInto: function(id,title,type){
             var context = this;
-            var call = ['[cms.navigation.insertInto(',id,',{\'title\':\'',_s(title),'\'},\''+_s(type)+'\'),',
-            'cms.navigation.getBranch(',id,')]'].join('');
+            var calls = [
+                this.model.createCall('cms.navigation.insertInto',[id,{title:title},type]),
+                this.model.createCall('cms.navigation.getChildNodes',[[id]])
+            ].join(",");
+            var call = ['[',calls,']'].join('');
+            
             return this.model.invoke(call).then(function(args){
-                context.onChildrenChange(args[1],args[1].childNodes);
+                context.onChildrenChange(args[1][0],args[1][0].childNodes);
             });
         },
 
@@ -365,10 +375,17 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
                 item = item.id;
             }
             var self = this;
-            var call = ['cms.navigation.deleteNode(',item,")"].join('');
+            
+            var call = [
+                '[',
+                [
+                    this.model.createCall('cms.navigation.deleteNode',[item])
+                ].join(','),
+                ']'
+            ].join('');
             var response = this.model.invoke(call);
             response.then(function(response){
-                self.onChildrenChange(response,response.childNodes);
+                self.onDelete({id:item})
             })
             
             return response;
@@ -473,6 +490,10 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
         // newChildrenList: dojo.data.Item[]
         // tags:
         //		callback
+        },
+        
+        onDelete:function(){
+            
         }
     });
     

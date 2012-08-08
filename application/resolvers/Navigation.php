@@ -217,8 +217,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         // Delete node
         $navigation->delete($nodeId);
 
-        // Return parent branch
-        return $navigation->getBranch($branch['parentId']);
+        return true;
     }
 
     /**

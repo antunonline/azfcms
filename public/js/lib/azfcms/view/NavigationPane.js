@@ -34,14 +34,14 @@ function
             /**
              * Right pane reference
              */
-            this.actionPane = new ContentPane({region:"right",style:"width:200px;"});
+            this.actionPane = new ContentPane({region:"left",style:"width:200px;padding:5px 0px;margin:0px;border:none"});
             
             
             /**
              * Action menu reference
              */
             this.menu = new Menu({
-                style:"width:100%;"
+                style:"width:100%"
             });
             
             

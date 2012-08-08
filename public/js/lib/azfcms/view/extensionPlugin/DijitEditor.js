@@ -7,7 +7,7 @@ define(  ['dojo/_base/declare','dojo/text!./templates/DijitEditor.html','dijit/_
     'dojo/i18n!azfcms/resources/nls/view',
 
 'dijit/Editor','dijit/form/Button','dijit/layout/BorderContainer',
-'dijit/layout/ContentPane'],
+'dijit/layout/ContentPane','dijit/Toolbar'],
 function (declare,templateString,_Widget,_WidgetsInTemplate,_Templated,nls){
     return declare([_Widget,_Templated,_WidgetsInTemplate],{
         templateString:templateString,

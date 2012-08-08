@@ -1,5 +1,5 @@
-define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
-    'azfcms/store/Lang','dojo/io/iframe','dojo/json'],
+define(['dojo/_base/declare','dojo/request/xhr','dojo/_base/Deferred',
+    'azfcms/store/Lang','dojo/request/iframe','dojo/json'],
     function(declare, xhr, Deferred,
         LangStore,iframe,json){
         return declare(null,{
@@ -242,15 +242,15 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
                 }
                         
                 // Do a POST request       
-                xhr.post({
+                xhr.post("/json-lang.php",{
                     url:"/json-lang.php",
-                    content:{
+                    data:{
                         expr:id
                     },
                     load: callback,
                     error: errback,
                     handleAs:'json'
-                })
+                }).then(callback,errback)
             },
             invoke: function(expr){
                 var d = new Deferred();
@@ -264,15 +264,16 @@ define(['dojo/_base/declare','dojo/_base/xhr','dojo/_base/Deferred',
             },
             invokeWithForm:function(expr,form){
                 var d = new Deferred();
-                iframe.send({
-                    url:"/json-lang.php",
-                    content:{
+                iframe("/json-lang.php",{
+                    data:{
                         expr:expr,
                         "MAX_FILE_SIZE":"1000000000",
                         'render-type':'render-in-textarea'
                     },
                     handleAs:"json",
-                    form:form
+                    form:form,
+                    preventCache:true,
+                    method:"POST"
                 })
                 .then(
                     function(value){d.callback(value);},

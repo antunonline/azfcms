@@ -110,14 +110,18 @@ define({
     
     epspTitle:"Status dodataka",
     epspSaveAction:"Spremi promjene",
-    epspEnablePluginGlobally:"Upali dodatak kod svih stranica",
-    epspDisablePluginGlobally:"Iskljući dodatak kod svih stranica",
-    epspGridLabelName:"Naziv",
-    epspGridLabelRegion:"Regija",
+    epspEnablePluginGlobally:"Uključi dodatak kod svih stranica",
+    epspDisablePluginGlobally:"Isključi dodatak kod svih stranica",
+    epspGridLabelName:"Naziv stranice",
+    epspGridLabelRegion:"Dio stranice",
     epspGridLabelPluginName:"Naziv dodatka",
     epspGridLabelEnabled:"Uključeno",
     epspGridLabelWeight:"Standardna težina",
-    epspGridLabelCustomWeight:"Modificirana težina"
+    epspGridLabelCustomWeight:"Modificirana težina",
+    epspSearchPageLabel:"Naziv stranice",
+    epspSearchPluginLabel:"Naziv dodatka",
+    epspSearchLabel:"Tra\u017ei"
+    
   },
 
   de: true,

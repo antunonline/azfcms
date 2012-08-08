@@ -221,6 +221,18 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
         if (!is_array($staticQueryArgs) || !is_array($args)) {
             return array();
         }
+        
+        if(is_array($query) && isset($query['title']) && is_string($query['title'])){
+            $pageTitleFilter = $query['title']."%";
+        } else {
+            $pageTitleFilter = "%";
+        }
+        
+        if(is_array($query) && isset($query['pluginTitle']) && is_string($query['pluginTitle'])){
+            $pluginTitle = $query['pluginTitle']."%";
+        } else {
+            $pluginTitle = "%";
+        }
 
         $start = isset($args['start']) && (is_int($args['start']) || ctype_digit($args['start'])) ?
                 $args['start'] : null;
@@ -231,7 +243,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
             return array();
         }
 
-        $rows = $this->getModel()->fetchStatusMatrix();
+        $rows = $this->getModel()->fetchStatusMatrix($pageTitleFilter,$pluginTitle);
         $returnRows = array();
         for ($i = $start, $newI = 0, $len = sizeof($rows); $i < $len && $i < ($start + $count); $i++, $newI++) {
             $rows[$i]['rowId'] = $i;

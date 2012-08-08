@@ -5,13 +5,13 @@
 
 define(
     ['dojo/_base/declare','dijit/layout/ContentPane','dojox/grid/DataGrid',
-    'dojo/data/ObjectStore','dijit/form/Button','dojo/dom-geometry',
+    'dojo/data/ObjectStore','dijit/form/Button','dojo/dom-construct',
     'dijit/Toolbar', 'dojo/_base/lang','dijit/layout/BorderContainer',
-    'dojo/i18n!azfcms/resources/nls/view'],function
+    'dojo/i18n!azfcms/resources/nls/view','dijit/form/TextBox','dojo/keys'],function
     (declare,ContentPane,DataGrid,
-        ObjectStore, Button,domGeometry,
+        ObjectStore, Button,domConstruct,
         Toolbar, lang, BorderContainer,
-        nls)
+        nls,TextBox,keys)
         {
         return declare([ContentPane],{
             closable:true,
@@ -19,7 +19,9 @@ define(
             postCreate:function(){
                 this.inherited(arguments);
                 this._createBorderContainer();
+                this._createTopContentPane();
                 this._createToolbar();
+                this._createSearchControls();
                 this._createGrid();
                 this._createButtons();
             },
@@ -27,10 +29,48 @@ define(
                 this.borderContainer = new BorderContainer();
                 this.addChild(this.borderContainer);
             },
+            _createTopContentPane:function(){
+                this.topContentPane = new ContentPane({
+                    region:"top"
+                });
+                this.topContentPane.startup();
+                this.borderContainer.addChild(this.topContentPane);
+            },
             _createToolbar:function(){
-                this.toolbar = new Toolbar({region:"top"})
-                this.borderContainer.addChild(this.toolbar);
+                this.toolbar = new Toolbar({})
+                this.topContentPane.addChild(this.toolbar);
                 this.toolbar.startup();
+                this.searchToolbar = new Toolbar({})
+                this.topContentPane.addChild(this.searchToolbar);
+                this.searchToolbar.startup();
+            },
+            _createSearchControls:function(){
+                domConstruct.place("<span>"+nls.epspSearchPageLabel+":</span>",this.searchToolbar.domNode);
+                this.searchTextBox = new TextBox({});
+                this.searchTextBox.reloadGrid = lang.hitch(this,"reloadGrid");
+                this.searchTextBox.on("keyDown",function(e){
+                    if(e.keyCode==keys.ENTER){
+                        this.reloadGrid();
+                    }
+                });
+                
+                this.searchToolbar.addChild(this.searchTextBox);
+                
+                domConstruct.place("<span style='padding-left:20px;'>"+nls.epspSearchPluginLabel+":</span>",this.searchToolbar.domNode);
+                this.searchPluginTextBox = new TextBox({});
+                this.searchToolbar.addChild(this.searchPluginTextBox);
+                this.searchPluginTextBox.reloadGrid = lang.hitch(this,"reloadGrid");
+                this.searchPluginTextBox.on("keyDown",function(e){
+                    if(e.keyCode==keys.ENTER){
+                        this.reloadGrid();
+                    }
+                });
+                
+                this.searchButton = new Button({
+                    label:nls.epspSearchLabel,
+                    onClick:lang.hitch(this,'reloadGrid')
+                });
+                this.searchToolbar.addChild(this.searchButton);
             },
             _createGrid:function(){
                 var store;
@@ -52,19 +92,19 @@ define(
                     {
                         name:nls.epspGridLabelName,
                         field:'pageTitle',
-                        width:'100px'
+                        width:'200px'
                     },
                     
                     {
                         name:nls.epspGridLabelRegion,
                         field:'pluginRegion',
-                        width:'100px'
+                        width:'200px'
                     },
 
                     {
                         name:nls.epspGridLabelPluginName,
                         field:'pluginName',
-                        width:'100px'
+                        width:'200px'
                     },
 
                     {
@@ -120,7 +160,10 @@ define(
             },
             
             reloadGrid:function(){
-                this.grid.setQuery({})
+                this.grid.setQuery({
+                    title:this.searchTextBox.get('value'),
+                    pluginTitle:this.searchPluginTextBox.get('value')
+                })
             },
             
             

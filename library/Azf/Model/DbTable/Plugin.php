@@ -73,7 +73,7 @@ class Azf_Model_DbTable_Plugin extends Zend_Db_Table_Abstract {
 JOIN NavigationPlugin np on n.id = np.navigationId
 JOIN Plugin p ON np.pluginId = p.id
 WHERE n.id = ?
-ORDER BY p.region, np.weight";
+ORDER BY p.region, np.weight, p.weight";
         
         $rows = $this->getAdapter()->fetchAll($SQL,array($navigationId));
         foreach($rows as &$row){
@@ -154,7 +154,14 @@ ORDER BY p.region, np.weight";
         return $row;
     }
     
-    public function fetchStatusMatrix(){
+    
+    /**
+     * 
+     * @param string $pageTitleFilter
+     * @param string $pluginTitle
+     * @return array
+     */
+    public function fetchStatusMatrix($pageTitleFilter, $pluginTitle){
         $SQL  = "(SELECT DISTINCT
     n.id as navigationId,
     n.title as pageTitle,
@@ -176,7 +183,12 @@ ON
 JOIN
     Plugin p
 ON 
-    np.pluginId = p.id)
+    np.pluginId = p.id
+WHERE
+    n.title like ?
+AND
+    p.name like ?
+)
 UNION
 (SELECT DISTINCT
     n.id as navigationId,
@@ -196,9 +208,14 @@ JOIN
     Plugin p
 ON
     p.id NOT IN (SELECT np.pluginId FROM NavigationPlugin np WHERE np.navigationId = n.id)
+WHERE
+    n.title like ?
+AND
+    p.name like ?
+
 ) ORDER BY l,r, pluginRegion, enabled desc, weight ,pluginWeight;
 ";
-        return $this->getAdapter()->fetchAll($SQL);
+        return $this->getAdapter()->fetchAll($SQL,array($pageTitleFilter,$pluginTitle,$pageTitleFilter,$pluginTitle));
     }
     
     

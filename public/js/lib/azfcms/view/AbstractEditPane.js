@@ -1,10 +1,8 @@
 define(
-    ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Editor',
-    'dojo/i18n!azfcms/resources/nls/view'],function
-    (declare, ContentPane, Editor,
-     nls)
+    ['dojo/_base/declare','dojo/i18n!azfcms/resources/nls/view'],function
+    (declare, nls)
         {
-        var _class = declare([ContentPane],{
+        var _class = declare([],{
         
             constructor: function(){
                 this.region = "center";

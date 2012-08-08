@@ -1,35 +1,36 @@
 define(
-    ['dojo/_base/declare','azfcms/controller/AbstractEditorController','azfcms/model/navigation'],function
-    (declare, AbstractEditorController,navigationModel)
+    ['dojo/_base/declare','azfcms/controller/AbstractEditorController'],function
+    (declare, AbstractEditorController)
     {
         var _class = declare([AbstractEditorController],{
+            
+            constructor:function(){
+                
             /**
                  * Reference of editor pane
                  */
-            editorPane:null,
+            this.editorPane = null;
                 
             /**
                  * Reference of navigation node identifier
                  */
-            nodeId:null,
+            this.nodeId=null;
             
             /**
              * @property {azfcms.model.navigation} navigationModel
              */
-            navigationModel:null,
-            
+            this.navigationModel=null
+            },
             
             /**
              * Initialize controller
              */
             initialize: function(callback){
                 var self = this;
-                // Define model content type
-                this.jsonModelContentType=false // false=string , true=json// Read description below
                 
                 // This is where you will initialize the controller.
                 // When the controller is initialized call the provided callback 
-                // function to procede with construction of visual editing tool
+                // function to procede with construction of this widget controller
                 callback();
             }
             

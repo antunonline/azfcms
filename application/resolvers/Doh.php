@@ -12,7 +12,9 @@
  */
 class Application_Resolver_Doh extends Azf_Service_Lang_Resolver {
 
+    const PARAM_CONTENT_PLUGIN_IDENTIFIER = "pluginIdentifier";
     const EXTENSION_PLUGIN_DEVELOPMENT_TITLE = 'Extension Plugin Development';
+    const CONTENT_PLUGIN_DEVELOPMENT_TITLE = 'Extension Plugin Development';
 
     /**
      * 
@@ -43,6 +45,15 @@ class Application_Resolver_Doh extends Azf_Service_Lang_Resolver {
      */
     public function getPluginManager() {
         return new Azf_Plugin_Extension_Manager();
+    }
+    
+    
+    /**
+     * 
+     * @return \Azf_Plugin_Descriptor
+     */
+    public function getPluginDescriptor(){
+        return new Azf_Plugin_Descriptor();
     }
 
     protected function isAllowed($namespaces, $parameters) {
@@ -251,6 +262,77 @@ class Application_Resolver_Doh extends Azf_Service_Lang_Resolver {
        $manager->setUp($type, $pluginId);
         
        return $params;   
+    }
+    
+    
+    
+    public function createContentPluginDevelopmentBranch() {
+        $root= $this->getNavigation()->getRootNode();
+        $rootid = $root['id'];
+        
+        $this->getNavigation()->insertInto($rootid, array(
+            'title'=>self::CONTENT_PLUGIN_DEVELOPMENT_TITLE,
+            'url'=>self::CONTENT_PLUGIN_DEVELOPMENT_TITLE,
+            'disabled'=>false
+        ));
+    }
+    
+    public function createContentPluginBranch($intoId, $identifier) {
+        $node = array(
+            'url'=>$identifier,
+            'title'=>$identifier,
+            'disabled'=>false
+        );
+        
+        $this->getNavigation()->insertInto($intoId, $node);
+    }
+    
+    /**
+     * 
+     * @param string $identifier
+     * @return int
+     */
+    public function initializeContentPluginMethod($identifier){
+        $developmentBranch = $this->fetchNavigationBranchByTitle(self::CONTENT_PLUGIN_DEVELOPMENT_TITLE);
+        if(!$developmentBranch){
+            $this->createContentPluginDevelopmentBranch();
+            $developmentBranch = $this->fetchNavigationBranchByTitle(self::CONTENT_PLUGIN_DEVELOPMENT_TITLE);
+        }
+        
+        $pluginBranch = $this->fetchNavigationBranchByTitle($identifier);
+        if(!$pluginBranch){
+            $this->createContentPluginBranch($developmentBranch['id'],$identifier);
+            $pluginBranch = $this->fetchNavigationBranchByTitle($identifier);
+            
+            $pluginParams = $this->getPluginDescriptor()->getContentPlugin($identifier);
+        $pluginParams['action'] = "installpage";
+        
+        $frontController = $this->getHelper("frontController");
+        /* @var $frontController Azf_Service_Lang_ResolverHelper_FrontController */
+        $frontController->callMvc($pluginBranch['id'],$pluginParams,'production');
+        $this->getNavigation()->setStaticParam($pluginBranch['id'], self::PARAM_CONTENT_PLUGIN_IDENTIFIER, $pluginIdentifier);
+        }
+        
+        
+        
+        
+        
+        return $pluginBranch['id'];
+    }
+    
+    public function reinitializeContentPluginMethod($identifier) {
+        $id = $this->initializeContentPluginMethod($identifier);
+        
+        $pluginParams = $this->getPluginDescriptor()->getContentPlugin($identifier);
+        $pluginParams['action'] = "installpage";
+        
+        $frontController = $this->getHelper("frontController");
+        /* @var $frontController Azf_Service_Lang_ResolverHelper_FrontController */
+        $frontController->callMvc($id,$pluginParams,'production');
+        $this->getNavigation()->setStaticParam($id, self::PARAM_CONTENT_PLUGIN_IDENTIFIER, $pluginIdentifier);
+
+        
+        return $id;
     }
 
 }

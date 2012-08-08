@@ -42,12 +42,9 @@ define(
             onSave: function(content){
                 
             },
+            
             resize:function(){
-                this.inherited(arguments);
-                var parentBoxModel= domGeometry.getContentBox(this.domNode.parentNode);
-                if(parentBoxModel.h<60)
-                    return;
-                this.editor.set("style","height:"+(parentBoxModel.h-60)+"px");
+                this.borderContainer.resize();
             }
         });
     

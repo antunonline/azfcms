@@ -40,7 +40,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
         },
             
         mayHaveChildren: function(item){
-            return "childNodes" in item;
+            return true;
         },
         
         /**
@@ -48,7 +48,13 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @return {Array}
          */
         getChildren: function(parentItem, onComplete){
-            onComplete(parentItem.childNodes);
+            if(parentItem.childNodes){
+                onComplete(parentItem.childNodes);
+            } else {
+                this.get(parentItem.id).then(function(item){
+                    onComplete(item.childNodes);
+                });
+            }
         },
         
         
@@ -88,6 +94,19 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @param {Number} index
          */
         pasteItem: function(childItem, oldParentItem, newParentItem, bCopy, index){
+            this.getChildNodes([oldParentItem.id,newParentItem.id]).then(lang.hitch(this,function(results){
+                this._pasteItem(childItem,results[0],results[1],bCopy,index);
+            }))
+        },
+        
+        /**
+         * @param {Object} childItem
+         * @param {Object} oldParentItem
+         * @param {Object} newParentItem
+         * @param {Boolean} bCopy
+         * @param {Number} index
+         */
+        _pasteItem:function(childItem, oldParentItem, newParentItem, bCopy, index){
             var self = this;
             var updateServer;
             
@@ -127,8 +146,6 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
                 self.onChildrenChange(oldParentItem,oldParentItem.childNodes);
                 self.onChildrenChange(newParentItem,newParentItem.childNodes);
             });
-            
-            
         },
         
         /**
@@ -177,6 +194,16 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             } else {
                 return null;
             }
+        },
+        
+        
+        /**
+         *
+         * @param {Array} forNodeIds An example would be [1,2,3]
+         * @return {Deferred}
+         */
+        getChildNodes:function(forNodeIds){
+            return this.model.singleInvoke('cms.navigation.getChildNodes',[forNodeIds]);
         },
         
         /**

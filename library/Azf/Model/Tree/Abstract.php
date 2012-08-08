@@ -610,6 +610,33 @@ ORDER BY t.l ASC";
 
         return $this->_parseTree($stmt, $cols, $showMetadataColumns);
     }
+    
+    
+    
+    /**
+     * 
+     * @param int $id
+     * @param null|array $cols
+     * @return array
+     */
+    public function getChildren($id, $cols = null) {
+        $colsSQL = $this->_parseCols($cols);
+        $selectSQL = "SELECT $colsSQL FROM $this->_name WHERE tid = ? AND (parentId = ? OR id = ?)  ORDER BY l,r";
+        
+        $items =  $this->getAdapter()->fetchAll($selectSQL,array($this->getTid(),$id,$id));
+        
+        if(isset($items[0])){
+            $response  = $items[0];
+            $response['childNodes'] = array();
+            for($i=1,$len=sizeof($items);$i<$len;$i++){
+                $response['childNodes'][] = $items[$i];
+            }
+        } else  {
+            $response = null;
+        }
+        
+        return $response;
+    }
 
     public function getVisible($id, $cols = null, $showMetadataColumns = false) {
         $n = $this->_find($id);

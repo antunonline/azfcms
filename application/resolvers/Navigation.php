@@ -351,6 +351,23 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         $this->_installContentPlugin($nodeId, $newType);
         return true;
     }
+    
+    
+    
+    public function getChildNodesMethod(array $nodeIds) {
+        $result = array();
+        $navigation = $this->getNavigation();
+        
+        foreach($nodeIds as $nodeId){
+            if(!is_int($nodeId)&&!ctype_digit($nodeId)){
+                continue;;
+            }
+            
+            $result[] = $navigation->getChildren($nodeId,array('id','parentId','l','r','title','url','disabled','home'));
+        }
+        
+        return $result;
+    }
 
     protected function isAllowed($namespaces, $parameters) {
         // TODO fix me

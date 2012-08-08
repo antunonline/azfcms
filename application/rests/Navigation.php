@@ -18,7 +18,7 @@ class Application_Rest_Navigation extends Azf_Rest_Provider_Abstract {
     public function get(Azf_Rest_Request $request, Azf_Rest_Response $response) {
         $navigation = Zend_Registry::get("navigationModel");
         /* @var $navigation Azf_Model_Tree_Navigation */
-        $record = $navigation->getBranch($request->getId());
+        $record = $navigation->getChildren($request->getId(),array('id','parentId','l','r','title','url','disabled','home'));
         return $record;
     }
 

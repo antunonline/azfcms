@@ -405,21 +405,32 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @param {String} keywords
          */
         setMetaValues: function(node, title, description, keywords){
-            var call = [
-                '[',
-                'cms.navigation.setTitle(',node,',\'',title,'\'),',
-                'cms.navigation.setDynamicParam(',node,',\'metaDescription\',\'',_s(description),'\'),',
-                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',_s(keywords),'\'),',
-                'cms.navigation.getBranch('+node+")",
-                ']'
-            ].join("");
+//            var call = [
+//                '[',
+//                'cms.navigation.setTitle(',node,',\'',title,'\'),',
+//                'cms.navigation.setDynamicParam(',node,',\'metaDescription\',\'',_s(description),'\'),',
+//                'cms.navigation.setDynamicParam(',node,',\'metaKeywords\',\'',_s(keywords),'\'),',
+//                'cms.navigation.getChildNodes('+node+")",
+//                ']'
+//            ].join("");
+            
+            var calls = [
+                this.model.createCall('cms.navigation.setTitle',[node,title]),
+                this.model.createCall('cms.navigation.setDynamicParam',[node,'metaDescription',description]),
+                this.model.createCall('cms.navigation.setDynamicParam',[node,'metaKeywords',keywords]),
+                this.model.createCall('cms.navigation.getChildNodes',[[node]])
+            ].join(",");
+            
+            var call = ["[",calls,"]"].join("");
             
             var response =  this.model.invoke(call);
             var self = this;
             
             response.then(function(args){
-                var node = args[3];
-                self.onChange(node);
+                var nodes = args[3];
+                if(nodes.length>0){
+                    self.onChange(nodes[0]);
+                }
             })
             return response;
         },

@@ -144,7 +144,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param string $title 
      * @return bool
      */
-    public function setTitle($nodeId, $title) {
+    public function setTitleMethod($nodeId, $title) {
         return $this->getNavigation()->setTitle($nodeId, $title);
     }
     
@@ -154,7 +154,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param string $url 
      * @return bool
      */
-    public function setUrl($nodeId, $url) {
+    public function setUrlMethod($nodeId, $url) {
         return $this->getNavigation()->setUrl($nodeId, $url);
     }
     

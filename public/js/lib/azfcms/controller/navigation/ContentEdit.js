@@ -128,15 +128,16 @@ define(
              */
             _onParamsLoad: function(){
                 this.cep.set("title",this.node.title);
+                this.cep.set("url",this.node.url);
                 this.cep.set("description",this.dynamicParams.metaDescription);
                 this.cep.set("keywords",this.dynamicParams.metaKeywords);
                 this.cep.pageType.set('value',this.staticParams.pluginIdentifier);
             },
        
        
-            onMetadataSave: function(title, description, keywords){
+            onMetadataSave: function(title, url, description, keywords){
                 var nid = this.nodeId;
-                this.navigationModel.setMetaValues(nid,title,description,keywords);
+                this.navigationModel.setMetaValues(nid,title, url,description,keywords);
             },
             
             onTypeChange:function(newType){

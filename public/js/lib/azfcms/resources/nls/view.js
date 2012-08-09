@@ -35,6 +35,7 @@ define({
     cepPageTitle: "Naziv stranice",
     cepPageDescription: "Opis stranice",
     cepPageKeywords: "Klju\u010dne riječi",
+    cepPageUrl: "URL stranice",
     cepChangeType: "Promijeni vrstu sadr\u017eaja",
     cepSave:"Spremi",
     

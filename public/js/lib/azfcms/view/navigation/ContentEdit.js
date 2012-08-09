@@ -23,6 +23,7 @@ define(
                 this.cepPageKeywords = nls.cepPageKeywords;
                 this.cepChangeType = nls.cepChangeType;
                 this.cepSave = nls.cepSave;
+                this.cepPageUrl = nls.cepPageUrl;
            
            
                 this.typeStore = args.store;
@@ -46,8 +47,9 @@ define(
                 var title = this.pageName.get("value");
                 var description = this.pageDescription.get("value");
                 var keywords = this.pageKeywords.get("value");
+                var url = this.pageUrl.get("value");
            
-                this.onMetadataSave(title,description,keywords);
+                this.onMetadataSave(title, url, description,keywords);
             },
             
             _onChangeType:function(){
@@ -87,8 +89,13 @@ define(
             _setKeywordsAttr: function(keywords){
                 this.pageKeywords.set("value",keywords);
             },
+            
+            _setUrlAttr:function(url){
+                this.pageUrl.set("value",url);
+            },
+            
        
-            onMetadataSave: function(title, description, keywords){
+            onMetadataSave: function(title, url, description, keywords){
            
             },
             

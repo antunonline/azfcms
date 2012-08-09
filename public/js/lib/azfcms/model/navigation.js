@@ -421,7 +421,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
          * @param {String} description
          * @param {String} keywords
          */
-        setMetaValues: function(node, title, description, keywords){
+        setMetaValues: function(node, title, url, description, keywords){
 //            var call = [
 //                '[',
 //                'cms.navigation.setTitle(',node,',\'',title,'\'),',
@@ -433,6 +433,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             
             var calls = [
                 this.model.createCall('cms.navigation.setTitle',[node,title]),
+                this.model.createCall('cms.navigation.setUrl',[node,url]),
                 this.model.createCall('cms.navigation.setDynamicParam',[node,'metaDescription',description]),
                 this.model.createCall('cms.navigation.setDynamicParam',[node,'metaKeywords',keywords]),
                 this.model.createCall('cms.navigation.getChildNodes',[[node]])
@@ -444,7 +445,7 @@ define(['azfcms/model','dojo/_base/lang','dojo/_base/Deferred',
             var self = this;
             
             response.then(function(args){
-                var nodes = args[3];
+                var nodes = args[4];
                 if(nodes.length>0){
                     self.onChange(nodes[0]);
                 }

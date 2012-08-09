@@ -121,7 +121,7 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
     }
 
     protected function _parseNodes(&$node) {
-        $node['url'] = "/" . trim($node['url'], '/') . "/" . $node['id'] . ".html";
+        $node['url'] = "/" . trim(urlencode($node['url']), '/') . "/" . $node['id'] . ".html";
 
         foreach ($node['childNodes'] as &$cnode) {
             $this->_parseNodes($cnode);
@@ -206,7 +206,7 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
             }
         }
     }
-
+    
     /**
      * 
      * @param int $level
@@ -238,7 +238,6 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
         if ($i < $level) {
             $nodes = array();
         }
-
 
 
         return $this->_levelMenuCache[$level] = $nodes;

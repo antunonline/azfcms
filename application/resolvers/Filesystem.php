@@ -500,7 +500,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
             $i++;
         }
 
-        copy($srcRealPath, $dstRealPath);
+        copy($srcRealPath, $newSrcPath);
     }
 
     /**

@@ -309,28 +309,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     public function _initAcl(){
         static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
         
-        $this->bootstrap("session");
-        if(Zend_Session::namespaceIsset("acl")){
-            $session = new Zend_Session_Namespace("acl", true);
-            $acl = $session->acl;
-        } else {
-            $acl = new Zend_Acl();
-            $uid = $this->bootstrap("auth")->id;
-            
-            $dbAdapter= $this->getPluginResource("db")->getDbAdapter();
-            $userModel = new Azf_Model_User(array("db"=>$dbAdapter));
-            
-            $aclRules = $userModel->getUserAclRules($uid);
-            foreach($aclRules as $rule){
-                $acl->allow(null, $rule['resource'], $rule['privilege']);
-            }
-            
-            $namespace = new Zend_Session_Namespace("acl");
-            $namespace->acl = $acl;
-        }
-        
-        Zend_Registry::set("acl",$acl);
-        return $acl;
+//        $this->bootstrap("session");
+//        if(Zend_Session::namespaceIsset("acl")){
+//            $session = new Zend_Session_Namespace("acl", true);
+//            $acl = $session->acl;
+//        } else {
+//            $acl = new Zend_Acl();
+//            $uid = $this->bootstrap("auth")->id;
+//            
+//            $dbAdapter= $this->getPluginResource("db")->getDbAdapter();
+//            $userModel = new Azf_Model_User(array("db"=>$dbAdapter));
+//            
+//            $aclRules = $userModel->getUserAclRules($uid);
+//            foreach($aclRules as $rule){
+//                $acl->allow(null, $rule['resource'], $rule['privilege']);
+//            }
+//            
+//            $namespace = new Zend_Session_Namespace("acl");
+//            $namespace->acl = $acl;
+//        }
+//        
+//        Zend_Registry::set("acl",$acl);
+//        return $acl;
     }
     
     

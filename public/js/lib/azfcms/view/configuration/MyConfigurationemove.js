@@ -1,7 +1,7 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/{ucName}.html'],function
+    'dojo/text!./templates/MyConfigurationemove.html'],function
 (declare, 
 _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString)
 {

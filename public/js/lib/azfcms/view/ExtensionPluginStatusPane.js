@@ -7,7 +7,7 @@ define(
     ['dojo/_base/declare','dijit/layout/ContentPane','dojox/grid/DataGrid',
     'dojo/data/ObjectStore','dijit/form/Button','dojo/dom-construct',
     'dijit/Toolbar', 'dojo/_base/lang','dijit/layout/BorderContainer',
-    'dojo/i18n!azfcms/resources/nls/view','dijit/form/TextBox','dojo/keys'],function
+    'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common','dijit/form/TextBox','dojo/keys'],function
     (declare,ContentPane,DataGrid,
         ObjectStore, Button,domConstruct,
         Toolbar, lang, BorderContainer,

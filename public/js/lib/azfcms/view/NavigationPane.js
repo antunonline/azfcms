@@ -1,7 +1,7 @@
 define(
 ['dojo/_base/declare','dijit/layout/ContentPane','dijit/Tree',
 'dijit/layout/BorderContainer','dijit/Menu','dijit/MenuItem',
-'dijit/tree/dndSource','dojo/i18n!azfcms/resources/nls/view',
+'dijit/tree/dndSource','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
 'dojo/aspect'],
 function
 (declare,ContentPane,Tree,

@@ -1,7 +1,7 @@
 define(
     ['dojo/_base/declare','azfcms/view/AbstractEditPane',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/Redirector.html','dojo/i18n!azfcms/resources/nls/view',
+    'dojo/text!./templates/Redirector.html','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
 
     'dijit/form/TextBox','dijit/form/Button'],function
     (declare, AbstractEditPane,

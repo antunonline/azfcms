@@ -381,6 +381,7 @@ class ${controllerClassName} extends Azf_Controller_Action {
             <filterchain>
                 <replacetokens begintoken="{" endtoken="}">
                     <token key="ucName" value="${ucName}" />
+                    <token key="name" value="${name}" />
                 </replacetokens>
             </filterchain>
         </copy>
@@ -391,6 +392,7 @@ class ${controllerClassName} extends Azf_Controller_Action {
             <filterchain>
                 <replacetokens begintoken="{" endtoken="}">
                     <token key="ucName" value="${ucName}" />
+                    <token key="name" value="${name}" />
                 </replacetokens>
             </filterchain>
         </copy>
@@ -426,6 +428,17 @@ class ${controllerClassName} extends Azf_Controller_Action {
                 </replacetokens>
             </filterchain>
         </copy>
+        
+        <!-- Create nls file -->
+        <copy file="public/js/lib/azfcms/resources/i18n/cms/configuration/nls/Skeleton.js"
+              tofile="public/js/lib/azfcms/resources/i18n/cms/configuration/nls/${ucName}.js">
+            <filterchain>
+                <replacetokens begintoken="{" endtoken="}">
+                    <token key="ucName" value="${ucName}" />
+                    <token key="name" value="${name}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
     </target>
 
 
@@ -438,6 +451,7 @@ class ${controllerClassName} extends Azf_Controller_Action {
         <delete file="public/js/lib/azfcms/tests/view/configuration/${ucName}.html" />
         <delete file="public/js/lib/azfcms/tests/controller/configuration/${ucName}.html" />
         <delete file="public/js/lib/azfcms/bootstrap/configuration/${ucName}.js" />
+        <delete file="public/js/lib/azfcms/resources/i18n/cms/configuration/nls/${ucName}.js" />
 
         <delete dir="public/js/lib/azfcms/view/configuration/${ucName}" />
         <delete dir="public/js/lib/azfcms/controller/configuration/${ucName}" />

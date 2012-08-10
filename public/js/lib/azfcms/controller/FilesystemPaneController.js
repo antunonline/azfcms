@@ -5,7 +5,7 @@
  */
 
 define(['dojo/_base/declare','dojo/_base/lang','azfcms/view/UploadPane',
-    'dijit/Dialog','azfcms/store/Filesystem','azfcms/view/util','dojo/i18n!azfcms/resources/nls/view'],function
+    'dijit/Dialog','azfcms/store/Filesystem','azfcms/view/util','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
     (declare,lang,UploadPane,
         Dialog,FilesystemStore,viewUtil, nls){
         return declare([],{

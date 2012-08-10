@@ -5,7 +5,7 @@
 define(
     ['dojo/_base/declare','dojo/text!./templates/UploadPane.html','dojo/_base/lang',
     'dijit/_TemplatedMixin','dijit/_Widget','dijit/_WidgetsInTemplateMixin',
-    'dojo/i18n!azfcms/resources/nls/view',
+    'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
 
     'dijit/form/Button','dijit/form/TextBox'],function
     (declare, templateString, lang,

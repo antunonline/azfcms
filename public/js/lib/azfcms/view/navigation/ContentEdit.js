@@ -4,7 +4,7 @@
  */
 define(
     ['dojo/_base/declare','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
-    'dojo/text!./templates/ContentEdit.html','dojo/i18n!azfcms/resources/nls/view',
+    'dojo/text!./templates/ContentEdit.html','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
     'dijit/layout/BorderContainer','dijit/layout/ContentPane',
     'dijit/form/FilteringSelect','dijit/form/TextBox','dijit/form/Textarea'
     ],function

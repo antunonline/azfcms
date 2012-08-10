@@ -1,7 +1,7 @@
 
 define(
     ['dojo/_base/declare','dijit/Dialog',
-    'dojo/i18n!azfcms/resources/nls/view','dijit/_TemplatedMixin','dijit/_Widget',
+    'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common','dijit/_TemplatedMixin','dijit/_Widget',
     'dojo/text!./templates/CreatePageDialog.html','dijit/_WidgetsInTemplateMixin','dijit/form/FilteringSelect',
     'dijit/form/Button'],function
     (declare,Dialog,

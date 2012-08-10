@@ -2,7 +2,7 @@ define(
     ['dojo/_base/declare','azfcms/model/cms',
         
     'azfcms/model/navigation','azfcms/view/util',
-    'dojo/i18n!azfcms/resources/nls/view'],function
+    'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
     (declare,  cms,
         navigationModel, util,
         nls)

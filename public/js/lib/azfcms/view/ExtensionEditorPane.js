@@ -6,7 +6,7 @@
 define(
     ['dojo/_base/declare','dojo/text!./templates/ExtendedEditorPane.html','dijit/_Widget',
     'dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dojo/dom-style',
-    'dojo/data/ObjectStore','dojo/_base/lang','azfcms/model/cms','dojo/i18n!azfcms/resources/nls/view',
+    'dojo/data/ObjectStore','dojo/_base/lang','azfcms/model/cms','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
     'dijit/layout/ContentPane',
 
     'dijit/layout/TabContainer','dojox/grid/DataGrid','dijit/layout/BorderContainer',

@@ -1,5 +1,5 @@
 define(
-    ['dojo/_base/declare','dojo/i18n!azfcms/resources/nls/view'],function
+    ['dojo/_base/declare','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
     (declare, nls)
         {
         var _class = declare([],{

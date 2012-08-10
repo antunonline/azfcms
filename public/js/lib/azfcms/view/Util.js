@@ -4,7 +4,7 @@
 
 define(
     ['dojo/_base/declare','dijit/Dialog','azfcms/view/ConfirmPane',
-    'dojo/i18n!azfcms/resources/nls/view','dojo/_base/lang','azfcms/store/Filesystem',
+    'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common','dojo/_base/lang','azfcms/store/Filesystem',
     'azfcms/view/FileSelectPane'],function
     (declare,Dialog,ConfirmPane,
         nls,lang,Filesystem,

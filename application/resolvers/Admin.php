@@ -22,6 +22,28 @@ class Application_Resolver_Admin extends Azf_Service_Lang_Resolver {
     
     /**
      * 
+     * @return array
+     */
+    public function getConfigurationActionFileList() {
+        $configurationActionDefinitionList = array();
+        $configurationActionDirectoryIterator = $this->getConfigurationActionDirectoryIterator();
+        while($configurationActionDirectoryIterator->valid()){
+            $path = $configurationActionDirectoryIterator->getPathname();
+            
+            if($configurationActionDirectoryIterator->isFile() && ("js"==  pathinfo($path,PATHINFO_EXTENSION))){
+                $configurationActionDefinitionList[] =$path;
+            }
+            
+            $configurationActionDirectoryIterator->next();
+        }
+        
+        sort($configurationActionDefinitionList,SORT_NUMERIC);
+        return $configurationActionDefinitionList;
+    }
+    
+    
+    /**
+     * 
      * @param string $path
      * @return string
      */
@@ -34,17 +56,11 @@ class Application_Resolver_Admin extends Azf_Service_Lang_Resolver {
      * @return array
      */
     public function getConfigurationActionDefinitionsMethod(){
-        $configurationActionDirectoryIterator = $this->getConfigurationActionDirectoryIterator();
         $configurationActionDefinitionList = array();
         
-        while($configurationActionDirectoryIterator->valid()){
-            $path = $configurationActionDirectoryIterator->getPathname();
-            
-            if($configurationActionDirectoryIterator->isFile() && ("js"==  pathinfo($path,PATHINFO_EXTENSION))){
-                $configurationActionDefinitionList[] = $this->getConfigurationActionDefinition($path);
-            }
-            
-            $configurationActionDirectoryIterator->next();
+        $fileList= $this->getConfigurationActionFileList();
+        for($i=0,$len=sizeof($fileList);$i<$len;$i++){
+            $configurationActionDefinitionList[] = $this->getConfigurationActionDefinition($fileList[$i]);
         }
         
         return $configurationActionDefinitionList;

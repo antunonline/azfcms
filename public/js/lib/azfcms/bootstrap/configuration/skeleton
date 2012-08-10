@@ -1,5 +1,6 @@
 {
-    i18nButtonLabelPointer: 'npCreatePageAction',
+    i18nButtonLabelPointer: 'np{ucName}Action',
+    i18nBbuttonFallbackLabel: '{ucName}',
     iconClass:'dijitIconNewTask',
     init: function(initCallback,adminDialog){
         var context = this;

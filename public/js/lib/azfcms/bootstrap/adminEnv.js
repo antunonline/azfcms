@@ -59,7 +59,11 @@ define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPa
                     // Load current definition
                     var definition = actionDefinitions[i];
                     // Load label
-                    var label = nls[definition.i18nButtonLabelPointer];
+                    if(nls[definition.i18nButtonLabelPointer]){
+                        var label = nls[definition.i18nButtonLabelPointer];
+                    } else {
+                        var label = definition.i18nBbuttonFallbackLabel;
+                    }
                     // Load icon class
                     var iconClass = definition.iconClass;
                     // Create callback

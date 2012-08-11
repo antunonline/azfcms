@@ -173,6 +173,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         
         $this->getResourceLoader()
                 ->addResourceType("plugins", "plugins","Plugin");
+        $this->getResourceLoader()
+                ->addResourceType("filters", "filters","Filter");
     }
 
     /**

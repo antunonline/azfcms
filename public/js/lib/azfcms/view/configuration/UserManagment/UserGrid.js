@@ -30,7 +30,8 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
           this.init();
         },
         templateString: templateString,
-        closable:true,
+        closable:false,
+        title:nls.userGridTabTitle,
         nls:nls,
         init:function(){
             // In this method you can initialize the view
@@ -49,6 +50,10 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
             
             this._attachWidgetEvents();
             this.grid.setStore(store,{});
+        },
+        
+        resize:function(){
+            this.borderContainer.resize();
         },
         
         _attachWidgetEvents:function(){
@@ -78,6 +83,10 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
             };
         },
         
+        reloadGrid:function(){
+            this._onSearch();
+        },
+        
         _onSearch:function(){
             this.onSearch(this.get('value'));
         },
@@ -99,6 +108,12 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
         },
         onSelect:function(user){
             
+        },
+        
+        onEdit:function(){
+            /**
+             * Will be activated when the user double clicks the row
+             */
         }
             
     });

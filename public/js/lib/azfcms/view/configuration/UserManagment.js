@@ -2,14 +2,15 @@ define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/UserManagment.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/UserManagment',
-    'dijit/form/Button',
+    'dojo/_base/lang',
+    'dijit/form/Button','azfcms/view/configuration/UserManagment/UserGrid',
     
     'dijit/layout/TabContainer','dijit/layout/BorderContainer','dijit/Toolbar',
-    'dijit/layout/ContentPane','azfcms/view/configuration/UserManagment/UserGrid'
+    'dijit/layout/ContentPane'
 ],function
 (declare, 
 _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
-    nls,Button)
+    nls,lang,Button,UserGrid, UserForm)
 {
     var _class = declare([_Widget,_TemplatedMixin,_WidgetsInTemplate],{
         constructor:function(){
@@ -26,10 +27,6 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
              */
             this.tabContainer;
             
-            /**
-             * User store
-             */
-            this.userStore;
             
             this.init();
         },
@@ -42,12 +39,18 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
             
         },
         
+        resize:function(){
+            this.inherited(arguments);
+            this.borderContainer.resize();
+        },
+        
         /**
          * Add widget to tab container
          * @param {dijit._Widget} widget
          */
         addChild:function(widget){
             this.tabContainer.addChild(widget);
+            this.resize();
         },
         
         

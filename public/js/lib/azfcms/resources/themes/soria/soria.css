@@ -1,0 +1,41 @@
+/* 
+    Document   : soria
+    Created on : Aug 11, 2012, 8:12:43 PM
+    Author     : antun
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.azfcmsGenericFormLayoutContainer > div > dl > dd >dl >  dd.input{
+    padding-left:20px;  
+    display: inline-block;
+}
+.azfcmsGenericFormLayoutContainer > div > dl > dd {
+    padding:10px;
+    border:1px solid #b1badf;
+    margin:5px 15px;
+    background:white;
+    display: inline-block;
+    width:80%;
+}
+.azfcmsGenericFormLayoutContainer > div >dl > dd >dl > dd.label{
+    padding:4px;
+    text-align: left;
+    line-height: 1.2em;
+    font-weight: bold;
+    line-height: 1.5em;
+    width:150px;
+    display: inline-block;
+}
+
+.azfcmsGenericFormLayoutContainer {
+    background-color:#e1ebfb;
+    border:1px solid #b1badf;
+    position:absolute;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    top:20px;
+    padding:10px;
+    overflow: auto;
+}

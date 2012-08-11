@@ -23,6 +23,12 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
         nls:nls,
         init:function(){
             // In this method you can initialize the view
+        },
+        /**
+         * Implement resize method. Call all direct descendants resize methods.
+         */
+        resize:function(){
+            
         }
             
     });

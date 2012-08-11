@@ -3,12 +3,11 @@
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/Grid.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/soriaGrid" />
-        <link rel="stylesheet" type="text/css" href="../../../../azfcms/resources/themes/soria/soria.css" />
-        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <link rel="stylesheet" type="text/css" href="../../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../dijit/themes/soria/soria.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../dojox/grid/resources/Grid.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../dojox/grid/resources/soriaGrid.css" />
+        <script type="text/javascript" src="../../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
                 height:100%;
@@ -20,11 +19,11 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/UserManagment',
-                'azfcms/controller/configuration/UserManagment','azfcms/store/registry!UsersStore'
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/UserManagment/UserForm',
+                'azfcms/controller/configuration/UserManagment/UserForm'
             ],function
             (domReady,dijit,doh,domCreate,View,
-            Controller,userStore){
+            Controller){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -32,18 +31,17 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.controller.extensionPlugin.UserManagment',[]);
+                    doh.register('azfcms.tests.controller.extensionPlugin.UserManagment.UserForm',[]);
                 }
                 else if(useCase == "customTest"){
                         
                     var view = new View({
-                       
+                        
                     },'inputContainer');
                     view.startup();
                     
                     var controller = new Controller({
-                        view:view,
-                        userStore:userStore
+                        view:view
                     });
                     
                     

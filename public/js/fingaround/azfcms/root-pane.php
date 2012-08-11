@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="/js/lib/dojo/resources/dojo.css" media="screen">
         <link rel="stylesheet" href="/js/lib/dojox/grid/resources/claroGrid.css" media="screen" />
         <link rel="stylesheet" href="/js/lib/dojox/grid/resources/Grid.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/azfcms/resources/themes/claro/claro.css" />
     </script>
     <style type="text/css" >
         root,html,body {

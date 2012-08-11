@@ -15,6 +15,11 @@ class Azf_Filter_Factory {
     
     protected $_loadedFilters = array();
     
+    
+    /**
+     * 
+     * @return Azf_Filter_Loader
+     */
     public static function getInstance(){
         if(!self::$instance){
             self::$instance = new self();
@@ -28,6 +33,9 @@ class Azf_Filter_Factory {
     
     
     protected function _constructFilterClass($filterName, $module){
+        if($module=='default'){
+            $module = "Application";
+        }
         return ucfirst($module)."_Filter_".ucfirst($filterName);
     }
     
@@ -38,7 +46,7 @@ class Azf_Filter_Factory {
     
     protected function _isFilterLoaded($filterName, $module){
         $key = $this->_getFilterKey($filterName, $module);
-        return isset($key);
+        return isset($this->_loadedFilters[$key]);
     }
     
     /**
@@ -86,6 +94,16 @@ class Azf_Filter_Factory {
      */
     public function loadFilter($filterName, $module = "default"){
         return $this->_loadFilter($filterName,$module);
+    }
+    
+    /**
+     * 
+     * @param string $filterName
+     * @param string $module
+     * @return Azf_Filter_Abstract
+     */
+    public static function get($filterName, $module='default'){
+        return self::getInstance()->loadFilter($filterName,$module);
     }
 }
 

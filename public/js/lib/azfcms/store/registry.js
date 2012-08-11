@@ -100,7 +100,9 @@ define(
             UsersStore:function(){
                 return QueryLangStore({
                     idProperty:"name",
-                    queryMethod:"cms.user.queryUsers"
+                    queryMethod:"cms.user.queryUsers",
+                    addMethod:"cms.user.addUser",
+                    putMethod:"cms.user.saveUser"
                 });
             }
         })

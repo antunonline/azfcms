@@ -10,7 +10,7 @@ $this;  /* @var $this Application_Plugin_Extension_LinkList */
             <?php
             foreach ($this->getParam("linkList",array()) as $link):
                 ?>
-            <a href="<?=$link->url ?>"><?=$link->name?></a>
+            <a href="<?=$link['url'] ?>"><?=$link['name']?></a>
                 <?php
             endforeach;
             ?>

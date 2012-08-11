@@ -130,6 +130,24 @@ class Azf_Model_User extends Zend_Db_Table_Abstract{
     }
     
     
+    /**
+     * 
+     * @param string $loginName
+     * @param string $email
+     * @param int $count
+     * @param int $start
+     * @return object
+     */
+    public function fetchByLoginNameAndEmail($loginName,$email, $count,$start){
+        $where = array(
+            'loginName like ?'=>"$loginName%",
+            'email like ?'=>"$email%"
+        );
+        
+        return $this->fetchAll($where, null, $count, $start);
+    }
+    
+    
     
     
 }

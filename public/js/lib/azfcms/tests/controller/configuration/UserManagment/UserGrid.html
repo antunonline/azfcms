@@ -19,8 +19,11 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/{ucName}/{ucChildName}'],function
-            (domReady,dijit,doh,domCreate, {ucChildName}){
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/UserManagment/UserGrid',
+                'azfcms/controller/configuration/UserManagment/UserGrid',  'azfcms/store/registry!UsersStore'
+            ],function
+            (domReady,dijit,doh,domCreate,View,
+            Controller,userStore){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -28,19 +31,24 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.view.configuration.{ucName}.{ucChildName}',[
-                        
-                    ]);
+                    doh.register('azfcms.tests.controller.extensionPlugin.UserManagment.UserGrid',[]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new {ucChildName}({
                         
-                    }, "inputContainer");
+                    var view = new View({
+                        store:userStore
+                    },'inputContainer');
                     view.startup();
+                    
+                    var controller = new Controller({
+                        view:view
+                    });
+                    
+                    
                     
                 } else {
                     domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
-                    domCreate.place("<a href='?useCase=customTest' >Custom Test</a><br />","inputContainer");
+                    domCreate.place("<a href='?useCase=customTest' >Custom test</a><br />","inputContainer");
                 }
             });
         </script>

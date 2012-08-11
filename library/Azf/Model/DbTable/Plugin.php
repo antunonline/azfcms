@@ -85,27 +85,11 @@ ORDER BY p.region, np.weight, p.weight";
 
     /**
      * 
-     * @param array $ps
-     * @return array
-     */
-    protected function _recursiveCast(&$ps) {
-        $ps = (array) $ps;
-        foreach ($ps as &$p) {
-            if (is_object($p)) {
-                $this->_recursiveCast($p);
-            }
-        }
-        return $ps;
-    }
-
-    /**
-     * 
      * @param string $params
      * @return string
      */
     protected function _decode($params) {
-        $decoded = json_decode($params);
-        return $this->_recursiveCast($decoded);
+        return json_decode($params,true);
     }
 
     /**

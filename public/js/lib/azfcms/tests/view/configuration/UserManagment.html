@@ -5,9 +5,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/Grid.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/soriaGrid.css
-        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <script type="text/javascript">
+            dojoConfig={
+                async:true,
+                parseOnLoad:false,
+                isDebug:true
+            }
+        </script>
+        <script type="text/javascript" src="../../../../dojo/dojo.js" ></script>
         <style>
             html,body {
                 height:100%;
@@ -19,8 +24,10 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/{ucName}'],function
-            (domReady,dijit,doh,domCreate, {ucName}){
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/UserManagment',
+                'azfcms/store/registry!UsersStore','azfcms/view/configuration/UserManagment/UserGrid'],function
+            (domReady,dijit,doh,domCreate, UserManagment,
+            userStore,userGrid){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -28,13 +35,13 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.view.configuration.{ucName}',[
+                    doh.register('azfcms.tests.view.configuration.UserManagment',[
                         
                     ]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new {ucName}({
-                        
+                    var view = new UserManagment({
+                        userStore:userStore
                     }, "inputContainer");
                     view.startup();
                     

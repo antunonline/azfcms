@@ -183,7 +183,7 @@ class Azf_Rest_Request {
 
     protected function _parseBody() {
         $content = file_get_contents("php://input");
-        $this->_parsedBody = json_decode($content);
+        $this->_parsedBody = json_decode($content,true);
     }
 
 }

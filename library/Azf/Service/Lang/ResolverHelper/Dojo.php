@@ -98,4 +98,22 @@ class Azf_Service_Lang_ResolverHelper_Dojo {
            'total'=>  (is_int($total)&&$total)?$total:sizeof($result)
        ) ;
     }
+    
+    
+    /**
+     * 
+     * @param array $params
+     * @param string $key
+     * @param string $default
+     * @return array
+     */
+    public function getQueryStringParam(array $params, $key,$default="") {
+        if(isset($params[$key])){
+            $value = $params[$key];
+            if(is_string($value)||  is_numeric($value)){
+                return $value;
+            }
+        }
+        return (string) $default;
+    }
 }

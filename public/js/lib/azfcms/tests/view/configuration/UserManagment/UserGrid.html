@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" type="text/css" href="../../../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../dijit/themes/soria/soria.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../dojox/grid/resources/Grid.css" />
         <link rel="stylesheet" type="text/css" href="../../../../../dojox/grid/resources/soriaGrid.css" />
         <script type="text/javascript" src="../../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
-            html,body {
-                height:100%;
-                width:100%;
-                padding:0px;
-                margin:0px;
-            }
+            html, body { height: 100%; width: 100%; padding: 0px; margin: 0px; }
         </style>
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/{ucName}/{ucChildName}'],function
-            (domReady,dijit,doh,domCreate, {ucChildName}){
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/UserManagment/UserGrid',
+            'azfcms/store/registry!UsersStore'],function
+            (domReady,dijit,doh,domCreate, UserGrid,
+            userStore){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -28,15 +26,22 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.view.configuration.{ucName}.{ucChildName}',[
+                    doh.register('azfcms.tests.view.configuration.UserManagment.UserGrid',[
                         
                     ]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new {ucChildName}({
-                        
+                    var view = new UserGrid({
+                        store:userStore
                     }, "inputContainer");
                     view.startup();
+                    
+                    view.on("search",function(user){
+                        console.debug(user);
+                    })
+                    view.on("select",function(user){
+                        console.debug(user)
+                    });
                     
                 } else {
                     domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");

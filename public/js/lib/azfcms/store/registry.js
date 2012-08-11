@@ -95,6 +95,13 @@ define(
                     useQueryForGetRetrieval:true,
                     queryMethod:"cms.pluginDescriptor.getContentPlugins"
                 });
+            },
+            
+            UsersStore:function(){
+                return QueryLangStore({
+                    idProperty:"name",
+                    queryMethod:"cms.user.queryUsers"
+                });
             }
         })
         

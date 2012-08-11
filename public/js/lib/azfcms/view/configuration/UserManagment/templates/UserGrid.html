@@ -1,0 +1,34 @@
+<div style="width:100%; height:100%;" >
+    <div data-dojo-type="dijit.layout.BorderContainer" 
+         data-dojo-attach-point="borderContainer"
+         style="width:100%;height:100%">
+        <div data-dojo-type="dijit.layout.ContentPane"
+            region="top">
+            <span>${nls.searchLoginNameLabel}:</span>
+            <input data-dojo-type="dijit.form.TextBox"
+                   data-dojo-attach-point="loginNameTextBox"/>
+            <span>${nls.searchEmailLabel}:</span>
+            <input data-dojo-type="dijit.form.TextBox" 
+                   data-dojo-attach-point="emailTextBox"/>
+            
+            <button data-dojo-type="dijit.form.Button"
+                    data-dojo-attach-event="onClick:_onSearch">${nls.startSearchLabel}</button>
+        </div>
+        <table data-dojo-type="dojox.grid.DataGrid"
+             style="width:100%;height:100%" region="center"
+             data-dojo-props="selectionMode:'single'"
+             data-dojo-attach-point="grid"
+             data-dojo-attach-event="onClick:_onSelect">
+            <thead>
+                <tr>
+                    <th field="loginName" width="150px" style="width:100px;">${nls.userGridLoginNameColumn}</th>
+                    <th field="firstName" width="150px" style="width:100px;">${nls.userGridFirstNameColumn}</th>
+                    <th field="lastName" width="150px" style="width:100px;">${nls.userGridLastNameColumn}</th>
+                    <th field="email" width="150px" style="width:100px;">${nls.userGridEmailColumn}</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+            
+        

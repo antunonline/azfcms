@@ -219,7 +219,7 @@ SQL;
      * @return array
      */
     protected function _decodeConfig($config) {
-        return (array) json_decode($config);
+        return json_decode($config,true);
     }
 
     /**
@@ -234,7 +234,7 @@ SQL;
 
         $tmpPlugins = $this->_decodeConfig($row['plugins']);
         foreach ($tmpPlugins as $pluginName => $pluginArray) {
-            $pluginArray = (array) $pluginArray;
+            $pluginArray = $pluginArray;
 
             if (isset($plugins[$pluginName])) {
                 $plugins[$pluginName] += $pluginArray;

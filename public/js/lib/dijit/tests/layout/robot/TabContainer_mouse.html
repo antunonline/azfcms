@@ -13,13 +13,15 @@
 			djConfig="isDebug: true"></script>
 
 		<script type="text/javascript">
-		require([
-			"doh/runner", "dojo/robotx",
-			"dojo/dom", "dojo/dom-geometry", "dojo/on", "dojo/query",
-			"dijit/tests/helpers", "dojo/domReady!"
-		], function(doh, robot, dom, geom, on, query, helpers){
+			require([
+				"doh/runner", "dojo/robotx",
+				"dojo/dom", "dojo/dom-geometry", "dojo/on", "dojo/query",
+				"dijit/tests/helpers", "dojo/domReady!"
+			], function(doh, robot, dom, geom, on, query, helpers){
 
 				robot.initRobot('../test_TabContainer.html');
+
+				var registry, focus;
 
 				doh.register("setup", [
 					function setup(){
@@ -41,7 +43,7 @@
 
 							robot.mouseMoveAt('mainTabContainer_tablist_tab3', 500);
 
-							on(dom.byId('mainTabContainer_tablist_tab3'), "mouseover", function(){
+							on.once(dom.byId('mainTabContainer_tablist_tab3'), "mouseover", function(){
 								setTimeout(d.getTestCallback(function(){
 									// Check that .dijitTabHover class was applied
 									var tabHover = query(".dijitTabHover #mainTabContainer_tablist_tab3");
@@ -118,7 +120,7 @@
 						timeout: 10000,
 						runTest: function(t){
 							var d = new doh.Deferred();
-							robot.mouseClick({left: true}, 500);
+
 							robot.mouseMoveAt(query('.dijitTabCloseButton', registry.byId("mainTabContainer_tablist_tab3").domNode)[0], 500);
 							
 							// verify the close button is in its hover state

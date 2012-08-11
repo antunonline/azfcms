@@ -1,5 +1,7 @@
 define([
-	"dojox/gantt/contextMenuTab",
+	"./contextMenuTab",
+	"./GanttTaskControl",
+	"./GanttProjectControl",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dijit/form/Form",
@@ -17,13 +19,12 @@ define([
 	"dojo/dom-attr",
 	"dojo/dom-geometry",
 	"dojo/keys",
-	"dojo/parser",
 	"dojo/domReady!"
-], function(contextMenuTab,
+], function(contextMenuTab, GanttTaskControl, GanttProjectControl,
 		Dialog, Button, Form,
 		registry, declare, arrayUtil, lang, locale, request, on,
-		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys, parser){
-	return declare("dojox.gantt.GanttTaskControl", [], {
+		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys){
+	return declare("dojox.gantt.TabMenu", [], {
 		constructor: function(chart){
 			this.ganttChart = chart;
 			this.menuPanel = null;
@@ -152,7 +153,7 @@ define([
 			});
 			domAttr.set(cell, "tabIndex", 0);
 			this.ganttChart._events.push(
-				on(cell, "click", lang.hitch(this, function(event){
+				on(cell, "click", lang.hitch(this, function(){
 					try{
 						this.hide();
 						tab.show();
@@ -173,12 +174,12 @@ define([
 				}))
 			);
 			this.ganttChart._events.push(
-				on(cell, "mouseover", lang.hitch(this, function(event){
+				on(cell, "mouseover", lang.hitch(this, function(){
 					domClass.add(cell, "ganttContextMenuItemHover");
 				}))
 			);
 			this.ganttChart._events.push(
-				on(cell, "mouseout", lang.hitch(this, function(event){
+				on(cell, "mouseout", lang.hitch(this, function(){
 					domClass.remove(cell, "ganttContextMenuItemHover");
 				}))
 			);

@@ -194,9 +194,11 @@ function(kernel, require, lang, declare, Deferred, when, has, config, on, ready,
 
 		setupControllers: function(){
 			// create application controller instance
-			this.controllers.push(new LoadController(this));
-			this.controllers.push(new TransitionController(this));
-			this.controllers.push(new LayoutController(this));
+			if(!this.noAutoLoadControllers){
+				this.controllers.push(new LoadController(this));
+				this.controllers.push(new TransitionController(this));
+				this.controllers.push(new LayoutController(this));
+			}
 
 			// move set _startView operation from history module to application
 			var hash = window.location.hash;
@@ -286,7 +288,7 @@ function(kernel, require, lang, declare, Deferred, when, has, config, on, ready,
 			App = declare(modules, ext);
 
 			ready(function(){
-				var app = App(config, node || baseWindow.body());
+				var app = new App(config, node || baseWindow.body());
 
 				if(has("app-log-api")){
 					app.log = function(){  

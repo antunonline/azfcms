@@ -30,6 +30,14 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
     public function initialize() {
         parent::initialize();
     }
+    
+    /**
+     * 
+     * @return Azf_Service_Lang_ResolverHelper_Dojo
+     */
+    public function getDojoHelper() {
+        return $this->getHelper("dojo");
+    }
 
     protected function isAllowed($namespaces, $parameters) {
         return true;
@@ -48,7 +56,7 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
 
         $start = $dojoHelper->getQueryOptionsStart($queryOptions);
         $count = $dojoHelper->getQueryOptionsCount($queryOptions);
-        $returnCols = array('id', 'loginName', 'firstName', 'lastName', 'email');
+        $returnCols = array('id', 'loginName', 'firstName', 'lastName', 'email','verified','verificationKey');
         $searchLogin = $dojoHelper->getQueryStringParam($query, 'loginName');
         $searchEmail = $dojoHelper->getQueryStringParam($query, "email");
 
@@ -84,11 +92,12 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
 
         $filterInput->setData($user);
         if (!$filterInput->isValid()) {
-            return $filterInput->getErrors();
+            return $this->getDojoHelper()
+                    ->createAddResponse(null, false, $filterInput->getMessages());
         }
         $newUser = $filterInput->getEscaped();
         $this->getUserModel()->insert($newUser);
-        return true;
+        return $this->getDojoHelper()->createAddResponse();
     }
 
     public function saveUserMethod(array $user) {
@@ -99,16 +108,15 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
                         Azf_Filter_Abstract::REMOVE => true
                     ),
                     'loginName' => array(
-                        Azf_Filter_Abstract::REMOVE_VALIDATORS => array(
-                            'db_NoRecordExists'
-                        )
+                        Azf_Filter_Abstract::REMOVE => true
                     )
                 )
         );
         $filterInput->setData($user);
+        
 
         if (!$filterInput->isValid()) {
-            return $filterInput->getMessages();
+            return $this->getDojoHelper()->createPutResponse(null, false, $filterInput->getMessages());
         }
 
         $newUser = $filterInput->getEscaped();
@@ -116,7 +124,26 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
         $id = $filterInput->id;
 
         $this->getUserModel()->update($newUser, array('id=?' => $id));
-        return true;
+        return $this->getDojoHelper()->createPutResponse();
+    }
+    
+    
+    /**
+     * 
+     * @param array $user
+     * @return array
+     */
+    public function removeUserMethod(array $user) {
+        $filterInput = Azf_Filter_Factory::get("user")->getFilterInput(array(), array('id'));
+        $filterInput->setData($user);
+        
+        if($filterInput->isValid()==false){
+            return $this->getDojoHelper()->createRemoveResponse(null, false, $filterInput->getMessages());
+        }
+        
+        $id = $filterInput->id;
+        $this->getUserModel()->delete(array('id=?'=>$id));
+        return $this->getDojoHelper()->createRemoveResponse($id);
     }
 
 }

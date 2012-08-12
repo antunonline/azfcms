@@ -116,4 +116,68 @@ class Azf_Service_Lang_ResolverHelper_Dojo {
         }
         return (string) $default;
     }
+    
+    
+    /**
+     * 
+     * @param array $response
+     * @param boolean|string|int $status
+     * @param array|boolean|string $errors
+     * @return array
+     */
+    protected function _createStdResponse($response=array(),$status=true,$errors=false) {
+        return array(
+            'response'=>$response,
+            'status'=>$status,
+            'errors'=>$errors
+        );
+    }
+    
+    
+    /**
+     * 
+     * @param array $response
+     * @param boolean|string|int $status
+     * @param array|boolean|string $errors
+     * @return array
+     */
+    public function createPutResponse($response=array(),$status=true,$errors=false) {
+        return $this->_createStdResponse($response, $status, $errors);
+    }
+    
+    
+    /**
+     * 
+     * @param array $response
+     * @param boolean|string|int $status
+     * @param array|boolean|string $errors
+     * @return array
+     */
+    public function createGetResponse($response=array(),$status=true,$errors=false) {
+        return $this->_createStdResponse($response, $status, $errors);
+    }
+    
+    
+    /**
+     * 
+     * @param array $response
+     * @param boolean|string|int $status
+     * @param array|boolean|string $errors
+     * @return array
+     */
+    public function createAddResponse($response=array(),$status=true,$errors=false) {
+        return $this->_createStdResponse($response, $status, $errors);
+    }
+    
+    
+    /**
+     * 
+     * @param array $response
+     * @param boolean|string|int $status
+     * @param array|boolean|string $errors
+     * @return array
+     */
+    public function createRemoveResponse($response=array(),$status=true,$errors=false) {
+        return $this->_createStdResponse($response, $status, $errors);
+    }
 }

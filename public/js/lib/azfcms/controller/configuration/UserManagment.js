@@ -1,9 +1,10 @@
 define(
 ['dojo/_base/declare', 'dojo/_base/lang','azfcms/model','azfcms/store/registry',
     'dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/UserManagment',
-    'azfcms/view/configuration/UserManagment/UserForm','azfcms/view/configuration/UserManagment/UserGrid'],function
+    'azfcms/view/configuration/UserManagment/UserForm','azfcms/view/configuration/UserManagment/UserGrid',
+    'azfcms/view/util','dojo/string'],function
 (declare, lang, model, storeRegistry,
-    nls, UserForm, UserGrid)
+    nls, UserForm, UserGrid,viewUtil,string)
 {
     var _class = declare([],{
         nls:nls,
@@ -46,6 +47,7 @@ define(
             
             this.view.addActionButton(this.nls.newUserButtonLabel,lang.hitch(this,'onNew'))
             this.view.addActionButton(this.nls.editUserButtonLabel,lang.hitch(this,'onEdit'))
+            this.view.addActionButton(this.nls.deleteUserButtonLabel,lang.hitch(this,'onRemove'))
         },
         
         _initUserGrid:function(){
@@ -64,7 +66,9 @@ define(
             var userForm = new UserForm({
                 title:this.nls.newUserFormTabTitle
             });
-            userForm.on('save',lang.hitch(this,'doCreate'));
+            userForm.on('save',lang.hitch(this,function(user){
+                this.doCreate(user,userForm);
+            }));
             this.view.addChild(userForm);
         },
         
@@ -77,24 +81,57 @@ define(
             }
             
             var userForm = new UserForm({
-                title:this.selectedUser.loginName
+                title:string.substitute(this.nls.editUserTabLabel,this.selectedUser)
             });
             userForm.set('value',this.selectedUser);
-            userForm.on('save',lang.hitch(this,'doSave'));
+            userForm.on('save',lang.hitch(this,function(response){
+                this.doSave(response,userForm);
+            }));
             this.view.addChild(userForm);
             
         },
         
-        doSave:function(user){
-            this.userStore.put(user).then(lang.hitch(this,function(){
-                this.userGridView.reloadGrid();
+        onRemove:function(){
+            if(!this.selectedUser){
+                return;
+            }
+            
+            viewUtil.confirm(lang.hitch(this,function(confirmed){
+                if(confirmed){
+                    this.doRemove(this.selectedUser);
+                }
+            }),this.nls.confirmDeleteMessage,this.selectedUser);
+        },
+        
+        doSave:function(user,userForm){
+            this.userStore.put(user).then(lang.hitch(this,function(response){
+                if(response.status==false){
+                    userForm.set("messages",response.errors);
+                } else {
+                    userForm.set("messages",{});
+                    this.userGridView.reloadGrid();
+                }
             }));
         },
         
-        doCreate:function(user){
-            this.userStore.add(user).then(lang.hitch(this,function(){
-                this.userGridView.reloadGrid();
+        doCreate:function(user,userForm){
+            this.userStore.add(user).then(lang.hitch(this,function(response){
+                if(response.status == false){
+                    userForm.set("messages",response.errors);
+                } else {
+                    userForm.set("messages",{});
+                    this.userGridView.reloadGrid();
+                }
             }));
+        },
+        
+        doRemove:function(selectedUser){
+            this.userStore.remove(selectedUser).then(lang.hitch(this,function(response){
+                if(response.status){
+                    this.selectedUser=null;
+                    this.userGridView.reloadGrid();
+                }
+            }))
         }
             
     });

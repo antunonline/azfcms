@@ -102,7 +102,8 @@ define(
                     idProperty:"name",
                     queryMethod:"cms.user.queryUsers",
                     addMethod:"cms.user.addUser",
-                    putMethod:"cms.user.saveUser"
+                    putMethod:"cms.user.saveUser",
+                    removeMethod:"cms.user.removeUser"
                 });
             }
         })

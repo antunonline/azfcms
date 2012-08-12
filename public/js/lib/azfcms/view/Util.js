@@ -5,10 +5,10 @@
 define(
     ['dojo/_base/declare','dijit/Dialog','azfcms/view/ConfirmPane',
     'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common','dojo/_base/lang','azfcms/store/Filesystem',
-    'azfcms/view/FileSelectPane'],function
+    'azfcms/view/FileSelectPane','dojo/string'],function
     (declare,Dialog,ConfirmPane,
         nls,lang,Filesystem,
-        FileSelectPane)
+        FileSelectPane,string)
         {
         return declare([],{
             FILE_TYPE_ALL:"all",
@@ -48,16 +48,19 @@ define(
                     this.getConfirmPane();
                 return this._confirmDialog;
             },
-            confirm:function(callback,message,acceptLabel,rejectLabel){
+            confirm:function(callback,message,messageMap,acceptLabel,rejectLabel){
+                messageMap=messageMap||{};
+                
                 var confirmDialog = this.getConfirmDialog();
                 this.getConfirmPane().confirm(function(value){
                     callback(value);
                     confirmDialog.hide();
-                },message,acceptLabel,rejectLabel);
+                },string.substitute(message,messageMap),acceptLabel,rejectLabel);
                 this.getConfirmDialog().show();
             },
-            alert:function(message){
-                window.alert(message);
+            alert:function(message,messageMap){
+                messageMap=messageMap||{};
+                window.alert(string.substitute(message,messageMap));
             },
             
             $_getFileSelectPane:function(){

@@ -52,7 +52,7 @@ class Application_Filter_User extends Azf_Filter_Abstract {/**
         ),
         'verified' => array(
             self::REQUIRED => false,
-            self::ALLOW_EMPTY=>true
+            self::ALLOW_EMPTY=>false
         ),
         'verificationKey' => array(
             self::REQUIRED => false,

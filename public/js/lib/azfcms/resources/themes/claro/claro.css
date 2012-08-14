@@ -28,6 +28,17 @@
     display: inline-block;
 }
 
+
+
+.azfcmsGenericFormLayoutContainer dd.error {
+    padding:0px 4px 0px 4px;
+}
+
+.azfcmsGenericFormLayoutContainer dd.error > ul {
+    background-color: #FFE284;
+    border: 1px solid #ff3333;
+}
+
 .azfcmsGenericFormLayoutContainer {
     background-color:#f1f1f1;
     border:1px solid #b5bcc7;

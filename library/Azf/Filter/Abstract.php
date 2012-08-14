@@ -129,7 +129,7 @@ abstract class Azf_Filter_Abstract {
                 $currentValidators = $validators[$name];
                 foreach($removeValidators as $removeValidator){
                     foreach($currentValidators as $index=>$curValidator){
-                        if($curValidator==$removeValidator){
+                        if($curValidator===$removeValidator){
                            unset($validators[$name][$index]);
                         } else if(is_array($curValidator)&&$curValidator[0]==$removeValidator) {
                              unset($validators[$name][$index]);

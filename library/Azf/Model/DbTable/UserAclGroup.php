@@ -95,17 +95,36 @@ LIMIT
     
     /**
      * 
+     * @param string $userLoginName
+     * @param string $aclGroupName
      * @return int
      */
-    public function getNumberOfJoinCombinations() {
+    public function countFetchAllByLoginNameAndGroupName($userLoginName, $aclGroupName) {
         $SQL = "
 SELECT
-    count(u.id)*(a.id) as total
+   u.count * a.count
 FROM
-    User u,
-    ACLGroup a;
+	(
+	SELECT 
+		count(id) as count
+	FROM
+		User 
+	WHERE 
+		loginName like :userLoginName
+	) as u,
+	(
+	SELECT
+		count(id) as count
+	FROM
+		ACLGroup
+	WHERE
+		name like :aclGroupName
+	) as a
 ";
-        return (int) $this->getAdapter()->fetchOne($SQL);
+        return (int) $this->getAdapter()->fetchOne($SQL,array(
+            'userLoginName'=>$userLoginName,
+            'aclGroupName'=>$aclGroupName
+        ));
     }
     
 }

@@ -148,11 +148,14 @@ abstract class Azf_Filter_Abstract {
     }
 
     /**
-     * @param array $overrideRules
+     * @param array|null $overrideRules
      * @param array|null $forFields - If empty array
      * @return Zend_Filer_Input
      */
-    public function getFilterInput(array $overrideRules=array(),$forFields=null) {
+    public function getFilterInput( $overrideRules=array(),$forFields=null) {
+        if(!is_array($overrideRules)){
+            $overrideRules=array();
+        }
         $rules = $this->getFilterInputRules($overrideRules,$forFields);
         return new Zend_Filter_Input($rules['filters'], $rules['validators']);
     }

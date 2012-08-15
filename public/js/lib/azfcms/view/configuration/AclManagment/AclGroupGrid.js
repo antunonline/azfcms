@@ -1,12 +1,8 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/AclManagment.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
-    'dojo/_base/lang',
-    
-    'dijit/layout/BorderContainer','dijit/layout/ContentPane','dijit/Toolbar',
-    'azfcms/view/configuration/AclManagment/UserForm','dijit/layout/TabContainer',
-    'azfcms/view/configuration/AclManagment/AclForm'
+    'dojo/text!./templates/AclGroupGrid.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
+    'dojo/_base/lang'
 
 ],function
 (declare, 
@@ -32,7 +28,7 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
          * Implement resize method. Call all direct descendants resize methods.
          */
         resize:function(){
-            this.borderContainer.resize();
+            
         }
             
     });

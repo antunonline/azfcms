@@ -112,10 +112,22 @@ define(
                     useQueryAsGetCache:true,
                     idProperty:"name",
                     getIdentity:function(item){
-                        return item.userLoginName+item.aclGroupName;
+                        return String(item.userId)+String(item.aclGroupId)
                     },
                     queryMethod:"cms.acl.queryUserAclGroup",
                     putMethod:"cms.acl.putUserAclGroupGroup"
+                });
+            },
+            
+            AclAclGroup:function(){
+                return QueryLangStore({
+                    useQueryAsGetCache:true,
+                    idProperty:"aclId",
+                    getIdentity:function(item){
+                        return String(item.aclId)+String(item.aclGroupId)
+                    },
+                    queryMethod:"cms.acl.queryAclAclGroup",
+                    putMethod:"cms.acl.putQueryAclAclGroupRecord"
                 });
             }
         })

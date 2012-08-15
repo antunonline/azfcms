@@ -1,12 +1,11 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/AclManagment.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
+    'dojo/text!./templates/AclGroupForm.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
     'dojo/_base/lang',
     
-    'dijit/layout/BorderContainer','dijit/layout/ContentPane','dijit/Toolbar',
-    'azfcms/view/configuration/AclManagment/UserForm','dijit/layout/TabContainer',
-    'azfcms/view/configuration/AclManagment/AclForm'
+    'dijit/layout/ContentPane','dijit/Toolbar','dijit/form/Button','azfcms/view/widget/form/InputContainer',
+    'dijit/layout/BorderContainer','dijit/form/TextBox','dijit/form/Textarea'
 
 ],function
 (declare, 
@@ -33,6 +32,27 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
          */
         resize:function(){
             this.borderContainer.resize();
+        },
+        
+        _getValueAttr:function(){
+            return {
+                name:this.nameInput.get('value'),
+                description:this.descriptionInput.get('value')
+            }
+        },
+        
+        
+        _setValueAttr:function(value){
+            this.nameInput.set('value',value.name);
+            this.descriptionInput.set('value',value.description);
+        },
+        
+        _fireSave:function(){
+            this.onSave(this.get('value'));
+        },
+        
+        onSave:function(value){
+            
         }
             
     });

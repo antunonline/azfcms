@@ -37,6 +37,15 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
     public function getAclAclGroupModel() {
         return new Azf_Model_DbTable_AclAclGroup();
     }
+    
+    
+    /**
+     * 
+     * @return \Azf_Model_DbTable_AclGroup
+     */
+    public function getAclGroupModel() {
+        return new Azf_Model_DbTable_AclGroup();
+    }
 
     /**
      * 
@@ -75,11 +84,10 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
         }
 
         $result = $this->getUserAclGroupModel()->fetchAllByLoginNameAndGroupName($userName, $groupName, $count, $start);
-        $totalNumOfResults = $this->getUserAclGroupModel()->getNumberOfJoinCombinations();
-        return $this->getDojoHelper()->constructQueryResult($result,$totalNumOfResults);
+        $totalNumOfResults = $this->getUserAclGroupModel()->countFetchAllByLoginNameAndGroupName($userName, $groupName);
+        return $this->getDojoHelper()->constructQueryResult($result, $totalNumOfResults);
     }
 
-    
     /**
      * 
      * @param array $userAclGroupQuerRecord
@@ -113,8 +121,7 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
         return $this->getDojoHelper()
                         ->createAddResponse($id);
     }
-    
-    
+
     /**
      * 
      * @param array $userAclGroupQuerRecord
@@ -138,26 +145,154 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
             return $this->getDojoHelper()->createAddResponse(null, false);
         }
         $userId = $userFilter->userId;
-        $aclGroupId= $gropuFilter->aclGroupId;
-        $memberOfGroup = isset($userAclGroupQuerRecord['memberOfGroup'])&&
-                    $userAclGroupQuerRecord['memberOfGroup'];
-        
-        if($memberOfGroup){
+        $aclGroupId = $gropuFilter->aclGroupId;
+        $memberOfGroup = isset($userAclGroupQuerRecord['memberOfGroup']) &&
+                $userAclGroupQuerRecord['memberOfGroup'];
+
+        if ($memberOfGroup) {
             $this->getUserAclGroupModel()
                     ->insert(array(
-                        'userId'=>$userId,
-                        'aclGroupId'=>$aclGroupId
+                        'userId' => $userId,
+                        'aclGroupId' => $aclGroupId
                     ));
         } else {
             $this->getUserAclGroupModel()
                     ->delete(array(
-                        'userId=?'=>$userId,
-                        'aclGroupId'=>$aclGroupId
+                        'userId=?' => $userId,
+                        'aclGroupId' => $aclGroupId
+                    ));
+        }
+
+        return $this->getDojoHelper()
+                        ->createPutResponse(TRUE);
+    }
+    
+    
+
+    /**
+     * 
+     * @param array $query
+     * @param array $options
+     * @param array $staticOptions
+     * @return array
+     */
+    public function queryAclAclGroupMethod(array $query, array $options, array $staticOptions) {
+        $dojoHelper = $this->getDojoHelper();
+
+        $aclFilter = Azf_Filter_Factory::get("acl")
+                ->getFilterInput(array(
+            'resource' => array(
+                Azf_Filter_Abstract::ALLOW_EMPTY => true,
+                Azf_Filter_Abstract::FIELD => 'aclResource'
+            )
+                ), array('resource'));
+        $aclGroupFilter = Azf_Filter_Factory::get("aclGroup")
+                ->getFilterInput(array(
+            'name' => array(
+                Azf_Filter_Abstract::ALLOW_EMPTY => true,
+                Azf_Filter_Abstract::FIELD => 'aclGroupName'
+            )
+                ));
+        $aclFilter->setData($query);
+        $aclGroupFilter->setData($query);
+
+        if (!$aclFilter->isValid("aclResource") || !$aclGroupFilter->isValid("aclGroupName")) {
+            return $dojoHelper->constructQueryResult(array(), 0);
+        }
+        $start = $dojoHelper->getQueryOptionsStart($options);
+        $count = $dojoHelper->getQueryOptionsCount($options);
+
+        $aclResource = $aclFilter->aclResource . "%";
+        $aclGroupName = $aclGroupFilter->aclGroupName . "%";
+
+        $results = $this->getAclAclGroupModel()->fetchAllByAclResourceAndGroupName($aclResource, $aclGroupName, $start, $count);
+        $total = $this->getAclAclGroupModel()->countFetchAllByAclResourceAndGroupName($aclResource, $aclGroupName);
+        return $dojoHelper->constructQueryResult($results,$total);
+    }
+    
+    
+    /**
+     * 
+     * @param array $record
+     * @return array
+     */
+    public function putQueryAclAclGroupRecordMethod(array $record) {
+        $aclIdFilter = Azf_Filter_Factory::get("acl")
+                ->getFilterInput(array(
+                    'id'=>array(
+                    Azf_Filter_Abstract::FIELD=>'aclId'
+                    )
+                ),array('id'));
+        $groupIdFilter = Azf_Filter_Factory::get("aclGroup")
+                ->getFilterInput(array(
+                    'id'=>array(
+                    Azf_Filter_Abstract::FIELD=>'aclGroupId'
+                    )
+                ),array('id'));
+        
+        $aclIdFilter->setData($record);
+        $groupIdFilter->setData($record);
+        $isAssociatedValid = isset($record['associated']);
+        
+        if(!$aclIdFilter->isValid('aclId')||!$groupIdFilter->isValid('aclGroupId')||!$isAssociatedValid){
+            return $this->getDojoHelper()
+                    ->createPutResponse(null,false);
+        }
+        
+        $associated=(boolean) $record['associated'];
+        
+        if($associated){
+            $this->getAclAclGroupModel()
+                    ->insert(array(
+                        'aclId'=>$aclIdFilter->aclId,
+                        'aclGroupId'=>$groupIdFilter->aclGroupId
+                    ));
+        } else {
+            $this->getAclAclGroupModel()
+                    ->delete(array(
+                        'aclId=?'=>$aclIdFilter->aclId,
+                        'aclGroupId=?'=>$groupIdFilter->aclGroupId
                     ));
         }
         
-        return $this->getDojoHelper()
-                ->createPutResponse(TRUE);
+        return $this->getDojoHelper()->createPutResponse(true);
+    }
+    
+    
+    /**
+     * 
+     * @param array $query
+     * @param array $options
+     * @return array
+     */
+    public function queryAclGroupMethod(array $query,array $options) {
+        $groupFilter = Azf_Filter_Factory::get("aclGroup")
+                ->getFilterInput(array(
+                    'name'=>array(
+                    Azf_Filter_Abstract::ALLOW_EMPTY=>true
+                    )
+                ), array('name'));
+        $groupFilter->setData($query);
+        
+        if(!$groupFilter->isValid('name')){
+            return $this->getDojoHelper()
+                    ->constructQueryResult(array());
+        }
+        
+        $dojoHelper = $this->getDojoHelper();
+        $start = $dojoHelper->getQueryOptionsStart($options);
+        $count = $dojoHelper->getQueryOptionsCount($options);
+        $name = $groupFilter->name."%";
+        
+        $results = $this->getAclGroupModel()
+                ->fetchAllByName($name,$start,$count);
+        $total = $this->getAclGroupModel()
+                ->countFetchAllByName($name);
+        
+        return $dojoHelper->
+        constructQueryResult($results, $total);
+        
+        
         
     }
 

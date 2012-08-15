@@ -3,11 +3,11 @@
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/Grid.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/soriaGrid.css" />
-        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <link rel="stylesheet" type="text/css" href="../../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../dijit/themes/soria/soria.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../dojox/grid/resources/Grid.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../../dojox/grid/resources/soriaGrid.css" />
+        <script type="text/javascript" src="../../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
                 height:100%;
@@ -19,10 +19,8 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/AclManagment',
-            'azfcms/store/registry!:UserAclGroup','azfcms/store/registry!:AclAclGroup'],function
-            (domReady,dijit,doh,domCreate, AclManagment,
-                userAclGroupStore,aclAclGroupStore){
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/AclManagment/AclGroupGrid'],function
+            (domReady,dijit,doh,domCreate, AclGroupGrid){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -30,14 +28,13 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.view.configuration.AclManagment',[
+                    doh.register('azfcms.tests.view.configuration.AclManagment.AclGroupGrid',[
                         
                     ]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new AclManagment({
-                        userAclGroupStore:userAclGroupStore,
-                        aclAclGroupStore:aclAclGroupStore
+                    var view = new AclGroupGrid({
+                        
                     }, "inputContainer");
                     view.startup();
                     

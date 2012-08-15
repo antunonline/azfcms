@@ -50,7 +50,7 @@ SELECT
 FROM
     ACLGroup a
 WHERE
-    a.name like '%'
+    a.name like ?
 ";
     return $this->getAdapter()
             ->fetchOne($SQL,array($name));

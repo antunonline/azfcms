@@ -129,6 +129,18 @@ define(
                     queryMethod:"cms.acl.queryAclAclGroup",
                     putMethod:"cms.acl.putQueryAclAclGroupRecord"
                 });
+            },
+            
+            AclGroup:function(){
+                return QueryLangStore({
+                    useQueryAsGetCache:true,
+                    idProperty:"id",
+                    getIdentity:function(item){
+                        return item.id;
+                    },
+                    queryMethod:"cms.acl.queryAclGroup",
+                    putMethod:"cms.acl.putAclGroup"
+                });
             }
         })
         

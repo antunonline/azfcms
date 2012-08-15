@@ -7,7 +7,7 @@
              data-dojo-attach-point="toolbar">
             <button data-dojo-type="dijit/form/Button"
                     data-dojo-attach-event="onClick:_fireSave"
-                    >Add</button>
+                    >${nls.aclGroupFormSaveButtonLabel}</button>
         </div>
         <div data-dojo-type="dijit.layout.ContentPane"
              region="center">
@@ -17,12 +17,12 @@
                         <dd
                             data-dojo-attach-point="nameInput"
                             data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'Name:'"
+                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.aclGroupFormNameLabel}'"
                             />
                         <dd
                             data-dojo-attach-point="descriptionInput"
                             data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.Textarea',label:'Description:'"
+                            data-dojo-props="inputType:'dijit.form.Textarea',label:'${nls.aclGroupFormDescriptionLabel}'"
                             />
 
                     </dl>

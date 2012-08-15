@@ -11,7 +11,11 @@ class Application_Filter_AclGroup extends Azf_Filter_Abstract {
         ),
         'validators' => array(
             array('alnum', true),
-            array('stringLength', 2, 40)
+            array('stringLength', 2, 40),
+            array('db_NoRecordExists', array(
+                        'table' => 'ACLGroup',
+                        'field' => 'name'
+                ))
         ),
         self::BRAKE_CHAIN_ON_FAILURE => true
     );
@@ -31,7 +35,7 @@ class Application_Filter_AclGroup extends Azf_Filter_Abstract {
             self::BRAKE_CHAIN_ON_FAILURE => true
         ),
         'name'=>'name',
-        'desription'=>array(
+        'description'=>array(
             'filters'=>array(
                 'stringTrim'
             ),

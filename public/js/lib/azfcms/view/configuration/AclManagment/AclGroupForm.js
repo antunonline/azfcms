@@ -47,6 +47,23 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
             this.descriptionInput.set('value',value.description);
         },
         
+        _setMessagesAttr:function(messages){
+            
+            for(var i = 0,prop='',len=this._attachPoints.length;i<len;i++){
+                prop = this._attachPoints[i];
+                if(this[prop].set && typeof this[prop].set == 'function'){
+                    this[prop].set("messages",{});
+                }
+            }
+            
+            for(var name in messages){
+                prop = name+"Input";
+                if(typeof this[prop].set == 'function'){
+                    this[prop].set('messages',messages[name]);
+                }
+            }
+        },
+        
         _fireSave:function(){
             this.onSave(this.get('value'));
         },

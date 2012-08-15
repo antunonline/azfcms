@@ -20,9 +20,9 @@
             var o = {}
             require(
             ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/AclManagment',
-            'azfcms/store/registry!:UserAclGroup','azfcms/store/registry!:AclAclGroup'],function
+            'azfcms/store/registry!:UserAclGroup','azfcms/store/registry!:AclAclGroup','azfcms/store/registry!:AclGroup'],function
             (domReady,dijit,doh,domCreate, AclManagment,
-                userAclGroupStore,aclAclGroupStore){
+                userAclGroupStore,aclAclGroupStore,aclGroupStore){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -37,7 +37,8 @@
                 else if(useCase == "customTest"){
                     var view = new AclManagment({
                         userAclGroupStore:userAclGroupStore,
-                        aclAclGroupStore:aclAclGroupStore
+                        aclAclGroupStore:aclAclGroupStore,
+                        aclGroupStore:aclGroupStore
                     }, "inputContainer");
                     view.startup();
                     

@@ -62,6 +62,9 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
             'name' => array(
                 Azf_Filter_Abstract::REMOVE_VALIDATORS => array('stringLength'),
                 Azf_Filter_Abstract::FIELD => 'aclGroupName',
+                    Azf_Filter_Abstract::REMOVE_VALIDATORS=>array(
+                        'db_NoRecordExists'
+                    ),
                 Azf_Filter_Abstract::ALLOW_EMPTY => true
             )
                 ), array('name'));
@@ -190,6 +193,9 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
                 ->getFilterInput(array(
             'name' => array(
                 Azf_Filter_Abstract::ALLOW_EMPTY => true,
+                    Azf_Filter_Abstract::REMOVE_VALIDATORS=>array(
+                        'db_NoRecordExists'
+                    ),
                 Azf_Filter_Abstract::FIELD => 'aclGroupName'
             )
                 ));
@@ -269,7 +275,10 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
         $groupFilter = Azf_Filter_Factory::get("aclGroup")
                 ->getFilterInput(array(
                     'name'=>array(
-                    Azf_Filter_Abstract::ALLOW_EMPTY=>true
+                    Azf_Filter_Abstract::ALLOW_EMPTY=>true,
+                    Azf_Filter_Abstract::REMOVE_VALIDATORS=>array(
+                        'db_NoRecordExists'
+                    )
                     )
                 ), array('name'));
         $groupFilter->setData($query);
@@ -291,8 +300,32 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
         
         return $dojoHelper->
         constructQueryResult($results, $total);
+    }
+    
+    /**
+     * 
+     * @param array $group
+     * @return array
+     */
+    public function putAclGroupMethod(array $group) {
+        $filter = Azf_Filter_Factory::get("aclGroup")
+                ->getFilterInput(array(
+                    'id'=>array(
+                    Azf_Filter_Abstract::REMOVE=>true
+                    )
+                ));
+        $filter->setData($group);
         
+        if(!$filter->isValid()){
+            return $this->getDojoHelper()->
+            createPutResponse(null, false, $filter->getMessages());
+        }
         
+        $data = $filter->getEscaped();
+        $this->getAclGroupModel()
+                ->insert($data);
+        return $this->getDojoHelper()
+                ->createPutResponse();
         
     }
 

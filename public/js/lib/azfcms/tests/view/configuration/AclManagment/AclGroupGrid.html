@@ -19,8 +19,10 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/AclManagment/AclGroupGrid'],function
-            (domReady,dijit,doh,domCreate, AclGroupGrid){
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/AclManagment/AclGroupGrid',
+            'azfcms/store/registry!:AclGroup'],function
+            (domReady,dijit,doh,domCreate, AclGroupGrid,
+            aclGroupStore){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -34,7 +36,7 @@
                 }
                 else if(useCase == "customTest"){
                     var view = new AclGroupGrid({
-                        
+                        store:aclGroupStore
                     }, "inputContainer");
                     view.startup();
                     

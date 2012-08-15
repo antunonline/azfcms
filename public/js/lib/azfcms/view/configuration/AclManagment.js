@@ -2,25 +2,30 @@ define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/AclManagment.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
-    'dojo/_base/lang',
+    'dojo/_base/lang','azfcms/view/configuration/AclManagment/AclGroupForm',
+    'dijit/form/Button',
     
     'dijit/layout/BorderContainer','dijit/layout/ContentPane','dijit/Toolbar',
     'azfcms/view/configuration/AclManagment/UserForm','dijit/layout/TabContainer',
-    'azfcms/view/configuration/AclManagment/AclForm'
+    'azfcms/view/configuration/AclManagment/AclForm','azfcms/view/configuration/AclManagment/AclGroupGrid'
 
 ],function
 (declare, 
 _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
-    nls,lang
+nls,lang,AclGroupForm,Button
     
-    )
+)
 {
     var _class = declare([_Widget,_TemplatedMixin,_WidgetsInTemplate],{
         // This property represents a template string which will be used to 
         // dynamicall construct user interface elements
         constructor:function(){
           
-          this.init();
+            /**
+             * AclGroupGrid widget reference
+             */
+            this.aclGroupGrid;
+            this.init();
         },
         templateString: templateString,
         closable:true,
@@ -33,9 +38,39 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
          */
         resize:function(){
             this.borderContainer.resize();
+        },
+        
+        addChild:function(child){
+            this.tabContainer.addChild(child);
+        },
+        
+        removeChild:function(child){
+            this.tabContainer.removeChild(child);
+        },
+        
+        addToolbarButton:function(params){
+            this.toolbar.addChild(new Button(params));
+        },
+        
+        createNewGroupForm:function(){
+            var aclGroupForm = new AclGroupForm({
+                title:this.nls.newGroupTabTitle
+            });
+            this.addChild(aclGroupForm);
+            return aclGroupForm;
+        },
+        
+        
+        _getSelectedRowAttr:function(){
+            var selection = this.aclGroupGrid.grid.selection.getSelected();
+            if(selection.length>0){
+                return selection[0];
+            } else {
+                return null;
+            }
         }
             
-    });
+        });
     
-    return _class;
-})
+        return _class;
+    })

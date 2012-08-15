@@ -5,6 +5,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/Grid.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dojox/grid/resources/soriaGrid.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../azfcms/resources/themes/soria/soria.css" />
         <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
         <style>
             html,body {
@@ -18,10 +21,12 @@
             var o = {}
             require(
             ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/view/configuration/AclManagment',
-                'azfcms/controller/configuration/AclManagment'
+                'azfcms/controller/configuration/AclManagment',
+                'azfcms/store/registry!:UserAclGroup','azfcms/store/registry!:AclAclGroup','azfcms/store/registry!:AclGroup'
             ],function
             (domReady,dijit,doh,domCreate,View,
-            Controller){
+            Controller,
+            userAclGroupStore,aclAclGroupStore,aclGroupStore){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -34,7 +39,9 @@
                 else if(useCase == "customTest"){
                         
                     var view = new View({
-                        
+                        userAclGroupStore:userAclGroupStore,
+                        aclAclGroupStore:aclAclGroupStore,
+                        aclGroupStore:aclGroupStore
                     },'inputContainer');
                     view.startup();
                     

@@ -307,7 +307,7 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
      * @param array $group
      * @return array
      */
-    public function putAclGroupMethod(array $group) {
+    public function addAclGroupMethod(array $group) {
         $filter = Azf_Filter_Factory::get("aclGroup")
                 ->getFilterInput(array(
                     'id'=>array(
@@ -326,7 +326,64 @@ class Application_Resolver_Acl extends Azf_Service_Lang_Resolver {
                 ->insert($data);
         return $this->getDojoHelper()
                 ->createPutResponse();
+    }
+    
+    
+    
+    /**
+     * 
+     * @param array $group
+     * @return array
+     */
+    public function putAclGroupMethod(array $group) {
+        $filter = Azf_Filter_Factory::get("aclGroup")
+                ->getFilterInput(null,array('id','description'));
+        $filter->setData($group);
         
+        if(!$filter->isValid()){
+            return $this->getDojoHelper()
+                    ->createPutResponse(null, false, $filter->getMessages());
+        }
+        
+        $data = $filter->getEscaped();
+        unset($data['id'],$data['name']);
+        
+        $id = $filter->id;
+        $where = array('id=?'=>$id);
+        
+        $this->getAclGroupModel()
+                ->update($data, $where);
+        
+        return $this->getDojoHelper()
+                ->createPutResponse();
+    }
+    
+    
+    /**
+     * 
+     * @param array $group
+     * @return array
+     */
+    public function removeAclGroupMethod(array $group) {
+        $filter = Azf_Filter_Factory::get("aclGroup")
+                ->getFilterInput(null,array('id'));
+        $filter->setData($group);
+        
+        if(!$filter->isValid()){
+            return $this->getDojoHelper()
+                    ->createRemoveResponse(null, FALSE);
+        }
+        
+        $id = $filter->id;
+        
+        $this->getAclGroupModel()
+                ->delete(array(
+                    'id=?'=>$id
+                ));
+        
+        return $this->
+        getDojoHelper()
+                ->createRemoveResponse();
     }
 
 }

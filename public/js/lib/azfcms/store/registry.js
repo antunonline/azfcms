@@ -139,7 +139,10 @@ define(
                         return item.id;
                     },
                     queryMethod:"cms.acl.queryAclGroup",
-                    putMethod:"cms.acl.putAclGroup"
+                    addMethod:"cms.acl.addAclGroup",
+                    putMethod:"cms.acl.putAclGroup",
+                    removeMethod:"cms.acl.removeAclGroup"
+                    
                 });
             }
         })

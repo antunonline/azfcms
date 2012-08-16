@@ -6,6 +6,7 @@
 
 define({
   root: {
+      tabTitle:"Kontrola Prava Pristupa",
       aclGroupGridTabTitle:"Sigurnosne Grupe",
       userFormTabTitle:"Prava Korisnika",
       aclFormTabTitle:"Prava Sigurnosnih Grupa",
@@ -35,7 +36,13 @@ define({
       userFormSearchButtonLabel:"Trazi",
       userFormAclGroupColumnLabel:"Sigurnosna Grupa",
       userFormLoginNameColumnLabel:"Korisnicko Ime",
-      userFormAssociatedColumnLabel:"Povezano"
+      userFormAssociatedColumnLabel:"Povezano",
+      
+      aclManagmentNewGroupButtonLabel:"Nova Sigurnosna Grupa",
+      aclManagmentEditGroupButtonLabel:"Uredi Sigurnosnu Grupu",
+      aclManagmentEditGroupTabName:"Grupa '${name}'",
+      aclManagmentDeleteGroupButtonLabel:"Izbriši izabranu grupu",
+      aclManagmentConfirmDelete:"Želite li doista izbrisati grupu '${name}'?"
   },
 
   de: false,

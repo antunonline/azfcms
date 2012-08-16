@@ -34,6 +34,7 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
         // dynamicall construct user interface elements
         templateString: templateString,
         closable:true,
+        title:nls.tabName,
         nls:nls,
         init:function(){
             

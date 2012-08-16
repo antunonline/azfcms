@@ -28,6 +28,7 @@ nls,lang,AclGroupForm,Button
             this.init();
         },
         templateString: templateString,
+        title:nls.tabTitle,
         closable:true,
         nls:nls,
         init:function(){
@@ -52,12 +53,16 @@ nls,lang,AclGroupForm,Button
             this.toolbar.addChild(new Button(params));
         },
         
-        createNewGroupForm:function(){
-            var aclGroupForm = new AclGroupForm({
+        createNewGroupForm:function(params){
+            var aclGroupForm = new AclGroupForm(lang.mixin({
                 title:this.nls.newGroupTabTitle
-            });
+            },params||{}));
             this.addChild(aclGroupForm);
             return aclGroupForm;
+        },
+        
+        reloadAclGroupGrid:function(){
+            this.aclGroupGrid.reload();
         },
         
         

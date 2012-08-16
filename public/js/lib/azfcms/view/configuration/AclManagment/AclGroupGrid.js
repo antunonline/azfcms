@@ -44,6 +44,10 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
             }
         },
         
+        reload:function(){
+            this.grid.setQuery(this.get('query'));
+        },
+        
         
         
         _fireSearch:function(){

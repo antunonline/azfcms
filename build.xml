@@ -7,6 +7,21 @@ and open the template in the editor.
 
 <project name="azfcms">
     <property name="output" value="${basedir}/buildOutput" />
+
+    <target name="prepareForDeployment">
+        <delete dir="public/js/fingaround" />
+        <delete dir="public/js/lib/dojo" />
+        <delete dir="public/js/lib/dijit" />
+        <delete dir="public/js/lib/dojox" />
+        <delete dir="public/js/lib/util" />
+        <delete dir="public/templates/greenforest" />
+        <delete dir="public/README" />
+        <delete dir="application/modules/user" />
+        <delete file="application/resolvers/Doh.php" />
+        <delete dir="build" />
+        <delete dir="tests" />
+        
+    </target>
     
     <target name="init" >
         <mkdir dir="${output}/CodeCoverage" />
@@ -530,6 +545,7 @@ class ${controllerClassName} extends Azf_Controller_Action {
         <delete file="public/js/lib/azfcms/tests/controller/configuration/${ucName}/${ucChildName}.html" />
 
     </target>
+
 
     
 </project>

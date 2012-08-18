@@ -87,9 +87,8 @@ define([
 			},
 
 			stampVersion = function(text){
-				// summary:
-				//		Changes the version number for dojo. Input should be the fileContents
-				//		of a file that contains the version number.
+				//summary: Changes the version number for dojo. Input should be the fileContents
+				//of a file that contains the version number.
 				version = bc.version;
 				if(version){
 					//First, break apart the version string.

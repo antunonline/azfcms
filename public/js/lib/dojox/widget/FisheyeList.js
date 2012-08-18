@@ -88,14 +88,14 @@ define(["dojo/_base/declare", "dojo/_base/sniff", "dojo/_base/lang", "dojo/aspec
 				itemPadding: 10,
 
 				// attachEdge: String
-				//		Controls the border that the menu items don't expand past;
+				//		controls the border that the menu items don't expand past;
 				//		for example, if set to "top", then the menu items will drop downwards as they expand.
-				//		Values: "center", "left", "right", "top", "bottom".
+				//		values: "center", "left", "right", "top", "bottom".
 				attachEdge: 'center',
 
 				// labelEdge: String
-				//		Controls were the labels show up in relation to the menu item icons.
-				//		Values: "center", "left", "right", "top", "bottom".
+				//		controls were the labels show up in relation to the menu item icons
+				//		values: "center", "left", "right", "top", "bottom".
 				labelEdge: 'bottom',
 
 				postCreate: function(){

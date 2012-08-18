@@ -5,14 +5,20 @@ function(lang, oo, Base, registry){
 var __StencilData = {
 	// summary:
 	//		the data used to create the dojox.gfx Shape
-	// cx: Number
+
+
+	// 	cx: Number
 	//		Center point x
-	// cy: Number
+	cx:0,
+	// 	cy: Number
 	//		Center point y
-	// rx: Number
+	cy:0,
+	// 	rx: Number
 	//		Horizontal radius
-	// ry: Number
+	rx:0,
+	// 	ry: Number
 	//		Vertical radius
+	ry:0
 };
 =====*/
 
@@ -30,7 +36,7 @@ var Ellipse = oo.declare(
 		anchorType: "group",
 		baseRender:true,
 		dataToPoints: function(/*Object*/o){
-			// summary:
+			//summary:
 			//		Converts data to points.
 			o = o || this.data;
 			var x = o.cx - o.rx,

@@ -13,11 +13,13 @@ define([
 
 
 	/*=====
-	var __Constraints = {
+	var __Constraints = function(){
 		// locale: String
 		//		locale used for validation, picks up value from this widget's lang attribute
 		// _flags_: anything
 		//		various flags passed to pattern function
+		this.locale = "";
+		this._flags_ = "";
 	};
 	=====*/
 
@@ -83,7 +85,7 @@ define([
 		state: "",
 
 		// tooltipPosition: String[]
-		//		See description of `dijit/Tooltip.defaultPosition` for details on this parameter.
+		//		See description of `dijit.Tooltip.defaultPosition` for details on this parameter.
 		tooltipPosition: [],
 
 		_deprecateRegExp: function(attr, value){
@@ -308,7 +310,7 @@ define([
 		},
 
 		reset:function(){
-			// Overrides dijit/form/TextBox.reset() by also
+			// Overrides dijit.form.TextBox.reset() by also
 			// hiding errors about partial matches
 			this._maskValidSubsetError = true;
 			this.inherited(arguments);

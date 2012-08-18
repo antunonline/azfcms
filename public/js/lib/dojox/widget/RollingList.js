@@ -221,8 +221,8 @@ dojo.declare("dojox.widget._RollingListPane",
 	
 	_onSetItem: function(/* item */ item,
 					/* attribute-name-string */ attribute,
-					/* Object|Array */ oldValue,
-					/* Object|Array */ newValue){
+					/* object | array */ oldValue,
+					/* object | array */ newValue){
 		// summary:
 		//		called when an item in the store has changed
 		if(this._hasItem(item)){
@@ -451,7 +451,7 @@ dojo.declare("dojox.widget._RollingListGroupPane",
 			},
 			_moveToPopup: function(/*Event*/ evt){
 				if(this.focusedChild && !this.focusedChild.disabled){
-					this.onItemClick(this.focusedChild, evt);
+					this.focusedChild._onClick(evt);
 				}
 			}
 		}, this.menuNode);
@@ -1085,7 +1085,7 @@ dojo.declare("dojox.widget.RollingList",
 		}
 	},
 	
-	_setStore: function(/* dojo/data/api/Read */ store){
+	_setStore: function(/* dojo.data.api.Read */ store){
 		// summary:
 		//		sets the store for this widget */
 		if(store === this.store && this._started){ return; }

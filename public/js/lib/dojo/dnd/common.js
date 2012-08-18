@@ -8,6 +8,7 @@ var exports = {
 	// summary:
 	//		TODOC
 };
+lang.setObject("dojo.dnd.common", exports);
 
 exports.getCopyKeyState = connect.isCopyKey;
 
@@ -33,9 +34,6 @@ exports.isFormElement = function(/*Event*/ e){
 	}
 	return " button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
 };
-
-// For back-compat, remove for 2.0.
-lang.mixin(lang.getObject("dojo.dnd", true), exports);
 
 return exports;
 });

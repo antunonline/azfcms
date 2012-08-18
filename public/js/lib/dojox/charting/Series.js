@@ -1,11 +1,12 @@
 define(["dojo/_base/lang", "dojo/_base/declare", "./Element"], 
 	function(lang, declare, Element){ 
 	/*=====
-	var __SeriesCtorArgs = {
+	var __SeriesCtorArgs = function(plot){
 		// summary:
 		//		An optional arguments object that can be used in the Series constructor.
 		// plot: String?
 		//		The plot (by name) that this series belongs to.
+		this.plot = plot;
 	};
 	=====*/
 	return declare("dojox.charting.Series", Element, {

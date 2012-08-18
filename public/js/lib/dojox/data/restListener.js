@@ -3,8 +3,9 @@ dojo.provide("dojox.data.restListener");
 dojox.data.restListener = function(message){
 	// summary:
 	//		this function can be used to receive REST notifications, from Comet or from another frame
-	// example:
-	//	|	dojo.connect(window,"onMessage",null,function(event) {
+	// description:
+	//		Example:
+	// |	dojo.connect(window,"onMessage",null,function(event) {
 	//	|		var data = dojo.fromJson(event.data);
 	//	|		dojox.restListener(data);
 	//	|	});

@@ -120,8 +120,6 @@ mv $buildName ../../
 cd ..
 rm -rf release/
 
-cd ../../
-
 # make a folder structure appropriate for directly extracting on downloads.dojotoolkit.org
 mv build release-$1
 rm -rf release-$1/$srcName/

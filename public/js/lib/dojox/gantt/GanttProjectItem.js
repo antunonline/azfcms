@@ -1,7 +1,7 @@
 define([
-	"./GanttTaskItem",
+	"dojox/gantt/GanttTaskItem",
 	"dojo/_base/declare",
-	"./GanttProjectControl",
+	"dojox/gantt/GanttProjectControl",
 	"dojo/domReady!"
 ], function(GanttTaskItem, declare){
 	return declare("dojox.gantt.GanttProjectItem", [GanttTaskItem], {

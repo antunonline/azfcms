@@ -22,8 +22,6 @@ define(["../_base/lang"], function(lang){
 
 				// messsage is non-enumerable in ES5
 				this.message = message;
-				// stack is non-enumerable in at least Firefox
-				this.stack = err.stack;
 			}else{
 				base.apply(this, arguments);
 			}

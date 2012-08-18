@@ -222,13 +222,15 @@ dojox.io.OAuth = new (function(){
 	}
 	
 	/*=====
-	 	dojox.io.OAuth.__AccessorArgs = {
+	 	dojox.io.OAuth.__AccessorArgs = function(key, secret){
 			// key: String
 			//		The key or token issued to either the consumer or by the OAuth service.
 			// secret: String
 			//		The secret (shared secret for consumers, issued secret by OAuth service).
+			this.key = key;
+			this.secret = secret;
 		};
-		dojox.io.OAuth.__OAuthArgs = {
+		dojox.io.OAuth.__OAuthArgs = function(consumer, sig_method, token){
 			// consumer: dojox.io.OAuth.__AccessorArgs
 			//		The consumer information issued to your OpenAuth application.
 			// sig_method: String
@@ -236,7 +238,9 @@ dojox.io.OAuth = new (function(){
 			// token: dojox.io.OAuth.__AccessorArgs?
 			//		The request token and secret issued by the OAuth service.  If not
 			//		issued yet, this should be null.
-		};
+			this.consumer = consumer;
+			this.token = token;
+		}
 	=====*/
 
 	/*

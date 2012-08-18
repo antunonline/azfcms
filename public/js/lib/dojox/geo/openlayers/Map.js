@@ -18,9 +18,10 @@ define([
 	Patch.patchGFX();
 
 	/*=====
-	dojox.geo.openlayers.__MapArgs = {
+	dojox.geo.openlayers.__MapArgs = function(baseLayerType, baseLayerName, baseLayerUrl, baseLayerOptions){
 		// summary:
 		//		The keyword arguments that can be passed in a Map constructor.
+		//
 		// baseLayerType: String
 		//		 type of the base layer. Can be any of
 		//
@@ -37,6 +38,10 @@ define([
 		//		Some layer may need an url such as Web Map Server.
 		// baseLayerOptions: String
 		//		Additional specific options passed to OpensLayers layer, such as The list of layer to display, for Web Map Server layer.
+		this.baseLayerType = baseLayerType;
+		this.baseLayerName = baseLayerName;
+		this.baseLayerUrl = baseLayerUrl;
+		this.baseLayerOptions = baseLayerOptions;
 	};
 	=====*/
 

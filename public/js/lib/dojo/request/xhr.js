@@ -3,10 +3,8 @@ define([
 	'./watch',
 	'./handlers',
 	'./util',
-	'../has'/*=====,
-	'../request',
-	'../_base/declare' =====*/
-], function(RequestError, watch, handlers, util, has/*=====, request, declare =====*/){
+	'../has'
+], function(RequestError, watch, handlers, util, has){
 	has.add('native-xhr', function(){
 		// if true, the environment has a native XHR implementation
 		return typeof XMLHttpRequest !== 'undefined';
@@ -127,21 +125,17 @@ define([
 				'Content-Type': 'application/x-www-form-urlencoded'
 			}
 		};
-	function xhr(url, options, returnDeferred){
+	function xhr(/*String*/ url, /*Object?*/ options, /*Boolean?*/ returnDeferred){
 		// summary:
-		//		Sends a request using XMLHttpRequest with the given URL and options.
-		// url: String
+		//		Sends an HTTP request with the given URL and options.
+		// description:
+		//		Sends an HTTP request with the given URL.
+		// url:
 		//		URL to request
-		// options: dojo/request/xhr.__Options?
-		//		Options for the request.
-		// returnDeferred: Boolean
-		//		Return a dojo/Deferred rather than a dojo/promise/Promise
-		// returns: dojo/promise/Promise|dojo/Deferred
-
 		var response = util.parseArgs(
 			url,
 			util.deepCreate(defaultOptions, options),
-			has('native-formdata') && options && options.data && options.data instanceof FormData
+			has('native-formdata') && options.data && options.data instanceof FormData
 		);
 		url = response.url;
 		options = response.options;
@@ -211,7 +205,7 @@ define([
 			}
 
 			if(util.notify){
-				util.notify.emit('send', response, dfd.promise.cancel);
+				util.notify.emit('send', response);
 			}
 			_xhr.send(data);
 		}catch(e){
@@ -224,68 +218,6 @@ define([
 		return returnDeferred ? dfd : dfd.promise;
 	}
 
-	/*=====
-	xhr.__BaseOptions = declare(request.__BaseOptions, {
-		// sync: Boolean?
-		//		Whether to make a synchronous request or not. Default
-		//		is `false` (asynchronous).
-		// data: String|Object|FormData?
-		//		Data to transfer. This is ignored for GET and DELETE
-		//		requests.
-		// headers: Object?
-		//		Headers to use for the request.
-		// user: String?
-		//		Username to use during the request.
-		// password: String?
-		//		Password to use during the request.
-		// withCredentials: Boolean?
-		//		For cross-site requests, whether to send credentials
-		//		or not.
-	});
-	xhr.__MethodOptions = declare(null, {
-		// method: String?
-		//		The HTTP method to use to make the request. Must be
-		//		uppercase. Default is `"GET"`.
-	});
-	xhr.__Options = declare([xhr.__BaseOptions, xhr.__MethodOptions]);
-
-	xhr.get = function(url, options){
-		// summary:
-		//		Send an HTTP GET request using XMLHttpRequest with the given URL and options.
-		// url: String
-		//		URL to request
-		// options: dojo/request/xhr.__BaseOptions?
-		//		Options for the request.
-		// returns: dojo/promise/Promise
-	};
-	xhr.post = function(url, options){
-		// summary:
-		//		Send an HTTP POST request using XMLHttpRequest with the given URL and options.
-		// url: String
-		//		URL to request
-		// options: dojo/request/xhr.__BaseOptions?
-		//		Options for the request.
-		// returns: dojo/promise/Promise
-	};
-	xhr.put = function(url, options){
-		// summary:
-		//		Send an HTTP PUT request using XMLHttpRequest with the given URL and options.
-		// url: String
-		//		URL to request
-		// options: dojo/request/xhr.__BaseOptions?
-		//		Options for the request.
-		// returns: dojo/promise/Promise
-	};
-	xhr.del = function(url, options){
-		// summary:
-		//		Send an HTTP DELETE request using XMLHttpRequest with the given URL and options.
-		// url: String
-		//		URL to request
-		// options: dojo/request/xhr.__BaseOptions?
-		//		Options for the request.
-		// returns: dojo/promise/Promise
-	};
-	=====*/
 	xhr._create = function(){
 		// summary:
 		//		does the work of portably generating a new XMLHTTPRequest object.

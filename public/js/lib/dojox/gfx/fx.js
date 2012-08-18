@@ -141,7 +141,7 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 		// args:
 		//		an object defining the animation setting.
 		// example:
-		//	|	fxg.animateStroke{{
+		//	|	dojox.gfx.fx.animateStroke{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		color: {start: "red", end: "green"},
@@ -193,7 +193,7 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 		// args:
 		//		an object defining the animation setting.
 		// example:
-		//	|	gfx.animateFill{{
+		//	|	dojox.gfx.fx.animateFill{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		color: {start: "red", end: "green"}
@@ -217,7 +217,7 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 		// args:
 		//		an object defining the animation setting.
 		// example:
-		//	|	gfx.animateFont{{
+		//	|	dojox.gfx.fx.animateFont{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		variant: {values: ["normal", "small-caps"]},
@@ -261,7 +261,7 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 		// args:
 		//		an object defining the animation setting.
 		// example:
-		//	|	gfx.animateTransform{{
+		//	|	dojox.gfx.fx.animateTransform{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		transform: [

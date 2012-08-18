@@ -10,7 +10,7 @@ define([
 
 	var forEach = array.forEach;
 
-	return function first(objectOrArray){
+	return function first(/*Object|Array?*/ objectOrArray){
 		// summary:
 		//		Takes multiple promises and returns a new promise that is fulfilled
 		//		when the first of these promises is fulfilled.
@@ -19,11 +19,9 @@ define([
 		//		when the first of these promises is fulfilled. Canceling the returned
 		//		promise will *not* cancel any passed promises. The promise will be
 		//		fulfilled with the value of the first fulfilled promise.
-		// objectOrArray: Object|Array?
+		// objectOrArray:
 		//		The promises are taken from the array or object values. If no value
 		//		is passed, the returned promise is resolved with an undefined value.
-		// returns: dojo/promise/Promise
-
 		var array;
 		if(objectOrArray instanceof Array){
 			array = objectOrArray;

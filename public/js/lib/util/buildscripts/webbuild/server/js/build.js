@@ -1,6 +1,5 @@
 function load(/*String*/fileName){
-	// summary:
-	//		opens the file at fileName and evals the contents as JavaScript.
+	//summary: opens the file at fileName and evals the contents as JavaScript.
 	
 	//Read the file
 	var fileContents = readFile(fileName);
@@ -16,8 +15,7 @@ function load(/*String*/fileName){
 }
 
 function readFile(/*String*/path, /*String?*/encoding){
-	// summary:
-	//		reads a file and returns a string
+	//summary: reads a file and returns a string
 	encoding = encoding || "utf-8";
 	var file = new java.io.File(path);
 	var lineSeparator = "\n";
@@ -39,8 +37,7 @@ function readFile(/*String*/path, /*String?*/encoding){
 //TODO: inlining this function since the new shrinksafe.jar is used, and older
 //versions of Dojo's buildscripts are not compatible.
 function optimizeJs(/*String fileName*/fileName, /*String*/fileContents, /*String*/copyright, /*String*/optimizeType, /*String*/stripConsole){
-	// summary:
-	//		either strips comments from string or compresses it.
+	//summary: either strips comments from string or compresses it.
 	copyright = copyright || "";
 
 	//Use rhino to help do minifying/compressing.

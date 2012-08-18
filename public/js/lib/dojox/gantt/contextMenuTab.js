@@ -1,5 +1,4 @@
 define([
-	"./GanttTaskControl",
 	"dijit/Menu",
 	"dijit/Dialog",
 	"dijit/form/NumberSpinner",
@@ -18,10 +17,16 @@ define([
 	"dojo/request",
 	"dojo/dom",
 	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"dojo/dom-geometry",
+	"dojo/keys",
+	"dojo/parser",
 	"dojo/domReady!"
-], function(GanttTaskControl, Menu, Dialog, NumberSpinner, Button, CheckBox, DateTextBox, TimeTextBox, TextBox, Form,
+], function(Menu, Dialog, NumberSpinner, Button, CheckBox, DateTextBox, TimeTextBox, TextBox, Form,
 		registry, declare, arrayUtil, lang, html, locale, request, 
-		dom, domClass){
+		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys, parser){
 	return declare("dojox.gantt.contextMenuTab", [], {
 		constructor: function(id, description, type, showOInfo, tabMenu, withDefaultValue){
 			this.id = id;
@@ -92,6 +97,7 @@ define([
 				this.hide();
 			}else{
 				alert("Complete Percentage out of Range");
+				return;
 			}
 		},
 		ownerUpdateAction: function(){
@@ -116,6 +122,7 @@ define([
 				this.hide();
 			}else{
 				alert("Please verify the Previous Task (" + p + ")  and adjust its Time Range");
+				return;
 			}
 		},
 		renameProjectAction: function(){
@@ -146,6 +153,7 @@ define([
 				this.hide();
 			}else{
 				alert("Percentage not Acceptable");
+				return;
 			}
 		},
 		addTaskAction: function(){
@@ -273,7 +281,8 @@ define([
 				return;
 			}
 			this.tabMenu.tabPanelDlg.titleNode.innerHTML = this.Description;
-			var content = this.tabMenu.paneContentArea.firstChild.rows[1].cells[0].firstChild;
+			var content = this.tabMenu.paneContentArea.firstChild.rows[1].cells[0].firstChild,
+				action = this.tabMenu.paneActionBar;
 			var cell, cellValue, row = null;
 		
 			if(this.showObjectInfo){
@@ -349,9 +358,9 @@ define([
 			domClass.add(cell.firstChild, "ganttDialogContentCell");
 		},
 		insertData: function(content, name, value){
-			var cellValue,
-				row = content.insertRow(content.rows.length),
-				cell = row.insertCell(row.cells.length);
+			var cell, cellValue, row = null;
+			row = content.insertRow(content.rows.length);
+			cell = row.insertCell(row.cells.length);
 			domClass.add(cell, "ganttMenuDialogDescCell");
 			cell.innerHTML = name;
 			cellValue = row.insertCell(row.cells.length);

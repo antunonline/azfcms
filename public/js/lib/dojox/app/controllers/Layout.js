@@ -39,7 +39,7 @@ function(lang, declare, has, on, win, array, query, domStyle, domAttr, domGeom, 
 			//		|	this.trigger("layout", {"view":view, "changeSize":changeSize, "resultSize":resultSize});
 			//
 			// event: Object
-			// |	{"view":view, "changeSize":changeSize, "resultSize":resultSize}
+			//		{"view":view, "changeSize":changeSize, "resultSize":resultSize}
 
 			var view = event.view;
 			var changeSize = event.changeSize || null;
@@ -59,7 +59,7 @@ function(lang, declare, has, on, win, array, query, domStyle, domAttr, domGeom, 
 				return;
 			}
 
-			var fullScreenScene, children;
+			var fullScreenScene, children, hasCenter;
 
 			if(view.selectedChild && view.selectedChild.isFullScreen){
 				console.warn("fullscreen sceen layout");
@@ -165,7 +165,7 @@ function(lang, declare, has, on, win, array, query, domStyle, domAttr, domGeom, 
 			//		|	on.emit(this.app.evented, "select", view);
 			//
 			// event: Object
-			// |		{"parent":parent, "view":view}
+			//		{"parent":parent, "view":view}
 
 			var parent = event.parent || this.app;
 			var view = event.view;

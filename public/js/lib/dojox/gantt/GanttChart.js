@@ -1,11 +1,10 @@
 // FIXME: documentation
 define([
-    "./GanttProjectItem",
-    "./GanttResourceItem",
-    "./GanttProjectControl",
-    "./GanttTaskControl",
-    "./GanttTaskItem",
-    "./TabMenu",
+    "dojox/gantt/GanttProjectItem",
+    "dojox/gantt/GanttResourceItem",
+    "dojox/gantt/GanttProjectControl",
+    "dojox/gantt/GanttTaskControl",
+    "dojox/gantt/TabMenu",
     "dijit/Tooltip",
     "dojo/_base/declare",
 	"dojo/_base/array",
@@ -25,8 +24,7 @@ define([
 	"dojo/_base/window",
 	"dojo/json",
 	"dojo/domReady!"
-], function(GanttProjectItem, GanttResourceItem, GanttProjectControl, 
-		GanttTaskControl, GanttTaskItem, TabMenu,
+], function(GanttProjectItem, GanttResourceItem, GanttProjectControl, GanttTaskControl, TabMenu,
 		Tooltip, 
 		declare, arrayUtil, lang, locale, request, util, on,
 		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys, has, win, JSON){
@@ -415,7 +413,7 @@ define([
 				_this.loadJSONString(response.text);
 				_this.buildUIContent();
 				console.log("Successfully! Loaded data from: " + _this.dataFilePath);
-			}, function(){
+			}, function(err){	
 				console.log("Failed! Load error: " + _this.dataFilePath);
 			});
 		},
@@ -821,7 +819,7 @@ define([
 			domStyle.set(newHourRow, "display", "none");
 			return panelTime;
 		},
-		adjustPanelTime: function(){
+		adjustPanelTime: function(width){
 			var maxEndPos = arrayUtil.map(this.arrProjects, function(project){
 				return (parseInt(project.projectItem[0].style.left) + parseInt(project.projectItem[0].firstChild.style.width)
 					+ project.descrProject.offsetWidth + this.panelTimeExpandDelta);

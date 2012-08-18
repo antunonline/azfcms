@@ -2,21 +2,20 @@ define([
 	"../_base/lang",
 	"../_base/array",
 	"../date",
-	/*===== "../_base/declare", =====*/
 	"../cldr/supplemental",
 	"../i18n",
 	"../regexp",
 	"../string",
 	"../i18n!../cldr/nls/gregorian",
 	"module"
-], function(lang, array, date, /*===== declare, =====*/ supplemental, i18n, regexp, string, gregorian, module){
+], function(lang, array, date, supplemental, i18n, regexp, string, gregorian, module){
 
 // module:
 //		dojo/date/locale
 
 var exports = {
 	// summary:
-	//		This modules defines dojo/date/locale, localization methods for Date.
+	//		This modules defines dojo.date.locale, localization methods for Date.
 };
 lang.setObject(module.id.replace(/\//g, "."), exports);
 
@@ -175,7 +174,7 @@ lang.setObject(module.id.replace(/\//g, "."), exports);
 	}
 
 /*=====
-var __FormatOptions = exports.__FormatOptions = declare(null, {
+var __FormatOptions = exports.__FormatOptions = function(){
 	// selector: String
 	//		choice of 'time','date' (default: date and time)
 	// formatLength: String
@@ -194,7 +193,16 @@ var __FormatOptions = exports.__FormatOptions = declare(null, {
 	//		(format only) use 4 digit years whenever 2 digit years are called for
 	// strict: Boolean
 	//		(parse only) strict parsing, off by default
-});
+	this.selector = selector;
+	this.formatLength = formatLength;
+	this.datePattern = datePattern;
+	this.timePattern = timePattern;
+	this.am = am;
+	this.pm = pm;
+	this.locale = locale;
+	this.fullYear = fullYear;
+	this.strict = strict;
+};
 =====*/
 
 exports._getZone = function(/*Date*/ dateObject, /*boolean*/ getName, /*__FormatOptions?*/ options){
@@ -229,7 +237,7 @@ exports.format = function(/*Date*/ dateObject, /*__FormatOptions?*/ options){
 	//		Formatting patterns are chosen appropriate to the locale.  Different
 	//		formatting lengths may be chosen, with "full" used by default.
 	//		Custom patterns may be used or registered with translations using
-	//		the dojo/date/locale.addCustomFormats() method.
+	//		the dojo.date.locale.addCustomFormats method.
 	//		Formatting patterns are implemented using [the syntax described at
 	//		unicode.org](http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns)
 	//
@@ -302,7 +310,7 @@ exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
 	//		Formatting patterns are chosen appropriate to the locale.  Different
 	//		formatting lengths may be chosen, with "full" used by default.
 	//		Custom patterns may be used or registered with translations using
-	//		the dojo/date/locale.addCustomFormats() method.
+	//		the dojo.date.locale.addCustomFormats method.
 	//
 	//		Formatting patterns are implemented using [the syntax described at
 	//		unicode.org](http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns)
@@ -370,7 +378,7 @@ exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
 					}
 					v = array.indexOf(months, v);
 					if(v == -1){
-//						console.log("dojo/date/locale.parse: Could not parse month name: '" + v + "'.");
+//						console.log("dojo.date.locale.parse: Could not parse month name: '" + v + "'.");
 						return false;
 					}
 				}else{
@@ -391,7 +399,7 @@ exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
 				}
 				v = array.indexOf(days, v);
 				if(v == -1){
-//					console.log("dojo/date/locale.parse: Could not parse weekday name: '" + v + "'.");
+//					console.log("dojo.date.locale.parse: Could not parse weekday name: '" + v + "'.");
 					return false;
 				}
 
@@ -416,7 +424,7 @@ exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
 					pm = pm.replace(period,'').toLowerCase();
 				}
 				if(options.strict && v != am && v != pm){
-//					console.log("dojo/date/locale.parse: Could not parse am/pm part.");
+//					console.log("dojo.date.locale.parse: Could not parse am/pm part.");
 					return false;
 				}
 
@@ -431,7 +439,7 @@ exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
 			case 'k': //hour (0-11)
 				//TODO: strict bounds checking, padding
 				if(v > 23){
-//					console.log("dojo/date/locale.parse: Illegal hours value");
+//					console.log("dojo.date.locale.parse: Illegal hours value");
 					return false;
 				}
 
@@ -452,7 +460,7 @@ exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
 //TODO				var firstDay = 0;
 //			default:
 //TODO: throw?
-//				console.log("dojo/date/locale.parse: unsupported pattern char=" + token.charAt(0));
+//				console.log("dojo.date.locale.parse: unsupported pattern char=" + token.charAt(0));
 		}
 		return true;
 	});
@@ -611,7 +619,7 @@ exports.addCustomFormats = function(/*String*/ packageName, /*String*/ bundleNam
 	//		The user may add custom localized formats where the bundle has properties following the
 	//		same naming convention used by dojo.cldr: `dateFormat-xxxx` / `timeFormat-xxxx`
 	//		The pattern string should match the format used by the CLDR.
-	//		See dojo/date/locale.format() for details.
+	//		See dojo.date.locale.format() for details.
 	//		The resources must be loaded by dojo.requireLocalization() prior to use
 
 	_customFormats.push({pkg:packageName,name:bundleName});

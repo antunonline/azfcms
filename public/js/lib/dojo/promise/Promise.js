@@ -12,51 +12,36 @@ define([
 
 	return lang.extend(function Promise(){
 		// summary:
-		//		The public interface to a deferred.
-		// description:
-		//		The public interface to a deferred. All promises in Dojo are
-		//		instances of this class.
+		//		Promise base class. All promises will be instances of this class.
 	}, {
-		then: function(callback, errback, progback){
+		then: function(/*Function?*/ callback, /*Function?*/ errback, /*Function?*/ progback){
 			// summary:
 			//		Add new callbacks to the promise.
-			// description:
-			//		Add new callbacks to the deferred. Callbacks can be added
-			//		before or after the deferred is fulfilled.
-			// callback: Function?
-			//		Callback to be invoked when the promise is resolved.
-			//		Receives the resolution value.
-			// errback: Function?
-			//		Callback to be invoked when the promise is rejected.
-			//		Receives the rejection error.
-			// progback: Function?
-			//		Callback to be invoked when the promise emits a progress
-			//		update. Receives the progress update.
 			// returns: dojo/promise/Promise
 			//		Returns a new promise for the result of the callback(s).
-			//		This can be used for chaining many asynchronous operations.
-
+			//
+			// callback:
+			//		Callback to be invoked when the promise is resolved.
+			// errback:
+			//		Callback to be invoked when the promise is rejected.
+			// progback:
+			//		Callback to be invoked when the promise emits a progress update.
 			throwAbstract();
 		},
 
-		cancel: function(reason, strict){
+		cancel: function(reason){
 			// summary:
-			//		Inform the deferred it may cancel its asynchronous operation.
+			//		Signal the promise that we're no longer interested in the result.
 			// description:
-			//		Inform the deferred it may cancel its asynchronous operation.
-			//		The deferred's (optional) canceler is invoked and the
-			//		deferred will be left in a rejected state. Can affect other
-			//		promises that originate with the same deferred.
-			// reason: any
-			//		A message that may be sent to the deferred's canceler,
-			//		explaining why it's being canceled.
-			// strict: Boolean?
-			//		If strict, will throw an error if the deferred has already
-			//		been fulfilled and consequently cannot be canceled.
-			// returns: any
-			//		Returns the rejection reason if the deferred was canceled
+			//		Signal the promise that we're no longer interested in the result.
+			//		The deferred may subsequently cancel its operation and reject the
+			//		promise. Can affect other promises that originate with the same
+			//		deferred. Returns the rejection reason if the deferred was canceled
 			//		normally.
-
+			//
+			// reason:
+			//		A message that may be sent to the deferred's canceler, explaining why
+			//		it's being canceled.
 			throwAbstract();
 		},
 
@@ -64,7 +49,6 @@ define([
 			// summary:
 			//		Checks whether the promise has been resolved.
 			// returns: Boolean
-
 			throwAbstract();
 		},
 
@@ -72,7 +56,6 @@ define([
 			// summary:
 			//		Checks whether the promise has been rejected.
 			// returns: Boolean
-
 			throwAbstract();
 		},
 
@@ -80,7 +63,6 @@ define([
 			// summary:
 			//		Checks whether the promise has been resolved or rejected.
 			// returns: Boolean
-
 			throwAbstract();
 		},
 
@@ -88,45 +70,49 @@ define([
 			// summary:
 			//		Checks whether the promise has been canceled.
 			// returns: Boolean
-
 			throwAbstract();
 		},
 
-		always: function(callbackOrErrback){
+		always: function(/*Function?*/ callbackOrErrback){
 			// summary:
-			//		Add a callback to be invoked when the promise is resolved
-			//		or rejected.
-			// callbackOrErrback: Function?
-			//		A function that is used both as a callback and errback.
+			//		Add a callback to be invoked when the promise is resolved or rejected.
 			// returns: dojo/promise/Promise
 			//		Returns a new promise for the result of the callback/errback.
-
+			//
+			// callbackOrErrback:
+			//		A function that is used both as a callback and errback.
 			return this.then(callbackOrErrback, callbackOrErrback);
 		},
 
-		otherwise: function(errback){
+		otherwise: function(/*Function?*/ errback){
 			// summary:
 			//		Add new errbacks to the promise.
-			// errback: Function?
-			//		Callback to be invoked when the promise is rejected.
 			// returns: dojo/promise/Promise
 			//		Returns a new promise for the result of the errback.
-
+			//
+			// errback:
+			//		Callback to be invoked when the promise is rejected.
 			return this.then(null, errback);
 		},
 
-		trace: function(){
+		trace: function(/* ... */){
+			// summary:
+			//		Trace the promise. All arguments are emitted in trace events.
+			// returns:
+			//		The original promise
 			return this;
 		},
 
-		traceRejected: function(){
+		traceRejected: function(/* ... */){
+			// summary:
+			//		Trace rejection of the promise. All arguments are emitted in trace
+			//		events.
+			// returns:
+			//		The original promise
 			return this;
 		},
 
 		toString: function(){
-			// returns: string
-			//		Returns `[object Promise]`.
-
 			return "[object Promise]";
 		}
 	});

@@ -1,5 +1,5 @@
-define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Evented", "./Color", "./connect", "./sniff", "../dom", "../dom-style"],
-	function(dojo, config, /*===== declare, =====*/ lang, Evented, Color, connect, has, dom, style){
+define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", "./sniff", "../dom", "../dom-style"],
+	function(dojo, config, lang, Evented, Color, connect, has, dom, style){
 	// module:
 	//		dojo/_base/fx
 	// notes:
@@ -395,14 +395,17 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 	};
 
 	/*=====
-	var __FadeArgs = declare(null, {
+	var __FadeArgs = function(node, duration, easing){
 		// node: DOMNode|String
 		//		The node referenced in the animation
 		// duration: Integer?
 		//		Duration of the animation in milliseconds.
 		// easing: Function?
 		//		An easing function.
-	});
+		this.node = node;
+		this.duration = duration;
+		this.easing = easing;
+	};
 	=====*/
 
 	basefx.fadeIn = function(/*__FadeArgs*/ args){
@@ -455,7 +458,9 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 	};
 
 	/*=====
-	var __AnimArgs = declare(__FadeArgs, {
+	var __AnimArgs = function(){};
+	__AnimArgs.prototype = new __FadeArgs();
+	lang.extend(__AnimArgs, {
 		// properties: Object?
 		//		A hash map of style properties to Objects describing the transition,
 		//		such as the properties of _Line with an additional 'units' property

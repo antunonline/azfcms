@@ -122,6 +122,7 @@ function(lang, declare, on, Controller){
 				history.replaceState(state, title, href);
 			}
 
+			var currentState = history.state;
 			// transition to the target view
 			this.app.trigger("transition", {
 				"viewId": target,

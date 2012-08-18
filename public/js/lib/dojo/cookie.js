@@ -4,7 +4,7 @@ define(["./_base/kernel", "./regexp"], function(dojo, regexp){
 //		dojo/cookie
 
 /*=====
-var __cookieProps = {
+var __cookieProps = function(){
 	// expires: Date|String|Number?
 	//		If a number, the number of days from today at which the cookie
 	//		will expire. If a date, the date past which the cookie will expire.
@@ -16,7 +16,11 @@ var __cookieProps = {
 	//		The domain to use for the cookie.
 	// secure: Boolean?
 	//		Whether to only send the cookie on secure connections
-};
+	this.expires = expires;
+	this.path = path;
+	this.domain = domain;
+	this.secure = secure;
+}
 =====*/
 
 

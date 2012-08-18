@@ -1,11 +1,11 @@
-define(["dojo/_base/lang","dojo/_base/array", "dojo/_base/declare", "dojo/on", "dojo/touch", "dojo/_base/event"],
-  function(lang, arr, declare, on, touch, event){
+define(["dojo/_base/lang","dojo/_base/array", "dojo/_base/declare", "dojo/on", "dojo/_base/event"], 
+  function(lang, arr, declare, on, evt){
 	return declare("dojox.gfx.Mover", null, {
 		constructor: function(shape, e, host){
 			// summary:
 			//		an object, which makes a shape follow the mouse,
 			//		used as a default mover, and as a base class for custom movers
-			// shape: dojox/gfx.Shape
+			// shape: dojox.gfx.Shape
 			//		a shape object to be moved
 			// e: Event
 			//		a mouse event, which started the move;
@@ -13,17 +13,24 @@ define(["dojo/_base/lang","dojo/_base/array", "dojo/_base/declare", "dojo/on", "
 			// host: Object?
 			//		object which implements the functionality of the move,
 			//		 and defines proper events (onMoveStart and onMoveStop)
+			var eOrig = e;
+			e = e.touches ? e.touches[0] : e;
 			this.shape = shape;
-			this.lastX = e.clientX;
+			this.lastX = e.clientX
 			this.lastY = e.clientY;
 			var h = this.host = host, d = document,
-				firstEvent = on(d, touch.move, lang.hitch(this, "onFirstMove"));
+				firstEvent = on(d, "mousemove", lang.hitch(this, "onFirstMove")),
+				firstTouchEvent = on(d, "touchmove", lang.hitch(this, "onFirstMove"));
 			this.events = [
-				on(d, touch.move,    lang.hitch(this, "onMouseMove")),
-				on(d, touch.release, lang.hitch(this, "destroy")),
+				on(d, "mousemove", lang.hitch(this, "onMouseMove")),
+				on(d, "mouseup",   lang.hitch(this, "destroy")),
+				//Handle Touch Events.
+				on(d, "touchmove", lang.hitch(this, "onMouseMove")),
+				on(d, "touchend",  lang.hitch(this, "destroy")),
 				// cancel text selection and text dragging
-				on(d, "dragstart",   lang.hitch(event, "stop")),
-				on(d, "selectstart", lang.hitch(event, "stop")),
+				on(d, "dragstart",   lang.hitch(evt, "stop")),
+				on(d, "selectstart", lang.hitch(evt, "stop")),
+				firstTouchEvent,
 				firstEvent
 			];
 			// notify that the move has started
@@ -37,12 +44,14 @@ define(["dojo/_base/lang","dojo/_base/array", "dojo/_base/declare", "dojo/on", "
 			//		event processor for onmousemove
 			// e: Event
 			//		mouse event
+			var eOrig = e;
+			e = e.touches ? e.touches[0] : e;
 			var x = e.clientX;
 			var y = e.clientY;
 			this.host.onMove(this, {dx: x - this.lastX, dy: y - this.lastY});
 			this.lastX = x;
 			this.lastY = y;
-			event.stop(e);
+			evt.stop(eOrig);
 		},
 		// utilities
 		onFirstMove: function(){

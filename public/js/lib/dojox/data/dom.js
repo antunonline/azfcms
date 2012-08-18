@@ -58,7 +58,7 @@ dataDom.textContent = function(/*Node*/node, /*string?*/text){
 	}
 };
 
-dataDom.replaceChildren = function(/*Element*/node, /*Node|Array*/ newChildren){
+dataDom.replaceChildren = function(/*Element*/node, /*Node || array*/ newChildren){
 	// summary:
 	//		Removes all children of node and appends newChild. All the existing
 	//		children will be destroyed.

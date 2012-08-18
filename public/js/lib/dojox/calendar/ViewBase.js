@@ -41,18 +41,21 @@ function(
 	StoreMixin){
 	
 	/*=====
-	var __GridClickEventArgs = {
+	var __GridClickEventArgs = function(date, triggerEvent){
 		// summary:
 		//		The event dispatched when the grid is clicked or double-clicked.
 		// date: Date
 		//		The start of the previously displayed time interval, if any. 
 		// triggerEvent: Event
 		//		The event at the origin of this event.
+		
+		this.date = date;
+		this.triggerEvent = triggerEvent;
 	};
 	=====*/
 	
 	/*=====
-	var __ItemMouseEventArgs = {
+	var __ItemMouseEventArgs = function(item, renderer, triggerEvent){
 		// summary:
 		//		The event dispatched when an item is clicked, double-clicked or context-clicked.
 		// item: Object
@@ -61,11 +64,15 @@ function(
 		//		The item renderer clicked.
 		// triggerEvent: Event
 		//		The event at the origin of this event.
+		
+		this.item = item;
+		this.renderer = renderer;
+		this.triggerEvent = triggerEvent;
 	};
 	=====*/
 	
 	/*=====
-	var __itemEditingEventArgs = {
+	var __itemEditingEventArgs = function(item, editKind, dates, startTime, endTimesheet, source, eventSource, triggerEvent){
 		// summary:
 		//		An item editing event.
 		// item: Object
@@ -90,6 +97,16 @@ function(
 		//		- "touch"		
 		// triggerEvent: Event
 		//		The event at the origin of this event.
+			
+		this.item = item;
+		this.editKind = editKind;
+		this.dates = dates;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.sheet = sheet;
+		this.source = source;
+		this.eventSource = eventSource;
+		this.triggerEvent = triggerEvent;
 	};
 	=====*/
 	

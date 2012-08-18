@@ -478,7 +478,7 @@ var Base = oo.declare(
 			}), ms);
 		},
 
-		attr: function(/*String|Object*/ key, /*String|Number?*/value){
+		attr: function(/*String | Object*/key, /* ? String | Number */value){
 			// summary:
 			//		Changes properties in the style or disabled styles,
 			//		depending on whether the object is enabled.
@@ -888,8 +888,7 @@ var Base = oo.declare(
 		},
 		getRadius: function(){
 			// summary:
-			//		Gets radius (length) of Stencil.
-			//
+			//		Gets radius (length) of Stencil
 			//		NOTE: Only works for Lines, Arrows and Vectors
 			//		(not for Ellipse, Axes has its own version)
 			var box = this.getBounds(true);
@@ -1133,7 +1132,7 @@ var Base = oo.declare(
 			return c;
 		},
 
-		disconnect: function(/*Handle|Array*/handles){
+		disconnect: function(/*handle | Array*/handles){
 			// summary:
 			//		Removes connections based on passed
 			//		handles arguments

@@ -48,7 +48,7 @@ timeUtil,
 _nls){
 	
 	/*=====
-	var __HeaderClickEventArgs = {
+	var __HeaderClickEventArgs = function(index, date, triggerEvent){
 		// summary:
 		//		A column click event.
 		// index: Integer
@@ -57,11 +57,14 @@ _nls){
 		//		The date displayed by the column.
 		// triggerEvent: Event
 		//		The origin event.
-	};
+		this.index = index;
+		this.date = date;
+		this.triggerEvent = triggerEvent;
+	}
 	=====*/
 	
 	/*=====
-	var __TimeIntervalChangeArgs = {
+	var __TimeIntervalChangeArgs = function(oldStartTime, startTime, oldEndTime, endTime){
 		// summary:
 		//		An time interval change event, dispatched when the calendar displayed time range has changed.
 		// oldStartTime: Date
@@ -72,22 +75,29 @@ _nls){
 		//		The end of the previously displayed time interval, if any.
 		// endTime: Date
 		//		The new end of the displayed time interval.
-	};
+		this.oldStartTime = oldStartTime;
+		this.startTime = startTime;
+		this.oldEndTime = oldEndTime;
+		this.endTime = endTime;
+	}
 	=====*/
 	
 	/*=====
-	var __GridClickEventArgs = {
+	var __GridClickEventArgs = function(date, triggerEvent){
 		// summary:
 		//		The event dispatched when the grid is clicked or double-clicked.
 		// date: Date
 		//		The start of the previously displayed time interval, if any. 
 		// triggerEvent: Event
 		//		The event at the origin of this event.
-	};
+		
+		this.date = date;
+		this.triggerEvent = triggerEvent;
+	}
 	=====*/
 	
 	/*=====
-	var __ItemMouseEventArgs = {
+	var __ItemMouseEventArgs = function(item, renderer, triggerEvent){
 		// summary:
 		//		The event dispatched when an item is clicked, double-clicked or context-clicked.
 		// item: Object
@@ -96,11 +106,15 @@ _nls){
 		//		The item renderer clicked.
 		// triggerEvent: Event
 		//		The event at the origin of this event.
-	};
+		
+		this.item = item;
+		this.renderer = renderer;
+		this.triggerEvent = triggerEvent;
+	}
 	=====*/
 	
 	/*=====
-	var __itemEditingEventArgs = {
+	var __itemEditingEventArgs = function(item, editKind, dates, startTime, endTimesheet, source, eventSource, triggerEvent){
 		// summary:
 		//		An item editing event.
 		// item: Object
@@ -119,13 +133,22 @@ _nls){
 		//		The view where the event occurred.
 		// eventSource: String
 		//		The device that triggered the event. This property can take the following values:
-		//
 		//		- "mouse", 
 		//		- "keyboard", 
 		//		- "touch"		
 		// triggerEvent: Event
 		//		The event at the origin of this event.
-	};
+			
+		this.item = item;
+		this.editKind = editKind;
+		this.dates = dates;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.sheet = sheet;
+		this.source = source;
+		this.eventSource = eventSource;
+		this.triggerEvent = triggerEvent;
+	}
 	=====*/
 
 	return declare("dojox.calendar.CalendarBase", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StoreMixin, _Invalidating, Selection], {

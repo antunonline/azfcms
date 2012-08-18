@@ -1,5 +1,5 @@
 define([
-	"./GanttTaskControl",
+	"dojox/gantt/GanttTaskControl",
     "dojo/_base/declare",
 	"dojo/domReady!"
 ], function(GanttTaskControl, declare){

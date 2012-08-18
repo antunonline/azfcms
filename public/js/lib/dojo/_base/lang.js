@@ -389,7 +389,7 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			};
 		})(),
 		/*=====
-		delegate: function(obj, props){
+		delegate: function(){
 			// summary:
 			//		Returns a new object which "looks" to obj for properties which it
 			//		does not have a value for. Optionally takes a bag of properties to
@@ -458,8 +458,6 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			// description:
 			//		Calling lang.partial is the functional equivalent of calling:
 			//		|	lang.hitch(null, funcName, ...);
-			// method:
-			//		The function to "wrap"
 			var arr = [ null ];
 			return lang.hitch.apply(dojo, arr.concat(lang._toArray(arguments))); // Function
 		},
@@ -536,8 +534,8 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//		String to be used as a template.
 			// map: Object|Function
 			//		If an object, it is used as a dictionary to look up substitutions.
-			//		If a function, it is called for every substitution with following parameters:
-			//		a whole match, a name, an offset, and the whole template
+			//		If a function, it is called for every substitution with following
+			//		parameters: a whole match, a name, an offset, and the whole template
 			//		string (see https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/String/replace
 			//		for more details).
 			// pattern: RegEx?

@@ -33,26 +33,23 @@ function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
 
 			// Fire synthetic touchover and touchout events on nodes since the browser won't do it natively.
 			on(win.doc, "touchmove", function(evt){
-				var newNode = win.doc.elementFromPoint(
-					evt.pageX - win.global.pageXOffset,
-					evt.pageY - win.global.pageYOffset
+				var oldNode = hoveredNode;
+				hoveredNode = win.doc.elementFromPoint(
+					evt.pageX - win.body().parentNode.scrollLeft,
+					evt.pageY - win.body().parentNode.scrollTop
 				);
-				if(newNode && hoveredNode !== newNode){
-					// touch out on the old node
-					on.emit(hoveredNode, "dojotouchout", {
-						target: hoveredNode,
-						relatedTarget: newNode,
-						bubbles: true
-					});
-
-					// touchover on the new node
-					on.emit(newNode, "dojotouchover", {
-						target: newNode,
+				if(oldNode !== hoveredNode){
+					on.emit(oldNode, "dojotouchout", {
+						target: oldNode,
 						relatedTarget: hoveredNode,
 						bubbles: true
 					});
 
-					hoveredNode = newNode;
+					on.emit(hoveredNode, "dojotouchover", {
+						target: hoveredNode,
+						relatedTarget: oldNode,
+						bubbles: true
+					});
 				}
 			});
 		});
@@ -71,10 +68,7 @@ function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
 	}
 
 
-	function _handle(type){
-		// type: String
-		//		press | move | release | cancel
-
+	function _handle(/*String - press | move | release | cancel*/type){
 		return function(node, listener){//called by on(), see dojo.on
 			return on(node, type, listener);
 		};

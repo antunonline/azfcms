@@ -1,6 +1,5 @@
 define([
-	"./GanttTaskItem",
-	"./GanttTaskControl",
+	"dojox/gantt/GanttTaskItem",
 	"dijit/focus",
 	"dojo/_base/declare",
 	"dojo/_base/array",
@@ -16,7 +15,7 @@ define([
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojo/domReady!"
-], function(GanttTaskItem, GanttTaskControl, focus,
+], function(GanttTaskItem, focus,
 		declare, arrayUtil, lang, locale, request, on,
 		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys){
 	return declare("dojox.gantt.GanttProjectControl", [], {
@@ -377,7 +376,7 @@ define([
 					}))
 				);
 				this.ganttChart._events.push(
-					on(divName, "mouseout", lang.hitch(this, function(){
+					on(divName, "mouseout", lang.hitch(this, function(event){
 						domClass.remove(divName, "ganttProjectNameItemHover");
 						clearTimeout(this.ganttChart.menuTimer);
 						this.ganttChart.menuTimer = setTimeout(lang.hitch(this, function(){
@@ -386,19 +385,19 @@ define([
 					}))
 				);
 				this.ganttChart._events.push(
-					on(this.ganttChart.tabMenu.menuPanel, "mouseover", lang.hitch(this, function(){
+					on(this.ganttChart.tabMenu.menuPanel, "mouseover", lang.hitch(this, function(event){
 						clearTimeout(this.ganttChart.menuTimer);
 					}))
 				);
 				this.ganttChart._events.push(
-					on(this.ganttChart.tabMenu.menuPanel, "keydown", lang.hitch(this, function(){
+					on(this.ganttChart.tabMenu.menuPanel, "keydown", lang.hitch(this, function(event){
 						if(this.ganttChart.tabMenu.isShow && event.keyCode == keys.ESCAPE){
 							this.ganttChart.tabMenu.hide();
 						}
 					}))
 				);
 				this.ganttChart._events.push(
-					on(this.ganttChart.tabMenu.menuPanel, "mouseout", lang.hitch(this, function(){
+					on(this.ganttChart.tabMenu.menuPanel, "mouseout", lang.hitch(this, function(event){
 						clearTimeout(this.ganttChart.menuTimer);
 						this.ganttChart.menuTimer = setTimeout(lang.hitch(this, function(){
 							this.ganttChart.tabMenu.hide();
@@ -409,14 +408,14 @@ define([
 			return divName;
 		},
 		getPercentCompleted: function(){
-			var sum = 0;
+			var sum = 0, percentage = 0;
 			arrayUtil.forEach(this.project.parentTasks, function(ppTask){
 				sum += parseInt(ppTask.percentage);
 			}, this);
 			if(this.project.parentTasks.length != 0){
-				return Math.round(sum / this.project.parentTasks.length);
+				return percentage = Math.round(sum / this.project.parentTasks.length);
 			}else{
-				return -1;
+				return percentage = -1;
 			}
 		},
 		getDuration: function(){

@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/Deferred", "dojo/when"], 
-function(lang, Deferred, when){
+define(["dojo/_base/lang", "dojo/Deferred", "dojo/when", "dojo/_base/config"], 
+function(lang, Deferred, when, config){
 	return function(/*Object*/ config, /*Object*/ parent, /*Object*/ app){
 		// summary:
 		//		model is called to create all of the models for the app, and all models for a view, it will
@@ -15,6 +15,9 @@ function(lang, Deferred, when){
 		// returns: loadedModels 
 		//		 loadedModels is an object holding all of the available loaded models for this view.
 
+		//var config = params.config;
+		//var parent = params.parent;
+
 		this.app = app || parent;
 		this.defCount = 0;
 		var loadedModels = {};
@@ -23,6 +26,7 @@ function(lang, Deferred, when){
 			lang.mixin(loadedModels, parent.loadedModels);
 		}
 		if(config){
+			var loadModelDeferred = loadedModels;
 			for(var test in config){
 				if(test.charAt(0) !== "_"){
 					this.defCount++;
@@ -40,6 +44,7 @@ function(lang, Deferred, when){
 		}else{
 			return loadedModels;
 		}
+		return allModelsLoadedDeferred;
 	};
 
 	function setupModel(config, item, parent, allModelsLoadedDeferred, loadedModels){
@@ -89,5 +94,6 @@ function(lang, Deferred, when){
 						return loadedModels;
 					}
 				}));
+				return loadModelDeferred;					
 	}	
 });

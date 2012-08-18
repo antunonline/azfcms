@@ -88,15 +88,18 @@ stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTi
 };
 
 /*=====
-var __Options = {
-	// selector: String
-	//		"date" or "time" for partial formatting of the Date object.
-	//		Both date and time will be formatted by default.
-	// zulu: Boolean
-	//		if true, UTC/GMT is used for a timezone
-	// milliseconds: Boolean
-	//		if true, output milliseconds
-};
+	var __Options = function(selector, zulu, milliseconds){
+		// selector: String
+		//		"date" or "time" for partial formatting of the Date object.
+		//		Both date and time will be formatted by default.
+		// zulu: Boolean
+		//		if true, UTC/GMT is used for a timezone
+		// milliseconds: Boolean
+		//		if true, output milliseconds
+		this.selector = selector;
+		this.zulu = zulu;
+		this.milliseconds = milliseconds;
+	};
 =====*/
 
 stamp.toISOString = function(/*Date*/ dateObject, /*__Options?*/ options){

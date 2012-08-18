@@ -7,12 +7,14 @@ if(defined("DEFINE_BUILD_DEPS")){
 
 $install[] = function(InstallWorkerLog $log){
     
-    $fp  = zip_open(realpath("dojo.zip"));
+    $fp  = zip_open(realpath("cms.zip"));
     if(!is_resource($fp)){
         $log->writeln(new Exception("Could not open zend framework distribution archive"));
     }
     
+    
     while($entry = zip_read($fp)){
+        
         $name = zip_entry_name($entry);
         $size = zip_entry_filesize($entry);
         if(!isset($rootDirName)){
@@ -33,10 +35,10 @@ $install[] = function(InstallWorkerLog $log){
         }
     }
     
-    recursiveDirectoryDelete("dojo");
-    rename($rootDirName,"dojo");
+    recursiveDirectoryDelete("cms");
+    rename($rootDirName,"cms");
     
-    $log->writeln("Done extracting dojo");
+    $log->writeln("Done extracting CMS");
     
 };
 ?>

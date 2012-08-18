@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL|E_STRICT);
+ini_set("display_errors", 1);
 ob_start();
 session_start();
 
@@ -10,6 +11,30 @@ if(isset($_GET['clearSession'])){
 $jobs = array();
 $vars = array();
 $resources = array();
+
+
+
+function recursiveDirectoryDelete($path) {
+    if(file_exists($path)==false){
+        return;
+    }
+    $d =  new RecursiveDirectoryIterator($path);
+    $r = new RecursiveIteratorIterator($d,  RecursiveIteratorIterator::CHILD_FIRST);
+    
+    while($r->valid()){
+        /* @var $r RecursiveDirectoryIterator */
+        if($r->isFile()){
+            unlink($r->getRealPath());
+        } else {
+            @rmdir($r->getRealPath());
+        }
+        
+        $r->next();
+    }
+    
+    rmdir($path);
+}
+
 
 
 function getQueryArg($name,$default="") {

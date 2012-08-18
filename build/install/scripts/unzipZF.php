@@ -15,6 +15,9 @@ $install[] = function(InstallWorkerLog $log){
     while($entry = zip_read($fp)){
         $name = zip_entry_name($entry);
         $size = zip_entry_filesize($entry);
+        if(!isset($rootDirName)){
+            $rootDirName = $name;
+        }
         
         if($size==0){
             if(file_exists($name)){
@@ -29,6 +32,9 @@ $install[] = function(InstallWorkerLog $log){
             fclose($dstFp);
         }
     }
+    
+    recursiveDirectoryDelete("zf");
+    rename($rootDirName,"zf");
     
     $log->writeln("Done extracting Zend Framework");
     

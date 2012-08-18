@@ -5,12 +5,15 @@ define([
 	'./util',
 	'./handlers',
 	'../_base/lang',
+	'../io-query',
 	'../query',
 	'../has',
 	'../dom',
 	'../dom-construct',
-	'../_base/window'
-], function(module, require, watch, util, handlers, lang, query, has, dom, domConstruct, win){
+	'../_base/window'/*=====,
+	'../request',
+	'../_base/declare' =====*/
+], function(module, require, watch, util, handlers, lang, ioQuery, query, has, dom, domConstruct, win/*=====, request, declare =====*/){
 	var mid = module.id.replace(/[\/\.\-]/g, '_'),
 		onload = mid + '_onload';
 
@@ -24,7 +27,7 @@ define([
 
 			var response = dfd.response,
 				options = response.options,
-				formNode = dom.byId(options.form);
+				formNode = dom.byId(options.form) || dfd._tmpForm;
 
 			if(formNode){
 				// remove all the hidden content inputs
@@ -45,10 +48,19 @@ define([
 
 				// restore original action + target
 				dfd._originalAction && formNode.setAttribute('action', dfd._originalAction);
+				if(dfd._originalMethod){
+					formNode.setAttribute('method', dfd._originalMethod);
+					formNode.method = dfd._originalMethod;
+				}
 				if(dfd._originalTarget){
 					formNode.setAttribute('target', dfd._originalTarget);
 					formNode.target = dfd._originalTarget;
 				}
+			}
+
+			if(dfd._tmpForm){
+				domConstruct.destroy(dfd._tmpForm);
+				delete dfd._tmpForm;
 			}
 
 			dfd._finished = true;
@@ -118,6 +130,17 @@ define([
 		return null;
 	}
 
+	function createForm(){
+		return domConstruct.create('form', {
+			name: mid + '_form',
+			style: {
+				position: 'absolute',
+				top: '-1000px',
+				left: '-1000px'
+			}
+		}, win.body());
+	}
+
 	function fireNextRequest(){
 		// summary:
 		//		Internal method used to fire the next request in the queue.
@@ -139,11 +162,35 @@ define([
 				options = response.options,
 				c2c = dfd._contentToClean = [],
 				formNode = dom.byId(options.form),
-				notify = util.notify;
+				notify = util.notify,
+				data = options.data || null,
+				queryStr;
 
-			var data = options.data || null;
+			if(!dfd._legacy && options.method === 'POST' && !formNode){
+				formNode = dfd._tmpForm = createForm();
+			}else if(options.method === 'GET' && formNode && response.url.indexOf('?') > -1){
+				queryStr = response.url.slice(response.url.indexOf('?') + 1);
+				data = lang.mixin(ioQuery.queryToObject(queryStr), data);
+			}
 
 			if(formNode){
+				if(!dfd._legacy){
+					var parentNode = formNode;
+					while(parentNode = parentNode.parentNode && parentNode !== win.doc.documentElement){}
+
+					// Append the form node or some browsers won't work
+					if(!parentNode){
+						formNode.style.position = 'absolute';
+						formNode.style.left = '-1000px';
+						formNode.style.top = '-1000px';
+						win.body().appendChild(formNode);
+					}
+
+					if(!formNode.name){
+						formNode.name = mid + '_form';
+					}
+				}
+
 				// if we have things in data, we need to add them to the form
 				// before submission
 				if(data){
@@ -185,10 +232,22 @@ define([
 						formNode.setAttribute('action', response.url);
 					}
 				}
-				if(methodNode){
-					methodNode.value = options.method;
+
+				if(!dfd._legacy){
+					dfd._originalMethod = methodNode ? methodNode.value : null;
+					if(methodNode){
+						methodNode.value = options.method;
+					}else{
+						formNode.setAttribute('method', options.method);
+					}
 				}else{
-					formNode.setAttribute('method', options.method);
+					if(!methodNode || !methodNode.value){
+						if(mthdNode){
+							mthdNode.value = options.method;
+						}else{
+							fn.setAttribute("method", options.method);
+						}
+					}
 				}
 
 				dfd._originalTarget = targetNode ? targetNode.value : null;
@@ -199,16 +258,24 @@ define([
 				}
 				formNode.target = iframe._iframeName;
 
-				notify && notify.emit('send', response);
+				notify && notify.emit('send', response, dfd.promise.cancel);
 				iframe._notifyStart(response);
 				formNode.submit();
 			}else{
 				// otherwise we post a GET string by changing URL location for the
 				// iframe
 
-				notify && notify.emit('send', response);
+				var extra = '';
+				if(response.options.data){
+					extra = response.options.data;
+					if(typeof extra !== 'string'){
+						extra = ioQuery.objectToQuery(extra);
+					}
+				}
+				var tmpUrl = response.url + (response.url.indexOf('?') > -1 ? '&' : '?') + extra;
+				notify && notify.emit('send', response, dfd.promise.cancel);
 				iframe._notifyStart(response);
-				iframe.setSrc(iframe._frame, response.url, true);
+				iframe.setSrc(iframe._frame, tmpUrl, true);
 			}
 		}catch(e){
 			dfd.reject(e);
@@ -269,6 +336,16 @@ define([
 		method: 'POST'
 	};
 	function iframe(url, options, returnDeferred){
+		// summary:
+		//		Sends a request using an iframe element with the given URL and options.
+		// url: String
+		//		URL to request
+		// options: dojo/request/iframe.__Options?
+		//		Options for the request.
+		// returnDeferred: Boolean
+		//		Return a dojo/Deferred rather than a dojo/promise/Promise
+		// returns: dojo/promise/Promise|dojo/Deferred
+
 		var response = util.parseArgs(url, util.deepCreate(defaultOptions, options), true);
 		url = response.url;
 		options = response.options;
@@ -289,6 +366,7 @@ define([
 				iframe._fireNextRequest();
 			}
 		};
+		dfd._legacy = returnDeferred;
 
 		iframe._dfdQueue.push(dfd);
 		iframe._fireNextRequest();
@@ -298,6 +376,42 @@ define([
 		return returnDeferred ? dfd : dfd.promise;
 	}
 
+	/*=====
+	iframe.__BaseOptions = declare(request.__BaseOptions, {
+		// form: DOMNode?
+		//		A form node to use to submit data to the server.
+		// data: String|Object?
+		//		Data to transfer. When making a GET request, this will
+		//		be converted to key=value parameters and appended to the
+		//		URL.
+	});
+	iframe.__MethodOptions = declare(null, {
+		// method: String?
+		//		The HTTP method to use to make the request. Must be
+		//		uppercase. Only `"GET"` and `"POST"` are accepted.
+		//		Default is `"POST"`.
+	});
+	iframe.__Options = declare([iframe.__BaseOptions, iframe.__MethodOptions]);
+
+	iframe.get = function(url, options){
+		// summary:
+		//		Send an HTTP GET request using an iframe element with the given URL and options.
+		// url: String
+		//		URL to request
+		// options: dojo/request/iframe.__BaseOptions?
+		//		Options for the request.
+		// returns: dojo/promise/Promise
+	};
+	iframe.post = function(url, options){
+		// summary:
+		//		Send an HTTP POST request using an iframe element with the given URL and options.
+		// url: String
+		//		URL to request
+		// options: dojo/request/iframe.__BaseOptions?
+		//		Options for the request.
+		// returns: dojo/promise/Promise
+	};
+	=====*/
 	iframe.create = create;
 	iframe.doc = doc;
 	iframe.setSrc = setSrc;

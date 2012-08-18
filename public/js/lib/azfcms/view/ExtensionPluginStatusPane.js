@@ -31,7 +31,8 @@ define(
             },
             _createTopContentPane:function(){
                 this.topContentPane = new ContentPane({
-                    region:"top"
+                    region:"top",
+                    style:"padding:0px;"
                 });
                 this.topContentPane.startup();
                 this.borderContainer.addChild(this.topContentPane);
@@ -40,12 +41,14 @@ define(
                 this.toolbar = new Toolbar({})
                 this.topContentPane.addChild(this.toolbar);
                 this.toolbar.startup();
-                this.searchToolbar = new Toolbar({})
-                this.topContentPane.addChild(this.searchToolbar);
-                this.searchToolbar.startup();
             },
             _createSearchControls:function(){
-                domConstruct.place("<span>"+nls.epspSearchPageLabel+":</span>",this.searchToolbar.domNode);
+                this.searchContentPane = new ContentPane({
+                    style:"margin-top:5px;"
+                });
+                this.topContentPane.addChild(this.searchContentPane);
+                
+                domConstruct.place("<span>"+nls.epspSearchPageLabel+":</span>",this.searchContentPane.domNode);
                 this.searchTextBox = new TextBox({});
                 this.searchTextBox.reloadGrid = lang.hitch(this,"reloadGrid");
                 this.searchTextBox.on("keyDown",function(e){
@@ -54,11 +57,11 @@ define(
                     }
                 });
                 
-                this.searchToolbar.addChild(this.searchTextBox);
+                this.searchContentPane.addChild(this.searchTextBox);
                 
-                domConstruct.place("<span style='padding-left:20px;'>"+nls.epspSearchPluginLabel+":</span>",this.searchToolbar.domNode);
+                domConstruct.place("<span style='padding-left:20px;'>"+nls.epspSearchPluginLabel+":</span>",this.searchContentPane.domNode);
                 this.searchPluginTextBox = new TextBox({});
-                this.searchToolbar.addChild(this.searchPluginTextBox);
+                this.searchContentPane.addChild(this.searchPluginTextBox);
                 this.searchPluginTextBox.reloadGrid = lang.hitch(this,"reloadGrid");
                 this.searchPluginTextBox.on("keyDown",function(e){
                     if(e.keyCode==keys.ENTER){
@@ -70,7 +73,7 @@ define(
                     label:nls.epspSearchLabel,
                     onClick:lang.hitch(this,'reloadGrid')
                 });
-                this.searchToolbar.addChild(this.searchButton);
+                this.searchContentPane.addChild(this.searchButton);
             },
             _createGrid:function(){
                 var store;

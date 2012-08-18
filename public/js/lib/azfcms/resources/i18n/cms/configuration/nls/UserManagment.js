@@ -6,6 +6,7 @@
 
 define({
   root: {
+      tabName:"Korisnici",
       newUserButtonLabel:"Novi korisnik",
       editUserButtonLabel:"Izmjeni vrijednosti korisnika",
       deleteUserButtonLabel:"Izbriši korisnika",

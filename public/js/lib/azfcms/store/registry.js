@@ -1,9 +1,9 @@
 define(
     ['dojo/_base/declare','azfcms/store/QueryLangStore','dojo/_base/Deferred',
-    'dojo/store/Cache','dojo/store/Memory'],
+    'dojo/store/Cache','dojo/store/Memory','dojo/data/ObjectStore'],
     function
     (declare,QueryLangStore,Deferred,
-        Cache,Memory){
+        Cache,Memory,ObjectStore){
         var __class = declare([],{
         
             constructor:function(){
@@ -105,6 +105,45 @@ define(
                     putMethod:"cms.user.saveUser",
                     removeMethod:"cms.user.removeUser"
                 });
+            },
+            
+            UserAclGroup:function(){
+                return QueryLangStore({
+                    useQueryAsGetCache:true,
+                    idProperty:"name",
+                    getIdentity:function(item){
+                        return String(item.userId)+String(item.aclGroupId)
+                    },
+                    queryMethod:"cms.acl.queryUserAclGroup",
+                    putMethod:"cms.acl.putUserAclGroupGroup"
+                });
+            },
+            
+            AclAclGroup:function(){
+                return QueryLangStore({
+                    useQueryAsGetCache:true,
+                    idProperty:"aclId",
+                    getIdentity:function(item){
+                        return String(item.aclId)+String(item.aclGroupId)
+                    },
+                    queryMethod:"cms.acl.queryAclAclGroup",
+                    putMethod:"cms.acl.putQueryAclAclGroupRecord"
+                });
+            },
+            
+            AclGroup:function(){
+                return QueryLangStore({
+                    useQueryAsGetCache:true,
+                    idProperty:"id",
+                    getIdentity:function(item){
+                        return item.id;
+                    },
+                    queryMethod:"cms.acl.queryAclGroup",
+                    addMethod:"cms.acl.addAclGroup",
+                    putMethod:"cms.acl.putAclGroup",
+                    removeMethod:"cms.acl.removeAclGroup"
+                    
+                });
             }
         })
         
@@ -120,8 +159,23 @@ define(
             callback,  // the function the plugin should call with the return value once it is done
             errback
             ){ 
+                    var useDataApi=false;
+                    // If id starts with :, use dojo.data API
+                    if(id.indexOf(":")>-1){
+                        id = id.substring(id.indexOf(":")+1);
+                        useDataApi=true;
+                    }
             instance.getStoreInstance(id).then(function(store){
-                callback(store);
+                if(useDataApi){
+                    // Use dojo.data API
+                    callback(new ObjectStore({
+                        objectStore:store
+                    }));
+                } else {
+                    // User dojo.store API
+                    callback(store);
+                }
+                
             })
         }
         

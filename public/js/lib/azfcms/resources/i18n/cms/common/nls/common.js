@@ -29,6 +29,8 @@ define({
     npPagePluginsAction: "Upravljanje dodacima",
     npPagePluginsStatusAction: "Status dodataka",
     npFilesystemAction: "Upravljanje dadotekama",
+    npUserManagmentAction:"Korisnici",
+    npAclManagmentAction:"Prava Pristupa",
     npHomeChange: "Postava naslovne stranice",
     
     cepContentType: "Vrsta sadr\u017eaja",

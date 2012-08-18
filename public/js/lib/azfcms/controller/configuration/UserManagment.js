@@ -120,6 +120,7 @@ define(
                     userForm.set("messages",response.errors);
                 } else {
                     userForm.set("messages",{});
+                    this.view.tabContainer.removeChild(userForm);
                     this.userGridView.reloadGrid();
                 }
             }));

@@ -37,7 +37,7 @@ class Application_Resolver_Admin extends Azf_Service_Lang_Resolver {
             $configurationActionDirectoryIterator->next();
         }
         
-        sort($configurationActionDefinitionList,SORT_NUMERIC);
+        sort($configurationActionDefinitionList,SORT_FLAG_CASE|SORT_STRING);
         return $configurationActionDefinitionList;
     }
     

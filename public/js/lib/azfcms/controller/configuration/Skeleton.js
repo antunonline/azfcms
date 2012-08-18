@@ -7,7 +7,7 @@ define(
     var _class = declare([],{
         nls:nls,
         constructor:function(args){
-            lang.mixin(this,args|{});
+            lang.mixin(this,args||{});
             if(!this.model){
                 this.model = model;
             }

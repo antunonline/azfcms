@@ -163,8 +163,9 @@
         var self = this;
         require(
             ['azfcms/view/FilesystemPane','azfcms/controller/FilesystemPaneController',
-            'azfcms/store/Filesystem','dojo/store/Observable'],function
-            (FP,FPC,FSStore, Observable){
+            'azfcms/store/Filesystem','dojo/store/Observable','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
+            (FP,FPC,FSStore, Observable,
+            nls){
                 self.adminDialog = adminDialog;
                 self.FP = FP
                 self.FPC = FPC;
@@ -180,13 +181,14 @@
                     },
                     isTreeModel:true
                 });
+                self.nls = nls;
                 initCallback()
             })
     },
     callback: function(item){
         var fp = new this.FP({
             closable:true,
-            title:nls.npFilesystemAction,
+            title:this.nls.npFilesystemAction,
             gridStore:this.gridStore,
             treeStore:this.treeStore
         });

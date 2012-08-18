@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acl>
+    <privileges>
+        <privilege>
+            <name>cms.userStereotype.${name}</name>
+            <description>Build-in generic user stereotype acl resource. Currently there is only one
+            such resource, and it is used to identify the root admin.</description>
+        </privilege>
+        
+        <privilege>
+            <name>[default.]content.pluginName.resource</name>
+            <description>Content plugin resource identifier</description>
+        </privilege>
+        
+        <privilege>
+            <name>[default.]extensionPlugin.pluginName.resource</name>
+            <description>Extension plugin resource identifier</description>
+        </privilege>
+        
+        <privilege>
+            <name>[default.]service.[lang|rest.]provider.resource</name>
+            <description>Service specific plugin resource identifier</description>
+        </privilege>
+        
+        
+    </privileges>
+</acl>

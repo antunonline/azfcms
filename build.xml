@@ -16,7 +16,6 @@ and open the template in the editor.
         <delete dir="public/js/lib/util" />
         <delete dir="public/templates/greenforest" />
         <delete dir="public/README" />
-        <delete dir="application/modules/user" />
         <delete file="application/resolvers/Doh.php" />
         <delete dir="build" />
         <delete dir="tests" />

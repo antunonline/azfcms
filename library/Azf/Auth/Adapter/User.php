@@ -29,6 +29,12 @@ class Azf_Auth_Adapter_User implements Zend_Auth_Adapter_Interface {
      * @var string
      */
     protected $password;
+    
+    /**
+     *
+     * @var string
+     */
+    public $signKey = "";
 
     /**
      *
@@ -59,7 +65,15 @@ class Azf_Auth_Adapter_User implements Zend_Auth_Adapter_Interface {
      * @param string $password 
      */
     public function setPassword($password) {
-        $this->password = sha1($password);
+        $this->password = $password;
+    }
+    
+    public function setSignKey($signKey) {
+        $this->signKey = $signKey;
+    }
+    
+    public function getSignKey() {
+        return $this->signKey;
     }
 
     /**
@@ -79,7 +93,10 @@ class Azf_Auth_Adapter_User implements Zend_Auth_Adapter_Interface {
         $identity = array();
         
         if($user){
-            if($user['password']===$this->getPassword()){
+            $signKey = $this->getSignKey();
+            $actualPassword = sha1($signKey.$user['password']);
+            $providedPassword = $this->getPassword();
+            if($actualPassword==$providedPassword){
                 $code = Zend_Auth_Result::SUCCESS;
                 unset($user['password']);
                 unset($user['verificationKey']);
@@ -88,7 +105,7 @@ class Azf_Auth_Adapter_User implements Zend_Auth_Adapter_Interface {
             }
         }
         
-        $result = new Zend_Auth_Result($code, (object) $identity);
+        $result = new Zend_Auth_Result($code, $identity);
         return $result;
         
     }

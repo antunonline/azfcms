@@ -10,6 +10,10 @@
     padding-left:20px;  
     display: inline-block;
 }
+
+.azfcmsGenericFormLayoutContainer > div > dl > dd >dl >  dd.emptyInput{
+    text-align: center;
+}
 .azfcmsGenericFormLayoutContainer > div > dl > dd {
     padding:10px;
     border:1px solid #b5bcc7;

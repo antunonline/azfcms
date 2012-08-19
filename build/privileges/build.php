@@ -3,14 +3,15 @@
 $xml = simplexml_load_file(__DIR__."/Privileges.xml");
 $sqlFp = fopen(__DIR__.'/Privileges.sql','w');
 
-$sqlInsertQuery = "INSERT INTO Acl (name,description) VALUES ";
+$sqlInsertQuery = "INSERT IGNORE INTO Acl (resource,description) VALUES \n";
 $sqlValueChunks = array();
-foreach($xml->privileges->privilege as $privilege){
-    $sqlValueChunks[] = "('$privilege->name','$privilege->description')";
+foreach($xml->resources->resource as $resource){
+    $sqlValueChunks[] = "('$resource->name','$resource->description')\n";
 }
 
 $sqlInsertQuery.=join(",\n",$sqlValueChunks).";\n";
 
 fwrite($sqlFp, $sqlInsertQuery);
 fclose($sqlFp);
+
 

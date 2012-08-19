@@ -5,6 +5,7 @@ if (defined("DEFINE_BUILD_DEPS")) {
     
     $this->addVarFromFile("dbDDL", "../resources/DDL.sql");
     $this->addVarFromFile("dbDML", "../resources/DML.sql");
+    $this->addVarFromFile("dbPrivileges", "../resources/privileges.sql");
     
     $this->addVarFromOpt("dbHost");
     $this->addVarFromOpt("dbUser");
@@ -18,7 +19,7 @@ if (defined("DEFINE_BUILD_DEPS")) {
 /**
  * Install DB Schema
  */
-$install[] = function(InstallWorkerLog $log, $dbHost, $dbUser, $dbPassword, $dbName, $dbDDL, $dbDML) {
+$install[] = function(InstallWorkerLog $log, $dbHost, $dbUser, $dbPassword, $dbName, $dbDDL, $dbDML,$dbPrivileges) {
             $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
@@ -28,6 +29,11 @@ $install[] = function(InstallWorkerLog $log, $dbHost, $dbUser, $dbPassword, $dbN
             } while($stmt->nextRowset());
             
             $stmt = $pdo->query($dbDML);
+            do  {
+                $stmt->closeCursor();
+            } while($stmt->nextRowset());
+            
+            $stmt = $pdo->query($dbPrivileges);
             do  {
                 $stmt->closeCursor();
             } while($stmt->nextRowset());

@@ -30,6 +30,15 @@ class InstallScriptBuilder {
     public function addFooter($script) {
         $this->_scripts[] = $script;
     }
+    
+    
+    public function getVar($name,$default=null) {
+        if(isset($this->_globals[$name])){
+            return $this->_globals[$name];
+        } else {
+            return $default;
+        }
+    }
 
     /**
      * 

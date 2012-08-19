@@ -11,7 +11,7 @@ COMMIT;
 
 START TRANSACTION;
 INSERT INTO `User` (`id`, `loginName`, `firstName`, `lastName`, `password`, `email`, `verified`, `verificationKey`, `cTime`, `rTime`) VALUES (1, 'guest', 'Guest', 'Guest', 'da39a3ee5e6b4b0d3255bfef95601890afd80709', 'guest@example.com', 1, 0, '01.01.2000', '01.01.2000');
-INSERT INTO `User` (`id`, `loginName`, `firstName`, `lastName`, `password`, `email`, `verified`, `verificationKey`, `cTime`, `rTime`) VALUES (2, 'root', 'Root', 'Root', 'root', 'root', 1, 0, '01.01.2000', '01.01.2000');
+INSERT INTO `User` (`id`, `loginName`, `firstName`, `lastName`, `password`, `email`, `verified`, `verificationKey`, `cTime`, `rTime`) VALUES (2, 'root', 'Root', 'Root', 'sha1rootpassword', 'root', 1, 0, '01.01.2000', '01.01.2000');
 
 COMMIT;
 
@@ -33,10 +33,13 @@ COMMIT;
 
 START TRANSACTION;
 INSERT INTO `Acl` (`id`, `resource`, `description`) VALUES (1, 'cms.userStereotype.root', 'Root user');
+INSERT INTO `Acl` (`id`, `resource`, `description`) VALUES (2, 'resource.admin.rw', 'Read and write admin access');
+INSERT INTO `Acl` (`id`, `resource`, `description`) VALUES (3, 'resource.user.login', 'User login privilege. Used by guest users to access their registered accounts.');
 
 COMMIT;
 
 START TRANSACTION;
-INSERT INTO `Acl_AclGroup` (`id`, `aclId`, `aclGroupId`) VALUES (1, 1, 2);
+INSERT INTO `Acl_AclGroup` (`id`, `aclId`, `aclGroupId`) VALUES (1, 1, 2); -- Add root access to root group
+INSERT INTO `Acl_AclGroup` (`id`, `aclId`, `aclGroupId`) VALUES (2, 3, 1); -- Add login access to guest group
 
 COMMIT;

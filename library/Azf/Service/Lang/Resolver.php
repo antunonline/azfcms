@@ -137,5 +137,34 @@ abstract class Azf_Service_Lang_Resolver {
             return $this->_helpers[$helper] = $this->_loadHelper($helper);
         }
     }
+    
+    
+    
+    /**
+     * 
+     * @param string $namespace
+     * @return string|null
+     */
+    public function getNamespaceDocCommentResource($namespace) {
+        $reflactionClass = new ReflectionClass($this);
+        $methodName = $namespace."Method";
+        
+        if($reflactionClass->hasMethod($methodName)){
+            $method = $reflactionClass->getMethod($methodName);
+            $docCom = $method->getDocComment();
+            
+            $regex = "/(?i)@resource +([a-z0-9.]+)/";
+            $matches = array();
+            if(preg_match($regex, $docCom, $matches)){
+                return $matches[1];
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+        
+        
+    }
 
 }

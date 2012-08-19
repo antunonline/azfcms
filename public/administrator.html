@@ -1,0 +1,147 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Administracijsko sučelje</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dijit/themes/claro/claro.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/claroGrid.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/azfcms/resources/themes/claro/claro.css" />
+        <script dojoConfig="async:true" src="/js/lib/dojo/dojo.js"></script>
+        <style type="text/css">
+            html,body {
+                width:100%;
+                height:100%;
+                margin:0px;
+                padding:0px;
+            }
+        </style>
+        <script type="text/javascript">
+            require(['dojo/ready','azfcms/model','dojo/parser',
+                'dojox/encoding/digests/SHA1','dijit','dojo/_base/lang','dojox/encoding/digests/_base',
+            
+                'dijit/form/TextBox','azfcms/view/widget/form/InputContainer','azfcms/view/widget/form/EmptyInputContainer',
+                'dijit/form/Button'],
+            function(ready,model,parser,
+            sha1,dijit,lang,digest){
+                
+                var controller = {
+                    init:function(){
+                        this.model = model;
+                        this.loginNameInput = dijit.byId('loginName');
+                        this.passwordInput = dijit.byId('password');
+                        this.loginButton = dijit.byId('loginButton');
+                        dijit.byId('loginButton').on("click",function(){
+                            controller.doLogin();
+                        });
+                    },
+                    
+                    disableForm:function(){
+                        this.loginNameInput.set("disabled",true);
+                        this.passwordInput.set("disabled",true);
+                        this.loginButton.set('disabled',true);
+                    },
+                    enableForm:function(){
+                        this.loginNameInput.set("disabled",false);
+                        this.passwordInput.set("disabled",false);
+                        this.loginButton.set('disabled',false);
+                    },
+                    
+                    sha1:function(value){
+                        return sha1(value,digest.outputTypes.Hex);
+                    },
+                    
+                    startAdminUI:function(){
+                        require(['azfcms/bootstrap/adminEnv'],lang.hitch(this,function(adminEnv){
+                            this.loginButton.destroy();
+                            this.loginNameInput.destroy();
+                            this.passwordInput.destroy();
+                            
+                            var formNode = document.getElementById('form');
+                            formNode.parentNode.removeChild(formNode);
+                            
+                            var adminPane = document.createElement("div");
+                            adminPane.id = "adminPane";
+                            adminPane.style.width = "100%";
+                            adminPane.style.height = "100%";
+                            document.body.appendChild(adminPane);
+                            
+                            adminEnv.startup('adminPane')
+                        }));
+                    },
+                    
+                    displayErrorMessage:function(){
+                        this.loginNameInput.set("messages",{
+                            invalidCredentials:"Korisničko ime ili lozinka nije valjano!"
+                        })
+                    },
+                    
+                    doLogin:function(){
+                        this.disableForm();
+                        var sendCredentials = function(){
+                            var hashedPassword = this.sha1(this.passwordInput.get('value'));
+                            var signedPassword = this.sha1(this.passwordSignKey+hashedPassword);
+                            var loginName = this.loginNameInput.get('value');
+                            
+                            this.model.singleInvoke('cms.user.login',[loginName,signedPassword]).
+                                then(lang.hitch(this,function(response){
+                                if(response.status){
+                                    this.startAdminUI();
+                                } else {
+                                    this.displayErrorMessage();
+                                    this.enableForm();
+                                }
+                            }));
+                        }
+                        
+                        if(!this.passwordSignKey){
+                            this.model.singleInvoke('cms.user.getPasswordSignKey',[])
+                            .then(lang.hitch(this,function(response){
+                                if(response.status){
+                                    this.passwordSignKey = response.response;
+                                }
+                                
+                                sendCredentials.apply(this,[]);
+                            }))
+                        } else {
+                            sendCredentials.apply(this,[]);
+                        }
+                    }
+                }
+                
+                
+                ready(function(){
+                    parser.parse(document.body);
+                    controller.init();
+                });
+                
+            })
+        </script>
+    </head>
+    <body class="claro">
+        <div id="form" class="azfcmsGenericFormLayoutContainer">
+            <div style="width:500px; margin: 0px auto;" >
+                <dl>
+                    <div data-dojo-type="azfcms/view/widget/form/InputContainer"
+                         data-dojo-props="inputType:'dijit/form/TextBox',label:'Korisničko ime'"
+                         id="loginName"></div>
+
+                    <div data-dojo-type="azfcms/view/widget/form/InputContainer"
+                         data-dojo-props="inputType:'dijit/form/TextBox','nativeType':'password',label:'Lozinka'"
+                         id="password"></div>
+                    <div data-dojo-type="azfcms/view/widget/form/EmptyInputContainer"
+                         >
+                        <button data-dojo-type="dijit/form/Button"
+                                id="loginButton"
+                                >Prijavi me</button>
+                    </div>
+            </div>
+        </dl>
+    </div>
+</div>
+</body>
+</html>

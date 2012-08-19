@@ -1,6 +1,8 @@
 <?php
 
 class Application_Resolver_User extends Azf_Service_Lang_Resolver {
+    
+    const LOGIN_PASSWORD_SIGN_HASH = 'loginSessionSignHash';
 
     /**
      *
@@ -38,9 +40,23 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
     public function getDojoHelper() {
         return $this->getHelper("dojo");
     }
+    
+    /**
+     * @return Zend_Session_Namespace
+     */
+    public function getSession() {
+        return new Zend_Session_Namespace("service.resource.user");
+    }
 
     protected function isAllowed($namespaces, $parameters) {
-        return true;
+        $resource = $this->getNamespaceDocCommentResource($namespaces[0]);
+        
+        if($resource){
+            return Azf_Acl::hasAccess($resource);
+        } else {
+            return Azf_Acl::hasAccess("resource.admin.rw");
+        }
+        
     }
 
     /**
@@ -144,6 +160,75 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
         $id = $filterInput->id;
         $this->getUserModel()->delete(array('id=?'=>$id));
         return $this->getDojoHelper()->createRemoveResponse($id);
+    }
+    
+    
+    /**
+     * 
+     * @return string
+     * @resource resource.user.login
+     */
+    public function getPasswordSignKeyMethod() {
+        $session = $this->getSession();
+        
+        if(!$session->__isset(self::LOGIN_PASSWORD_SIGN_HASH)){
+            $key = sha1(sha1(rand(0, PHP_INT_MAX)).sha1(rand(0, PHP_INT_MAX)));
+            $session->__set(self::LOGIN_PASSWORD_SIGN_HASH,$key);            
+        }
+        
+        return $this->getDojoHelper()
+                ->createGetResponse($session->__get(self::LOGIN_PASSWORD_SIGN_HASH));
+    }
+    
+    /**
+     * 
+     * @param type $loginName
+     * @param type $signedPasswordHash
+     * @return array
+     * @resource resource.user.login
+     */
+    public function loginMethod($loginName, $signedPasswordHash) {
+        $filter = Azf_Filter_Factory::get("user")
+                ->getFilterInput(array(
+                    'loginName'=>array(
+                    Azf_Filter_Abstract::REMOVE_VALIDATORS=>array('db_NoRecordExists')
+                    )
+                ), array('loginName'));
+        
+        $filter->setData(array("loginName"=>$loginName));
+        if($filter->isValid()==false||!is_string($signedPasswordHash)){
+            return $this->getDojoHelper()
+                    ->createGetResponse(null, false, $filter->getMessages());
+        }
+        
+        $row = $this->getUserModel()->fetchRow(array(
+            'loginName=?'=>$filter->loginName
+        ));
+        
+        if($row==false){
+            return $this->getDojoHelper()
+                    ->createGetResponse(null, false);
+        }
+        
+        $signKey = $this->getSession()->__get(self::LOGIN_PASSWORD_SIGN_HASH)?:sha1(rand(0,PHP_INT_MAX));
+        
+        $authAdapter = new Azf_Auth_Adapter_User($this->getUserModel());
+        $authAdapter->setLoginName($loginName);
+        $authAdapter->setSignKey($signKey);
+        $authAdapter->setPassword($signedPasswordHash);
+        
+        $auth = Zend_Auth::getInstance();
+        $authResult = $auth->authenticate($authAdapter);
+        
+        
+        if($authResult->isValid()){
+            Azf_Acl::getInstance()->reset();
+            return $this->getDojoHelper()
+                    ->createGetResponse();
+        } else {
+            return $this->getDojoHelper()
+                    ->createGetResponse(null, false);
+        }
     }
 
 }

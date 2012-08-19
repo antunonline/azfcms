@@ -369,8 +369,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     }
 
     protected function isAllowed($namespaces, $parameters) {
-        // TODO fix me
-        return true;
+        return Azf_Acl::hasAccess("resource.admin.rw");
     }
 
     

@@ -148,6 +148,63 @@ class Azf_Model_User extends Zend_Db_Table_Abstract{
     }
     
     
+    /**
+     * 
+     * @param type $userId
+     * @return array
+     */
+    public function getUserAcl($userId){
+        $SQL = "
+SELECT 
+    a.resource
+FROM 
+    User_ACLGroup ug
+JOIN  
+    ACLGroup g
+ON
+    ug.aclGroupId = g.id
+JOIN
+    Acl_AclGroup ag
+ON
+    ag.aclGroupId = g.id
+JOIN
+    Acl a
+ON
+    a.id = ag.aclId
+WHERE
+    ug.userId = ?;";
+        return $this->getAdapter()->fetchCol($SQL,array($userId));
+    }
+    
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getGuestAcl(){
+        $SQL = "
+SELECT 
+    a.resource
+FROM 
+    User_ACLGroup ug
+JOIN  
+    ACLGroup g
+ON
+    ug.aclGroupId = g.id
+JOIN
+    Acl_AclGroup ag
+ON
+    ag.aclGroupId = g.id
+JOIN
+    Acl a
+ON
+    a.id = ag.aclId
+WHERE
+    ug.userId = 1
+";
+        return $this->getAdapter()->fetchCol($SQL);
+    }
+    
     
     
 }

@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <acl>
-    <privileges>
-        <privilege>
+    <resources>
+        <resource>
             <name>cms.userStereotype.${name}</name>
             <description>Build-in generic user stereotype acl resource. Currently there is only one
             such resource, and it is used to identify the root admin.</description>
-        </privilege>
+        </resource>
         
-        <privilege>
+        <resource>
+            <name>[default.]resource.${resource}.${privilege}</name>
+            <description>This format of resource can be used to create ACL resource
+            rule that is appliable in content plugins, extension plugins and service providers.
+            By use of such resource format we reduce ammount of ACL resourc definitions</description>
+        </resource>
+        
+        <resource>
             <name>[default.]content.pluginName.resource</name>
             <description>Content plugin resource identifier</description>
-        </privilege>
+        </resource>
         
-        <privilege>
+        <resource>
             <name>[default.]extensionPlugin.pluginName.resource</name>
             <description>Extension plugin resource identifier</description>
-        </privilege>
+        </resource>
         
-        <privilege>
-            <name>[default.]service.[lang|rest.]provider.resource</name>
+        <resource>
+            <name>[default.]service.[lang|rest.]${serviceName}.resource</name>
             <description>Service specific plugin resource identifier</description>
-        </privilege>
+        </resource>
         
         
-    </privileges>
+    </resources>
 </acl>

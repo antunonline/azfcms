@@ -10,6 +10,7 @@ define(['dojo/_base/declare',
         return declare('azfcms.view.widget.form.InputContainer',[_Widget,_TemplatedMixin,_WidgetsInTemplate],{
             templateString:templateString,
             label:"",
+            nativeType:"text",
             constructor:function(){
             
                 /**
@@ -21,6 +22,11 @@ define(['dojo/_base/declare',
                  * Type of input component, will be injected into data-dojo-type attribubte
                  */
                 this.inputType;
+                
+                /**
+                 * Native type of input element, defaults to text
+                 */
+                this.nativeType;
                 
                 /**
                  * WIdget of this.inputType type

@@ -6,11 +6,11 @@ class Application_Resolver_PluginDescriptor extends Azf_Service_Lang_Resolver {
 
         
     public function initialize() {
-        parent::initialize();
+        return Azf_Acl::hasAccess("resource.admin.rw");
     }
 
     protected function isAllowed($namespaces, $parameters) {
-        return true;
+        return Azf_Acl::hasAccess("resource.admin.rw");
     }
     
     

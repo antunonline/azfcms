@@ -279,62 +279,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
     
     
-    /**
-     * 
-     */
-    public function _initAuth(){
-        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
-        if(!Zend_Auth::getInstance()->hasIdentity()){
-            $dbAdapter = $this->getPluginResource("db")->getDbAdapter();
-            
-            $userModel = new Azf_Model_User(array('db'=>$dbAdapter));
-            $authAdapter = new Azf_Auth_Adapter_User($userModel);
-            $authAdapter->setLoginName("Guest");
-            $authAdapter->setPassword("");
-            
-            $auth = Zend_Auth::getInstance();
-            $result = $auth->authenticate($authAdapter);
-            if($result->isValid()==false){
-                throw new RuntimeException("Guest user could not be logged in");
-            }
-            $identity = $auth->getIdentity();
-        } else {
-            $identity = Zend_Auth::getInstance()->getIdentity();
-        }
-        
-        return $identity;
-    }
-    
-    /**
-     * Initialize ACL
-     */
-    public function _initAcl(){
-        static $isInit;if(isset($isInit)){return;} else {$isInit = true;}
-        
-//        $this->bootstrap("session");
-//        if(Zend_Session::namespaceIsset("acl")){
-//            $session = new Zend_Session_Namespace("acl", true);
-//            $acl = $session->acl;
-//        } else {
-//            $acl = new Zend_Acl();
-//            $uid = $this->bootstrap("auth")->id;
-//            
-//            $dbAdapter= $this->getPluginResource("db")->getDbAdapter();
-//            $userModel = new Azf_Model_User(array("db"=>$dbAdapter));
-//            
-//            $aclRules = $userModel->getUserAclRules($uid);
-//            foreach($aclRules as $rule){
-//                $acl->allow(null, $rule['resource'], $rule['privilege']);
-//            }
-//            
-//            $namespace = new Zend_Session_Namespace("acl");
-//            $namespace->acl = $acl;
-//        }
-//        
-//        Zend_Registry::set("acl",$acl);
-//        return $acl;
-    }
-    
     
     public function _initDefaulTemplateIdentifier(){
         static $isInit;if(isset($isInit)){return;} else {$isInit = true;}

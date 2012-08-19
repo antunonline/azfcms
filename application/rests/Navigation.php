@@ -8,7 +8,7 @@
 class Application_Rest_Navigation extends Azf_Rest_Provider_Abstract {
 
     public function isAllowed($request, $method, $id) {
-        return true;
+        return Azf_Acl::hasAccess("resource.admin.rw");
     }
 
     public function delete(Azf_Rest_Request $request, Azf_Rest_Response $response) {

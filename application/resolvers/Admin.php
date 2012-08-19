@@ -7,7 +7,7 @@
  */
 class Application_Resolver_Admin extends Azf_Service_Lang_Resolver {
     protected function isAllowed($namespaces, $parameters) {
-        return true;
+        return Azf_Acl::hasAccess("resource.admin.rw");
     }
     
     

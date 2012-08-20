@@ -16,7 +16,7 @@ class Application_Resolver_Admin extends Azf_Service_Lang_Resolver {
      * @return \DirectoryIterator
      */
     public function getConfigurationActionDirectoryIterator() {
-        return new DirectoryIterator(APPLICATION_PATH."/../public/js/lib/azfcms/bootstrap/configuration");
+        return new DirectoryIterator(getcwd()."/js/lib/azfcms/bootstrap/configuration");
     }
     
     

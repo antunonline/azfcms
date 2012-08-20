@@ -57,6 +57,11 @@ class Application_Filter_User extends Azf_Filter_Abstract {/**
         'verificationKey' => array(
             self::REQUIRED => false,
             self::ALLOW_EMPTY=>true
+        ),
+        'password'=>array(
+            'validators'=>array(
+                array('stringLength',5)
+            )
         )
     );
 

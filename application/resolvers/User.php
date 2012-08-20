@@ -112,6 +112,7 @@ class Application_Resolver_User extends Azf_Service_Lang_Resolver {
                     ->createAddResponse(null, false, $filterInput->getMessages());
         }
         $newUser = $filterInput->getEscaped();
+        $newUser['password'] = sha1($filterInput->getUnescaped('password'));
         $this->getUserModel()->insert($newUser);
         return $this->getDojoHelper()->createAddResponse();
     }

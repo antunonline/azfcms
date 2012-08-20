@@ -24,7 +24,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
         if ($this->_baseDir)
             return $this->_baseDir;
 
-        return realpath(APPLICATION_PATH . "/../public/files");
+        return realpath(getcwd() . "/files");
     }
 
     public function constructRealPath($path) {

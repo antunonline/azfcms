@@ -58,6 +58,7 @@ $install[] = function(InstallWorkerLog $log){
     $mv2Public("cms/public/index.php","index.php");
     $mv2Public("cms/public/json-rest.php","json-rest.php");
     $mv2Public("cms/public/json-rpc.php","json-rpc.php");
+    $mv2Public("cms/public/administrator.html","administrator.html");
     $mv2Public("dojo/dojo","js/lib/dojo");
     $mv2Public("dojo/dijit","js/lib/dijit");
     $mv2Public("dojo/dojox","js/lib/dojox");

@@ -545,6 +545,15 @@ class ${controllerClassName} extends Azf_Controller_Action {
 
     </target>
 
-
+    
+    <target name="pushUpdate">
+        <exec  executable="php"  failonerror="true">
+             <arg value="build/update/update.php" />
+             <env key="target" value="${target}" />
+             <env key="user" value="${targetUser}" />
+             <env key="password" value="${targetPassword}" />
+             <env key="gitCommand" value="${targetGitCommand}" />
+        </exec>
+    </target>
     
 </project>

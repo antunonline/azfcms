@@ -1,7 +1,7 @@
 {
     i18nButtonLabelPointer: 'npUserManagmentAction',
     i18nBbuttonFallbackLabel: 'UserManagment',
-    iconClass:'dijitIconNewTask',
+    iconClass:'dijitIconUsers',
     init: function(initCallback,adminDialog){
         var context = this;
         context.adminDialog = adminDialog;

@@ -38,10 +38,10 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
      * @return string
      */
     protected function _normalizePath($path) {
-        if (strpos($path, "public/") == 0) {
+        if (strpos($path, "public/") === 0) {
             return str_replace("public/", getcwd() . "/", $path);
         } else {
-            return $path;
+            return realpath(getcwd().'/../'.$path);
         }
     }
 
@@ -68,7 +68,6 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
         foreach ($files as $file) {
             $path = $this->_normalizePath($file[0]);
             $body = $file[1];
-            
             if (!file_exists($path)) {
                 @mkdir($path);
                 @rmdir($path);

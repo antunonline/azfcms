@@ -112,25 +112,23 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
         $expectedBodyHash = sha1($body . $this->getUserPassword());
 
         if ($expectedBodyHash !== $actualBodyHash) {
-            $this->getDojoHelper()
+            return $this->getDojoHelper()
                     ->createPutResponse(null, false, "Body hash is invalid");
         }
 
         $decodedBody = json_decode($body, true);
         if (!is_array($decodedBody)) {
-            $this->getDojoHelper()
+            return $this->getDojoHelper()
                     ->createPutResponse(false, false, "Body could not be deserialized!");
         }
 
-        $this->applyUpdates($decodedBody);
-
         try {
-            
+            $this->applyUpdates($decodedBody);
         } catch (Exception $e) {
-            $this->getDojoHelper()
+            return $this->getDojoHelper()
                     ->createPutResponse(false, false, $e->getMessage());
         }
-        $this->getDojoHelper()
+        return $this->getDojoHelper()
                 ->createPutResponse();
     }
 

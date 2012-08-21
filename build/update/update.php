@@ -17,7 +17,7 @@ class GitDiffBuilder {
      * @return type
      */
     protected function _getDiffChangeList() {
-        return explode("\n", `git diff --name-status HEAD~1`);
+        return array_diff(explode("\n", `git diff --name-status HEAD~1`),array(""));
     }
 
     protected function _getDiffLinePath($line) {
@@ -207,7 +207,8 @@ class UpdateTransferService {
 
         $postData = array(
             'expr' => "cms.update.push('$signedBodyHash')",
-            'body' => $this->_updateBody
+            'body' => $this->_updateBody,
+            'XDEBUG_SESSION_START'=>'netbeans-xdebug'
         );
         $encodedPostData = http_build_query($postData);
 
@@ -237,7 +238,7 @@ class UpdateTransferService {
         }
 
         if (!$decodedResponse['status']) {
-            throw new Exception("Update response status is not positive!");
+            throw new Exception("Update response status is not positive, (error: $decodedResponse[errors])");
         }
     }
 
@@ -259,5 +260,5 @@ class UpdateTransferService {
 
 $diffBuilder = new GitDiffBuilder();
 $diff = $diffBuilder->toString();
-$update = new UpdateTransferService("http://azfcms", "update", "update");
+$update = new UpdateTransferService(getenv("target"),  getenv("user"),  getenv("password"));
 $update->exec($diff);

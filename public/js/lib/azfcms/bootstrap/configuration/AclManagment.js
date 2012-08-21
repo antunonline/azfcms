@@ -1,7 +1,7 @@
 {
     i18nButtonLabelPointer: 'npAclManagmentAction',
     i18nBbuttonFallbackLabel: 'AclManagment',
-    iconClass:'dijitIconNewTask',
+    iconClass:'dijitIconKey',
     init: function(initCallback,adminDialog){
         var context = this;
         context.adminDialog = adminDialog;

@@ -17,6 +17,12 @@
             <description>User login privilege. Used by guest users to access their registered accounts.</description>
         </resource>
         
+        <resource>
+            <name>service.update.push</name>
+            <description>Privilege that grands access to the update service. Can be used to push
+            CMS updates through service API calls.</description>
+        </resource>
+        
         
         
     </resources>

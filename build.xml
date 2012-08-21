@@ -545,6 +545,11 @@ class ${controllerClassName} extends Azf_Controller_Action {
 
     </target>
 
-
+    
+    <target name="pushUpdate">
+        <exec  executable="php" >
+             <arg value="build/update/update.php" />
+        </exec>
+    </target>
     
 </project>

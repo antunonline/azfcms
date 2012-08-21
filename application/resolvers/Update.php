@@ -41,7 +41,7 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
         if (strpos($path, "public/") === 0) {
             return str_replace("public/", getcwd() . "/", $path);
         } else {
-            return realpath(getcwd().'/../'.$path);
+            return getcwd().'/../'.$path;
         }
     }
 

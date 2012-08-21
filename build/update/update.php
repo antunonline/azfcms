@@ -11,13 +11,22 @@
  * @author antun
  */
 class GitDiffBuilder {
+    
+    protected $_gitCommand = "git diff --name-status HEAD~1";
+    
+    function __construct($gitCommand=null) {
+        if(is_string($gitCommand)&&(strpos($gitCommand,"git diff")===0)){
+            $this->_gitCommand = $gitCommand;
+        }
+        
+    }
 
-    /**
+        /**
      * 
      * @return type
      */
     protected function _getDiffChangeList() {
-        return array_diff(explode("\n", `git diff --name-status HEAD~1`),array(""));
+        return array_diff(explode("\n", `$this->_gitCommand`),array(""));
     }
 
     protected function _getDiffLinePath($line) {
@@ -258,7 +267,7 @@ class UpdateTransferService {
 
 }
 
-$diffBuilder = new GitDiffBuilder();
+$diffBuilder = new GitDiffBuilder(getenv('gitCommand'));
 $diff = $diffBuilder->toString();
 $update = new UpdateTransferService(getenv("target"),  getenv("user"),  getenv("password"));
 $update->exec($diff);

@@ -58,8 +58,9 @@ define(
             },
        
             addChild: function(child){
+                child.region="center";
                 if(this.editorPlugin){
-                    this.borderContainer.removeChild(this.editorPlugin);
+                    this.bodyPane.removeChild(this.editorPlugin);
                     
                     if(this.editorPlugin.destroyRecursive){
                         try{
@@ -73,7 +74,7 @@ define(
                     
                 }
                 this.editorPlugin = child;
-                this.borderContainer.addChild(child);
+                this.bodyPane.addChild(child);
             },
        
        

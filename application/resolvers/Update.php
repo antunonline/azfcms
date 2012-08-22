@@ -25,8 +25,8 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
 
     public function getUserPassword() {
         $user = Zend_Auth::getInstance()->getIdentity();
-        $userRecord = $this->getUserModel()->find($user['id']);
-        return $userRecord->password;
+        $password = $this->getUserModel()->getAdapter()->fetchOne("select password from User where id = ?;",array($user['id']));;
+        return $password;
     }
 
     /**
@@ -113,10 +113,10 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
 
         if ($expectedBodyHash !== $actualBodyHash) {
             return $this->getDojoHelper()
-                    ->createPutResponse(null, false, "Body hash is invalid");
+                    ->createPutResponse(null, false, "Body hash is invalid ($expectedBodyHash,$actualBodyHash)");
         }
 
-        $decodedBody = json_decode($body, true);
+        $decodedBody = json_decode(base64_decode($body), true);
         if (!is_array($decodedBody)) {
             return $this->getDojoHelper()
                     ->createPutResponse(false, false, "Body could not be deserialized!");

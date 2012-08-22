@@ -69,7 +69,7 @@ class Application_Resolver_Update extends Azf_Service_Lang_Resolver {
             $path = $this->_normalizePath($file[0]);
             $body = $file[1];
             if (!file_exists($path)) {
-                @mkdir($path);
+                @mkdir($path,true);
                 @rmdir($path);
             }
             

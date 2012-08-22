@@ -3,7 +3,8 @@ define(
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/DijitEditor.html','dojo/dom-geometry',
     'dijit/Editor','dijit/form/Button','dijit/layout/BorderContainer',
-    'dijit/layout/ContentPane','dijit/Toolbar'],function
+    'dijit/layout/ContentPane','dijit/Toolbar','dijit/_editor/plugins/LinkDialog','dijit/_editor/plugins/FontChoice',
+                   'dijit/_editor/plugins/TextColor','dijit/_editor/plugins/ViewSource'],function
     (declare, AbstractEditPane,
         _Widget, _TemplatedMixin, _WidgetsInTemplate,
         templateString,domGeometry)

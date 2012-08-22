@@ -212,20 +212,24 @@ class UpdateTransferService {
     }
 
     protected function _pushUpdate() {
-        $signedBodyHash = sha1($this->_updateBody . $this->_password);
+        $body = base64_encode($this->_updateBody);
+        $signedBodyHash = sha1($body . $this->_password);
 
         $postData = array(
             'expr' => "cms.update.push('$signedBodyHash')",
-            'body' => $this->_updateBody,
+            'body' => $body,
             'XDEBUG_SESSION_START'=>'netbeans-xdebug'
         );
         $encodedPostData = http_build_query($postData);
+        
+        
+        
 
         $contextOptions = array(
             'http' => array(
                 'method' => 'POST',
                 'header' => array(
-                    'Content-Type: application/x-www-form-urlencoded',
+                    'Content-Type: application/x-www-form-urlencoded; charset=utf-8',
                     'Cookie: PHPSESSID=' . $this->_sessionKey . ";"
                 ),
                 'content' => $encodedPostData

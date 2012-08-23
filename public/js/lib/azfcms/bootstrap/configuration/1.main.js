@@ -101,7 +101,7 @@
 },
 {
     i18nButtonLabelPointer: 'npPagePluginsAction',
-    iconClass:'dijitIconDocument',
+    iconClass:'dijitIconConfigure',
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(
@@ -136,7 +136,7 @@
 },
 {
     i18nButtonLabelPointer: 'npPagePluginsStatusAction',
-    iconClass:'dijitIconDocument',
+    iconClass:'dijitIconSample',
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(
@@ -158,7 +158,7 @@
 },
 {
     i18nButtonLabelPointer: 'npFilesystemAction',
-    iconClass:'dijitIconDocument',
+    iconClass:'dijitIconSample',
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(

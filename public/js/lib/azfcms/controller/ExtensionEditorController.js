@@ -91,9 +91,8 @@ define(
                     
                     self.editorPane.disable();
                     self.model.remove(pluginId).then(function(){
-                        then(function(){
-                            self.editorPane.enable();
-                        })
+                        self.editorPane.enable();
+                        self.editorPane.reloadGrid();
                     })
                 },nls.eecDeleteConfirmation);
             },

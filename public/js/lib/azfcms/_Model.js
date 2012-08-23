@@ -1,5 +1,5 @@
 define(['dojo/_base/declare','dojo/request/xhr','dojo/_base/Deferred',
-    'azfcms/store/Lang','dojo/request/iframe','dojo/json'],
+    'azfcms/store/Lang','dojo/request/iframe','dojo/_base/json'],
     function(declare, xhr, Deferred,
         LangStore,iframe,json){
         return declare(null,{
@@ -120,7 +120,7 @@ define(['dojo/_base/declare','dojo/request/xhr','dojo/_base/Deferred',
                         else callArgs.push("false");   
                     }
                     else {
-                        callArgs.push(json.stringify(arg));
+                        callArgs.push(json.toJson(arg));
                     }
                 }
             
@@ -247,10 +247,10 @@ define(['dojo/_base/declare','dojo/request/xhr','dojo/_base/Deferred',
                     data:{
                         expr:id
                     },
-                    load: callback,
-                    error: errback,
-                    handleAs:'json'
-                }).then(callback,errback)
+                    handleAs:'text'
+                }).then(function(text){
+                    callback(json.fromJson(text));
+                },errback)
             },
             invoke: function(expr){
                 var d = new Deferred();

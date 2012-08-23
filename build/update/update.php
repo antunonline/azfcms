@@ -12,7 +12,7 @@
  */
 class GitDiffBuilder {
     
-    protected $_gitCommand = "git diff --name-status HEAD~1";
+    protected $_gitCommand = "git diff --name-status @{1}";
     
     function __construct($gitCommand=null) {
         if(is_string($gitCommand)&&(strpos($gitCommand,"git diff")===0)){

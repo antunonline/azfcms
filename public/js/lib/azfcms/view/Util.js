@@ -11,11 +11,11 @@ define(
         FileSelectPane,string)
         {
         return declare([],{
-            FILE_TYPE_ALL:"all",
-            FILE_TYPE_IMAGES:"images",
-            FILE_TYPE_AUDIO:"audio",
-            FILE_TYPE_VIDEO:"video",
-            FILE_TYPE_DIRECTORY:"directory",
+            FILE_TYPE_ALL:"FILE_TYPE_ALL",
+            FILE_TYPE_IMAGES:"FILE_TYPE_IMAGES",
+            FILE_TYPE_AUDIO:"FILE_TYPE_AUDIO",
+            FILE_TYPE_VIDEO:"FILE_TYPE_VIDEO",
+            FILE_TYPE_DIRECTORY:"FILE_TYPE_DIRECTORY",
     
             $_FILE_TYPE_ALL:[],
             $_FILE_TYPE_IMAGES:['jpg','jpeg','gif','png'],

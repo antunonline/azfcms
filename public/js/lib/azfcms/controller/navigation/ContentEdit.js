@@ -90,15 +90,24 @@ define(
                 var cep = this.cep;
                 // Get plugin identifier
                 var pluginIdentifier = staticParams.pluginIdentifier;
-                pluginIdentifier = pluginIdentifier.substring(0,1).toUpperCase()+pluginIdentifier.substring(1);
+                var ucPluginIdentifier = pluginIdentifier.substring(0,1).toUpperCase()+pluginIdentifier.substring(1);
+                var module = staticParams.module;
            
-                require(['azfcms/controller/content/'+pluginIdentifier, 'azfcms/view/content/'+pluginIdentifier],
-                    function(EC, EP){
-                        var ep = cec._buildEditorPane(EP,cep);
-                        cec._buildController(EC,self.nodeId,ep).then(function(controller){
-                            d.callback(controller)
-                        });
+                require(['azfcms/store/registry!ContentPluginTypeStore'],function(contentPluginStore){
+                    contentPluginStore.get(pluginIdentifier).then(function(plugin){
+                        var module = plugin.module;
+                        
+                        require(['azfcms/module/'+module+'/contentPlugin/'+pluginIdentifier+'/controller/'+ucPluginIdentifier, 'azfcms/module/'+module+'/contentPlugin/'+pluginIdentifier+'/view/'+ucPluginIdentifier],
+                            function(EC, EP){
+                                var ep = cec._buildEditorPane(EP,cep);
+                                cec._buildController(EC,self.nodeId,ep).then(function(controller){
+                                    d.callback(controller)
+                                });
+                            })
                     })
+                })
+           
+                
                 return d;
             },
        

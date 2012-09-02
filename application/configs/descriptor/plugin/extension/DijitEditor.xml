@@ -13,5 +13,6 @@ and open the template in the editor.
     <displayName>Dijit Editor</displayName>
     <description>Dijit Editor TYpe</description>
     <version>1.0</version>
+    <module>default</module>
 
 </plugin>

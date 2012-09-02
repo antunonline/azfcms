@@ -38,15 +38,16 @@ define(
                 this.editorPane.on("itemSelect",lang.hitch(this,"onItemSelect"));
             },
     
-            _buildRequire: function(type){
+            _buildRequire: function(type,plugin){
                 function _ucFirst(str) {
                     return str.substring(0,1).toUpperCase()+str.substring(1);
                     
                 }
-                var name = _ucFirst(type);
+                var module = plugin.module;
+                var ucType = _ucFirst(type);
                 return [
-                'azfcms/controller/extensionPlugin/'+name,
-                'azfcms/view/extensionPlugin/'+name
+                'azfcms/module/'+module+'/extensionPlugin/'+type+'/controller/'+ucType,
+                'azfcms/module/'+module+'/extensionPlugin/'+type+'/view/'+ucType,
                 ];
             },
             _buildEditorPane:function(AbstractExtensionPane){
@@ -98,11 +99,16 @@ define(
             },
             onExtendedEdit: function(pluginId,type){
                 var self = this;
-                var requires = this._buildRequire(type);
-                require(requires,function(Controller,View){
-                    var view = self._buildEditorPane(View);
-                    var controller = self._buildController(Controller,pluginId,view);
+                require(['azfcms/store/registry!ExtensionPluginTypeStore'],function(extensionPluginStore){
+                    extensionPluginStore.get(type).then(function(plugin){
+                        var requires = self._buildRequire(type,plugin);
+                        require(requires,function(Controller,View){
+                            var view = self._buildEditorPane(View);
+                            var controller = self._buildController(Controller,pluginId,view);
+                        })
+                    })
                 })
+                
             },
             onItemSelect: function(item){
                 this.editorPane.disable();

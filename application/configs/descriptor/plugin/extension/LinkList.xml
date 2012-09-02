@@ -13,5 +13,6 @@ and open the template in the editor.
     <displayName>Lista adresa</displayName>
     <description>Pomoću ovog dodatka u stranicu možete dodati nezavisnu listu adresa prema drugim stranicama.</description>
     <version>1.0</version>
+    <module>default</module>
 
 </plugin>

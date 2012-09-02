@@ -3,10 +3,7 @@
 class DijiteditorController extends Azf_Controller_Action {
 
     public function renderAction() {
-        $this->_helper->viewRenderer->setNoRender(true);
-        $content = $this->getValue("content");
-        
-        echo $content;
+        $this->view->content = $this->getValue("content");
     }
 
     /**
@@ -23,6 +20,7 @@ class DijiteditorController extends Azf_Controller_Action {
     }
     
     public function uninstallpageAction() {
+        $this->_helper->viewRenderer->setNoRender(true);
         $id = $this->_getParam("id");
         $navigation = $this->getNavigation();
         

@@ -6,7 +6,7 @@
         var context = this;
         context.adminDialog = adminDialog;
         require(
-            ['azfcms/view/configuration/AclManagment','azfcms/controller/configuration/AclManagment',
+            ['azfcms/module/default/configurationPlugin/aclManagment/view/AclManagment','azfcms/module/default/configurationPlugin/aclManagment/controller/AclManagment',
                 'azfcms/store/registry!:UserAclGroup','azfcms/store/registry!:AclAclGroup','azfcms/store/registry!:AclGroup'
             ],function
             (View,Controller,

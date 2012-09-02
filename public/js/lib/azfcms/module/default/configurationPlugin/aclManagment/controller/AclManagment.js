@@ -1,6 +1,6 @@
 define(
 ['dojo/_base/declare', 'dojo/_base/lang','azfcms/model','azfcms/store/registry',
-    'dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
+    'dojo/i18n!../resource/i18n/nls/AclManagment',
     'azfcms/store/registry!AclGroup','dojo/string','azfcms/view/util'],function
 (declare, lang, model, storeRegistry,
     nls,aclGroupStore,string,util)

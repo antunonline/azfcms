@@ -6,7 +6,7 @@
         var context = this;
         context.adminDialog = adminDialog;
         require(
-            ['azfcms/view/configuration/UserManagment','azfcms/controller/configuration/UserManagment',
+            ['azfcms/module/default/configurationPlugin/userManagment/view/UserManagment','azfcms/module/default/configurationPlugin/userManagment/controller/UserManagment',
                 'azfcms/store/registry!UsersStore'
             ],function
             (View,Controller,

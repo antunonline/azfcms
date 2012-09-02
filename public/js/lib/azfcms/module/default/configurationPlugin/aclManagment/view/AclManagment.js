@@ -1,13 +1,13 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/AclManagment.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
-    'dojo/_base/lang','azfcms/view/configuration/AclManagment/AclGroupForm',
+    'dojo/text!./templates/AclManagment.html','dojo/i18n!../resource/i18n/nls/AclManagment',
+    'dojo/_base/lang','./AclGroupForm',
     'dijit/form/Button',
     
     'dijit/layout/BorderContainer','dijit/layout/ContentPane','dijit/Toolbar',
-    'azfcms/view/configuration/AclManagment/UserForm','dijit/layout/TabContainer',
-    'azfcms/view/configuration/AclManagment/AclForm','azfcms/view/configuration/AclManagment/AclGroupGrid'
+    './UserForm','dijit/layout/TabContainer',
+    './AclForm','./AclGroupGrid'
 
 ],function
 (declare, 

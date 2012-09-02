@@ -1,7 +1,7 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/UserForm.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment',
+    'dojo/text!./templates/UserForm.html','dojo/i18n!../resource/i18n/nls/AclManagment',
     'dojo/_base/lang','dojo/keys',
     
     'dijit/layout/BorderContainer','dijit/Toolbar','dijit/form/Button',

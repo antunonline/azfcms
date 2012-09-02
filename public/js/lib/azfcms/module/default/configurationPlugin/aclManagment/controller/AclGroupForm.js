@@ -1,6 +1,6 @@
 define(
 ['dojo/_base/declare', 'dojo/_base/lang','azfcms/model','azfcms/store/registry',
-    'dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/AclManagment'],function
+    'dojo/i18n!../resource/i18n/nls/AclManagment'],function
 (declare, lang, model, storeRegistry,
     nls)
 {
@@ -23,6 +23,10 @@ define(
             this.view 
             
             this.init();
+        },
+        
+        init:function(){
+            // In this method you can initialize the view
         }
             
     });

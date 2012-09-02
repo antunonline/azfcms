@@ -1,7 +1,7 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/UserGrid.html','dojo/i18n!azfcms/resources/i18n/cms/configuration/nls/UserManagment',
+    'dojo/text!./templates/UserGrid.html','dojo/i18n!../resource/i18n/nls/UserManagment',
     'dojo/_base/lang','dojo/data/ObjectStore','dojo/keys',
     
     'dijit/layout/BorderContainer','dojox/grid/DataGrid',

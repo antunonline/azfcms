@@ -111,7 +111,7 @@ class Application_Resolver_Filesystem extends Azf_Service_Lang_Resolver {
                 continue;
             if ($filter['file'] == false && $file->isFile())
                 continue;
-            if ($filter['extensions']) {
+            if ($filter['extensions'] && $file->isFile()) {
                 $extensions = $filter['extensions'];
                 if (!in_array($ext, $extensions)) {
                     continue;

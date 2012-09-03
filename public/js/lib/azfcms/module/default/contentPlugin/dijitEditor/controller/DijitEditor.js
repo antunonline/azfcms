@@ -1,5 +1,5 @@
 define(
-    ['dojo/_base/declare','azfcms/controller/AbstractContentController'],function
+    ['dojo/_base/declare','azfcms/module/default/controller/AbstractContentController'],function
     (declare, AbstractEditorController)
     {
         var _class = declare([AbstractEditorController],{

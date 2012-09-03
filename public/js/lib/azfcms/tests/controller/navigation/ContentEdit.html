@@ -14,7 +14,7 @@ and open the template in the editor.
             require(
             ['dojo/domReady!',
                 'dijit','doh','azfcms/tests/CallChain',
-                'azfcms/controller/navigation/ContentEdit'],function
+                'azfcms/module/default/controller/navigation/ContentEdit'],function
             (ready,
             dijit,doh,Chain ,
             Controller){
@@ -57,7 +57,7 @@ and open the template in the editor.
                                 title:"title"
                             }
                             
-                            define('azfcms/controller/content/Test',[],function(){
+                            define('azfcms/module/default/controller/content/Test',[],function(){
                                 return function(){
                                     chain.test6()
                                     this.name = "controller";

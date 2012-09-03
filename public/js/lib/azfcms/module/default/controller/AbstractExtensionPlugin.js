@@ -14,12 +14,12 @@ define(  ['dojo/_base/declare','azfcms/model/cms','dojo/_base/lang'],
                 }
                 
                 if(!args.pluginId){
-                    throw "azfcms/controller/extensionPlugin/Abstract: pluginId is not specified"
+                    throw "azfcms/module/default/controller/extensionPlugin/Abstract: pluginId is not specified"
                 }
                 
                 
                 if(!args.view){
-                    throw "azfcms/controller/extensionPlugin/Abstract: view is not specified"
+                    throw "azfcms/module/default/controller/extensionPlugin/Abstract: view is not specified"
                 }
                 
                 lang.mixin(this,args);

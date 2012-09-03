@@ -2,7 +2,7 @@ define(
 ['dojo/_base/declare', 'dojo/_base/lang','azfcms/model','azfcms/store/registry',
     'dojo/i18n!../resource/i18n/nls/UserManagment',
     '../view/UserForm','../view/UserGrid',
-    'azfcms/view/util','dojo/string'],function
+    'azfcms/module/default/view/util','dojo/string'],function
 (declare, lang, model, storeRegistry,
     nls, UserForm, UserGrid,viewUtil,string)
 {

@@ -120,6 +120,7 @@ class Azf_Rest_Server {
                     'namespace' => ucfirst($module),
                     'basePath' => $modulePath
                 ));
+        $resourceLoader->addResourceType("rests", "rests", "Rest");
 
         if (is_readable($bootstrapPath)) {
             include_once($bootstrapPath);

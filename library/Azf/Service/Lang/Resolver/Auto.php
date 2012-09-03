@@ -27,8 +27,8 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
                 $generated = $this->_executeDefaultModuleResolver($namespaces, $parameters);
                 break;
             case 3: 
-                break;
                 $generated = $this->_executeNamedModuleResolver($namespaces, $parameters);
+                break;
             default:
                 $generated =  "No Such Method";
                 break;
@@ -70,6 +70,7 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
      */
     protected function _executeNamedModuleResolver($namespaces, $parameters){
         $moduleNamespace = array_shift($namespaces);
+        $this->_initModule($moduleNamespace);
         $classNamespace = array_shift($namespaces);
         
         $classSuffix = ucfirst($classNamespace);
@@ -86,6 +87,38 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
         
         // Execute resolver
         return $this->_executeResolver($resolver,$classNamespace,$method,$parameters);
+    }
+    
+    protected function _initModule($moduleName){
+        $modulePath = APPLICATION_PATH."/modules/".strtolower($moduleName);
+        $bootstrapClassName = ucfirst($moduleName)."_Bootstrap";
+        $moduleBootstrapPath = $modulePath."/Bootstrap.php";
+        
+        if(strtolower($moduleName)=="default"){
+            return true;
+        }
+        
+        if(!is_dir($modulePath)){
+            return false;
+        }
+        $autoloader = new Zend_Application_Module_Autoloader(array(
+            'namespace'=>ucfirst($moduleName),
+            'basePath'=>$modulePath
+        ));
+        $autoloader->addResourceType("resolvers", "resolvers", "Resolver");
+        
+        
+        if(is_file($moduleBootstrapPath) && is_readable($moduleBootstrapPath)){
+           if(!include_once($moduleBootstrapPath)){
+               return false;
+           }
+           
+           $bootstrapInstance = new $bootstrapClassName();
+           /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
+           $bootstrapInstance->bootstrap();
+        }
+        
+        return true;
     }
     
     protected function _loadClass($className){

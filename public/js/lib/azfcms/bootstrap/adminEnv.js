@@ -1,5 +1,5 @@
-define(['dojo/_base/declare','azfcms/view/AdminDialog','azfcms/view/NavigationPane',
-    'azfcms/model/navigation','azfcms/controller/Context','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
+define(['dojo/_base/declare','azfcms/module/default/view/AdminDialog','azfcms/module/default/view/NavigationPane',
+    'azfcms/model/navigation','azfcms/module/default/controller/Context','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
     'dojo/_base/Deferred','dojo/on','azfcms/model!cms.admin.getConfigurationActionDefinitions()',
     'dojo/_base/json'],function
     (declare, AdminDialog, NavigationPane,

@@ -6,7 +6,7 @@
         var context = this;
         context.adminDialog = adminDialog;
         require(
-            ['azfcms/view/configuration/{ucName}','azfcms/controller/configuration/{ucName}'
+            ['azfcms/view/configuration/{ucName}','azfcms/module/default/controller/configuration/{ucName}'
             ],function
             (View,Controller
                 ){

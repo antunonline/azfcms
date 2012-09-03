@@ -3,6 +3,6 @@
  * and open the template in the editor.
  */
 
-define(['azfcms/view/Util'],function(Util){
+define(['azfcms/module/default/view/Util'],function(Util){
     return new Util();
 })

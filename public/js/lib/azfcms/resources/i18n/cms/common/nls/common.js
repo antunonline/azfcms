@@ -3,17 +3,17 @@
  * Abbreviations
  * 
  * ad = azfcms/view/AdminPane
- * np = azfcms/view/NavigationPane
+ * np = azfcms/module/default/view/NavigationPane
  * cep = azfcms/view/ContentEditPane
- * aep = azfcms/view/AbstractEditPane
+ * aep = azfcms/module/default/view/AbstractEditPane
  * dpd = azfcms/view/navigation/DeletePageDialog
- * up = azfcms/view/UploadPane
+ * up = azfcms/module/default/view/UploadPane
  * cp = azfcms/view/Confirmpane
- * utl = azfcms/view/Util
+ * utl = azfcms/module/default/view/Util
  * eep = azfcms/view/ExtensionEditorPane
- * eec = azfcms/controller/ExtensionEditorController
+ * eec = azfcms/module/default/controller/ExtensionEditorController
  * extDijit = azfcms/view/extensionPlugin/DijitEditor
- * nce = azfcms/controller/navigation/ContentEdit,
+ * nce = azfcms/module/default/controller/navigation/ContentEdit,
  * fsp = azfcms/view/FilesystemPane
  * 
  */

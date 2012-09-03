@@ -3,9 +3,9 @@
  */
 
 define(
-    ['dojo/_base/declare','dijit/Dialog','azfcms/view/ConfirmPane',
+    ['dojo/_base/declare','dijit/Dialog','azfcms/module/default/view/ConfirmPane',
     'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common','dojo/_base/lang','azfcms/store/Filesystem',
-    'azfcms/view/FileSelectPane','dojo/string'],function
+    'azfcms/module/default/view/FileSelectPane','dojo/string'],function
     (declare,Dialog,ConfirmPane,
         nls,lang,Filesystem,
         FileSelectPane,string)

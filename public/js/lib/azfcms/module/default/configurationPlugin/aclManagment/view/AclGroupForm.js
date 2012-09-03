@@ -4,7 +4,7 @@ define(
     'dojo/text!./templates/AclGroupForm.html','dojo/i18n!../resource/i18n/nls/AclManagment',
     'dojo/_base/lang',
     
-    'dijit/layout/ContentPane','dijit/Toolbar','dijit/form/Button','azfcms/view/widget/form/InputContainer',
+    'dijit/layout/ContentPane','dijit/Toolbar','dijit/form/Button','azfcms/module/default/view/form/InputContainer',
     'dijit/layout/BorderContainer','dijit/form/TextBox','dijit/form/Textarea'
 
 ],function

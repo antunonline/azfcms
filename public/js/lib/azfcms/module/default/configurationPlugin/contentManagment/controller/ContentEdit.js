@@ -1,7 +1,7 @@
 define(
     ['dojo/_base/declare','dojo/_base/Deferred','azfcms/model',
         
-    'dojo/_base/lang','azfcms/model/navigation','azfcms/view/util',
+    'dojo/_base/lang','azfcms/model/navigation','azfcms/module/default/view/util',
     'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
     (declare, Deferred, model,
         lang, navigationModel,util,

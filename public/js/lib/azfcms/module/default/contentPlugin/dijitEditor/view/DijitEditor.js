@@ -1,5 +1,5 @@
 define(
-    ['dojo/_base/declare','azfcms/view/AbstractEditPane',
+    ['dojo/_base/declare','azfcms/module/default/view/AbstractEditPane',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/DijitEditor.html','dojo/dom-geometry',
     'dijit/Editor','dijit/form/Button','dijit/layout/BorderContainer',

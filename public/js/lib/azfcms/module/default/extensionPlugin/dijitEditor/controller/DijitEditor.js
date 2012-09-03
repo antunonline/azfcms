@@ -3,7 +3,7 @@
  */
 
 
-define(  ['dojo/_base/declare','azfcms/controller/AbstractExtensionPlugin'],
+define(  ['dojo/_base/declare','azfcms/module/default/controller/AbstractExtensionPlugin'],
     function (declare,Abstract){
         return declare([Abstract],{
             cmsModel:null,

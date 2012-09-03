@@ -1,6 +1,6 @@
 
 define(
-    ['dojo/_base/declare','dojo/_base/lang','azfcms/view/util','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
+    ['dojo/_base/declare','dojo/_base/lang','azfcms/module/default/view/util','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
     (declare, lang,util,nls){
         return declare([],{
             constructor: function(args){

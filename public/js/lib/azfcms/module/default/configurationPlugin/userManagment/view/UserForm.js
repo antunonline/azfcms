@@ -5,7 +5,7 @@ define(
     'dojo/_base/lang','dijit/Tooltip',
     
     'dijit/form/TextBox','dijit/form/Button','dijit/layout/ContentPane','dijit/layout/BorderContainer',
-    'dijit/form/CheckBox','dijit/Toolbar','dijit/form/ValidationTextBox','azfcms/view/widget/form/InputContainer'
+    'dijit/form/CheckBox','dijit/Toolbar','dijit/form/ValidationTextBox','azfcms/module/default/view/form/InputContainer'
 
     ],function
     (declare, 

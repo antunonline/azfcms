@@ -17,9 +17,9 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','doh','azfcms/controller/ExtensionEditorController',
+            ['dojo/domReady!','doh','azfcms/module/default/controller/ExtensionEditorController',
                 'dojo/_base/declare','dijit/_Widget','dojo/_base/array','dojo/_base/Deferred',
-                'azfcms/controller/AbstractExtensionController','dojo/dom-construct'
+                'azfcms/module/default/controller/AbstractExtensionController','dojo/dom-construct'
             ],function
             (ready,doh, EEC,
             declare,_Widget,array,Deferred,
@@ -416,7 +416,7 @@
                                     model:{}
                                 });
                             
-                                define('azfcms/controller/extensionPlugin/Test',[],function(){
+                                define('azfcms/module/default/controller/extensionPlugin/Test',[],function(){
                                     return Controller;
                                 })
                                 define('azfcms/view/extensionPlugin/Test',[],function(){

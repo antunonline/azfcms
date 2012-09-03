@@ -24,7 +24,7 @@ and open the template in the editor.
             require(['dojo/ready','azfcms/model','dojo/parser',
                 'dojox/encoding/digests/SHA1','dijit','dojo/_base/lang','dojox/encoding/digests/_base',
             
-                'dijit/form/TextBox','azfcms/view/widget/form/InputContainer','azfcms/view/widget/form/EmptyInputContainer',
+                'dijit/form/TextBox','azfcms/module/default/view/form/InputContainer','azfcms/module/default/view/form/EmptyInputContainer',
                 'dijit/form/Button'],
             function(ready,model,parser,
             sha1,dijit,lang,digest){
@@ -126,14 +126,14 @@ and open the template in the editor.
         <div id="form" class="azfcmsGenericFormLayoutContainer">
             <div style="width:500px; margin: 0px auto;" >
                 <dl>
-                    <div data-dojo-type="azfcms/view/widget/form/InputContainer"
+                    <div data-dojo-type="azfcms/module/default/view/form/InputContainer"
                          data-dojo-props="inputType:'dijit/form/TextBox',label:'Korisničko ime'"
                          id="loginName"></div>
 
-                    <div data-dojo-type="azfcms/view/widget/form/InputContainer"
+                    <div data-dojo-type="azfcms/module/default/view/form/InputContainer"
                          data-dojo-props="inputType:'dijit/form/TextBox','nativeType':'password',label:'Lozinka'"
                          id="password"></div>
-                    <div data-dojo-type="azfcms/view/widget/form/EmptyInputContainer"
+                    <div data-dojo-type="azfcms/module/default/view/form/EmptyInputContainer"
                          >
                         <button data-dojo-type="dijit/form/Button"
                                 id="loginButton"

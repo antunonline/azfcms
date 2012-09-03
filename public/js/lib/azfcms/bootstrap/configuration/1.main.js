@@ -5,7 +5,7 @@
     init: function(initCallback,adminDialog){
         var context = this;
         require(
-            ['azfcms/view/navigation/CreatePageDialog','azfcms/controller/navigation/CreatePage',
+            ['azfcms/module/default/configurationPlugin/contentManagment/view/CreatePageDialog','azfcms/module/default/configurationPlugin/contentManagment/controller/CreatePage',
             'azfcms/store/registry!ContentPluginTypeStore'],function
             (CPD,CPC,
                 contentPluginTypeStore){
@@ -30,7 +30,7 @@
     init: function(initCallback, adminDialog){
         this.ad = adminDialog;
         var self = this;
-        require(['azfcms/view/navigation/ContentEdit','azfcms/controller/navigation/ContentEdit','azfcms/store/registry!ContentPluginTypeStore'],function
+        require(['azfcms/module/default/configurationPlugin/contentManagment/view/ContentEdit','azfcms/module/default/configurationPlugin/contentManagment/controller/ContentEdit','azfcms/store/registry!ContentPluginTypeStore'],function
             (cep,cec,contentPluginTypeStore){
                 self.CEP = cep;
                 self.CEC = cec;
@@ -63,7 +63,7 @@
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(
-            ['azfcms/controller/navigation/HomePage'],function
+            ['azfcms/module/default/configurationPlugin/contentManagment/controller/HomePage'],function
             (HPC){
                 self.hpc = new HPC();
                 initCallback()
@@ -80,7 +80,7 @@
     init: function(initCallback,adminDialog){
         var self = this;
         require(
-            ['azfcms/view/navigation/DeletePageDialog','azfcms/controller/navigation/DeletePage',
+            ['azfcms/module/default/configurationPlugin/contentManagment/view/DeletePageDialog','azfcms/module/default/configurationPlugin/contentManagment/controller/DeletePage',
             'azfcms/model'],function
             (DPD,DPC,
                 model){
@@ -105,7 +105,7 @@
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(
-            ['azfcms/view/ExtensionEditorPane','azfcms/controller/ExtensionEditorController',
+            ['azfcms/module/default/configurationPlugin/extensionManagment/view/ExtensionEditorPane','azfcms/module/default/configurationPlugin/extensionManagment/controller/ExtensionEditorController',
             'azfcms/store/registry!ExtensionPluginTypeStore','azfcms/store/registry!TemplateRegionsStore','azfcms/store/registry!ExtensionPluginStore'],function
             (EEP,EEC,
                 extensionPluginTypeStore,regionStore,extensionPluginStore){
@@ -140,7 +140,7 @@
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(
-            ['azfcms/view/ExtensionPluginStatusPane','azfcms/store/registry!ExtensionPluginStatusStore'],function
+            ['azfcms/module/default/configurationPlugin/extensionManagment/view/ExtensionPluginStatusPane','azfcms/store/registry!ExtensionPluginStatusStore'],function
             (ExtensionPluginStatusPane, extensionPluginStatusStore){
                 self.extensionPluginStatusStore = extensionPluginStatusStore
                 self.ExtensionPluginStatusPane = ExtensionPluginStatusPane;
@@ -162,7 +162,7 @@
     init: function(initCallback,adminDialog, item){
         var self = this;
         require(
-            ['azfcms/view/FilesystemPane','azfcms/controller/FilesystemPaneController',
+            ['azfcms/module/default/configurationPlugin/filesystemManagment/view/FilesystemManagment','azfcms/module/default/configurationPlugin/filesystemManagment/controller/FilesystemManagment',
             'azfcms/store/Filesystem','dojo/store/Observable','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
             (FP,FPC,FSStore, Observable,
             nls){

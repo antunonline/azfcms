@@ -5,7 +5,7 @@
  */
 
 define(['dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin','dijit/_Widget',
-    'dojo/_base/lang','dojo/_base/declare','dojo/text!./templates/FilesystemPane.html',
+    'dojo/_base/lang','dojo/_base/declare','dojo/text!./FilesystemManagment.html',
     'dojo/data/ObjectStore','dojo/query','dojox/grid/DataGrid','dojo/dom-style',
     'dijit/form/Button','dojo/aspect','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
 

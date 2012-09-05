@@ -3,6 +3,7 @@
 class DijiteditorController extends Azf_Controller_Action {
 
     public function renderAction() {
+        $this->_helper->viewRenderer->setNoRender(true);
         $this->view->content = $this->getValue("content");
     }
 

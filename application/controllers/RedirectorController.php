@@ -9,6 +9,7 @@ class RedirectorController extends Azf_Controller_Action {
     }
 
     public function renderAction() {
+        $this->_helper->viewRenderer->setNoRender(true);
         $url = $this->getValue("url");
         $redirector = $this->_helper->redirector;
         /* @var $redirector Zend_Controller_Action_Helper_Redirector */

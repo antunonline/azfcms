@@ -22,6 +22,7 @@ $application = new Zend_Application(
                 APPLICATION_PATH . '/configs/application.ini'
 );
 $application->bootstrap();
+Zend_Registry::set("application",$application);
 
 // If expr is not present, or is not a string
 if (!isset($_REQUEST['expr']) || !is_string($_REQUEST['expr'])) {

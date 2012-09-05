@@ -17,6 +17,18 @@ class Azf_Controller_Plugin_Bootstrap extends Zend_Controller_Plugin_Abstract{
         
         // Configure controller helper classes
         $this->_initControllerHelpers();
+        
+        $this->_initModule($request);
+    }
+    
+    /**
+     * 
+     * @param Zend_Controller_Request_Abstract $request
+     */
+    public function _initModule(Zend_Controller_Request_Abstract $request) {
+        $module = $request->getModuleName();
+        
+        Azf_Bootstrap_Module::getInstance()->load($module);
     }
 
     /**

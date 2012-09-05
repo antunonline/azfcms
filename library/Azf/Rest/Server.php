@@ -103,34 +103,8 @@ class Azf_Rest_Server {
     }
 
     protected function _initModule() {
-        if ($this->getRequest()->getModuleName() == "application") {
-            return;
-        }
-        $module = $this->getRequest()->getModuleName();
-        $module = strtolower($module[0]).substr($module,1);
-        $modulePath = APPLICATION_PATH . "/modules/" . $module;
-        $bootstrapPath = $modulePath . "/Bootstrap.php";
-        $bootstrapClassName = ucfirst($module) . "_Bootstrap";
-
-        if (!is_dir($modulePath)) {
-            throw new RuntimeException("Module directory for module \"$module\" does not exist");
-        }
-
-        $resourceLoader = new Zend_Application_Module_Autoloader(array(
-                    'namespace' => ucfirst($module),
-                    'basePath' => $modulePath
-                ));
-        $resourceLoader->addResourceType("rests", "rests", "Rest");
-
-        if (is_readable($bootstrapPath)) {
-            include_once($bootstrapPath);
-            if (class_exists($bootstrapClassName)) {
-                $bootstrapInstance = new $bootstrapClassName(Zend_Registry::get("application"));
-                /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
-                $bootstrapInstance->setResourceLoader($resourceLoader);
-                $bootstrapInstance->bootstrap();
-            }
-        }
+        Azf_Bootstrap_Module::getInstance()
+                ->load($this->getRequest()->getModuleName());
     }
 
     protected function _initProvider() {

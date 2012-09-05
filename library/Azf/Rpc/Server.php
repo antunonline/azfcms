@@ -173,33 +173,8 @@ class Azf_Rpc_Server {
     
     protected function _initModule(){
         $moduleName = $this->getModuleName();
-        $providerName = $this->getProviderName();
-        $modulePath = APPLICATION_PATH."/modules/".strtolower($moduleName);
-        $moduleBootstrapPath = $modulePath."/".ucfirst($modulePath)."Bootstrap";
-        $bootstrapClassName = ucfirst($moduleName)."_".ucfirst($providerName);
-        
-        if(strtolower($moduleName)=="default"){
-            return true;
-        }
-        
-        if(!is_dir($modulePath)){
-            return false;
-        }
-        $autoloader = new Zend_Application_Module_Autoloader(array(
-            'namespace'=>strtolower($moduleName),
-            'basePath'=>$modulePath
-        ));
-        
-        if(is_file($moduleBootstrapPath) && is_readable($moduleBootstrapPath)){
-           if(!include_once($moduleBootstrapPath)){
-               return false;
-           }
-           
-           $bootstrapInstance = new $bootstrapClassName();
-           /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
-           $bootstrapInstance->bootstrap();
-        }
-        
+        Azf_Bootstrap_Module::getInstance()
+                ->load($moduleName);
         return true;
     }
 

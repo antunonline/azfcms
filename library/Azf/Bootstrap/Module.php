@@ -45,7 +45,7 @@ class Azf_Bootstrap_Module {
             $this->_loadedModules[] = $module;
         }
         
-        if ($module == "default") {
+        if ($module == "default" || $module == "application") {
             return;
         }
         

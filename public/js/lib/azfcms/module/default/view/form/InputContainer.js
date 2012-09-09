@@ -63,7 +63,10 @@ define(['dojo/_base/declare',
                 }
                 
                 this.errorDom = domConstruct.place(innerHTMLChunks.join(""),this.errorNode);
-                
+            },
+            
+            _setDisabledAttr:function(value){
+                this.inputWidget.set("disabled",value);
             }
         });
     }

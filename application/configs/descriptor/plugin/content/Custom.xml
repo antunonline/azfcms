@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+    xmlns='http://it-branch.com/xml/ns/plugin/content'
+>
+    
+    <pluginIdentifier>custom</pluginIdentifier>
+    <displayName>Custom MVC</displayName>
+    <description>This content type is a composite type which will allow us to set alter mapping of this 
+        url to our MVC class.
+    </description>
+    <version>1.0</version>
+    <module>default</module>
+    <controller>custom</controller>
+    <action>render</action>
+</plugin>

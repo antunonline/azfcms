@@ -346,7 +346,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
             return false;
         }
         
-        $this->_uninstallContentPlugin($nodeId);
+            $this->_uninstallContentPlugin($nodeId);
         $this->_installContentPlugin($nodeId, $newType);
         return true;
     }
@@ -379,7 +379,9 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      */
     protected  function _uninstallContentPlugin($nodeId) {
         $staticParams = $this->getNavigation()->getStaticParams($nodeId);
-        $mvcParams = array('action'=>'uninstallpage')+$staticParams;
+        $pluginIdentifier = $staticParams[self::PARAM_CONTENT_PLUGIN_IDENTIFIER];
+        $plugin = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
+        $mvcParams = array('action'=>'uninstallpage')+$plugin+$staticParams;
         $this->_callMvc($nodeId, $mvcParams, 'production');
         $this->getNavigation()->deleteStaticParam($nodeId, "values");
     }
@@ -393,7 +395,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     public function _installContentPlugin($nodeId,$pluginIdentifier) {
         $pluginDescriptor = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
         $mvcParams = array('action'=>'installpage')+$pluginDescriptor;
-        $this->_callMvc($nodeId, $mvcParams, 'production');
+            $this->_callMvc($nodeId, $mvcParams, 'production');
         $this->getNavigation()->setStaticParam($nodeId, self::PARAM_CONTENT_PLUGIN_IDENTIFIER, $pluginIdentifier);
     }
 

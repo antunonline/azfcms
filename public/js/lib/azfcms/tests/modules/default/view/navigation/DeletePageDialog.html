@@ -1,0 +1,98 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false"></script>
+        <script>
+            require(
+            ['azfcms/view/navigation/DeletePageDialog','dojo/domReady!',
+                'dijit','doh','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common'],function
+            (DeletePageDialog,ready,
+            dijit,doh, nls){
+                //              
+                var d = new DeletePageDialog()
+                var form = d.form;
+                d.show();
+                
+                doh.register('DialogTests',[
+                    {
+                        name:"Test Disable",
+                        runTest: function(){
+                            d.form.disable();
+                            
+                            doh.t(form.confirmButton.get("disabled"));
+                            doh.t(form.cancelButton.get("disabled"));
+                        }
+                    },
+                    {
+                        name:"Test Disable",
+                        runTest: function(){
+                            d.form.enable();
+                            
+                            doh.f(form.confirmButton.get("disabled"));
+                            doh.f(form.cancelButton.get("disabled"));
+                        }
+                    },
+                    {
+                        name:"Test Message",
+                        runTest: function(){
+                            d.form.set("message","TEST")
+                            var message = d.form.message.innerHTML;
+                            
+                            doh.t(1<message.indexOf("TEST"));
+                        }
+                    },
+                    {
+                        name:"Test cancel",
+                        runTest: function(){
+                            var async = new doh.Deferred();
+                            d.form.on("cancel",function(){
+                                async.callback(true);
+                            });
+                            d.form.cancelButton.onClick({});
+                            
+                            return async;
+                            
+                        }
+                    },
+                    {
+                        name:"Test Confirm",
+                        runTest: function(){
+                            var async = new doh.Deferred();
+                            d.form.on("confirm",function(){
+                                async.callback(true);
+                            });
+                            d.form.confirmButton.onClick({});
+                            
+                            return async;
+                            
+                        }
+                    },
+                    {
+                        name:"Check Cancel label",
+                        runTest: function(){
+                            doh.t(document.body.innerHTML.indexOf(nls.dpdCancelButton)>0);
+                        }
+                    },
+                    {
+                        name:"Check Confirm label",
+                        runTest: function(){
+                            doh.t(document.body.innerHTML.indexOf(nls.dpdConfirmButton)>0);
+                        }
+                    }
+                ]);
+                doh.run();
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

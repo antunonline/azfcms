@@ -1,0 +1,35 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/claro/claro.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true" ></script>
+        <script type="text/javascript">
+            require(['doh','dojo/domReady!','azfcms/view/content/Redirector',
+                'dojo/aspect'],function(doh,domReady,Redirector,
+            aspect){
+                doh.register("azfcms.tests.view.content.Redirector",[
+                    {
+                        name:"Test constructor",
+                        runTest: function(){
+                            var e = new Redirector({
+                                
+                            });
+                            e.placeAt(document.body)
+                        }
+                    }
+                ]);
+                
+                doh.run();
+            });
+        </script>
+    </head>
+    <body class="claro">
+    </body>
+</html>

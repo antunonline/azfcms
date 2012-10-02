@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['azfcms/module/default/view/ConfirmPane','dojo/domReady!',
+                'dijit','doh','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
+                'dojo/dom','azfcms/view/extensionPlugin/DijitEditor'],function
+            (ConfirmPane,ready,
+            dijit,doh, nls,
+            dom,DijitEditor){
+                //              
+                
+               
+                var isRobot = window.location.toString().indexOf("?robot")>-1;
+                
+                if(!isRobot){
+                    
+                
+                    doh.register('azfcms.tests.view.extensionPlugin.DijitEditor',[
+                        {
+                            name:"Test .constructor",
+                            runTest:function(){
+                                var editor = new DijitEditor({
+                                    
+                                })
+                                
+                                editor.placeAt(document.body);
+                            }
+                        }
+                    ]);
+                    doh.run();
+                }
+                
+                if(isRobot){
+                    var pane = new UploadPane({
+                    style:"width:400px;height:200px;"
+                    });
+                    pane.placeAt(document.body);
+                    
+                    
+                    if(window.location.toString().indexOf("robot-recorder")>-1){
+                        require(["dojox/robot/recorder"],new Function())
+                    }
+                }
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

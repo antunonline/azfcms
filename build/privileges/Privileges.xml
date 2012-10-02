@@ -23,6 +23,16 @@
             CMS updates through service API calls.</description>
         </resource>
         
+        <resource>
+            <name>resource.news.read</name>
+            <description>Give the user access to read news posts.</description>
+        </resource>
+        
+        <resource>
+            <name>resource.news.write</name>
+            <description>Give the user access to read and write news posts.</description>
+        </resource>
+        
         
         
     </resources>

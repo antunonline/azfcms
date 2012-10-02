@@ -125,6 +125,35 @@ ENGINE = InnoDB;
 CREATE UNIQUE INDEX `aclaclgroupid` ON `Acl_AclGroup` (`aclId` ASC, `aclGroupId` ASC) ;
 
 
+DROP TABLE IF EXISTS `NewsCategory`;
+
+CREATE TABLE NewsCategory (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(80) NOT NULL,
+    `description` VARCHAR(255) NOT NULL,
+    `userId` INT NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+CREATE INDEX `NewsCategory_title` ON `NewsCategory` (`title` ASC);
+CREATE INDEX `NewsCategory_userId` ON `NewsCategory` (`userId` ASC);
+
+DROP TABLE IF EXISTS `NewsPost`;
+
+CREATE TABLE NewsPost (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `newsCategoryId` INT NOT NULL,
+    `title` VARCHAR(80) NOT NULL,
+    `body` MEDIUMTEXT NOT NULL,
+    `userId` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY  `NewsPost` (`newsCategoryId`) REFERENCES `NewsCategory` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE INDEX `NewsPost_title` ON `NewsPost` (`title` ASC);
+CREATE INDEX `NewsPost_userId` ON `NewsPost` (`userId` ASC);
+
+
 
 DROP procedure IF EXISTS `navigation_completeUserMenu`;
 

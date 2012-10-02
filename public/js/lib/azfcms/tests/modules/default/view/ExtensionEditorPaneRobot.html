@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="isDebug:false"></script>
+        <style>
+            html,body {
+                height:100%;
+
+            }
+        </style>
+        <script>
+            var o = {}
+            dojo.require('dijit.robotx')
+            doh.robot.initRobot("./ExtensionEditorPaneRobotFixture.html")
+            dojo.addOnLoad(function(){
+                
+                
+                doh.register('Test Region select',[
+                    {
+                        name: 'Test regionSelect select element',
+                        timeout: 8000,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.mouseMove(264, 16, 880, 551, true);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('INPUT')[0]; }, 271, 100, 2, 6);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.mouseMove(140, 35, 401, 463, true);
+                            doh.robot.scrollIntoView('dijit_form_FilteringSelect_0_popup0', 260);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 162);
+                            doh.robot.mouseMove(139, 35, 582, 100, true);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').regionSelect.get('item').identifier=="region1"){
+                                    d.callback(true)
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test .onItemSelect 1',
+                        timeout: 4166,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            var expected = {
+                                id:1,
+                                name:'Name/1',
+                                description:'Description/1',
+                                type:'type1',
+                                region:'region1',
+                                weight:'110',
+                                enabled:true
+                            };
+                            var connection = dijit.byId('view').on("itemSelect",function(actual){
+                                doh.is(expected.id,actual.id);
+                                doh.is(expected.name,actual.name);
+                                doh.is(expected.description,actual.description);
+                                doh.is(expected.type,actual.type);
+                                doh.is(expected.region,actual.region);
+                                doh.is(expected.weight,actual.weight);
+                                doh.is(expected.enabled,actual.enabled);
+                                d.callback(true)
+                                connection.remove();
+                            });
+                            
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(291, 65, 1, 947, true);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('TD')[1]; }, 506, 100, 89, 13);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test .onItemSelect 2',
+                        timeout: 4166,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            var expected = {
+                                id:2,
+                                name:'Name/2',
+                                description:'Description/2',
+                                type:'type2',
+                                region:'region2',
+                                weight:'110',
+                                enabled:false
+                            };
+                            var connection = dijit.byId('view').on("itemSelect",function(actual){
+                                doh.is(expected.id,actual.id);
+                                doh.is(expected.name,actual.name);
+                                doh.is(expected.description,actual.description);
+                                doh.is(expected.type,actual.type);
+                                doh.is(expected.region,actual.region);
+                                doh.is(expected.weight,actual.weight);
+                                doh.is(expected.enabled,actual.enabled);
+                                connection.remove();
+                                d.callback(true)
+                            });
+                            
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(257, 84, 1, 928, true);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('TD')[5]; }, 395, 100, 55, 11);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test nameText input element',
+                        timeout: 4136,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(310, 265, 1, 550, true);
+                            doh.robot.scrollIntoView('widget_dijit_form_TextBox_0', 75);
+                            doh.robot.mouseMoveAt('dijit_form_TextBox_0', 1, 100, 20, 6);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.mouseMove(316, 268, 85, 40, true);
+                            doh.robot.keyPress(dojo.keys.SHIFT, 6, {'shift':false, 'ctrl':false, 'alt':false});
+                            doh.robot.mouseMove(321, 270, 2, 32, true);
+                            doh.robot.typeKeys('Test', 107, 498);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').nameText.get('value')=="Test"){
+                                    d.callback(true);
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test descriptionText input element',
+                        timeout: 5549,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(302, 282, 1, 661, true);
+                            doh.robot.scrollIntoView('widget_dijit_form_TextBox_1', 138);
+                            doh.robot.mouseMoveAt('dijit_form_TextBox_1', 1, 100, 12, 3);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.keyPress(dojo.keys.SHIFT, 376, {'shift':false, 'ctrl':false, 'alt':false});
+                            doh.robot.typeKeys('Opis', 264, 986);
+                            doh.robot.mouseMove(304, 282, 356, 64, true);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').descriptionText.get('value')=="Opis"){
+                                    d.callback(true);
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test typeSelect select element',
+                        timeout: 6431,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(463, 308, 1, 754, true);
+                            doh.robot.scrollIntoView('widget_dijit_form_FilteringSelect_1', 74);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('INPUT')[8]; }, 6, 100, 6, 9);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.mouseMove(358, 325, 321, 312, true);
+                            doh.robot.scrollIntoView('dijit_form_FilteringSelect_1_popup0', 105);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 110);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').typeSelect.get('item').name=="type1"){
+                                    d.callback(true);
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test formRegionSelect select element',
+                        timeout: 5000,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(0, 0, 1, 100, true);
+                            doh.robot.mouseMove(461, 325, 503, 1440, true);
+                            doh.robot.scrollIntoView('widget_dijit_form_FilteringSelect_2', 194);
+                            doh.robot.mouseMoveAt(function(){ return document.getElementsByTagName('INPUT')[12]; }, 3, 100, 4, 7);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.mouseMove(350, 347, 124, 704, true);
+                            doh.robot.scrollIntoView('dijit_form_FilteringSelect_2_popup0', 113);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 150);
+                            doh.robot.mouseMove(352, 343, 65, 95, true);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').formRegionSelect.get('item').identifier=="region1"){
+                                    d.callback(true);
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test weightText input element',
+                        timeout: 4991,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(314, 350, 1, 811, true);
+                            doh.robot.scrollIntoView('widget_dijit_form_TextBox_2', 90);
+                            doh.robot.mouseMoveAt('dijit_form_TextBox_2', 1, 100, 24, 11);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.mouseMove(313, 350, 30, 100, true);
+                            doh.robot.typeKeys('100', 870, 382);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').weightText.get('value')=="100"){
+                                    d.callback(true);
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test enabledCheckBox checkbox',
+                        timeout: 3860,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(386, 370, 1, 1274, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('DIV')[57]; }, 115);
+                            doh.robot.mouseMoveAt('dijit_form_CheckBox_0', 2, 100, 6, 12);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.sequence(function(){
+                                if(dijit.byId('view').disabledCheckBox.get('value')=="on"){
+                                    d.callback(true);
+                                }else{
+                                    d.errback(new Error('We got a failure'));
+                                }
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test stateButton',
+                        timeout: 3700,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            dijit.byId('view').stateButton.on("click",function(){
+                                d.callback();
+                            })
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(333, 357, 1, 807, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[5]; }, 26);
+                            doh.robot.mouseMoveAt('dijit_form_Button_0_label', 1, 100, 21, 4);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            doh.robot.sequence(function(){
+                            }, 1000);
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test saveButton button',
+                        timeout: 3778,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.keyPress(undefined, 1, {'shift':false, 'ctrl':true, 'alt':true});
+                            doh.robot.mouseMove(69, 384, 1, 808, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[5]; }, 116);
+                            doh.robot.mouseMoveAt('dijit_form_Button_1_label', 2, 100, 35, 3);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            dijit.byId('view')._onSave=function(){
+                                d.callback(true);
+                            };
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test _onExtendedEdit event',
+                        timeout: 3914,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.mouseMove(159, 382, 338, 536, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[11]; }, 231);
+                            doh.robot.mouseMoveAt('dijit_form_Button_2', 8, 100, 63.399993896484375, 3.399993896484375);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            
+                            dijit.byId('view')._onExtendedEdit = function(){
+                                d.callback(true);
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test _onCreate event',
+                        timeout: 3645,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.mouseMove(309, 385, 127, 496, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[17]; }, 255);
+                            doh.robot.mouseMoveAt('dijit_form_Button_3_label', 6, 100, 46.600006103515625, 5.399993896484375);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            dijit.byId('view')._onCreate = function(){
+                                d.callback(true);
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        name: 'Test _onDelete event',
+                        timeout: 3885,
+                        runTest: function(){
+                            var d = new doh.Deferred();
+                            doh.robot.mouseMove(372, 386, 168, 808, true);
+                            doh.robot.scrollIntoView(function(){ return document.getElementsByTagName('SPAN')[23]; }, 183);
+                            doh.robot.mouseMoveAt('dijit_form_Button_4_label', 6, 100, 17.79998779296875, 6.399993896484375);
+                            doh.robot.mouseClick({left:true, middle:false, right:false}, 1);
+                            dijit.byId('view')._onDelete = function(){
+                                d.callback(true);
+                            }
+                            return d;
+                        }
+                    }
+                ]);
+                
+                doh.robot.sequence(function(){
+                    doh.run();
+                })
+                
+            });
+        </script>
+    </head>
+    <body class="soria">
+        <div style="width:100%;height:100%" id="inputContainer">
+
+        </div>
+    </body>
+</html>

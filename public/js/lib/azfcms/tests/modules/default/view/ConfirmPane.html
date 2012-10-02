@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../../../dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="../../../dijit/themes/soria/soria.css" />
+        <script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['azfcms/module/default/view/ConfirmPane','dojo/domReady!',
+                'dijit','doh','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
+                'dojo/dom','dijit/Dialog'],function
+            (ConfirmPane,ready,
+            dijit,doh, nls,
+            dom,Dialog){
+                //              
+                
+               
+                var dialog = new Dialog({
+                    style:"width:350px;"
+                });
+                dialog.startup();
+               
+                var isRobot = window.location.toString().indexOf("?robot")>-1;
+                
+                if(!isRobot){
+                    
+                
+                    doh.register('azfcms.tests.view.ConfirmPane',[
+                        {
+                            name:"Test .constructor",
+                            runTest:function(){
+                                var pane = new ConfirmPane();
+                                dialog.set("content",pane);
+                                dialog.show();
+                                pane.destroy();
+                            }
+                        },
+                        {
+                            name:"Test .confirm accept without custom labels",
+                            runTest:function(){
+                                var pane = new ConfirmPane();
+                                dialog.set("content",pane);
+                                dialog.show();
+                                
+                                var isConfirmOk = false;
+                                var d = new doh.Deferred();
+                                pane.confirm(function(confirm){
+                                    doh.t(confirm);
+                                    doh.is("MY MESSAGE",pane.get("message"));
+                                    d.callback(true);
+                                },"MY MESSAGE")
+                                
+                                pane._onAccept();
+                                pane.destroy();
+                                return d;
+                            }
+                        },
+                        {
+                            name:"Test .confirm reject without custom labels",
+                            runTest:function(){
+                                var pane = new ConfirmPane();
+                                dialog.set("content",pane);
+                                dialog.show();
+                                
+                                var isConfirmOk = false;
+                                var d = new doh.Deferred();
+                                pane.confirm(function(confirm){
+                                    doh.f(confirm);
+                                    doh.is("MY MESSAGE",pane.get("message"));
+                                    d.callback(true);
+                                    doh.is(0,pane.callback.length);
+                                },"MY MESSAGE")
+                                
+                                pane._onReject();
+                                pane.destroy();
+                                return d;
+                            }
+                        },
+                        {
+                            name:"Render pane for preview",
+                            runTest:function(){
+                                var pane = new ConfirmPane();
+                                dialog.set("content",pane);
+                                dialog.show();
+                            }
+                        }
+                    ]);
+                    doh.run();
+                }
+                
+                if(isRobot){
+                    var pane = new UploadPane({
+                    style:"width:400px;height:200px;"
+                    });
+                    pane.placeAt(document.body);
+                    
+                    
+                    if(window.location.toString().indexOf("robot-recorder")>-1){
+                        require(["dojox/robot/recorder"],new Function())
+                    }
+                }
+            })
+        </script>
+    </head>
+    <body class="soria">
+
+    </body>
+</html>

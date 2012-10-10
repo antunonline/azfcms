@@ -1,0 +1,14 @@
+<?='<?xml version="1.0" encoding="UTF-8"?>'?>
+<plugin
+    xmlns='http://it-branch.com/xml/ns/plugin/content'
+>
+    
+    <pluginIdentifier><?=$name?></pluginIdentifier>
+    <displayName><?=$name?></displayName>
+    <description>Enter your description here
+    </description>
+    <version>1.0</version>
+    <module><?=$module?></module>
+    <controller><?=$ucName?></controller>
+    <action>render</action>
+</plugin>

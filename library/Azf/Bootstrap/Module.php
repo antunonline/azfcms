@@ -70,4 +70,39 @@ class Azf_Bootstrap_Module {
             }
         }
     }
+    
+    protected function _startsWith($body,$start) {
+        if(strpos($body, $start)===0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    
+    /**
+     * 
+     * @return array
+     */
+    protected function _callInitMethods() {
+        $reflectionClass = new ReflectionClass($this);
+        $reflectionMethods = $reflectionClass->getMethods();
+        
+        foreach($reflectionMethods as $reflectionMethod){
+            /* @var $reflectionMethod ReflectionMethod */
+            $methodName = $reflectionMethod->getName();
+            if($this->_startsWith($methodName, "_init")){
+               $reflectionMethod->invoke($object);
+            }
+        }
+        
+    }
+    
+    public function bootstrap(){
+        
+    }
+    
+    public function _initLoader() {
+        
+    }
 }

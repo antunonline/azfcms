@@ -1,0 +1,11 @@
+<?='<?xml version="1.0" encoding="UTF-8"?>'."\n" ?>
+<plugin
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://it-branch.com/xml/ns/plugin/extension'
+    xsi:schemaLocation='http://it-branch.com/xml/ns/plugin/extension file:/var/www/azfcms/library/Azf/Plugin/Descriptor/Parser/Extension.xsd'>
+    <name><?=$name?></name>
+    <displayName><?=$name?></displayName>
+    <description>Enter your description here</description>
+    <version>1.0</version>
+    <module><?=$module?></module>
+</plugin>

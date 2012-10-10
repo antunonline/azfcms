@@ -20,7 +20,7 @@ $install[] = function(InstallWorkerLog $log, $dbHost, $dbUser, $dbPassword, $dbN
             $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-            $updateSQL = "UPDATE User SET password = ?";
+            $updateSQL = "UPDATE User SET password = ? where loginName='root'";
             $stmt = $pdo->prepare($updateSQL);
             $stmt->bindValue(1, $rootPassword);
             $stmt->execute();

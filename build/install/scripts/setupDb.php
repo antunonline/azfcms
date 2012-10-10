@@ -21,7 +21,7 @@ if (defined("DEFINE_BUILD_DEPS")) {
  */
 $install[] = function(InstallWorkerLog $log, $dbHost, $dbUser, $dbPassword, $dbName, $dbDDL, $dbDML,$dbPrivileges) {
             $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $pdo->query($dbDDL);
             do  {

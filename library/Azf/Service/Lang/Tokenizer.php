@@ -130,6 +130,11 @@ class Azf_Service_Lang_Tokenizer {
                         $pos++;
                         $string.='\'';
                         
+                        // If next char is also backslash
+                    } else if($this->query[$pos + 1] == '\\'){
+                        // Skip next two backslashes and add one to string
+                        $pos++;
+                        $string.='\\';
                     } else {
                         // Otherwise include escape char
                         $string.=$c;
@@ -181,7 +186,11 @@ class Azf_Service_Lang_Tokenizer {
                         $pos++;
                         $string.='"';
                         
-                    } else {
+                    } else if($this->query[$pos + 1] == '\\'){
+                        // Skip next two backslashes and add one to string
+                        $pos++;
+                        $string.='\\';
+                    }  else {
                         // Otherwise include escape char
                         $string.=$c;
                     }

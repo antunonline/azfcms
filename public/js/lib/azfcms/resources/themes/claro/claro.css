@@ -6,39 +6,82 @@
         Purpose of the stylesheet follows.
 */
 
-.azfcmsGenericFormLayoutContainer > div > dl > dd >dl >  dd.input{
-    padding-left:20px;  
-    display: inline-block;
+
+.azfcmsGenericFormLayoutContainer > div  {
+    position: relative;
+    left:10px;
+}
+.azfcmsGenericFormLayoutContainer > div > div {
+    position: relative;
+    background:  #fff;
+    padding:10px;
+    left:-10px;
+    right:10px;
+    margin-top:10px;
+    border: 1px solid #b5bcc7;
 }
 
-.azfcmsGenericFormLayoutContainer > div > dl > dd >dl >  dd.emptyInput{
-    text-align: center;
-}
-.azfcmsGenericFormLayoutContainer > div > dl > dd {
+.azfcmsGenericFormLayoutContainer > div > div > div.wideLabel{
     padding:10px;
-    border:1px solid #b5bcc7;
-    margin:5px 15px;
-    background:white;
-    display: inline-block;
-    width:80%;
+    text-align: left;
+    line-height: 1.2em;
+    font-weight: bold;
+    line-height: 1.5em;
+    position: relative;
+    line-height: 100%;
+    
 }
-.azfcmsGenericFormLayoutContainer > div >dl > dd >dl > dd.label{
-    padding:4px;
+
+.azfcmsGenericFormLayoutContainer > div > div > div.label{
+    padding:10px;
     text-align: left;
     line-height: 1.2em;
     font-weight: bold;
     line-height: 1.5em;
     width:150px;
-    display: inline-block;
+    float:left;
+    position: relative;
+    line-height: 100%;
+    
+}
+
+.azfcmsGenericFormLayoutContainer > div > div > div.input{
+    /*padding-left:20px;*/  
+/*    width:90%;*/
+    position: relative;
+    padding:5px;
+    margin-left:170px;
+    margin-right:10px;
+    /*background-color: #f1f1f1;*/
+    /*border:1px solid #b5bcc7;*/
+}
+
+.azfcmsGenericFormLayoutContainer > div > div > div.wideInput{
+    /*padding-left:20px;*/  
+/*    width:90%;*/
+    position: relative;
+    padding:5px;
+    margin:0px;
+    left:0px;right:0px;
+    /*background-color: #f1f1f1;*/
+    /*border:1px solid #b5bcc7;*/
+}
+
+.azfcmsGenericFormLayoutContainer > div > div > div.input > .inputWidget{
+    width:100%;
+}
+
+.azfcmsGenericFormLayoutContainer > div > div > div.wideInput > .inputWidget{
+    width:100%;
 }
 
 
 
-.azfcmsGenericFormLayoutContainer dd.error {
+.azfcmsGenericFormLayoutContainer div.error {
     padding:0px 4px 0px 4px;
 }
 
-.azfcmsGenericFormLayoutContainer dd.error > ul {
+.azfcmsGenericFormLayoutContainer div.error > ul {
     background-color: #FFE284;
     border: 1px solid #ff3333;
 }
@@ -51,6 +94,6 @@
     right:20px;
     bottom:20px;
     top:20px;
-    padding:10px;
+    padding-left:10px;
     overflow: auto;
 }

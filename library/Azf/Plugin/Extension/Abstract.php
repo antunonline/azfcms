@@ -18,6 +18,13 @@ abstract class Azf_Plugin_Extension_Abstract{
      */
     protected $_identifier;
     
+    
+    /**
+     *
+     * @var string
+     */
+    protected $_module;
+    
     /**
      *
      * @var array
@@ -44,6 +51,15 @@ abstract class Azf_Plugin_Extension_Abstract{
         return $this->_identifier;
     }
     
+    /**
+     * 
+     * @return string
+     */
+    public function getModule() {
+        return $this->_module;
+    }
+
+        
     /**
      * 
      * @return array
@@ -116,8 +132,9 @@ abstract class Azf_Plugin_Extension_Abstract{
      * 
      * @param array $params
      */
-    function __construct($identifier, array $params=array()) {
+    function __construct($identifier, $module, array $params=array()) {
         $this->_identifier = $identifier;
+        $this->_module = $module;
         $this->_params = $params;
     }
     
@@ -164,7 +181,12 @@ abstract class Azf_Plugin_Extension_Abstract{
      * @return string
      */
     protected function renderTemplate($template){
-        $templatePath = APPLICATION_PATH."/views/pluginScripts/".$this->getIdentifier()."/".$template.".phtml";
+        if($this->getModule()=="default"){
+            $templatePath = APPLICATION_PATH."/views/pluginScripts/".$this->getIdentifier()."/".$template.".phtml";
+        } else {
+            $templatePath = APPLICATION_PATH."/modules/".$this->getModule()."/views/pluginScripts/".$this->getIdentifier()."/".$template.".phtml";
+        }
+        
         return include $templatePath;
     }
 

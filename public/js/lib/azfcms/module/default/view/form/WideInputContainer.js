@@ -4,11 +4,11 @@
  */
 define(['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/InputContainer.html','dojo/_base/lang','dojo/dom-construct',
+    'dojo/text!./templates/WideInputContainer.html','dojo/_base/lang','dojo/dom-construct',
     'dojo/dom-geometry','dojo/dom-style','dojo/dom-class'],
     function(declare,_Widget,_TemplatedMixin,_WidgetsInTemplate,
         templateString,lang,domConstruct, domGeometry,domStyle, domClass){
-        return declare('azfcms.view.widget.form.InputContainer',[_Widget,_TemplatedMixin,_WidgetsInTemplate],{
+        return declare('azfcms.view.widget.form.WideInputContainer',[_Widget,_TemplatedMixin,_WidgetsInTemplate],{
             templateString:templateString,
             label:"",
             nativeType:"text",
@@ -38,11 +38,6 @@ define(['dojo/_base/declare',
                  * Style that will be appliced to input element
                  */
                 this.inputStyle = "";
-                
-                /**
-                 * Current widget layout
-                 */
-                this.layout = "regular";
             },
             
             _getValueAttr:function(){
@@ -82,52 +77,6 @@ define(['dojo/_base/declare',
                     this.inputWidget.set("style",this.inputStyle);
                 }
                 domClass.add(this.inputWidget.domNode,'inputWidget');
-                this.resize();
-            },
-            
-            _calculateInputElementWidth:function(){
-                var box = domGeometry.getContentBox(this.domNode);
-                return box.w-170-10+"px";
-            },
-            
-            _getLayoutAttr:function(){
-                return this.layout;
-            },
-            
-            _setLayoutAttr:function(layout){
-                if(layout=="regular"){
-                    this.set("regularLayout",null);
-                } else {
-                    this.set("rowLayout",null);
-                }
-            },
-            
-            _setRegularLayoutAttr:function(){
-                domClass.replace(this.labelNode,"label","wideLabel");
-                domClass.replace(this.containerNode,"input","wideInput");
-                this.layout = "regular";
-            },
-            
-            _setRowLayoutAttr: function(){
-                domClass.replace(this.labelNode,"wideLabel","label");
-                domClass.replace(this.containerNode,"wideInput","input");
-                this.layout = "row";
-            },
-            
-            resize:function(){
-                var width = this._calculateInputElementWidth();
-                var style = this.containerNode.style;
-                if(parseInt(width)>99){
-                    if(this.get("layout")!="regular"){
-                        this.set("layout","regular");
-                    }
-                    style.width = width;
-                } else {
-                    style.width = "auto";
-                    if(this.get("layout")!="row"){
-                        this.set("layout","row");
-                    }
-                }
             },
             
             _setDisabledAttr:function(value){

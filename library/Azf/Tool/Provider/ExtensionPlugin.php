@@ -80,7 +80,7 @@ class Azf_Tool_Provider_ExtensionPlugin extends Azf_Tool_Provider_Abstract {
         $copyBuilder = $this->_getCopyBuilder();
         $copyBuilder->setBaseDstPath($this->_getPhpExtensionPluginViewPath($this->_module, $this->_name));
         
-        $copyBuilder->copyTemplate("ExtensionPluginView.phtml", $this->_name.".phtml", $this->_templateArgs);
+        $copyBuilder->copyTemplate("ExtensionPluginView.phtml", "index.phtml", $this->_templateArgs);
         
         $this->_writeBuilderAndClear($dirBuilder);
         $this->_writeBuilderAndClear($copyBuilder);

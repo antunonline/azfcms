@@ -21,6 +21,7 @@ class Azf_Model_DbTable_Plugin extends Zend_Db_Table_Abstract {
         return $this->insert(array(
                     'name' => $ep['name'],
                     'description' => $ep['description'],
+                    'module'=>$ep['module'],
                     'type' => $ep['type'],
                     'region' => $ep['region'],
                     'weight'=>$ep['weight'],

@@ -39,6 +39,7 @@ class Azf_Bootstrap_Module {
      * @throws RuntimeException
      */
     public function load($module) {
+        $module = strtolower($module);
         if(in_array($module, $this->_loadedModules)){
             return;
         } else {
@@ -92,14 +93,14 @@ class Azf_Bootstrap_Module {
             /* @var $reflectionMethod ReflectionMethod */
             $methodName = $reflectionMethod->getName();
             if($this->_startsWith($methodName, "_init")){
-               $reflectionMethod->invoke($object);
+               $reflectionMethod->invoke($this);
             }
         }
         
     }
     
     public function bootstrap(){
-        
+        $this->_callInitMethods();
     }
     
     public function _initLoader() {

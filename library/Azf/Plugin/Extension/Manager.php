@@ -6,20 +6,62 @@
  * @author antun
  */
 class Azf_Plugin_Extension_Manager {
+    
+    
+    /**
+     *
+     * @var Azf_Plugin_Descriptor
+     */
+    protected $_pluginDescriptor;
 
     /**
      *
      * @var Azf_Model_DbTable_Plugin
      */
     protected $_model;
+    
+    
+    
+    
+    /**
+     * 
+     * @return Azf_Plugin_Descriptor
+     */
+    public function getPluginDescriptor() {
+        if(!$this->_pluginDescriptor){
+            $this->_pluginDescriptor = new Azf_Plugin_Descriptor();
+        }
+        
+        return $this->_pluginDescriptor;
+    }
+    
+    protected function _getPluginDescriptor($identifier) {
+        return $this->getPluginDescriptor()->getExtensionPlugin($identifier);
+    }
+    
+    
+    /**
+     * 
+     * @param array $extensionPluginRecord
+     * @return int
+     */
+    protected function _insertPluginRecord(array $extensionPluginRecord) {
+        if(isset($extensionPluginRecord['module'])==false){
+            $descriptor = $this->_getPluginDescriptor($extensionPluginRecord['type']);
+            $extensionPluginRecord['module'] = $descriptor['module'];
+        }
+        return $this->getModel()->insertPlugin($extensionPluginRecord);
+    }
 
     /**
      *
-     * @param string $type
-     * @param int $pluginId
+     * @param array $pluginRecord
+     * @return int |null
      */
-    public function setUp($type, $pluginId) {
-        $instance = $this->_getPluginInstance($type, $pluginId);
+    public function setUp(array $pluginRecord) {
+        $pluginId = $this->_insertPluginRecord($pluginRecord);
+        
+        $instance = $this->_getPluginInstance(null, null, $pluginId);
         /* @var $instance Azf_Plugin_Extension_Abstract */
         if ($instance) {
             $instance->setId($pluginId);
@@ -34,17 +76,17 @@ class Azf_Plugin_Extension_Manager {
 
     /**
      * 
-     * @param string $type
      * @param int $pluginId
      */
-    public function tearDown($type, $pluginId) {
-        $instance = $this->_getPluginInstance($type, $pluginId);
+    public function tearDown($pluginId) {
+        $instance = $this->_getPluginInstance(null,null, $pluginId);
 
 
         if ($instance) {
             $instance->setId($pluginId);
             try {
                 $instance->tearDown();
+                $this->getModel()->deleteById($pluginId);
             } catch (Exception $exc) {
                 
             }
@@ -66,7 +108,7 @@ class Azf_Plugin_Extension_Manager {
 
         foreach ($plugins as $plugin) {
             // Load instance
-            $instance = $this->_getPluginInstance($plugin['type'], null, $plugin['params']);
+            $instance = $this->_getPluginInstance($plugin['type'], $plugin['module'], $plugin['id'], $plugin['params']);
             // Load region name
             $region = $plugin['region'];
 
@@ -117,13 +159,14 @@ class Azf_Plugin_Extension_Manager {
     /**
      * 
      * @param string|null $type
+     * @param string|null $module
      * @param int|null $pluginId
      * @param array $pluginParams
      * @return null|Azf_Plugin_Extended_Abstract
      * 
      */
-    protected function _getPluginInstance($type, $pluginId, $pluginParams = null) {
-        if (!$type || !is_array($pluginParams)) {
+    protected function _getPluginInstance($type, $module, $pluginId, $pluginParams = null) {
+        if (!$type  || !is_array($pluginParams)) {
             $pluginRecord = $this->getModel()->findById($pluginId);
         }
 
@@ -133,8 +176,16 @@ class Azf_Plugin_Extension_Manager {
         if (!$type) {
             $type = $pluginRecord['type'];
         }
+        if(!$module){
+           if($pluginRecord){
+               $module = $pluginRecord['module'];
+           } else {
+               $descriptor = $this->_getPluginDescriptor($type);
+               $module = $descriptor['module'];
+           }
+        }
 
-        $instance = $this->_constructPlugin($type, $pluginParams);
+        $instance = $this->_constructPlugin($module, $type, $pluginParams);
         /* @var $instance Azf_Plugin_Extension_Abstract */
         if($pluginId){
             $instance->setId($pluginId);
@@ -197,20 +248,32 @@ class Azf_Plugin_Extension_Manager {
 
     /**
      * 
-     * @param type $type
+     * @param string $module
+     * @param string $type
      */
-    public function getClassName($type) {
-        return "Application_Plugin_Extension_" . ucfirst($type);
+    public function getClassName($module, $type) {
+        
+        if($module == "default"){
+            $className = "Application_Plugin_Extension_" . ucfirst($type);
+        } else {
+            $className = ucfirst($module)."_Plugin_Extension_" . ucfirst($type);
+        }
+         
+        return $className;
     }
 
     /**
      * 
+     * @param string $module
      * @param string $type
      * @param array $pluginParams
      */
-    public function _constructPlugin($type, $pluginParams) {
-        $className = $this->getClassName($type);
-        return new $className($type,$pluginParams);
+    public function _constructPlugin($module, $type, $pluginParams) {
+        if($module != "default"){
+            Azf_Bootstrap_Module::getInstance()->load($module);
+        }
+        $className = $this->getClassName($module, $type);
+        return new $className($type,$module, $pluginParams);
     }
 
     /**
@@ -221,7 +284,7 @@ class Azf_Plugin_Extension_Manager {
      * @return boolean
      */
     public function setValue($pluginId, $key, $value) {
-        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+        if (!$plugin = $this->_getPluginInstance(null, null, $pluginId))
             return false;
 
         $return = $plugin->setValue($key, $value);
@@ -236,7 +299,7 @@ class Azf_Plugin_Extension_Manager {
      * @return boolean
      */
     public function setValues($pluginId, $values) {
-        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+        if (!$plugin = $this->_getPluginInstance(null, null, $pluginId))
             return false;
 
         /* @var $plugin Azf_Plugin_Extension_Abstract */
@@ -252,7 +315,7 @@ class Azf_Plugin_Extension_Manager {
      * @return mixed
      */
     public function getValue($pluginId, $key) {
-        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+        if (!$plugin = $this->_getPluginInstance(null, null, $pluginId))
             return false;
 
         /* @var $plugin Azf_Plugin_Extension_Abstract */
@@ -267,7 +330,7 @@ class Azf_Plugin_Extension_Manager {
      * @return mixed
      */
     public function getValues($pluginId) {
-        if (!$plugin = $this->_getPluginInstance(null, $pluginId))
+        if (!$plugin = $this->_getPluginInstance(null, null, $pluginId))
             return false;
 
         /* @var $plugin Azf_Plugin_Extension_Abstract */

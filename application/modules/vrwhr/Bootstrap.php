@@ -1,15 +1,14 @@
-<?="<?php"?>
-
+<?php
 /**
  * Description of Bootstrap
  *
  * @author antun
  */
-class <?=$ucModule?>_Bootstrap extends Azf_Bootstrap_Module{
+class Vrwhr_Bootstrap extends Azf_Bootstrap_Module{
     public function _initLoader() {
         $loader = new Zend_Loader_Autoloader_Resource(array(
-            'basePath'=>APPLICATION_PATH.'/modules/<?=strtolower($module)?>',
-            'namespace'=>'<?=$ucModule?>'
+            'basePath'=>APPLICATION_PATH.'/modules/vrwhr',
+            'namespace'=>'Vrwhr'
         ));
         $loader->addResourceType('plugin', 'plugins', 'Plugin');
         $loader->addResourceType('rests', 'rests', 'Rest');

@@ -1,12 +1,12 @@
 {
-    i18nButtonLabelPointer: 'np<?=$ucName?>Action',
-    i18nBbuttonFallbackLabel: '<?=$ucName?>',
+    i18nButtonLabelPointer: 'npNewsAction',
+    i18nBbuttonFallbackLabel: 'News',
     iconClass:'some icon...',
     init: function(initCallback,adminDialog){
         var context = this;
         context.adminDialog = adminDialog;
         require(
-            ['azfcms/module/<?=$module?>/configurationPlugin/<?=$name?>/view/<?=$ucName?>','azfcms/module/<?=$module?>/configurationPlugin/<?=$name?>/controller/<?=$ucName?>'
+            ['azfcms/module/vrwhr/configurationPlugin/news/view/News','azfcms/module/vrwhr/configurationPlugin/news/controller/News'
             ],function
             (View,Controller
                 ){

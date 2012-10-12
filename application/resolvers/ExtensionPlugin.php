@@ -7,33 +7,52 @@
  */
 class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
 
+    
+    /**
+     *
+     * @var Azf_Plugin_Descriptor
+     */
+    protected $_descriptor;
+    
     /**
      *
      * @var Azf_Plugin_Extension_Manager
      */
-    protected $manager;
+    protected $_manager;
 
     /**
      *
      * @var Azf_Model_DbTable_Plugin
      */
-    protected $model;
+    protected $_model;
 
     /**
      *
      * @var Azf_Model_DbTable_NavigationPlugin
      */
-    protected $navigationPluginModel;
+    protected $_navigationPluginModel;
 
+    
+    /**
+     * @return Azf_Plugin_Descriptor
+     */
+    public function getPluginDescriptor() {
+        if(!$this->_descriptor){
+            $this->_descriptor = new Azf_Plugin_Descriptor();
+        }
+        
+        return $this->_descriptor;
+    }
+    
     /**
      * 
      * @return Azf_Plugin_Extension_Manager
      */
     public function getManager() {
-        if (empty($this->manager)) {
+        if (empty($this->_manager)) {
             $this->_initManager();
         }
-        return $this->manager;
+        return $this->_manager;
     }
 
     /**
@@ -41,7 +60,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @param Azf_Plugin_Extension_Manager $manager
      */
     public function setManager(Azf_Plugin_Extension_Manager $manager) {
-        $this->manager = $manager;
+        $this->_manager = $manager;
     }
 
     public function _initManager() {
@@ -53,14 +72,14 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @return Azf_Model_DbTable_Plugin
      */
     public function getModel() {
-        if (empty($this->model)) {
+        if (empty($this->_model)) {
             $this->_initModel();
         }
-        return $this->model;
+        return $this->_model;
     }
 
     public function setModel(Azf_Model_DbTable_Plugin $model) {
-        $this->model = $model;
+        $this->_model = $model;
     }
 
     public function _initModel() {
@@ -72,10 +91,10 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @return Azf_Model_DbTable_NavigationPlugin
      */
     public function getNavigationPluginModel() {
-        if (empty($this->navigationPluginModel)) {
+        if (empty($this->_navigationPluginModel)) {
             $this->_initNavigationPluginModel();
         }
-        return $this->navigationPluginModel;
+        return $this->_navigationPluginModel;
     }
 
     public function _initNavigationPluginModel() {
@@ -87,7 +106,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @param Azf_Model_DbTable_NavigationPlugin $navigationPluginModel
      */
     public function setNavigationPluginModel(Azf_Model_DbTable_NavigationPlugin $navigationPluginModel) {
-        $this->navigationPluginModel = $navigationPluginModel;
+        $this->_navigationPluginModel = $navigationPluginModel;
     }
 
     /**
@@ -105,11 +124,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
             return false;
         }
         
-        
-//        $name, $description, $type, $region, $weight;
-        $pluginId = $this->getModel()->insertPlugin($extensionPlugin);
-
-        $this->getManager()->setUp($extensionPlugin['type'], $pluginId);
+        $pluginId = $this->getManager()->setUp($extensionPlugin);
         return $pluginId;
     }
 
@@ -125,12 +140,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
      * @param int $pluginId
      */
     public function removeExtensionPluginMethod($pluginId) {
-        $row = $this->getModel()->find($pluginId);
-        if ($row->count() > 0) {
-            $type = $row[0]->type;
-            $this->getManager()->tearDown($type, $pluginId);
-            $this->getModel()->deleteById($pluginId);
-        }
+        $this->getManager()->tearDown($pluginId);
     }
 
     /**

@@ -78,6 +78,7 @@ DROP TABLE IF EXISTS `Plugin` ;
 
 CREATE  TABLE IF NOT EXISTS `Plugin` (
   `id` INT NOT NULL AUTO_INCREMENT ,
+  `module` VARCHAR(45) NOT NULL ,
   `type` VARCHAR(45) NOT NULL ,
   `name` VARCHAR(60) NOT NULL ,
   `description` VARCHAR(255) NOT NULL ,

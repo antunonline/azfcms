@@ -89,37 +89,8 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
         return $this->_executeResolver($resolver,$classNamespace,$method,$parameters);
     }
     
-    protected function _initModule($moduleName){
-        $modulePath = APPLICATION_PATH."/modules/".strtolower($moduleName);
-        $bootstrapClassName = ucfirst($moduleName)."_Bootstrap";
-        $moduleBootstrapPath = $modulePath."/Bootstrap.php";
-        
-        if(strtolower($moduleName)=="default"){
-            return true;
-        }
-        
-        if(!is_dir($modulePath)){
-            return false;
-        }
-        
-        
-        if(is_file($moduleBootstrapPath) && is_readable($moduleBootstrapPath)){
-           if(!include_once($moduleBootstrapPath)){
-               throw new RuntimeException("Could not load module bootstrap file for module '$moduleName'");
-           }
-           
-           if(!class_exists($bootstrapClassName)){
-               throw new RuntimeException("Module bootstrap class $bootstrapClassName does not exists");
-           }
-           
-           $bootstrapInstance = new $bootstrapClassName(Zend_Registry::get("application"));
-           /* @var $bootstrapInstance Zend_Application_Module_Bootstrap */
-           $bootstrapInstance->bootstrap();
-        }
-        else {
-            throw new RuntimeException("Could not load module bootstrap file for module '$moduleName'");
-        }
-        
+    protected function _initModule($moduleName){ 
+        Azf_Bootstrap_Module::getInstance()->load($moduleName);
         return true;
     }
     

@@ -1,4 +1,4 @@
-<?php
+<?='<?php'?>
 
 
 /**
@@ -6,8 +6,8 @@
  *
  * @author antun
  */
-class Vrwhr_Model_DbTable_NewsCategory extends Zend_Db_Table_Abstract{
-    protected $_name= "NewsCategory";
+class <?="$ucModule"?>_Model_DbTable_<?=$ucName?> extends Zend_Db_Table_Abstract{
+    protected $_name= "<?=$ucName?>";
     protected $_userName = "User";
     protected $_primary = "id";
     

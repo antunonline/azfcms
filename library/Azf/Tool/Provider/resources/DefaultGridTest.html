@@ -6,8 +6,7 @@
         <link rel="stylesheet" type="text/css" href="/js/lib/dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="/js/lib/dijit/themes/claro/claro.css" />
         <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/Grid.css" />
-        <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/claroGrid" />
-        <link rel="stylesheet" type="text/css" href="/js/lib/azfcms/resources/themes/claro/claro.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/claroGrid.css" />
         <script type="text/javascript">
             dojoConfig={
                 async:true,
@@ -27,11 +26,11 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/module/<?=$module?>/configurationPlugin/<?=$name?>/view/<?=$ucName?>'
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/module/<?=$module?>/<?=$componentName?>/<?=$name?>/view/<?=$ucResource?>Grid',
+                'dojo/data/ItemFileReadStore'
             ],
             function
-            (domReady,dijit,doh,domCreate, <?=$ucName?>
-            ){
+            (domReady,dijit,doh,domCreate, <?=$ucResource?>Grid,ItemFileReadStore            ){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -39,13 +38,28 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.module.<?=$module?>.configuration.<?=$ucName?>.view.<?=$ucName?>',[
+                    doh.register('azfcms.tests.module.<?=$module?>.<?=$componentName?>.<?=$name?>.view.<?=$ucResource?>Grid',[
                         
                     ]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new <?=$ucName?>({
-                        
+                    var store = new ItemFileReadStore({
+                        data:{
+                            label:'title',
+                            'identifier':'id',
+                            items:[
+                                {'id':1,title:"title1",loginName:"description1"},
+                                {'id':2,title:"title2",loginName:"description2"},
+                                {'id':3,title:"title3",loginName:"description3"},
+                                {'id':4,title:"title4",loginName:"description4"},
+                            ]
+                        }
+                    })
+                    var view = new <?=$ucResource?>Grid({
+                        store:store,
+                        onEdit:function(){
+                            console.debug(arguments);
+                        }
                     }, "inputContainer");
                     view.startup();
                     

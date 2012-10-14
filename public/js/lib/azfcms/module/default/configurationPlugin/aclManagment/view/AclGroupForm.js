@@ -5,7 +5,8 @@ define(
     'dojo/_base/lang',
     
     'dijit/layout/ContentPane','dijit/Toolbar','dijit/form/Button','azfcms/module/default/view/form/InputContainer',
-    'dijit/layout/BorderContainer','dijit/form/TextBox','dijit/form/Textarea'
+    'dijit/layout/BorderContainer','dijit/form/TextBox','dijit/form/Textarea',
+    'azfcms/module/default/view/form/WideInputContainer'
 
 ],function
 (declare, 

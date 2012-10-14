@@ -12,8 +12,11 @@ define(['dojo/_base/declare',
             templateString:templateString,
             label:"",
             nativeType:"text",
-            constructor:function(){
+            constructor:function(props){
             
+            if(typeof props !='undefined'){
+                lang.mixin(this,props);
+            }
                 /**
              * Container label
              */
@@ -37,12 +40,19 @@ define(['dojo/_base/declare',
                 /**
                  * Style that will be appliced to input element
                  */
-                this.inputStyle = "";
+                this.inputStyle;
                 
                 /**
                  * Current widget layout
                  */
                 this.layout = "regular";
+                
+                
+                /**
+                 * If set to true, css class inputWidget will not be
+                 * assigned to input widget.
+                 */
+                this.disableInputWidgetCssTweaks;
             },
             
             _getValueAttr:function(){
@@ -81,7 +91,11 @@ define(['dojo/_base/declare',
                 if(this.inputStyle){
                     this.inputWidget.set("style",this.inputStyle);
                 }
-                domClass.add(this.inputWidget.domNode,'inputWidget');
+                
+                if(!this.disableInputWidgetCssTweaks){
+                    domClass.add(this.inputWidget.domNode,'inputWidget');
+                }
+                
                 this.resize();
             },
             

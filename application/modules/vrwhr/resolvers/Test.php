@@ -1,16 +1,13 @@
 <?php
-
 /**
- * Description of NewsCategory
- *
+ * Description of Test *
  * @author antun
  */
-class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
+class Vrwhr_Resolver_Test extends Azf_Service_Lang_Resolver{
     
     /**
      *
-     * @var Vrwhr_Model_DbTable_NewsCategory
-     */
+     * @var Vrwhr_Model_DbTable_Test     */
     protected $_model;
     
     
@@ -21,11 +18,10 @@ class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
     protected $_dojoHelper;
     
     /**
-     * @return Vrwhr_Model_DbTable_NewsCategory
-     */
+     * @returnVrwhr_Model_DbTable_Test     */
     protected function _getModel() {
         if(!$this->_model){
-            $this->_model = new Vrwhr_Model_DbTable_NewsCategory();
+            $this->_model = new Vrwhr_Model_DbTable_Test();
         }
         
         return $this->_model;
@@ -51,7 +47,7 @@ class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
      * @return Azf_Filter_Abstract
      */
     protected function _getFilterInput($overrideRules=array(),$forFields=null) {
-        return Azf_Filter_Factory::get("newsCategory", "vrwhr")->getFilterInput($overrideRules,$forFields);
+        return Azf_Filter_Factory::get("test", "Vrwhr")->getFilterInput($overrideRules,$forFields);
     }
     
     protected function isAllowed($namespaces, $parameters) {
@@ -88,7 +84,7 @@ class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
         $filterInput->setData($record);
         
         if($filterInput->isValid()){
-            $userEntity = Zend_Auth::getInstance()->getIdentity();
+            $userEntity = array('id'=>1);
             
             $preparedRecord = $filterInput->getEscaped()+array('userId'=>$userEntity['id']);
             return $this->_getDojoHelper()->createAddResponse($this->_getModel()->insert($preparedRecord));

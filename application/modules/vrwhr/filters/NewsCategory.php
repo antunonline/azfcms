@@ -1,9 +1,25 @@
 <?php
 
-class Application_Filter_AclGroup extends Azf_Filter_Abstract {
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+/**
+ * Description of NewsCategory
+ *
+ * @author antun
+ */
+class Vrwhr_Filter_NewsCategory extends Azf_Filter_Abstract {
+    
     /**
-     *
+     * Name generic
+     * 
+     * If you want to use it in your filter definition, just
+     * point field to generic name
+     * 
+     * Example:
+     * 'title'=>'name'
      * @var array
      */
     protected $_nameGeneric = array(
@@ -11,15 +27,11 @@ class Application_Filter_AclGroup extends Azf_Filter_Abstract {
         ),
         'validators' => array(
             array('alnum', true),
-            array('stringLength', 2, 40),
-            array('db_NoRecordExists', array(
-                        'table' => 'ACLGroup',
-                        'field' => 'name'
-                ))
+            array('stringLength', 2, 40)
         ),
         self::BRAKE_CHAIN_ON_FAILURE => true
     );
-
+    
     /**
      *
      * @var array
@@ -34,17 +46,14 @@ class Application_Filter_AclGroup extends Azf_Filter_Abstract {
             ),
             self::BRAKE_CHAIN_ON_FAILURE => true
         ),
-        'name'=>'name', // Points to name generic filter
-        'description'=>array(
-            'filters'=>array(
+        'title'=>'name',
+        'description' => array(
+            'filters' => array(
                 'stringTrim'
             ),
-            'validators'=>array(
-                array('alnum',true),
-                array('stringLength',0,255)
+            'validators' => array(
+                array('stringLength', 0, 255)
             ),
-            
         )
     );
-
 }

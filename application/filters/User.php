@@ -1,10 +1,11 @@
 <?php
 
-class Application_Filter_User extends Azf_Filter_Abstract {/**
- *
- * @var array
- */
-
+class Application_Filter_User extends Azf_Filter_Abstract {
+    
+    /**
+     * name generic filter rule
+     * @var array
+     */
     protected $_nameGeneric = array(
         'filters' => array(
         ),
@@ -42,8 +43,8 @@ class Application_Filter_User extends Azf_Filter_Abstract {/**
             ),
             self::BRAKE_CHAIN_ON_FAILURE => true
         ),
-        'firstName' => 'name',
-        'lastName' => 'name',
+        'firstName' => 'name',  // Points to name generic filter
+        'lastName' => 'name',  // Points to name generic filter
         'email' => array(
             'filters' => array(),
             'validators' => array(

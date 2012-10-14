@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
         <title></title>
@@ -27,11 +28,11 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/module/<?=$module?>/configurationPlugin/<?=$name?>/view/<?=$ucName?>'
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct',
+                'azfcms/module/<?=$module?>/<?=$componentName?>/<?=$name?>/view/<?=$ucResource?>Form'
             ],
             function
-            (domReady,dijit,doh,domCreate, <?=$ucName?>
-            ){
+            (domReady,dijit,doh,domCreate,<?=$ucResource?>Form){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -39,15 +40,19 @@
                 
                 
                 if(useCase=="dohTests"){
-                    doh.register('azfcms.tests.module.<?=$module?>.configuration.<?=$ucName?>.view.<?=$ucName?>',[
+                    doh.register('azfcms.tests.module.<?=$module?>.<?=$componentName?>.<?=$name?>.view.<?=$ucResource?>Form',[
                         
                     ]);
                 }
                 else if(useCase == "customTest"){
-                    var view = new <?=$ucName?>({
-                        
-                    }, "inputContainer");
-                    view.startup();
+                   var form = new <?=$ucResource?>Form({
+                        onSave:function(value){
+                            console.debug(value);
+                        },
+                        style:"width:100%;height:100%;"
+                    },'inputContainer');
+                    form.startup();
+                    
                     
                 } else {
                     domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");

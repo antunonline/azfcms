@@ -13,19 +13,17 @@
              region="center">
             <div class="azfcmsGenericFormLayoutContainer" >
                 <div style="width:550px;float:left">
-                    <dl>
-                        <dd
-                            data-dojo-attach-point="nameInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.aclGroupFormNameLabel}'"
-                            />
-                        <dd
-                            data-dojo-attach-point="descriptionInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.Textarea',label:'${nls.aclGroupFormDescriptionLabel}'"
-                            />
+                    <div
+                        data-dojo-attach-point="nameInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.aclGroupFormNameLabel}'"
+                        ></div>
+                    <div
+                        data-dojo-attach-point="descriptionInput"
+                        data-dojo-type="azfcms.view.widget.form.WideInputContainer"
+                        data-dojo-props="inputType:'dijit.form.Textarea',label:'${nls.aclGroupFormDescriptionLabel}'"
+                        ></div>
 
-                    </dl>
                 </div>
             </div>
         </div>

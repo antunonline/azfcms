@@ -189,12 +189,28 @@ class Azf_Tool_Provider_Abstract  extends Zend_Tool_Framework_Provider_Abstract 
         return $this->_getPhpExtensionPluginViewBasePath($module)."/".$name;
     }
     
-    protected function _getPhpContentPluginPath($module, $name) {
+    protected function _getPhpContentPluginPath($module) {
         return $this->_getPhpModulePath($module)."/controllers";
     }
     
     protected function _getPhpContentPluginViewPath($module, $name) {
         return $this->_getPhpModulePath($module)."/views/scripts/$name";
+    }
+    
+    protected function _getPhpModelPath($module) {
+        return $this->_getPhpModulePath($module)."/models";
+    }
+    
+    protected function _getPhpDbModelPath($module) {
+        return $this->_getPhpModelPath($module)."/DbTable";
+    }
+    
+    protected function _getPhpFilterPath($module) {
+        return $this->_getPhpModulePath($module)."/filters";
+    }
+    
+    protected function _getPhpResolverPath($module) {
+        return $this->_getPhpModulePath($module)."/resolvers";
     }
     
     /**

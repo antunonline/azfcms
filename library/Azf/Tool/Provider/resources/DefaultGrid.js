@@ -1,7 +1,7 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/NewsGrid.html','dojo/i18n!../resource/i18n/nls/News',
+    'dojo/text!./templates/<?=$ucResource?>Grid.html','dojo/i18n!../resource/i18n/nls/<?=$ucName?>',
     'dojo/_base/lang','dojo/keys',
     'dijit/form/Button',
     

@@ -13,48 +13,44 @@
         <div data-dojo-type="dijit.layout.ContentPane"
              region="center" style="position:relative">
             <div class="azfcmsGenericFormLayoutContainer" >
-                <div style="width:50%;float:left">
-                    <dl>
-                        <dd
-                            data-dojo-attach-point="loginNameInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formLoginNameLabel}'"
-                            />
-                        <dd
-                            data-dojo-attach-point="firstNameInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formFirstNameLabel}'"
-                            />
-                        <dd
-                            data-dojo-attach-point="lastNameInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formLastNameLabel}'"
-                            />
-                        <dd
-                            data-dojo-attach-point="emailInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formEmailLabel}'"
-                            />
-                        <dd
-                            data-dojo-attach-point="passwordInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formPasswordLabel}'"
-                            />
-                    </dl>
+                <div style="width:400px;float:left;">
+                    <div
+                        data-dojo-attach-point="loginNameInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formLoginNameLabel}'"
+                        ></div>
+                    <div
+                        data-dojo-attach-point="firstNameInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formFirstNameLabel}'"
+                        ></div>
+                    <div
+                        data-dojo-attach-point="lastNameInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formLastNameLabel}'"
+                        ></div>
+                    <div
+                        data-dojo-attach-point="emailInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formEmailLabel}'"
+                        ></div>
+                    <div
+                        data-dojo-attach-point="passwordInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formPasswordLabel}'"
+                        ></div>
                 </div>
-                <div style="width:50%;float:left">
-                    <dl>
-                        <dd
-                            data-dojo-attach-point="verifiedInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.CheckBox',label:'${nls.formVerifiedLabel}'"
-                            />
-                        <dd
-                            data-dojo-attach-point="verificationKeyInput"
-                            data-dojo-type="azfcms.view.widget.form.InputContainer"
-                            data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formVerificationKeyLabel}'"
-                            />
-                    </dl>
+                <div style="width:400px;float:left;margin-left:10px;">
+                    <div
+                        data-dojo-attach-point="verifiedInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.CheckBox',label:'${nls.formVerifiedLabel}',disableInputWidgetCssTweaks:true"
+                        ></div>
+                    <div
+                        data-dojo-attach-point="verificationKeyInput"
+                        data-dojo-type="azfcms.view.widget.form.InputContainer"
+                        data-dojo-props="inputType:'dijit.form.TextBox',label:'${nls.formVerificationKeyLabel}'"
+                        ></div>
                 </div>
             </div>
         </div>

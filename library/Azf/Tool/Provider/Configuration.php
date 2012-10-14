@@ -1,53 +1,32 @@
 <?php
 
-require_once "Abstract.php";
+require_once "AbstractPlugin.php";
 /**
  * Description of Configuratin
  *
  * @author antun
  */
-class Azf_Tool_Provider_Configuration extends Azf_Tool_Provider_Abstract{
+class Azf_Tool_Provider_Configuration extends Azf_Tool_Provider_AbstractPlugin{
     
     protected static $_jsDirectoryLayout = array(
-        'controller','view','view/templates','resource/nls'
+        'controller','view','view/templates','resource/i18n/nls'
     );
     
     protected static $_jsDirectoryTestLayout = array(
         'view','controller'
     );
     
-    protected $_module;
-    protected $_ucModule;
-    protected $_name;
-    protected $_ucName;
-    protected $_baseJsPath;
-    protected $_baseJsTestPath;
-    protected $_baseBootstrapPath;
-    protected $_templateArgs;
+    public function getComponentName() {
+        return "configurationPlugin";
+    }
     
-    
-    protected function _prepareObject($module, $name) {
-        $this->_module = $module;
-        $this->_ucModule = ucfirst($module);
-        $this->_name = $name;
-        $this->_ucName = ucfirst($this->_name);
+    protected function _prepareObject($module, $name, $resource = "") {
+        parent::_prepareObject($module, $name, $resource);
         $this->_baseJsPath = $this->_getJsConfigurationPluginBasePath($module,$name);
         $this->_baseJsTestPath = $this->_getTestJsConfigurationPluginBasePath($module,$name);
         $this->_baseBootstrapPath = $this->_getJsConfigurationBootstrapPath();
-        $this->_templateArgs = array(
-            'name'=>$name,
-            'ucName'=>$this->_ucName,
-            'module'=>$this->_module,
-            'ucModule'=>$this->_ucModule
-        );
     }
     
-    protected function _createDirectoryLayout() {
-        $dirBuilder = $this->_getDirectoryBuilder($this->_baseJsPath);
-        $dirBuilder->createLayout(self::$_jsDirectoryLayout);
-        $dirBuilder->createDirectory("resource/i18n/nls/".$this->_ucName);
-        $this->_writeBuilderAndClear($dirBuilder);
-    }
     
     protected function _createJsScripts() {
         $copyBuilder = $this->_getCopyBuilder($this->_baseJsPath);
@@ -55,7 +34,7 @@ class Azf_Tool_Provider_Configuration extends Azf_Tool_Provider_Abstract{
         $copyBuilder->copyTemplate("ConfigurationPluginView.js", "view/$this->_ucName.js", $this->_templateArgs);
         $copyBuilder->copyTemplate("ConfigurationPluginController.js", "controller/$this->_ucName.js", $this->_templateArgs);
         $copyBuilder->copyTemplate("ConfigurationPluginViewTemplate.html", "view/templates/$this->_ucName.html", $this->_templateArgs);
-        $copyBuilder->copyTemplate("ConfigurationPluginI18n.js", "resource/i18n/nls/$this->_ucName.js", $this->_templateArgs);
+        $copyBuilder->copyTemplate("Defaulti18n.js", "resource/i18n/nls/$this->_ucName.js", $this->_templateArgs);
         
         $this->_writeBuilderAndClear($copyBuilder);
     }
@@ -139,5 +118,6 @@ class Azf_Tool_Provider_Configuration extends Azf_Tool_Provider_Abstract{
         
         $this->_writeln("Configuration plugin is deleted");
     }
+    
 }
 

@@ -1,12 +1,11 @@
 <?php
 
-
 /**
  * 
  *
  * @author antun
  */
-class Vrwhr_Model_DbTable_NewsCategory extends Zend_Db_Table_Abstract{
+class Vrwhr_Model_DbTable_Test extends Zend_Db_Table_Abstract{
     protected $_name= "NewsCategory";
     protected $_userName = "User";
     protected $_primary = "id";

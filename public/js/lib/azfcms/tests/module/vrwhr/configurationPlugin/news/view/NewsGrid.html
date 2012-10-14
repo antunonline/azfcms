@@ -26,10 +26,11 @@
         <script>
             var o = {}
             require(
-            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/module/vrwhr/configurationPlugin/news/view/NewsGrid'
+            ['dojo/domReady!','dijit','doh','dojo/dom-construct','azfcms/module/vrwhr/configurationPlugin/news/view/NewsGrid',
+                'dojo/data/ItemFileReadStore'
             ],
             function
-            (domReady,dijit,doh,domCreate, NewsGrid            ){
+            (domReady,dijit,doh,domCreate, NewsGrid,ItemFileReadStore            ){
                 
                 var location = window.location.toString()
                 var matches = /useCase=(.*)$/.exec(location);
@@ -42,8 +43,23 @@
                     ]);
                 }
                 else if(useCase == "customTest"){
+                    var store = new ItemFileReadStore({
+                        data:{
+                            label:'title',
+                            'identifier':'id',
+                            items:[
+                                {'id':1,title:"title1",loginName:"description1"},
+                                {'id':2,title:"title2",loginName:"description2"},
+                                {'id':3,title:"title3",loginName:"description3"},
+                                {'id':4,title:"title4",loginName:"description4"},
+                            ]
+                        }
+                    })
                     var view = new NewsGrid({
-                        
+                        store:store,
+                        onEdit:function(){
+                            console.debug(arguments);
+                        }
                     }, "inputContainer");
                     view.startup();
                     

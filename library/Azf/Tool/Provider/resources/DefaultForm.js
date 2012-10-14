@@ -1,7 +1,7 @@
 define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
-    'dojo/text!./templates/NewsForm.html','dojo/i18n!../resource/i18n/nls/News',
+    'dojo/text!./templates/<?=$ucResource?>Form.html','dojo/i18n!../resource/i18n/nls/<?=$ucName?>',
     'dojo/_base/lang','azfcms/module/default/view/AbstractEditPane',
     'dijit/form/Button',
     

@@ -1,34 +1,44 @@
 <?php
 
-require_once __DIR__."/Abstract.php";
+require_once "AbstractPlugin.php";
 /**
  * Description of ContentPlugin
  *
  * @author antun
  */
-class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
+class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_AbstractPlugin {
     
     static $_jsDirectoryLayout = array(
-        'controller','view','view/templates'
+        'controller','view','view/templates',
+        'resource/i18n/nls'
     );
     
-    static $_jsTestDirectoryLayout = array(
+    static $_jsDirectoryTestLayout = array(
         'controller','view'
     );
     
-    protected $_module;
-    protected $_name;
-    protected $_jsBasePath;
-    protected $_testJsBasePath;
+    
     protected $_phpBasePath;
     protected $_phpViewScriptsBasePath;
-    protected $_templateArgs;
     protected $_descriptorBasePath;
+    
+    public function getComponentName() {
+        return "contentPlugin";
+    }
+    
+    protected function _prepareObject($module, $name, $resource = "") {
+        parent::_prepareObject($module, $name, $resource);
+        $this->_baseJsPath = $this->_getContentPluginBasePath($module,$name);
+        $this->_baseJsTestPath = $this->_getTestJsContentPluginBasePath($module,$name);
+        $this->_phpBasePath = $this->_getPhpContentPluginPath($module, $name);
+        $this->_phpViewScriptsBasePath = $this->_getPhpContentPluginViewPath($module, $name);
+        $this->_descriptorBasePath = $this->_getContentPluginDescriptorsBasePath();
+    }
     
     
     protected function _createContentPluginDirectoryLayout() {
         $dirBuilder = $this->_getDirectoryBuilder();
-        $dirBuilder->createBasepath($this->_jsBasePath);
+        $dirBuilder->createBasepath($this->_baseJsPath);
         $dirBuilder->createLayout(self::$_jsDirectoryLayout);
         
         $this->_writeBuilderAndClear($dirBuilder);
@@ -37,25 +47,26 @@ class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
     protected function _createJsScripts() {
         $copyBuilder = $this->_getCopyBuilder();
         
-        $copyBuilder->setBaseDstPath($this->_jsBasePath);
-        $copyBuilder->copyTemplate("ContentPluginView.js", "view/".ucfirst($this->_name).".js", $this->_templateArgs);
-        $copyBuilder->copyTemplate("ContentPluginController.js","controller/".ucfirst($this->_name).".js",$this->_templateArgs);
-        $copyBuilder->copyTemplate("ContentPluginTemplate.html","view/templates/".ucfirst($this->_name).".html",$this->_templateArgs);
+        $copyBuilder->setBaseDstPath($this->_baseJsPath);
+        $copyBuilder->copyTemplate("ContentPluginView.js", "view/".$this->_ucName.".js", $this->_templateArgs);
+        $copyBuilder->copyTemplate("ContentPluginController.js","controller/".$this->_ucName.".js",$this->_templateArgs);
+        $copyBuilder->copyTemplate("ContentPluginTemplate.html","view/templates/".$this->_ucName.".html",$this->_templateArgs);
+        $copyBuilder->copyTemplate("Defaulti18n.js","resource/i18n/nls/".$this->_ucName.".js",$this->_templateArgs);
         
         $this->_writeBuilderAndClear($copyBuilder);
     }
     
     protected function _createJsTestLayout() {
         $dirBuilder = $this->_getDirectoryBuilder();
-        $dirBuilder->createBasepath($this->_testJsBasePath);
-        $dirBuilder->createLayout(self::$_jsTestDirectoryLayout);
+        $dirBuilder->createBasepath($this->_baseJsTestPath);
+        $dirBuilder->createLayout(self::$_jsDirectoryTestLayout);
         $this->_writeBuilderAndClear($dirBuilder);
     }
     
     protected function _createJsTestScripts() {
         $copyBuilder = $this->_getCopyBuilder();
-        $copyBuilder->setBaseDstPath($this->_testJsBasePath);
-        $copyBuilder->copyTemplate("ContentPluginViewTest.html", "view/".ucfirst($this->_name).".html", $this->_templateArgs);
+        $copyBuilder->setBaseDstPath($this->_baseJsTestPath);
+        $copyBuilder->copyTemplate("ContentPluginViewTest.html", "view/".$this->_ucName.".html", $this->_templateArgs);
         $this->_writeBuilderAndClear($copyBuilder);
     }
     
@@ -63,7 +74,7 @@ class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
         $copyBuilder = $this->_getCopyBuilder();
         $copyBuilder->setBaseDstPath($this->_descriptorBasePath);
         
-        $copyBuilder->copyTemplate("ContentPluginDescriptor.xml", ucfirst($this->_name).".xml", $this->_templateArgs);
+        $copyBuilder->copyTemplate("ContentPluginDescriptor.xml", $this->_ucModule.$this->_ucName.".xml", $this->_templateArgs);
         
         $this->_writeBuilderAndClear($copyBuilder);
     }
@@ -89,27 +100,10 @@ class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
         $this->_writeBuilderAndClear($copyBuilder);
     }
     
-    
-    protected function _setupObject($module, $name) {
-        $this->_module = $module;
-        $this->_name = $name;
-        $this->_jsBasePath = $this->_getContentPluginBasePath($module,$name);
-        $this->_testJsBasePath = $this->_getTestJsContentPluginBasePath($module,$name);
-        $this->_phpBasePath = $this->_getPhpContentPluginPath($module, $name);
-        $this->_phpViewScriptsBasePath = $this->_getPhpContentPluginViewPath($module, $name);
-        $this->_descriptorBasePath = $this->_getContentPluginDescriptorsBasePath();
-        $this->_templateArgs =array(
-            'module'=>strtolower($module),
-            'ucModule'=>  ucfirst(strtolower($module)),
-            'name'=>$name,
-            'ucName'=>  ucfirst($name)
-        );
-    }
-    
     public function create($module, $name) {
-        $this->_setupObject($module, $name);
+        $this->_prepareObject($module, $name);
 
-        if($this->_getDirectoryBuilder()->fullPathExists($this->_jsBasePath)){
+        if($this->_getDirectoryBuilder()->fullPathExists($this->_baseJsPath)){
             $this->_writeln("Module already exists");
             return;
         }
@@ -127,10 +121,10 @@ class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
     
     public function _deleteJsContentPlugin() {
         $dirBuilder = $this->_getDirectoryBuilder();
-        $dirBuilder->setBasePath($this->_jsBasePath);
+        $dirBuilder->setBasePath($this->_baseJsPath);
         $dirBuilder->destroyRecursive();
         
-        $dirBuilder->setBasePath($this->_testJsBasePath);
+        $dirBuilder->setBasePath($this->_baseJsTestPath);
         $dirBuilder->destroyRecursive();
         
         $this->_writeBuilderAndClear($dirBuilder);
@@ -141,7 +135,7 @@ class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
         $dirBuilder = $this->_getDirectoryBuilder();
         $dirBuilder->setBasePath($this->_descriptorBasePath);
         
-        $dirBuilder->delete(ucfirst($this->_name).".xml");
+        $dirBuilder->delete($this->_ucModule.$this->_ucName.".xml");
         $this->_writeBuilderAndClear($dirBuilder);
     }
     
@@ -162,7 +156,7 @@ class Azf_Tool_Provider_ContentPlugin extends Azf_Tool_Provider_Abstract {
     }
     
     public function delete($module, $name) {
-        $this->_setupObject($module, $name);
+        $this->_prepareObject($module, $name);
         
         
         $this->_deleteJsContentPlugin();

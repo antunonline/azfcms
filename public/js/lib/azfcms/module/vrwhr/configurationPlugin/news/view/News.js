@@ -2,7 +2,7 @@ define(
 ['dojo/_base/declare',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/News.html','dojo/i18n!../resource/i18n/nls/News',
-    'dojo/_base/lang',
+    'dojo/_base/lang','azfcms/module/default/view/util',
     'dijit/form/Button',
     
     'dijit/layout/TabContainer','dijit/layout/BorderContainer','dijit/Toolbar',
@@ -10,7 +10,7 @@ define(
 ],function
 (declare, 
 _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
-    nls,lang)
+    nls,lang, util)
 {
     var _class = declare([_Widget,_TemplatedMixin,_WidgetsInTemplate],{
         constructor:function(){
@@ -74,6 +74,13 @@ _Widget, _TemplatedMixin, _WidgetsInTemplate, templateString,
             
         },
         
+        _onDelete:function(){
+            util.confirm(lang.hitch(this,function(choice){
+                if(choice){
+                    this.onDelete();
+                }
+            }),"Želite li izbrisati izabrane artikle?");
+        },
         
         onDelete:function(){
             

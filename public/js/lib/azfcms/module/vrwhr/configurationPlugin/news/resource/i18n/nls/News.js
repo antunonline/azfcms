@@ -6,7 +6,9 @@
 
 define({
   root: {
-      tabTitle:"News"
+      tabTitle:"News",
+      editBtnLabel:"Spremi",
+      createBtnLabel:"Dodaj"
   },
 
   de: false,

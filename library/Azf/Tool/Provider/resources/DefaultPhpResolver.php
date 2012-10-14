@@ -1,15 +1,15 @@
-<?php
+<?='<?php'?>
 
 /**
- * Description of NewsCategory
+ * Description of <?=$ucName?>
  *
  * @author antun
  */
-class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
+class <?=$ucModule?>_Resolver_<?=$ucName?> extends Azf_Service_Lang_Resolver{
     
     /**
      *
-     * @var Vrwhr_Model_DbTable_NewsCategory
+     * @var <?=$ucModule?>_Model_DbTable_<?=$ucName?>
      */
     protected $_model;
     
@@ -21,11 +21,11 @@ class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
     protected $_dojoHelper;
     
     /**
-     * @return Vrwhr_Model_DbTable_NewsCategory
+     * @return<?=$ucModule?>_Model_DbTable_<?=$ucName?>
      */
     protected function _getModel() {
         if(!$this->_model){
-            $this->_model = new Vrwhr_Model_DbTable_NewsCategory();
+            $this->_model = new <?=$ucModule?>_Model_DbTable_<?=$ucName?>();
         }
         
         return $this->_model;
@@ -51,7 +51,7 @@ class Vrwhr_Resolver_NewsCategory extends Azf_Service_Lang_Resolver{
      * @return Azf_Filter_Abstract
      */
     protected function _getFilterInput($overrideRules=array(),$forFields=null) {
-        return Azf_Filter_Factory::get("newsCategory", "vrwhr")->getFilterInput($overrideRules,$forFields);
+        return Azf_Filter_Factory::get("<?=$name?>", "<?=$ucModule?>")->getFilterInput($overrideRules,$forFields);
     }
     
     protected function isAllowed($namespaces, $parameters) {

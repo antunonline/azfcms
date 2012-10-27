@@ -284,5 +284,14 @@ class Azf_View_Helper_Navigation extends Zend_View_Helper_Abstract {
         }
         return $this->_contextMenu = $this->_findContextMenu($this->getTree(), $this->getContextId());
     }
+    
+    
+    /**
+     * Return itself
+     * @return Azf_View_Helper_Navigation
+     */
+    public function navigation(){
+        return $this;
+    }
 
 }

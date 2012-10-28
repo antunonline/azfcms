@@ -85,7 +85,8 @@ class Azf_Plugin_Descriptor {
      */
     protected function _findPlugin($identifier,array $plugins){
         foreach($plugins as $plug){
-            if(isset($plug['name']) && $plug['name']==$identifier){
+            if((isset($plug['name']) && $plug['name']==$identifier)||
+                    (isset($plug['pluginIdentifier']) && $plug['pluginIdentifier']==$identifier)){
                 return $plug;
             }
         } 

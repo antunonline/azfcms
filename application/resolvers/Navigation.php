@@ -257,7 +257,13 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
         );
 
         $this->_callMvc($id, $mvc, 'production');
-        $response = $mvc['response']->response;
+        if(isset($mvc['response'])&&isset($mvc['response']->response)){
+            $response = $mvc['response']->response;
+        } else {
+            $response = null;
+            error_log($response);
+        }
+        
         return $response;
     }
 

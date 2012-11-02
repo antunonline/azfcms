@@ -1,201 +1,56 @@
-define(["./_base/kernel", "./_base/lang", "./aspect", "./dom", "./on", "./has", "./mouse", "./ready", "./_base/window"],
-function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
+/*
+	Copyright (c) 2004-2012, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dojo/touch
-
-	var hasTouch = has("touch");
-
-	var touchmove, hoveredNode;
-
-	if(hasTouch){
-		ready(function(){
-			// Keep track of currently hovered node
-			hoveredNode = win.body();	// currently hovered node
-
-			win.doc.addEventListener("touchstart", function(evt){
-				// Precede touchstart event with touch.over event.  DnD depends on this.
-				// Use addEventListener(cb, true) to run cb before any touchstart handlers on node run,
-				// and to ensure this code runs even if the listener on the node does event.stop().
-				var oldNode = hoveredNode;
-				hoveredNode = evt.target;
-				on.emit(oldNode, "dojotouchout", {
-					target: oldNode,
-					relatedTarget: hoveredNode,
-					bubbles: true
-				});
-				on.emit(hoveredNode, "dojotouchover", {
-					target: hoveredNode,
-					relatedTarget: oldNode,
-					bubbles: true
-				});
-			}, true);
-
-			// Fire synthetic touchover and touchout events on nodes since the browser won't do it natively.
-			on(win.doc, "touchmove", function(evt){
-				var newNode = win.doc.elementFromPoint(
-					evt.pageX - win.global.pageXOffset,
-					evt.pageY - win.global.pageYOffset
-				);
-				if(newNode && hoveredNode !== newNode){
-					// touch out on the old node
-					on.emit(hoveredNode, "dojotouchout", {
-						target: hoveredNode,
-						relatedTarget: newNode,
-						bubbles: true
-					});
-
-					// touchover on the new node
-					on.emit(newNode, "dojotouchover", {
-						target: newNode,
-						relatedTarget: hoveredNode,
-						bubbles: true
-					});
-
-					hoveredNode = newNode;
-				}
-			});
-		});
-
-		// Define synthetic touchmove event that unlike the native touchmove, fires for the node the finger is
-		// currently dragging over rather than the node where the touch started.
-		touchmove = function(node, listener){
-			return on(win.doc, "touchmove", function(evt){
-				if(node === win.doc || dom.isDescendant(hoveredNode, node)){
-					listener.call(this, lang.mixin({}, evt, {
-						target: hoveredNode
-					}));
-				}
-			});
-		};
-	}
-
-
-	function _handle(type){
-		// type: String
-		//		press | move | release | cancel
-
-		return function(node, listener){//called by on(), see dojo.on
-			return on(node, type, listener);
-		};
-	}
-
-	//device neutral events - touch.press|move|release|cancel/over/out
-	var touch = {
-		press: _handle(hasTouch ? "touchstart": "mousedown"),
-		move: hasTouch ? touchmove :_handle("mousemove"),
-		release: _handle(hasTouch ? "touchend": "mouseup"),
-		cancel: hasTouch ? _handle("touchcancel") : mouse.leave,
-		over: _handle(hasTouch ? "dojotouchover": "mouseover"),
-		out: _handle(hasTouch ? "dojotouchout": "mouseout"),
-		enter: mouse._eventHandler(hasTouch ? "dojotouchover" : "mouseover"),
-		leave: mouse._eventHandler(hasTouch ? "dojotouchout" : "mouseout")
-	};
-	/*=====
-	touch = {
-		// summary:
-		//		This module provides unified touch event handlers by exporting
-		//		press, move, release and cancel which can also run well on desktop.
-		//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
-		//
-		// example:
-		//		Used with dojo.on
-		//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
-		//		|		on(node, touch.press, function(e){});
-		//		|		on(node, touch.move, function(e){});
-		//		|		on(node, touch.release, function(e){});
-		//		|		on(node, touch.cancel, function(e){});
-		// example:
-		//		Used with touch.* directly
-		//		|	touch.press(node, function(e){});
-		//		|	touch.move(node, function(e){});
-		//		|	touch.release(node, function(e){});
-		//		|	touch.cancel(node, function(e){});
-
-		press: function(node, listener){
-			// summary:
-			//		Register a listener to 'touchstart'|'mousedown' for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		move: function(node, listener){
-			// summary:
-			//		Register a listener to 'touchmove'|'mousemove' for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		release: function(node, listener){
-			// summary:
-			//		Register a listener to 'touchend'|'mouseup' for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		cancel: function(node, listener){
-			// summary:
-			//		Register a listener to 'touchcancel'|'mouseleave' for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		over: function(node, listener){
-			// summary:
-			//		Register a listener to 'mouseover' or touch equivalent for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		out: function(node, listener){
-			// summary:
-			//		Register a listener to 'mouseout' or touch equivalent for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		enter: function(node, listener){
-			// summary:
-			//		Register a listener to mouse.enter or touch equivalent for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		},
-		leave: function(node, listener){
-			// summary:
-			//		Register a listener to mouse.leave or touch equivalent for the given node
-			// node: Dom
-			//		Target node to listen to
-			// listener: Function
-			//		Callback function
-			// returns:
-			//		A handle which will be used to remove the listener by handle.remove()
-		}
-	};
-	=====*/
-
-	has("extend-dojo") && (dojo.touch = touch);
-
-	return touch;
+//>>built
+define("dojo/touch",["./_base/kernel","./_base/lang","./aspect","./dom","./on","./has","./mouse","./ready","./_base/window"],function(_1,_2,_3,_4,on,_5,_6,_7,_8){
+var _9=_5("touch");
+var _a=false;
+if(_5("ios")){
+var ua=navigator.userAgent;
+var v=ua.match(/OS ([\d_]+)/)?RegExp.$1:"1";
+var os=parseFloat(v.replace(/_/,".").replace(/_/g,""));
+_a=os<5;
+}
+var _b,_c;
+if(_9){
+_7(function(){
+_c=_8.body();
+_8.doc.addEventListener("touchstart",function(_d){
+var _e=_c;
+_c=_d.target;
+on.emit(_e,"dojotouchout",{target:_e,relatedTarget:_c,bubbles:true});
+on.emit(_c,"dojotouchover",{target:_c,relatedTarget:_e,bubbles:true});
+},true);
+on(_8.doc,"touchmove",function(_f){
+var _10=_8.doc.elementFromPoint(_f.pageX-(_a?0:_8.global.pageXOffset),_f.pageY-(_a?0:_8.global.pageYOffset));
+if(_10&&_c!==_10){
+on.emit(_c,"dojotouchout",{target:_c,relatedTarget:_10,bubbles:true});
+on.emit(_10,"dojotouchover",{target:_10,relatedTarget:_c,bubbles:true});
+_c=_10;
+}
+});
+});
+_b=function(_11,_12){
+return on(_8.doc,"touchmove",function(evt){
+if(_11===_8.doc||_4.isDescendant(_c,_11)){
+_12.call(this,_2.mixin({},evt,{target:_c,touches:evt.touches,preventDefault:function(){
+evt.preventDefault();
+},stopPropagation:function(){
+evt.stopPropagation();
+}}));
+}
+});
+};
+}
+function _13(_14){
+return function(_15,_16){
+return on(_15,_14,_16);
+};
+};
+var _17={press:_13(_9?"touchstart":"mousedown"),move:_9?_b:_13("mousemove"),release:_13(_9?"touchend":"mouseup"),cancel:_9?_13("touchcancel"):_6.leave,over:_13(_9?"dojotouchover":"mouseover"),out:_13(_9?"dojotouchout":"mouseout"),enter:_6._eventHandler(_9?"dojotouchover":"mouseover"),leave:_6._eventHandler(_9?"dojotouchout":"mouseout")};
+1&&(_1.touch=_17);
+return _17;
 });

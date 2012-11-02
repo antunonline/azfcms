@@ -37,7 +37,7 @@ class Azf_Service_Lang {
     /**
      *
      * @param string $namespace
-     * @param Azf_Service_Lang_Resolver|string $resolver 
+     * @param Azf_Service_Lang_Resolver|string $resolver
      */
     public function setResolver($namespace, $resolver) {
         $this->resolvers[$namespace] = $resolver;
@@ -90,7 +90,7 @@ class Azf_Service_Lang {
     /**
      *
      * @param string $expression
-     * @return mixed 
+     * @return mixed
      */
     public function execute($expression) {
         if (!is_string($expression)) {
@@ -106,7 +106,10 @@ class Azf_Service_Lang {
             $this->_initializeProcessor();
 
             return $this->getProcessor()->process($tokens);
-        } catch (RuntimeException $e) { 
+        } catch (RuntimeException $e) {
+            if(APPLICATION_ENV=='json-lang-development'){
+                throw $e;
+            }
             return "Syntax error";
         }
     }
@@ -114,7 +117,7 @@ class Azf_Service_Lang {
     /**
      *
      * @param string $expression
-     * @return string 
+     * @return string
      */
     public function executeAndJson($expr) {
         return json_encode($this->execute($expr));

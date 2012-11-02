@@ -4,9 +4,12 @@
 defined('APPLICATION_PATH')
         || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
 
-// Define application environment
-define('APPLICATION_ENV', 'json-lang-production');
-
+if(getenv('APPLICATION_ENV')){
+  define('APPLICATION_ENV','json-lang-'.getenv('APPLICATION_ENV'));
+} else {
+  // Define application environment
+  define('APPLICATION_ENV', 'json-lang-production');
+}
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
             realpath(APPLICATION_PATH . '/../library'),

@@ -44,15 +44,45 @@ class Azf_Tool_Provider_AbstractPlugin extends Azf_Tool_Provider_Abstract{
         throw new RuntimeException("getComponentName method must be overriden");
     }
     
-    protected function _createDirectoryLayout() {
-        $dirBuilder = $this->_getDirectoryBuilder($this->_baseJsPath);
-        $dirBuilder->createLayout(self::$_jsDirectoryLayout);
-        $dirBuilder->createDirectory("resource/i18n/nls/".$this->_ucName);
-        $this->_writeBuilderAndClear($dirBuilder);
+    
+    
+    
+    /**
+     *  This method will copy all provided templates into base path
+     * 
+     * Example structure:
+     * array(
+     *  'base/path/1'=>array(
+     *      array('Resource1.js','DstName1.js'),
+     *      array('Resource2.js','view/DstName2.js')
+     *  ),
+     *  'base/path/2'=>array(
+     *      array('Resource1.js','DstName1.js'),
+     *      array('Resource2.js','view/DstName2.js')
+     *  )
+     * )
+     * @param type $templates
+     */
+    protected function _copyTemplatesV2($templates) {
+        $copyBuilder = $this->_getCopyBuilder();
+        
+        foreach($templates as $basePath => $pathTemplates){
+            $copyBuilder->setBaseDstPath($basePath);
+            
+            foreach($pathTemplates as $template){
+                $copyBuilder->copyTemplate($template[0], $template[1], $this->_templateArgs);
+            }
+        }
+        
+        $this->_writeBuilderAndClear($copyBuilder);
     }
     
     
-    
+    /**
+     *  This method will eventually be removed, use _copyTemplatesV2 method instead
+     * @param type $copyTemplates
+     * @param type $copyTestTemplates
+     */
     protected function _copyTemplates($copyTemplates, $copyTestTemplates) {
         $copyBuilder = $this->_getCopyBuilder($this->_baseJsPath);
         foreach($copyTemplates as $template){
@@ -78,6 +108,37 @@ class Azf_Tool_Provider_AbstractPlugin extends Azf_Tool_Provider_Abstract{
         $dirBuilder->setBasePath($this->_baseJsTestPath);
         foreach($jsTestTemplates as $template){
             $dirBuilder->delete($template[1]);
+        }
+        
+        $this->_writeBuilderAndClear($dirBuilder);
+    }
+    
+    
+    /**
+     *  This method will delete all provided templates and directories
+     * 
+     * Example structure:
+     * array(
+     *  'base/path/1'=>array(
+     *      array('Resource1.js','DstName1.js'),
+     *      array('Resource2.js','view/DstName2.js')
+     *  ),
+     *  'base/path/2'=>array(
+     *      array('Resource1.js','DstName1.js'),
+     *      array('Resource2.js','view/DstName2.js')
+     *  )
+     * )
+     * @param type $templates
+     */
+    protected function _deleteTemplatesV2($templates) {
+        $dirBuilder = $this->_getDirectoryBuilder();
+        
+        foreach($templates as $basePath => $pathTemplates){
+            $dirBuilder->setBasePath($basePath);
+            
+            foreach($pathTemplates as $template){
+                $dirBuilder->delete($template[1]);
+            }
         }
         
         $this->_writeBuilderAndClear($dirBuilder);

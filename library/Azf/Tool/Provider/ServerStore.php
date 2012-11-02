@@ -24,49 +24,6 @@ class Azf_Tool_Provider_ServerStore extends Azf_Tool_Provider_AbstractPlugin{
     }
     
     
-    /**
-     *  This method will copy all provided templates into base path
-     * 
-     * Example structure:
-     * array(
-     *  'base/path/1'=>array(
-     *      array('Resource1.js','DstName1.js'),
-     *      array('Resource2.js','view/DstName2.js')
-     *  ),
-     *  'base/path/2'=>array(
-     *      array('Resource1.js','DstName1.js'),
-     *      array('Resource2.js','view/DstName2.js')
-     *  )
-     * )
-     * @param type $templates
-     */
-    protected function _copyTemplates($templates) {
-        $copyBuilder = $this->_getCopyBuilder();
-        
-        foreach($templates as $basePath => $pathTemplates){
-            $copyBuilder->setBaseDstPath($basePath);
-            foreach($pathTemplates as $template){
-                $copyBuilder->copyTemplate($template[0], $template[1], $this->_templateArgs);
-            }
-        }
-        
-        $this->_writeBuilderAndClear($copyBuilder);
-    }
-    
-    protected function _deleteTemplates($templates) {
-        $dirBuilder = $this->_getDirectoryBuilder();
-        
-        foreach($templates as $basePath => $pathTemplates){
-            $dirBuilder->setBasePath($basePath);
-            
-            foreach($pathTemplates as $template){
-                $dirBuilder->delete($template[1]);
-            }
-        }
-        
-        $this->_writeBuilderAndClear($dirBuilder);
-    }
-    
     protected function _getStoreTemplates() {
         return array(
             $this->_basePhpModelPath=>array(
@@ -85,7 +42,7 @@ class Azf_Tool_Provider_ServerStore extends Azf_Tool_Provider_AbstractPlugin{
     public function create($module, $name) {
         $this->_prepareObject($module, $name);
         
-        $this->_copyTemplates($this->_getStoreTemplates());
+        $this->_copyTemplatesV2($this->_getStoreTemplates());
         
         $this->_writeln("Store is created");
     }
@@ -93,7 +50,7 @@ class Azf_Tool_Provider_ServerStore extends Azf_Tool_Provider_AbstractPlugin{
     public function delete($module, $name) {
         $this->_prepareObject($module, $name);
         
-        $this->_deleteTemplates($this->_getStoreTemplates());
+        $this->_deleteTemplatesV2($this->_getStoreTemplates());
         
         $this->_writeln("Store is deleted");
     }

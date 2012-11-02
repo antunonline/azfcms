@@ -65,4 +65,49 @@ class Application_Resolver_Admin extends Azf_Service_Lang_Resolver {
         
         return $configurationActionDefinitionList;
     }
+    
+    protected function _getJsModulePaths() {
+        $dirIterator = new DirectoryIterator(APPLICATION_PATH."/../public/js/lib/azfcms/module");
+        $modulePaths = array();
+        
+        foreach($dirIterator as $file){
+            if($file->isDir() && $file->isDot()==false){
+                $modulePaths[] = $file->getPathname();
+            }
+        }
+        
+        return $modulePaths;
+    }
+    
+    protected function _getJsGeneratorPaths($modulePaths) {
+        $servicePaths = array();
+        foreach($modulePaths as $modulePath){
+            $dirIterator= new DirectoryIterator($modulePath."/generator");
+            foreach($dirIterator as $file){
+                if($file->isDir()&&$file->isDot()==false){
+                    $servicePaths[] = $file->getRealPath();
+                }
+            }
+        }
+        
+        return $servicePaths;
+        
+    }
+    
+    protected function _buildAmdRequirePaths($servicePaths) {
+        $normModulePath = realpath(APPLICATION_PATH."/../public/js/lib")."/";
+        
+        foreach($servicePaths as $key=>$path){
+            $basename = basename($path);
+            $servicePaths[$key] = str_replace($normModulePath, "", $path). "/". ucfirst($basename)."Generator";
+        }
+        
+        return $servicePaths;
+    }
+    
+    public function getGeneratorAmdListMethod() {
+        $modulePaths = $this->_getJsModulePaths();
+        $servicePaths = $this->_getJsGeneratorPaths($modulePaths);
+        return $this->_buildAmdRequirePaths($servicePaths);
+    }
 }

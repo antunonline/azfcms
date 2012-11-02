@@ -28,6 +28,13 @@ class Azf_Tool_Provider_Configuration extends Azf_Tool_Provider_AbstractPlugin{
     }
     
     
+    protected function _createDirectoryLayout() {
+        $dirBuilder = $this->_getDirectoryBuilder($this->_baseJsPath);
+        $dirBuilder->createLayout(self::$_jsDirectoryLayout);
+        $dirBuilder->createDirectory("resource/i18n/nls/".$this->_ucName);
+        $this->_writeBuilderAndClear($dirBuilder);
+    }
+    
     protected function _createJsScripts() {
         $copyBuilder = $this->_getCopyBuilder($this->_baseJsPath);
 

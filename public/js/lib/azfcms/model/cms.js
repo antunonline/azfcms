@@ -124,6 +124,10 @@ define(['azfcms/model','dojo/_base/Deferred','dojo/_base/declare',
             getExtensionValues:function(pluginId){
                 var call = this.model.createCall("cms.extensionPlugin.getExtensionValues",[pluginId]);
                 return this.model.invoke(call);
+            },
+            
+            getGeneratorAmdPaths:function(){
+                return this.model.singleInvoke("cms.admin.getGeneratorAmdList",[]);
             }
         });
     

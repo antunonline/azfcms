@@ -164,6 +164,14 @@ class Azf_Tool_Provider_Abstract  extends Zend_Tool_Framework_Provider_Abstract 
         return $this->_getJsBasePath()."/bootstrap/configuration";
     }
     
+    protected function _getJsGeneratorBasePath($module, $name) {
+        return $this->_getJsModuleBasePath($module)."/generator/".lcfirst($name);
+    }
+    
+    protected function _getTestJsGeneratorBasePath($module, $name) {
+        return $this->_getTestJsModulePath($module)."/generator/".lcfirst($name);
+    }
+    
     protected function _getPhpApplicationPath() {
         return $this->getCwd()."/application";
     }
@@ -241,6 +249,27 @@ class Azf_Tool_Provider_Abstract  extends Zend_Tool_Framework_Provider_Abstract 
         $this->_writeln($builder->getLogLinesAndClean());
     }
    
+    
+    
+      protected function _createLayoutV2($paths) {
+        $dirBuilder = $this->_getDirectoryBuilder();
+        foreach($paths as $basePath => $subDirectories){
+            $dirBuilder->createBasepath($basePath);
+            foreach($subDirectories as $subDirectory){
+                $dirBuilder->createDirectory($subDirectory);
+            }
+        }   
+        
+        $this->_writeBuilderAndClear($dirBuilder);
+    }
+    
+    protected function _deleteLayoutV2($paths){
+        $dirBuilder = $this->_getDirectoryBuilder();
+        foreach($paths as $basePath => $subDirectories){
+            $dirBuilder->destroyRecursiveFullPath($basePath);
+        }   
+        $this->_writeBuilderAndClear($dirBuilder);
+    }
     
     
 }

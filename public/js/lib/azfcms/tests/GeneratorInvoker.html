@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dijit/themes/claro/claro.css" />
+        <script type="text/javascript" src="/js/lib/dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+            }
+        </style>
+        <script>
+            var o = {}
+            var invoker;
+            require(
+            ['azfcms/module/default/GeneratorInvoker','dojo/domReady!',
+                'dijit','doh',
+                'dojo/dom','dijit/Dialog','dojo/io-query','dijit/Dialog'],function
+            (GeneratorInvoker,ready,
+            dijit,doh, 
+            dom,Dialog,ioQuery, Dialog){
+                              
+                
+
+            var uri = window.location.toString();
+               var query = uri.substring(uri.indexOf("?") + 1, uri.length);
+                var queryObject = ioQuery.queryToObject(query);
+                
+                if(queryObject.action == "doh"){
+                    doh.register('azfcms.tests.view.ConfirmPane',[
+                        {
+                            name:"Test .constructor",
+                            runTest:function(){
+                                
+                            }
+                        }
+                    ]);
+                    doh.run();
+                } else if(queryObject.action=="render"){
+                invoker = GeneratorInvoker;
+                    GeneratorInvoker.invoke(function(result){
+                        document.getElementById('inputContainer').innerHTML = result;
+                    },'html')
+                } else {
+                    document.write("<a href='?action=doh'>DOH Testovi</a><br />");
+                    document.write("<a href='?action=render'>Izvršavanje koda</a><br />");
+                }
+            })
+        </script>
+    </head>
+    <body class="claro">
+        <div id="inputContainer">
+            
+        </div>
+    </body>
+</html>

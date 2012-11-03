@@ -6,6 +6,7 @@
 define(  ['dojo/_base/declare','dojo/text!./templates/DijitEditor.html','dijit/_Widget','dijit/_WidgetsInTemplateMixin','dijit/_TemplatedMixin',
     'dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
 
+'azfcms/module/default/GeneratorEditorPlugin',
 'dijit/Editor','dijit/form/Button','dijit/layout/BorderContainer',
 'dijit/layout/ContentPane','dijit/Toolbar'],
 function (declare,templateString,_Widget,_WidgetsInTemplate,_Templated,nls){

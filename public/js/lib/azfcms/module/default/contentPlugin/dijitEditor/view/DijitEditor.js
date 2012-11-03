@@ -2,6 +2,8 @@ define(
     ['dojo/_base/declare','azfcms/module/default/view/AbstractEditPane',
     'dijit/_Widget','dijit/_TemplatedMixin','dijit/_WidgetsInTemplateMixin',
     'dojo/text!./templates/DijitEditor.html','dojo/dom-geometry',
+    
+    'azfcms/module/default/GeneratorEditorPlugin',
     'dijit/Editor','dijit/form/Button','dijit/layout/BorderContainer',
     'dijit/layout/ContentPane','dijit/Toolbar','dijit/_editor/plugins/LinkDialog','dijit/_editor/plugins/FontChoice',
                    'dijit/_editor/plugins/TextColor','dijit/_editor/plugins/ViewSource'],function

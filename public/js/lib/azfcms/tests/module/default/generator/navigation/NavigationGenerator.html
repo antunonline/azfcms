@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="/js/lib/dojo/resources/dojo.css" />
         <link rel="stylesheet" type="text/css" href="/js/lib/dijit/themes/claro/claro.css" />
-        <script type="text/javascript" src="/js/lib/dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true"></script>
+        <script type="text/javascript" src="/js/lib/dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true,packages:[{name:doh,location:../util/doh}],packages:[{name:'doh',location:'../util/doh'}]"></script>
         <style>
             html,body {
                 height:100%;
@@ -14,11 +14,12 @@
         </style>
         <script>
             var o = {}
+            var invoker;
             require(
-            ['azfcms/module/default/generator/video/VideoGenerator','dojo/domReady!',
-                'dijit','doh',
+            ['azfcms/module/default/generator/navigation/NavigationGenerator','dojo/domReady!',
+                'dijit','doh/main',
                 'dojo/dom','dijit/Dialog','dojo/io-query','dijit/Dialog'],function
-            (VideoGenerator,ready,
+            (Generator,ready,
             dijit,doh, 
             dom,Dialog,ioQuery, Dialog){
                               
@@ -38,13 +39,12 @@
                         }
                     ]);
                     doh.run();
-                }
-                
-                if(queryObject.action=="render"){
-                    var view = new VideoGenerator({
-                        
-                    },'inputContainer');
-                    
+                } else if(queryObject.action=="render"){
+                    var generator = new Generator();
+                    generator.getView().placeAt('inputContainer')
+                } else {
+                    document.write("<a href='?action=doh'>DOH Testovi</a><br />");
+                    document.write("<a href='?action=render'>Izvršavanje koda</a><br />");
                 }
             })
         </script>

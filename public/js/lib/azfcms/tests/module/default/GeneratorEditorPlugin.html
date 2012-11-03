@@ -14,13 +14,14 @@
         </style>
         <script>
             var o = {}
+            var invoker;
             require(
-            ['azfcms/module/default/view/GeneratorInvokerPane','dojo/domReady!',
+            ['azfcms/module/default/GeneratorEditorPlugin','dojo/domReady!',
                 'dijit','doh',
-                'dojo/dom','dijit/Dialog','dojo/io-query','dijit/Dialog'],function
-            (GeneratorInvokerPane,ready,
+                'dojo/dom','dijit/Dialog','dojo/io-query','dijit/Editor'],function
+            (GeneratorInvoker,ready,
             dijit,doh, 
-            dom,Dialog,ioQuery, Dialog){
+            dom,Dialog,ioQuery, Editor){
                               
                 
 
@@ -38,16 +39,13 @@
                         }
                     ]);
                     doh.run();
-                }
-                
-                if(queryObject.action=="render"){
-                    var dialog =new Dialog({
-                    });
-                    var view = new GeneratorInvokerPane({
-                        dialog:dialog
-                    });
-                    
-                    view.show();
+                } else if(queryObject.action=="render"){
+                new Editor({
+                extraPlugins:['generator']
+                },'inputContainer')
+                } else {
+                    document.write("<a href='?action=doh'>DOH Testovi</a><br />");
+                    document.write("<a href='?action=render'>Izvršavanje koda</a><br />");
                 }
             })
         </script>

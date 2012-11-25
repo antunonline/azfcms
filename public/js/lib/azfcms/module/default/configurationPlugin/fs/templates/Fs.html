@@ -1,0 +1,44 @@
+<div style="width:100%;height:100%">
+    <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-attach-point="borderContainer" style="width:100%;height:100%">
+        <div region="top" data-dojo-type="dijit/Toolbar" data-dojo-attach-point="toolbar">
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doDirectoryCreate">Dodaj direktorij</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doClone">Kopiraj</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doDelete">Izbriši</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doMove">Premjesti</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doRename">Promjeni Naziv</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doFileCreate">Dodaj dadoteku</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doFileEdit">Editiraj dadoteku</button>
+            <button data-dojo-type="dijit/form/Button"
+                    data-dojo-attach-event="onClick:doUpload">Učitaj dadoteke</button>
+            
+        </div>
+        
+        <div data-dojo-type="dijit/Tree" data-dojo-props="model:this.model" region="left" style="width:250px;"
+             data-dojo-attach-point="tree">
+            
+        </div>
+
+        <div data-dojo-type="dijit/layout/TabContainer" region="center"
+             data-dojo-attach-point="tabContainer">
+            <table data-dojo-attach-point="grid" data-dojo-type="dojox/grid/DataGrid"
+                   style="width:100%;height:100%;"  data-dojo-props="title:'Dadoteke'">
+                <thead>
+                    <tr>
+                        <th field="name" width="400px">Naziv</th>
+                        <th field="size" width="50px" >Veličina</th>
+                        <th field="ctime" width="100px">Stvoreno</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+
+    </div>
+</div>

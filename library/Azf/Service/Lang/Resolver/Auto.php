@@ -113,7 +113,11 @@ class Azf_Service_Lang_Resolver_Auto extends Azf_Service_Lang_Resolver {
      * @param string $parameters 
      */
     protected function _executeResolver(Azf_Service_Lang_Resolver $resolver,$classNamespace,$method,$parameters){
-        return $resolver->execute($classNamespace, array($method), $parameters);
+        try {
+            return $resolver->execute($classNamespace, array($method), $parameters);
+        } catch (Exception $e) {
+            return $resolver->handleException($e);
+        }
     }
 
     

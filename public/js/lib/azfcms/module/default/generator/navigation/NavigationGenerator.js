@@ -46,14 +46,14 @@ navigationStore, Tree, domGeometry, topic, lang){
         _initMetadata:function(){
             this.name = "DefaultNavigation"
             this.services = [
-                'html'
+                'htmlLink'
             ]
         },
-        buildHtml:function(promise){
+        buildHtmlLink:function(promise){
             var node;
             if(node = this.getSelection()){
                 var href = '/'+decodeURI(node.title)+'/'+node.id+'.html';
-                promise.resolve('<a href="'+href+'">'+node.title+'</a>');
+                promise.resolve('&nbsp;<a href="'+href+'">'+node.title+'</a>&nbsp;');
             }
             
         }

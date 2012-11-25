@@ -83,6 +83,11 @@ abstract class Azf_Service_Lang_Resolver {
             return $this->_execute($namespaces, $parameters);
         }
     }
+    
+    
+    public function handleException(Exception $e) {
+        throw $e;
+    }
 
     /**
      * Use this method to initialize resolver 

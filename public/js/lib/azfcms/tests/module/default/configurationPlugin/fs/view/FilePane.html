@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dijit/themes/claro/claro.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/Grid.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/claroGrid" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/azfcms/resources/themes/claro/claro.css" />
+        <script type="text/javascript">
+            dojoConfig={
+                async:true,
+                parseOnLoad:false,
+                isDebug:true
+            }
+        </script>
+        <script type="text/javascript" src="/js/lib/dojo/dojo.js" ></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+                padding:0px;
+                margin:0px;
+            }
+        </style>
+        <script>
+            var o = {}
+            require(
+            ['dojo/domReady!','dijit','dojo/dom-construct',
+                'azfcms/module/default/configurationPlugin/fs/view/FilePane'
+            ],
+            function
+            (domReady,dijit,domCreate,FilePaneForm){
+                
+                var location = window.location.toString()
+                var matches = /useCase=(.*)$/.exec(location);
+                var useCase = matches&&matches[1]?matches[1]:null;
+                
+                
+                if(useCase=="dohTests"){
+                    doh.register('azfcms.tests.module.default.configurationPlugin.fs.view.FilePaneForm',[
+                        
+                    ]);
+                }
+                else if(useCase == "customTest"){
+                   var form = new FilePaneForm({
+                        onSave:function(value){
+                            console.debug(value);
+                        },
+                        style:"width:100%;height:100%;"
+                    },'inputContainer');
+                    form.startup();
+                    
+                    
+                } else {
+                    domCreate.place("<a href='?useCase=dohTests' >Doh Tests</a><br />","inputContainer");
+                    domCreate.place("<a href='?useCase=customTest' >Custom Test</a><br />","inputContainer");
+                }
+            });
+        </script>
+    </head>
+    <body class="claro">
+        <div style="width:100%;height:100%" id="inputContainer">
+
+        </div>
+    </body>
+</html>

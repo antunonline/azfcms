@@ -108,9 +108,9 @@ function
          * Prevent resizes if tree is not yet loaded
          */
         resize:function(){
-            if(this.tree.rootNode){
+//            if(this.tree.rootNode){
                 this.inherited(arguments);
-            }
+//            }
         }
     });
 })

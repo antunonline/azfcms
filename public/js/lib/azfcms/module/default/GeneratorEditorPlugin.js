@@ -4,11 +4,14 @@ define([
 	"dojo/_base/kernel", // kernel.experimental
 	"dojo/_base/lang", // lang.hitch
 	"dijit/_editor/_Plugin",
-	"dijit/form/Button",
+	"dijit/form/DropDownButton",
         'dojo/dom-attr',
         'dojo/dom-class',
-        'azfcms/module/default/GeneratorInvoker'
-], function(declare, domStyle, kernel, lang, _Plugin, Button, domAttr, domClass, GeneratorInvoker){
+        'azfcms/module/default/GeneratorInvoker',
+        'dijit/DropDownMenu',
+        'dijit/MenuItem'
+], function(declare, domStyle, kernel, lang, _Plugin, Button, domAttr, domClass, GeneratorInvoker,
+Menu,MenuItem){
 
 	// module:
 	//		dijit/_editor/plugins/ToggleDir
@@ -24,20 +27,35 @@ define([
 		// rather than by sending commands to the Editor
 		useDefaultCommand: false,
 
-		command: "generator",
 
 		// Override _Plugin.buttonClass to use a ToggleButton for this plugin rather than a vanilla Button
 		buttonClass: Button,
 
 		_initButton: function(){
+                    var self = this;
                     // Override _Plugin._initButton() to setup handler for button click events.
-                    this.inherited(arguments);
-                    this.button.on("click",lang.hitch(this,function(){
-                        GeneratorInvoker.invoke(lang.hitch(this,function(result){
-                            this.editor.execCommand('insertHTML', result);
-                        }),'html');
+                    this.dropDown = new Menu();
+                    this.dropDown.addChild(new MenuItem({
+                        label:"Poveznica",
+                        onClick:function(){
+                            GeneratorInvoker.invoke(function(result){
+                                self.editor.execCommand('insertHTML',result);
+                            },'htmlLink')
+                        }
                     }))
+                    this.dropDown.addChild(new MenuItem({
+                        label:"Slika",
+                        onClick:function(){
+                            GeneratorInvoker.invoke(function(result){
+                                self.editor.execCommand('insertHTML',result);
+                            },'htmlImage')
+                        }
+                    }))
+                    this.inherited(arguments);
                     domClass.add(this.button.iconNode,'dijitEditorIconInsertImage');
+                    
+                   
+                      
                     
                     
                     

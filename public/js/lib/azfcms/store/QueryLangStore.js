@@ -16,6 +16,9 @@ define(
             putMethod:"",
             removeMethod:"",
             constructor:function(args){
+                if(!args){
+                    args = {}
+                }
                 
                 this.queryOptions={};
                 this.addOptions={};

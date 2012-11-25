@@ -12,8 +12,8 @@ define(['dojo/_base/declare','dojo/request/xhr','dojo/_base/Deferred',
         
         
             /**
-         * SIngle quote escape
-         */
+            * SIngle quote escape
+            */
             _d : function(value){
                 return value.replace(/"/g,"\\\"");
             },
@@ -261,6 +261,15 @@ define(['dojo/_base/declare','dojo/request/xhr','dojo/_base/Deferred',
             singleInvoke:function(method,args){
                 var call = this.createCall(method,args);
                 return this.invoke(call);
+            },
+            multipleInvoke:function(calls){
+                var preparedCalls = []
+                for(var i = 0,len = calls.length;i<len;i++){
+                    preparedCalls.push(this.createCall(calls[i][0],calls[i][1]));
+                }
+                
+                var stmt =  "["+preparedCalls.join(',')+"]"
+                return this.invoke(stmt);
             },
             invokeWithForm:function(expr,form){
                 var d = new Deferred();

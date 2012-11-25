@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojo/resources/dojo.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dijit/themes/claro/claro.css" />
+        <link rel="stylesheet" type="text/css" href="/js/lib/dojox/grid/resources/claroGrid.css" />
+        <script type="text/javascript" src="/js/lib/dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:false, isDebug:true,packages:[{name:'doh',location:'../util/doh'}]"></script>
+        <style>
+            html,body {
+                height:100%;
+                width:100%;
+            }
+        </style>
+        <script>
+            var o = {}
+            var invoker;
+            require(
+            ['azfcms/module/default/generator/zf/ZfGenerator','dojo/domReady!',
+                'dijit','doh',
+                'dojo/dom','dijit/Dialog','dojo/io-query','dijit/Dialog','dojo/dom-geometry',
+            'azfcms/module/default/store/FSStore'
+        ],function
+            (Generator,ready,
+            dijit,doh, 
+            dom,Dialog,ioQuery, Dialog, domGeometry, FSStore){
+                              
+                
+
+            var uri = window.location.toString();
+               var query = uri.substring(uri.indexOf("?") + 1, uri.length);
+                var queryObject = ioQuery.queryToObject(query);
+                
+                if(queryObject.action == "doh"){
+                    doh.register('azfcms.tests.view.ConfirmPane',[
+                        {
+                            name:"Test .constructor",
+                            runTest:function(){
+                                
+                            }
+                        }
+                    ]);
+                    doh.run();
+                } else if(queryObject.action=="render"){
+                    var generator = new Generator();
+                    generator.getView().placeAt('inputContainer');
+                    generator.resize(domGeometry.getContentBox(generator.domNode));
+                } else {
+                    document.write("<a href='?action=doh'>DOH Testovi</a><br />");
+                    document.write("<a href='?action=render'>Izvršavanje koda</a><br />");
+                }
+            })
+        </script>
+    </head>
+    <body class="claro">
+        <div id="inputContainer" style="width:100%;height:100%;">
+            
+        </div>
+    </body>
+</html>

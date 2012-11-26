@@ -200,7 +200,114 @@ AND
 
 ) ORDER BY l,r, pluginRegion, enabled desc, weight ,pluginWeight;
 ";
-        return $this->getAdapter()->fetchAll($SQL,array($pageTitleFilter,$pluginTitle,$pageTitleFilter,$pluginTitle));
+        $stmt = $this->getAdapter()->prepare($SQL);
+        $stmt->bindParam(1, $pageTitleFilter);
+        $stmt->bindParam(3, $pageTitleFilter);
+        $stmt->bindParam(2, $pluginTitle);
+        $stmt->bindParam(4, $pluginTitle);
+        $stmt->execute();
+        
+        /**
+         * n.id as navigationId,
+            n.title as pageTitle,
+            n.l as l,
+            n.r as r,
+            1 as enabled,
+            np.id as navigationPluginId,
+            np.weight as weight,
+            p.id as pluginId,
+            p.`name` as `pluginName`,
+            p.region as pluginRegion,
+            p.weight as pluginWeight
+         */
+        $navigationId=$pageTitle=$l=$r=$navigationPluginId
+        =$weight= $pluginId=$pluginName=$pluginRegion=$pluginWeight=
+        $enabled=null;
+        $stmt->bindColumn("navigationId", $navigationId,Zend_Db::PARAM_INT);
+        $stmt->bindColumn("pageTitle", $pageTitle);
+        $stmt->bindColumn("l", $l,Zend_Db::PARAM_INT);
+        $stmt->bindColumn("r", $r,Zend_Db::PARAM_INT);
+        $stmt->bindColumn("enabled", $enabled,Zend_Db::PARAM_INT);
+        $stmt->bindColumn("navigationPluginId", $navigationPluginId,Zend_Db::PARAM_INT);
+        $stmt->bindColumn("weight",$weight,Zend_Db::PARAM_INT);
+        $stmt->bindColumn('pluginId',$pluginId,Zend_Db::PARAM_INT);
+        $stmt->bindColumn("pluginName",$pluginName);
+        $stmt->bindColumn("pluginRegion",$pluginRegion);
+        $stmt->bindColumn("pluginWeight",$pluginWeight,Zend_Db::PARAM_INT);
+        
+        $rows = array();
+        $i = 0;
+        while($stmt->fetch(Zend_DB::FETCH_BOUND)){
+            $rows[] = array(
+                'rowId'=>$i,
+                'navigationId'=>$navigationId,
+                'pageTitle'=>$pageTitle,
+                'l'=>$l,
+                'r'=>$r,
+                'enabled'=>(boolean)$enabled,
+                'navigationPluginId'=>$navigationPluginId,
+                'weight'=>$weight,
+                'pluginId'=>$pluginId,
+                'pluginName'=>$pluginName,
+                'pluginRegion'=>$pluginRegion,
+                'pluginWeight'=>$pluginWeight
+            );
+            $i++;
+        }
+        
+        
+        return $rows;
+    }
+    /**
+     * 
+     * @param int $pageId
+     * @return array
+     */
+    public function fetchPageStatusMatrix($pageId){
+        $SQL  = "(SELECT DISTINCT
+    n.id as navigationId,
+    1 as enabled,
+    np.id as navigationPluginId,
+    np.weight as weight,
+    p.id as pluginId,
+    p.`name` as `pluginName`,
+    p.region as pluginRegion,
+    p.weight as pluginWeight
+FROM
+    Navigation n
+JOIN
+    NavigationPlugin np
+ON
+    n.id = np.navigationId
+JOIN
+    Plugin p
+ON 
+    np.pluginId = p.id
+WHERE
+    n.id = ?
+)
+UNION
+(SELECT DISTINCT
+    n.id as navigationId,
+    0 as enabled,
+    0 as navigationPluginId,
+    0 as weight,
+    p.id as pluginId,
+    p.`name` as `pluginName`,
+    p.region as pluginRegion,
+    p.weight as pluginWeight
+FROM
+    Navigation n
+JOIN
+    Plugin p
+ON
+    p.id NOT IN (SELECT np.pluginId FROM NavigationPlugin np WHERE np.navigationId = n.id)
+WHERE
+    n.id = ?
+
+) ORDER BY l,r, pluginRegion, enabled desc, weight ,pluginWeight;
+";
+        return $this->getAdapter()->fetchAll($SQL,array($pageId, $pageId));
     }
     
     

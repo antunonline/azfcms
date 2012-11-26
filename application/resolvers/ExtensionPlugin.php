@@ -85,6 +85,14 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
     public function _initModel() {
         $this->setModel(new Azf_Model_DbTable_Plugin());
     }
+    
+    /**
+     * 
+     * @return Azf_Service_Lang_ResolverHelper_Dojo
+     */
+    public function getDojoHelper() {
+        return $this->getHelper("dojo");
+    }
 
     /**
      * 
@@ -226,7 +234,7 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
     protected function getExtensionValuesMethod($pluginId) {
         return $this->getManager()->getValues($pluginId);
     }
-
+    
     public function getExtensionPluginStatusMatrixMethod($query = null, $args = array(), $staticQueryArgs = array()) {
         if (!is_array($staticQueryArgs) || !is_array($args)) {
             return array();
@@ -243,29 +251,26 @@ class Application_Resolver_ExtensionPlugin extends Azf_Service_Lang_Resolver {
         } else {
             $pluginTitle = "%";
         }
-
-        $start = isset($args['start']) && (is_int($args['start']) || ctype_digit($args['start'])) ?
-                $args['start'] : null;
-        $count = isset($args['count']) && (is_int($args['count']) || ctype_digit($args['count'])) ?
-                $args['count'] : null;
-
-        if ($start === null || $count === null) {
-            return array();
-        }
-
+        
+        $dojoHelper = $this->getDojoHelper();
         $rows = $this->getModel()->fetchStatusMatrix($pageTitleFilter,$pluginTitle);
-        $returnRows = array();
-        for ($i = $start, $newI = 0, $len = sizeof($rows); $i < $len && $i < ($start + $count); $i++, $newI++) {
-            $rows[$i]['rowId'] = $i;
-            $rows[$i]['enabled'] = (bool) (int) $rows[$i]['enabled'];
-            $rows[$i]['weight'] = (int) $rows[$i]['weight'];
-            $returnRows[$newI] = $rows[$i];
+        return $dojoHelper->sliceStoreResponse($rows, $args);
+    }
+    
+    
+    /**
+     * 
+     * @param array $query {id:<int>}
+     * @param type $args
+     * @param type $staticArgs
+     */
+    public function getPageExtensionPluginStatusMatrix($query, $args, $staticArgs) {
+        if(false == isset($query['id'])){
+            return $this->getDojoHelper()->constructQueryResult(array());
         }
-
-        return array(
-            'data' => $returnRows,
-            'total' => sizeof($rows)
-        );
+        
+        $rows = $this->getModel()->fetchPageStatusMatrix($query['id']);
+        return $this->createQueryResponse($rows);
     }
 
     public function testSetExtensionPluginStatusValidArguments($item) {

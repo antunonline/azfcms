@@ -8,6 +8,57 @@
             data-dojo-props="title:'${eepTabName}'"
             style="width:100%;height:100%">
 
+
+            <div data-dojo-type="dijit/layout/BorderContainer" region="top"
+                 style="height:150px;width:100%;">
+                <div data-dojo-type="dijit/Toolbar" region="top">
+                    <button 
+                        data-dojo-type="dijit.form.Button"
+                        data-dojo-attach-point="saveButton"
+                        data-dojo-attach-event="onClick:_onSave">${eepFormSave}</button>
+                    <button 
+                        data-dojo-type="dijit.form.Button"
+                        data-dojo-attach-point="customEditButton"
+                        data-dojo-attach-event="onClick:_onExtendedEdit">${eepFormExtendedEdit}</button>
+                    <button 
+                        data-dojo-type="dijit.form.Button"
+                        data-dojo-attach-point="addButton"
+                        data-dojo-attach-event="onClick:_onCreate">${eepFormAdd}</button>
+                    <button 
+                        data-dojo-type="dijit.form.Button"
+                        data-dojo-attach-point="removeButton"
+                        data-dojo-attach-event="onClick:_onDelete">${eepFormDelete}</button>
+                </div>
+                <div data-dojo-type="dijit/layout/ContentPane" region="center">
+                    <div data-dojo-type="dojox.layout.TableContainer" 
+                     region="center"
+                       orientation="horiz" cols="2"
+                       style="width:600px;">
+                        <div data-dojo-type="dijit.form.TextBox"
+                                data-dojo-attach-point="nameText" 
+                                label="${eepFormName}:"></div>
+                        <input data-dojo-type="dijit.form.TextBox"
+                                data-dojo-attach-point="descriptionText"
+                                label="${eepFormDescription}:"/>
+                        <input data-dojo-type="dijit.form.FilteringSelect"
+                               data-dojo-attach-point="typeSelect"
+                               data-dojo-props="searchAttr:'displayName'"
+                               label="${eepFormType}:"/>
+                        <input data-dojo-type="dijit.form.FilteringSelect"
+                               data-dojo-attach-point="formRegionSelect" 
+                               label="${eepFormRegion}:"/>
+                        <input data-dojo-type="dijit.form.NumberSpinner"
+                               data-dojo-attach-point="weightText"
+                               data-dojo-props="value:0"
+                               label="${eepFormPlacement}:"/>
+                        <input data-dojo-type="dijit.form.CheckBox"
+                               data-dojo-attach-point="enabledByDefault"
+                               data-dojo-props="value:0"
+                               label="${eepFormEnabledByDefault}:"/>
+                </div>
+                </div>
+            </div>
+            
             <div data-dojo-type="dijit.layout.ContentPane" region="center" style='height:100%;width:100%'>
                 <table  data-dojo-type="dojox.grid.DataGrid"
                        style="height:100%"
@@ -19,77 +70,9 @@
                             <th width="200px;" field="region" >${eepRegion}</th>
                             <th width="200px;" field="description" >${eepDescriptionColumnLabel}</th>
                             <th width="200px;" field="weight">${eepPlacementColumnLabel}</th>
+                            <th width="200px;" field="enabledByDefault">${eepEnabledByDefault}</th>
                         </tr>
                     </thead>
-                </table>
-            </div>
-
-            <div
-                data-dojo-type="dijit.layout.ContentPane"
-                data-dojo-attach-point="formNode"
-                region="bottom"
-                style="height:160px;">
-
-                <table style="width:100%;height:100px">
-                    <tbody>
-                        <tr>
-                            <td >${eepFormName}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.TextBox"
-                                       data-dojo-attach-point="nameText" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormDescription}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.TextBox"
-                                       data-dojo-attach-point="descriptionText" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormType}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.FilteringSelect"
-                                       data-dojo-attach-point="typeSelect"
-                                       data-dojo-props="searchAttr:'displayName'"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormRegion}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.FilteringSelect"
-                                       data-dojo-attach-point="formRegionSelect" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>${eepFormPlacement}:</td>
-                            <td>
-                                <input data-dojo-type="dijit.form.NumberSpinner"
-                                       data-dojo-attach-point="weightText"
-                                       data-dojo-props="value:0"/>
-                            </td>
-                        </tr>
-                        <tr >
-                            <td colspan="2">
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="saveButton"
-                                    data-dojo-attach-event="onClick:_onSave">${eepFormSave}</button>
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="customEditButton"
-                                    data-dojo-attach-event="onClick:_onExtendedEdit">${eepFormExtendedEdit}</button>
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="addButton"
-                                    data-dojo-attach-event="onClick:_onCreate">${eepFormAdd}</button>
-                                <button 
-                                    data-dojo-type="dijit.form.Button"
-                                    data-dojo-attach-point="removeButton"
-                                    data-dojo-attach-event="onClick:_onDelete">${eepFormDelete}</button>
-                            </td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
 

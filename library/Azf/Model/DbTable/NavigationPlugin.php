@@ -144,6 +144,26 @@ select * from NavigationPlugin
     }
     
     
+    public function enableDefaultPlugins($nodeId) {
+        $SQL = "
+INSERT INTO
+    NavigationPlugin
+(pluginId,navigationId)
+SELECT 
+    id, ?
+FROM
+    Plugin
+WHERE
+    enabledByDefault = 1          
+";
+        
+        $stmt = $this->getAdapter()->prepare($SQL);
+        $stmt->bindParam(1, $nodeId);
+        $stmt->execute();
+        return true;
+    }
+    
+    
     
     /**
      * 

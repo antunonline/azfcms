@@ -57,6 +57,13 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
     public function setPluginDescriptor($pluginDescriptor) {
         $this->pluginDescriptor = $pluginDescriptor;
     }
+    
+    /**
+     * @return Azf_Model_DbTable_NavigationPlugin
+     */
+    public function getNavigationPluginModel() {
+        return new Azf_Model_DbTable_NavigationPlugin();
+    }
 
     public function initialize() {
         parent::initialize();
@@ -399,6 +406,7 @@ class Application_Resolver_Navigation extends Azf_Service_Lang_Resolver {
      * @param string $pluginIdentifier 
      */
     public function _installContentPlugin($nodeId,$pluginIdentifier) {
+        $this->getNavigationPluginModel()->enableDefaultPlugins($nodeId);
         $pluginDescriptor = $this->getPluginDescriptor()->getContentPlugin($pluginIdentifier);
         $mvcParams = array('action'=>'installpage')+$pluginDescriptor;
             $this->_callMvc($nodeId, $mvcParams, 'production');

@@ -85,6 +85,7 @@ CREATE  TABLE IF NOT EXISTS `Plugin` (
   `region` VARCHAR(45) NOT NULL ,
   `params` MEDIUMTEXT NOT NULL ,
   `weight` SMALLINT NOT NULL DEFAULT 0 ,
+  `enabledByDefault` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 

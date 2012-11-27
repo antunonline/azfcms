@@ -113,7 +113,8 @@ ORDER BY p.region, np.weight, p.weight";
             'name'=>$plugin['name'],
             'description'=>$plugin['description'],
             'region'=>$plugin['region'],
-            'weight'=>$plugin['weight']
+            'weight'=>$plugin['weight'],
+            'enabledByDefault'=>(int)$plugin['enabledByDefault']
         );
         $where = array(
             'id=?'=>$plugin['id']
@@ -327,6 +328,7 @@ WHERE
         /* @var $result Zend_Db_Table_Rowset_Abstract */
         foreach($result as $row){
             $row->params = $this->_decode($row->params);
+            $row->enabledByDefault = $row->enabledByDefault=="0"?false:true;
         }
         
         return $result;

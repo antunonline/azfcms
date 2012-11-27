@@ -67,6 +67,7 @@ define({
     eepDescriptionColumnLabel:"Opis",
     eepDisabledColumnLabel:"Ukljućen",
     eepPlacementColumnLabel:"Pozicija",
+    eepEnabledByDefault:"Uključi u novim stranicama",
     eepRegion:"Dio stranice",
     eepFormName:"Naziv",
     eepFormDescription:"Opis",
@@ -79,6 +80,7 @@ define({
     eepFormExtendedEdit:"Editiraj dodatne vrijednosti",
     eepFormAdd:"Novi dodatak",
     eepFormDelete:"Izbriši dodatak",
+    eepFormEnabledByDefault:"Uključi u novim stranicama",
     eepReloadGrid:"Osvježi listu",
     
     eecDeleteConfirmation:"\u017delite li doista izbrisati izabrani dodatak?",

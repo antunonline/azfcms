@@ -37,7 +37,7 @@
                                 
                 self.typeStore = contentPluginTypeStore
                 self.typeStore.idProperty = "pluginIdentifier";
-                self.typeStore.query().then(function(){
+                self.typeStore.query({}).then(function(){
                     initCallback();
                 })
                                 

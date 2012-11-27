@@ -10,7 +10,10 @@ define(
     'dijit/layout/ContentPane',
 
     'dijit/layout/TabContainer','dojox/grid/DataGrid','dijit/layout/BorderContainer',
-    'dijit/form/FilteringSelect','dijit/form/CheckBox','dijit/form/TextBox','dijit/form/NumberSpinner'],function
+    'dijit/form/FilteringSelect','dijit/form/CheckBox','dijit/form/TextBox','dijit/form/NumberSpinner',
+    'dojox/layout/TableContainer','dijit/Toolbar','dijit/form/CheckBox'
+
+],function
     (declare,templateString,_Widget,
         _TemplatedMixin, _WidgetsInTemplateMixin, domStyle,
         ObjectStore,lang,cms,nls,
@@ -77,9 +80,9 @@ define(
                 })
             },
             resize:function(){
-                this.tabContainer.resize();
-                this.borderContainer.resize();
-                this.pluginGrid.resize();
+                this.tabContainer.resize(arguments.length?arguments[0]:null);
+//                this.borderContainer.resize();
+//                this.pluginGrid.resize();
             },
             getDomNodeBox: function(){
                 var cs = domStyle.getComputedStyle(this.domNode);
@@ -107,6 +110,7 @@ define(
                 this.customEditButton.set("disabled",true);
                 this.removeButton.set("disabled",true);
                 this.addButton.set("disabled",true);
+                this.enabledByDefault.set("disabled",true);
             },
             enable:function(){
                 this.tabContainer.set("disabled",false);
@@ -120,6 +124,7 @@ define(
                 this.customEditButton.set("disabled",false);
                 this.removeButton.set("disabled",false);
                 this.addButton.set("disabled",false);
+                this.enabledByDefault.set("disabled",false);
             },
             addChild: function(pane){
                 this.tabContainer.addChild(pane);
@@ -135,7 +140,8 @@ define(
                     type:"",
                     region:"",
                     weight:0,
-                    enabled:false
+                    enabled:false,
+                    enabledByDefault:false
                 });
             },
             _setFormAttr: function(plugin){
@@ -145,6 +151,7 @@ define(
                 this.formRegionSelect.set("value",plugin.region);
                 this.typeSelect.set("value",plugin.type);
                 this.weightText.set("value",plugin.weight);
+                this.enabledByDefault.set("checked",plugin.enabledByDefault);
                 this.pluginId = plugin.id;
             },
             _getFormAttr:function(){
@@ -154,7 +161,8 @@ define(
                     'description':this.descriptionText.get("value"),
                     "type":this.typeSelect.get("value"),
                     'weight':parseInt(this.weightText.get("value")),
-                    'region':this.formRegionSelect.get("value")
+                    'region':this.formRegionSelect.get("value"),
+                    'enabledByDefault':this.enabledByDefault.get('checked')
                 };
             },
             _onSave:function(){

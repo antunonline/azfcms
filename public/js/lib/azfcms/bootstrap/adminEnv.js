@@ -1,11 +1,11 @@
 define(['dojo/_base/declare','azfcms/module/default/view/AdminDialog','azfcms/module/default/view/NavigationPane',
     'azfcms/model/navigation','azfcms/module/default/controller/Context','dojo/i18n!azfcms/resources/i18n/cms/common/nls/common',
     'dojo/_base/Deferred','dojo/on','azfcms/model!cms.admin.getConfigurationActionDefinitions()',
-    'dojo/_base/json'],function
+    'dojo/_base/json','dojo/on','dojo/dom-geometry'],function
     (declare, AdminDialog, NavigationPane,
         navigationModel, ContextController, nls,
         Deferred,on, serializedConfigurationDefinitions,
-        json)
+        json, on, domGeometry)
         {
         var _class = declare([],{
             startup: function(dstNode){
@@ -41,11 +41,36 @@ define(['dojo/_base/declare','azfcms/module/default/view/AdminDialog','azfcms/mo
                 navigationModel.getRoot(function(){
                     self.adminDialog.resize();
                 });
+                
+                var self = this;
+                // Setup onresize event
+                on(window,'resize',function(){
+                    self.onWindowResize();
+                })
+                
                 return d;
             },
             
+            
+            onWindowResize: function(){
+                if(this._resizing){
+                    return;
+                } else {
+                    this._resizing =true;
+                }
+                var self = this;
+                
+                window.setTimeout(function(){
+                    
+                    self.resize(domGeometry.getContentBox(document.body));
+                    self._resizing = false;
+                },400);
+                
+                return ;
+            },
+            
             resize:function(){
-                this.adminDialog.resize();
+                this.adminDialog.resize(arguments.length>0?arguments[0]:null);
             },
         
             /**

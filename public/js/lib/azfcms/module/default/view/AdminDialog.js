@@ -15,6 +15,10 @@ define(
             addChild:function(){
                 this.inherited(arguments);
                 this.resize();
+            },
+            
+            resize: function(){
+                this.inherited(arguments);
             }
         });
     
